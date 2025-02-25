@@ -11,7 +11,6 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("data_province")]
     public class data_province : FullAuditedEntity<long>
     {
-        public long KhoanhDatId { get; set; }
         public string MaKhoanhDat { get; set; }
         public string MaDVHCCapXa { get; set; }
         public string MaDVHCCapHuyen { get; set; }

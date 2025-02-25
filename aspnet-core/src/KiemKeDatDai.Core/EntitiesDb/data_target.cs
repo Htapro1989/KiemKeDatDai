@@ -13,7 +13,6 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("data_target")]
     public class data_target : FullAuditedEntity<long>
     {
-        public long chiTieuId { get; set; }
         public string MaDVHCCapXa { get; set; }
         public string MaKhoanhDat { get; set; }
         public string MucDichSuDung { get; set; }

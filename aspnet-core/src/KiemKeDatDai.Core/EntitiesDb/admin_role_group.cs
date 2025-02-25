@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("admin_roles")]
-    public class admin_roles : FullAuditedEntity<long>
+    [Table("admin_role_group")]
+    public class admin_role_group : FullAuditedEntity<long>
     {
-        public long id {  get; set; }
         public long user_id { get; set; }
         public long role_id { get; set; }
         public DateTime created_date { get; set; }

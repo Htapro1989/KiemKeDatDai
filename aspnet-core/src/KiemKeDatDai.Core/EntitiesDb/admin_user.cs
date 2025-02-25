@@ -12,7 +12,6 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("category_place")]
     public class admin_user : FullAuditedEntity<long>
     {
-        public long id { get; set; }
         public string fullname { get; set; }
         public string email { get; set; }
         public string username { get; set; }

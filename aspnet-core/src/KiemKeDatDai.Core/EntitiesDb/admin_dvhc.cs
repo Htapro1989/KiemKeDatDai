@@ -11,7 +11,6 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("admin_dvhc")]
     public class admin_dvhc : FullAuditedEntity<long>
     {
-        public long id { get; set; }
         public string name { get; set; }
         public long parent_id { get; set; }
         public long level { get; set; }
