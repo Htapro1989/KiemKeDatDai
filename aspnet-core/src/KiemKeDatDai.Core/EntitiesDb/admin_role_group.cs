@@ -14,6 +14,5 @@ namespace KiemKeDatDai.EntitiesDb
     {
         public long user_id { get; set; }
         public long role_id { get; set; }
-        public DateTime created_date { get; set; }
     }
 }

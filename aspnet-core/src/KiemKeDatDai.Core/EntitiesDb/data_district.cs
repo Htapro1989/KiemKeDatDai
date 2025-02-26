@@ -25,7 +25,6 @@ namespace KiemKeDatDai.EntitiesDb
         public string MdSDSanGon { get; set; }
         public string MdSDSanBay { get; set; }
         public long chiTieuId { get; set; }
-        public DateTime created_date { get; set; }
-        public long year_id { get; set; }
+        public long year_code { get; set; }
     }
 }

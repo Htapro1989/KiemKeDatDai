@@ -9,18 +9,16 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("category_place")]
+    [Table("admin_user")]
     public class admin_user : FullAuditedEntity<long>
     {
         public string fullname { get; set; }
         public string email { get; set; }
         public string username { get; set; }
         public string password { get; set; }
-        public long place_id { get; set; }
+        public long dvhc_code { get; set; }
         public bool activate { get; set; }
-        public long year_id {  get; set; }
-        public DateTime created_date { get; set; }
-        public DateTime modified_date { get; set; }
+        public long year_code {  get; set; }
 
     }
 }

@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("admin_dvhc")]
-    public class admin_dvhc : FullAuditedEntity<long>
+    [Table("category_dvhc")]
+    public class category_dvhc : FullAuditedEntity<long>
     {
         public string code { get; set; }
         public string name { get; set; }
