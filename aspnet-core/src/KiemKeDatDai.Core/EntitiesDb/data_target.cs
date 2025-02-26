@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("data_target")]
-    public class data_target : FullAuditedEntity<long>
+    [Table("Data_Target")]
+    public class Data_Target : FullAuditedEntity<long>
     {
         public string MaDVHCCapXa { get; set; }
         public string MaKhoanhDat { get; set; }

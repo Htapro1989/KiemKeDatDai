@@ -8,11 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("data_commune")]
-    public class data_commune : FullAuditedEntity<long>
+    [Table("Data_Commune")]
+    public class Data_Commune : FullAuditedEntity<long>
     {
+        public string MaXa { get; set; }
+        public string MaHuyen { get; set; }
+        public string MaTinh { get; set; }
+        public string MaVung { get; set; }
+        public long HuyenId { get; set; }
+        public long TinhId { get; set; }
         public string MaKhoanhDat { get; set; }
-        public string MaDVHCCapXa { get; set; }
         public long SoThuTuKhoanhDat { get; set; }
         public decimal DTKhongGian { get; set; }
         public decimal DienTich { get; set; }
@@ -25,5 +30,6 @@ namespace KiemKeDatDai.EntitiesDb
         public string MdSDSanBay { get; set; }
         public long chiTieuId { get; set; }
         public long year_code { get; set; }
+        public bool? Status { get; set; }
     }
 }

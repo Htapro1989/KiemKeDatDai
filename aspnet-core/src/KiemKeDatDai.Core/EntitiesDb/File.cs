@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("category_dvhc")]
-    public class category_dvhc : FullAuditedEntity<long>
+    [Table("File")]
+    public class File : FullAuditedEntity<long>
     {
-        public string code { get; set; }
-        public string name { get; set; }
-        public long parent_id { get; set; }
-        public long level { get; set; }
-        public bool activate { get; set; }
+        public string FileName { get; set; }
+        public string FileType { get; set; }
+        public long FilePath { get; set; }
+        public long Url { get; set; }
+        public bool Active { get; set; }
         public long year_id { get; set; }
     }
 }

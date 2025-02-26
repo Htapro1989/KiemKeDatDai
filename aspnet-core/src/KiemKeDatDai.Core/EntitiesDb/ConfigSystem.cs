@@ -1,5 +1,4 @@
 ﻿using Abp.Domain.Entities.Auditing;
-using Castle.MicroKernel.SubSystems.Conversion;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("admin_role_group")]
-    public class admin_role_group : FullAuditedEntity<long>
+    [Table("ConfigSystem")]
+    public class ConfigSystem : FullAuditedEntity<long>
     {
-        public long user_id { get; set; }
-        public long role_id { get; set; }
+        public int expired_auth { get; set; }
+        public string server_file_upload { get; set; }
+
     }
 }

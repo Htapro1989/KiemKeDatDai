@@ -30,4 +30,5 @@ public class User : AbpUser<User>
 
         return user;
     }
+    public long? DonViHanhChinhId { get; set; }
 }
