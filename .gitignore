@@ -10,3 +10,5 @@ aspnet-core/src/KiemKeDatDai.Migrator/Logs/Logs.txt
 aspnet-core/build/outputs/
 aspnet-core/docker/mvc/Mvc-Logs/
 
+/aspnet-core/src/KiemKeDatDai.Application/Users/UserAppService.cs
+/aspnet-core/src/KiemKeDatDai.EntityFrameworkCore/EntityFrameworkCore/KiemKeDatDaiDbContextConfigurer.cs
