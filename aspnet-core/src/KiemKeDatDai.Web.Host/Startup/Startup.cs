@@ -60,6 +60,7 @@ namespace KiemKeDatDai.Web.Host.Startup
                                 .Select(o => o.RemovePostFix("/"))
                                 .ToArray()
                         )
+                        .WithMethods("PUT", "DELETE", "GET", "POST", "OPTIONS")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()

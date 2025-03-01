@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KiemKeDatDai.AppCore.Utility
+namespace KiemKeDatDai
 {
     public static class CommonEnum
     {

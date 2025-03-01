@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KiemKeDatDai.AppCore.Utility
+namespace KiemKeDatDai.ApplicationDto
 {
     public class CommonResponseDto
     {

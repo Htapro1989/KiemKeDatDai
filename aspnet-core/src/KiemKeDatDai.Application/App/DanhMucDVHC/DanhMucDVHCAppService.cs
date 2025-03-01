@@ -5,21 +5,22 @@ using Abp.AutoMapper;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using KiemKeDatDai;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.ObjectMapping;
 using Abp.Runtime.Caching;
 using Abp.Threading;
-using KiemKeDatDai.AppCore.DanhMucDVHC;
+using KiemKeDatDai.Sessions;
 using KiemKeDatDai.AppCore.DanhMucDVHC.Dto;
-using KiemKeDatDai.AppCore.Log;
-using KiemKeDatDai.AppCore.Log.Dto;
-using KiemKeDatDai.AppCore.Utility;
+using KiemKeDatDai.ApplicationDto;
 using KiemKeDatDai.Authorization.Users;
+using KiemKeDatDai.Dto;
 using KiemKeDatDai.EntitiesDb;
 using KiemKeDatDai.Users;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -41,7 +42,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
-        private readonly ILogAppService _iLogAppService;
+        //private readonly ILogAppService _iLogAppService;
 
         private readonly ICache mainCache;
 
@@ -52,8 +53,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
-            IHttpContextAccessor httpContextAccessor,
-            ILogAppService iLogAppService
+            IHttpContextAccessor httpContextAccessor
+            //ILogAppService iLogAppService
             )
         {
             _cacheManager = cacheManager;
@@ -64,9 +65,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
-            _iLogAppService = iLogAppService;
-        }
-
+            //_iLogAppService = iLogAppService;
+        }        
         [AbpAuthorize]
         public async Task<CommonResponseDto> GetByUser(long userId)
         {
@@ -75,8 +75,59 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var lstDVHC = new List<DVHCOutputDto>();
                 PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
-                var query = (from up in _userRepos.GetAll()
-                             join dvhc in _dvhcRepos.GetAll() on up.DonViHanhChinhId equals dvhc.Id
+                var dvhcObj = await _userRepos.FirstOrDefaultAsync(x => x.Id == userId);
+                var dvhcId = dvhcObj != null ? dvhcObj.DonViHanhChinhId : 0;
+                if (dvhcId != 0)
+                {
+                    var query = (from  dvhc in _dvhcRepos.GetAll()
+                                 where dvhc.Id == dvhcId || dvhc.Parent_id == dvhcId
+                                 select new DVHCOutputDto
+                                 {
+                                     Id = dvhc.Id,
+                                     TenTinh = dvhc.TenTinh,
+                                     MaTinh = dvhc.MaTinh,
+                                     TenHuyen = dvhc.TenHuyen,
+                                     MaHuyen = dvhc.MaHuyen,
+                                     TenXa = dvhc.TenXa,
+                                     MaXa = dvhc.MaXa,
+                                     Name = dvhc.Name,
+                                     Parent_id = dvhc.Parent_id,
+                                     Level = dvhc.Level,
+                                     Active = dvhc.Active,
+                                     Year_Id = dvhc.Year_Id,
+                                     TrangThaiDuyet = dvhc.TrangThaiDuyet,
+                                     ChildStatus = dvhc.Level == 4 ? 0 : 1
+                                 });
+                    lstDVHC = await query.ToListAsync();
+                    commonResponseDto.ReturnValue = lstDVHC;
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Thành Công";
+                }
+                else
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Không tìm thấy tài khoản người dùng trong hệ thống!";
+                }
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                throw;
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetById(long id)
+        {
+            var userId = 4;
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var lstDVHC = new List<DVHCOutputDto>();
+                PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
+                var query = (from dvhc in _dvhcRepos.GetAll()
+                             where dvhc.Id == id
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
@@ -93,12 +144,19 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                  Year_Id = dvhc.Year_Id,
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
                                  ChildStatus = dvhc.Level == 4 ? 0 : 1
-                             })
-                             .WhereIf(userId > 0, x => x.Id.Equals(userId));
-                lstDVHC = await query.ToListAsync();
-                commonResponseDto.ReturnValue = lstDVHC;
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
-                commonResponseDto.Message = "Thành Công";
+                             });
+                if (query != null)
+                {
+                    lstDVHC = await query.ToListAsync();
+                    commonResponseDto.ReturnValue = lstDVHC;
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Thành Công";
+                }
+                else
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Không có dữ liệu cấp dưới!";
+                }
             }
             catch (Exception ex)
             {
@@ -108,7 +166,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             }
             return commonResponseDto;
         }
-
         [AbpAuthorize]
         public async Task<CommonResponseDto> CreateOrUpdate(DVHCInputDto input)
         {
@@ -154,12 +211,12 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     var dvhc = input.MapTo<DVHCOutputDto>();
                     await _dvhcRepos.InsertAsync(dvhc);
                     //insert log
-                    var log = new LogInputDto
-                    {
-                        UserId = currentUser.Id,
-                        Describle = "Thêm dữ liệu thông tin hồ chứa"
-                    };
-                    _iLogAppService.Create(log);
+                    //var log = new LogInputDto
+                    //{
+                    //    UserId = currentUser.Id,
+                    //    Describle = "Thêm dữ liệu thông tin hồ chứa"
+                    //};
+                    //_iLogAppService.Create(log);
                 }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -187,16 +244,16 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                     //insert log
-                    var log = new LogInputDto
-                    {
-                        UserId = currentUser.Id,
-                        Describle = "Xoá dữ liệu đơn vị hành chính"
-                    };
-                    _iLogAppService.Create(log);
+                    //var log = new LogInputDto
+                    //{
+                    //    UserId = currentUser.Id,
+                    //    Describle = "Xoá dữ liệu đơn vị hành chính"
+                    //};
+                    //_iLogAppService.Create(log);
                 }
                 else
                 {
-                    commonResponseDto.Message = "Dơn vị hành chínhnày không tồn tại";
+                    commonResponseDto.Message = "Dơn vị hành chính này không tồn tại";
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     return commonResponseDto;
                 }
