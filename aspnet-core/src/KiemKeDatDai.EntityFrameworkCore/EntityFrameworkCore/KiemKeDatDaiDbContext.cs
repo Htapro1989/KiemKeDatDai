@@ -18,6 +18,8 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Data_Province> Data_Province { get; set; }
         public virtual DbSet<Data_Target> Data_Target { get; set; }
         public virtual DbSet<DM_BieuMau> DM_BieuMau { get; set; }
+        public virtual DbSet<CapDVHC> CapDVHC { get; set; }
+        public virtual DbSet<DM_DVCH_BM> DM_DVCH_BM { get; set; }
 
         public KiemKeDatDaiDbContext(DbContextOptions<KiemKeDatDaiDbContext> options)
             : base(options)

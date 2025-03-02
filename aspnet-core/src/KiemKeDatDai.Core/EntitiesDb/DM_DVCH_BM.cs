@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("DM_BieuMau")]
-    public class DM_BieuMau : FullAuditedEntity<long>
+    [Table("DM_DVCH_BM")]
+    public class DM_DVCH_BM : FullAuditedEntity<long>
     {
-        public string KyHieu { get; set; }
-        public string NoiDung { get; set; }
-        public string CapDVHC { get; set; }
-        public bool Activated { get; set; }
+        public long CapDVHCId { get; set; }
+        public string CapDVHCCode { get; set; }
+        public long BieuMauId { get; set; }
+        public long Year_Id { get; set; }
     }
 }

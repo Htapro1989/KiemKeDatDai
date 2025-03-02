@@ -29,15 +29,15 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 
-namespace KiemKeDatDai.App.DanhMucDVHC
+namespace KiemKeDatDai.App.DMBieuMau
 {
-    [AbpAuthorize]
-    public class DanhMucDVHCAppService : KiemKeDatDaiAppServiceBase, IDonViHanhChinhAppService
+    public class DMBieuMauAppService: KiemKeDatDaiAppServiceBase, IDMBieuMauAppService
     {
         private readonly ICacheManager _cacheManager;
         private readonly IIocResolver _iocResolver;
+        private readonly IRepository<DM_BieuMau, long> _dmbmRepos;
         private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
-        private readonly IRepository<CapDVHC, long> _cdvhcRepos;
+        private readonly IRepository<DM_DVCH_BM, long> _dmdvhcbmRepos;
         private readonly IRepository<User, long> _userRepos;
         private readonly IObjectMapper _objectMapper;
         private readonly IUserAppService _iUserAppService;
@@ -47,10 +47,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
 
         private readonly ICache mainCache;
 
-        public DanhMucDVHCAppService(ICacheManager cacheManager,
+        public DMBieuMauAppService(ICacheManager cacheManager,
             IIocResolver iocResolver,
+            IRepository<DM_BieuMau, long> dmbmRepos,
             IRepository<DonViHanhChinh, long> dvhcRepos,
-            IRepository<CapDVHC, long> cdvhcRepos,
+            IRepository<DM_DVCH_BM, long> dmdvhcbmRepos,
             IRepository<User, long> userRepos,
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
@@ -61,107 +62,37 @@ namespace KiemKeDatDai.App.DanhMucDVHC
         {
             _cacheManager = cacheManager;
             _iocResolver = iocResolver;
+            _dmbmRepos = dmbmRepos;
+            _dmbmRepos = dmbmRepos;
             _dvhcRepos = dvhcRepos;
-            _cdvhcRepos = cdvhcRepos;
-            _userRepos = userRepos;
+            _dmdvhcbmRepos = dmdvhcbmRepos;
             _objectMapper = objectMapper;
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
-        }        
-        [AbpAuthorize]
-        public async Task<CommonResponseDto> GetByUser(long userId)
-        {
-            CommonResponseDto commonResponseDto = new CommonResponseDto();
-            try
-            {
-                var lstDVHC = new List<DVHCOutputDto>();
-                PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
-                var userObj = await _userRepos.FirstOrDefaultAsync(x => x.Id == userId);
-                var dvhcId = userObj != null ? userObj.DonViHanhChinhId : 0;
-                if (dvhcId != 0)
-                {
-                    var query = (from  dvhc in _dvhcRepos.GetAll()
-                                 join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
-                                 where dvhc.Id == dvhcId || dvhc.Parent_id == dvhcId
-                                 select new DVHCOutputDto
-                                 {
-                                     Id = dvhc.Id,
-                                     TenTinh = dvhc.TenTinh,
-                                     MaTinh = dvhc.MaTinh,
-                                     TenHuyen = dvhc.TenHuyen,
-                                     MaHuyen = dvhc.MaHuyen,
-                                     TenXa = dvhc.TenXa,
-                                     MaXa = dvhc.MaXa,
-                                     Name = dvhc.Name,
-                                     Parent_id = dvhc.Parent_id,
-                                     CapDVHCId = dvhc.CapDVHCId,
-                                     Active = dvhc.Active,
-                                     Year_Id = dvhc.Year_Id,
-                                     TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                     ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
-                                 });
-                    lstDVHC = await query.ToListAsync();
-                    commonResponseDto.ReturnValue = lstDVHC;
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
-                    commonResponseDto.Message = "Thành Công";
-                }
-                else
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Không tìm thấy tài khoản người dùng trong hệ thống!";
-                }
-            }
-            catch (Exception ex)
-            {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                commonResponseDto.Message = ex.Message;
-                throw;
-            }
-            return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> GetById(long id)
+        public async Task<CommonResponseDto> GetAll(DMBieuMauDto input)
         {
-            var userId = 4;
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var lstDVHC = new List<DVHCOutputDto>();
+                var lstBM = new List<DMBieuMauOuputDto>();
                 PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
-                var query = (from dvhc in _dvhcRepos.GetAll()
-                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
-                             where dvhc.Parent_id == id
-                             select new DVHCOutputDto
+                var query = (from bm in _dmbmRepos.GetAll()
+                             select new DMBieuMauOuputDto
                              {
-                                 Id = dvhc.Id,
-                                 TenTinh = dvhc.TenTinh,
-                                 MaTinh = dvhc.MaTinh,
-                                 TenHuyen = dvhc.TenHuyen,
-                                 MaHuyen = dvhc.MaHuyen,
-                                 TenXa = dvhc.TenXa,
-                                 MaXa = dvhc.MaXa,
-                                 Name = dvhc.Name,
-                                 Parent_id = dvhc.Parent_id,
-                                 CapDVHCId = dvhc.CapDVHCId,
-                                 Active = dvhc.Active,
-                                 Year_Id = dvhc.Year_Id,
-                                 TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
-                             });
-                if (query != null)
-                {
-                    lstDVHC = await query.ToListAsync();
-                    commonResponseDto.ReturnValue = lstDVHC;
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
-                    commonResponseDto.Message = "Thành Công";
-                }
-                else
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Không có dữ liệu cấp dưới!";
-                }
+                                 Id = bm.Id,
+                                 KyHieu = bm.KyHieu,
+                                 NoiDung = bm.NoiDung,
+                                 CapDVHC = bm.CapDVHC,
+                                 Activated = bm.Activated
+                             })
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
+                lstBM = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
+                var totalCout = await query.CountAsync();
+                pagedResultDto.TotalCount = totalCout;
             }
             catch (Exception ex)
             {
@@ -172,7 +103,41 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> CreateOrUpdate(DVHCInputDto input)
+        public async Task<CommonResponseDto> GetByDVHC(long dvhcId)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var lstBM = new List<DMBieuMauOuputDto>();
+                PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
+                var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == dvhcId);
+                var dvhcLevel = dvhcObj != null ? dvhcObj.CapDVHCId : 0;
+                var query = (from bm in _dmbmRepos.GetAll()
+                             join dmdvhcbm in _dmdvhcbmRepos.GetAll() on bm.Id equals dmdvhcbm.BieuMauId
+                             where dmdvhcbm.CapDVHCId == dvhcLevel
+                             select new DMBieuMauOuputDto
+                             {
+                                 Id = bm.Id,
+                                 KyHieu = bm.KyHieu,
+                                 NoiDung = bm.NoiDung,
+                                 CapDVHC = bm.CapDVHC,
+                                 Activated = bm.Activated
+                             });
+                lstBM = await query.ToListAsync();
+                commonResponseDto.ReturnValue = lstBM;
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                throw;
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> CreateOrUpdate(DMBieuMauInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
@@ -180,22 +145,14 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
-                    var data = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
+                    var data = await _dmbmRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
                     if (data != null)
                     {
-                        data.TenTinh = input.TenTinh;
-                        data.MaTinh = input.MaTinh;
-                        data.TenHuyen = input.TenHuyen;
-                        data.MaHuyen = input.MaHuyen;
-                        data.TenXa = input.TenXa;
-                        data.MaXa = input.MaXa;
-                        data.Name = input.Name;
-                        data.Parent_id = input.Parent_id;
-                        data.CapDVHCId = input.CapDVHCId;
-                        data.Active = input.Active;
-                        data.Year_Id = input.Year_Id;
-                        data.TrangThaiDuyet = input.TrangThaiDuyet;
-                        await _dvhcRepos.UpdateAsync(data);
+                        data.KyHieu = input.KyHieu;
+                        data.NoiDung = input.NoiDung;
+                        data.CapDVHC = input.CapDVHC;
+                        data.Activated = input.Activated;
+                        await _dmbmRepos.UpdateAsync(data);
                         //insert log
                         //var log = new LogInputDto
                         //{
@@ -206,15 +163,15 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     }
                     else
                     {
-                        commonResponseDto.Message = "Đơn vị hành chính này không tồn tại";
+                        commonResponseDto.Message = "Xảy ra lỗi trong quá tình thêm mới!";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
                 }
                 else
                 {
-                    var dvhc = input.MapTo<DVHCInputDto>();
-                    await _dvhcRepos.InsertAsync(dvhc);
+                    var objBM = input.MapTo<DMBieuMauInputDto>();
+                    await _dmbmRepos.InsertAsync(objBM);
                     //insert log
                     //var log = new LogInputDto
                     //{
@@ -242,10 +199,10 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             try
             {
                 var currentUser = await GetCurrentUserAsync();
-                var objDVHC = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == id);
-                if (objDVHC != null)
+                var objBM = await _dmbmRepos.FirstOrDefaultAsync(x => x.Id == id);
+                if (objBM != null)
                 {
-                    await _dvhcRepos.DeleteAsync(objDVHC);
+                    await _dmbmRepos.DeleteAsync(objBM);
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                     //insert log
@@ -258,7 +215,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 }
                 else
                 {
-                    commonResponseDto.Message = "Dơn vị hành chính này không tồn tại";
+                    commonResponseDto.Message = "Biểu mẫu này không tồn tại";
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     return commonResponseDto;
                 }
@@ -271,6 +228,5 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             }
             return commonResponseDto;
         }
-       
     }
 }

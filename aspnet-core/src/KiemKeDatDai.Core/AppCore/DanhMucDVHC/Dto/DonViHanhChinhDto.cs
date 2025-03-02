@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KiemKeDatDai.AppCore.DanhMucDVHC.Dto
+namespace KiemKeDatDai.Dto
 {
     [AutoMap(typeof(DonViHanhChinh))]
     public class DVHCInputDto : DonViHanhChinh

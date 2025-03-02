@@ -20,7 +20,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string Name { get; set; }
         public long? Parent_id { get; set; }
         public string Parent_Code { get; set; }
-        public long Level { get; set; }
+        public long CapDVHCId { get; set; }
         public bool Active { get; set; }
         public long Year_Id { get; set; }
         public int TrangThaiDuyet { get; set; }
