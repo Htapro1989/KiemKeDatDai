@@ -84,7 +84,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 {
                     var query = (from  dvhc in _dvhcRepos.GetAll()
                                  join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
-                                 where dvhc.Id == dvhcId || dvhc.Parent_id == dvhcId
+                                 where dvhc.Id == dvhcId
                                  select new DVHCOutputDto
                                  {
                                      Id = dvhc.Id,
@@ -124,7 +124,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
         [AbpAuthorize]
         public async Task<CommonResponseDto> GetById(long id)
         {
-            var userId = 4;
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
