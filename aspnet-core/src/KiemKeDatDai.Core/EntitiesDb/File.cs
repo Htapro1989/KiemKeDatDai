@@ -16,6 +16,6 @@ namespace KiemKeDatDai.EntitiesDb
         public long FilePath { get; set; }
         public long Url { get; set; }
         public bool Active { get; set; }
-        public long year_id { get; set; }
+        public long year { get; set; }
     }
 }

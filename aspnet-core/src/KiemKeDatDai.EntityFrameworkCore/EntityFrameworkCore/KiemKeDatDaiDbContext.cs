@@ -20,6 +20,12 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<DM_BieuMau> DM_BieuMau { get; set; }
         public virtual DbSet<CapDVHC> CapDVHC { get; set; }
         public virtual DbSet<DM_DVCH_BM> DM_DVCH_BM { get; set; }
+        public virtual DbSet<KyThongKeKiemKe> KyThongKeKiemKe { get; set; }
+        public virtual DbSet<Bieu01KKSL> Bieu01KKSL { get; set; }
+        public virtual DbSet<Bieu01KKSL_Vung> Bieu01KKSL_Vung { get; set; }
+        public virtual DbSet<Bieu01KKSL_Tinh> Bieu01KKSL_Tinh { get; set; }
+        public virtual DbSet<Bieu01KKSL_Huyen> Bieu01KKSL_Huyen { get; set; }
+        public virtual DbSet<Bieu01KKSL_Xa> Bieu01KKSL_Xa { get; set; }
 
         public KiemKeDatDaiDbContext(DbContextOptions<KiemKeDatDaiDbContext> options)
             : base(options)

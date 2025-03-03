@@ -14,6 +14,6 @@ namespace KiemKeDatDai.EntitiesDb
         public long CapDVHCId { get; set; }
         public string CapDVHCCode { get; set; }
         public long BieuMauId { get; set; }
-        public long Year_Id { get; set; }
+        public long Year { get; set; }
     }
 }

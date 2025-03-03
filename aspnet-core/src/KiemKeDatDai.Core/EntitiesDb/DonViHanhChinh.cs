@@ -22,7 +22,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string Parent_Code { get; set; }
         public long CapDVHCId { get; set; }
         public bool Active { get; set; }
-        public long Year_Id { get; set; }
+        public long Year { get; set; }
         public int TrangThaiDuyet { get; set; }
     }
 }

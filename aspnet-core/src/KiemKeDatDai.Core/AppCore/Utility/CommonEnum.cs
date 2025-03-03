@@ -28,37 +28,11 @@ namespace KiemKeDatDai
             IsExistEmail = -1,
         }
 
-        public enum DUONG_GIOI_HAN
+        public enum TRANG_THAI_SUYET
         {
-            MNTL = 0,
-            PHAI = 1,
-            TRAI = 2
-        }
-        public enum LOAI_DUONG_GIOI_HAN
-        {
-            MOT_DUONG = 1,
-            HAI_DUONG = 2,
-            BA_DUONG = 3,
-            BON_DUONG = 4
-        }
-        public enum LOAI_DANH_GIA
-        {
-            TCT1 = 1,
-            TCT2 = 2,
-            TCT3 = 3
-        }
-
-        public enum TRAM_QUAN_TRAC
-        {
-            THU_CONG = 1,
-            TU_DONG = 2
-        }
-
-        public enum DANH_GIA
-        {
-            DAM_BAO_AN_TOAN = 1,
-            AN_TOAN = 2,
-            NGUY_CO_MAT_AN_TOAN = 3
+            CHUA_GUI = 0,
+            CHUA_DUYET = 1,
+            DA_DUYET = 2
         }
 
         public class ComboBoxDto
