@@ -53,7 +53,8 @@ namespace KiemKeDatDai.Controllers
                 AccessToken = accessToken,
                 EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
                 ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds,
-                UserId = loginResult.User.Id
+                UserId = loginResult.User.Id,
+                MaDVHC = loginResult.User.DonViHanhChinhCode
             };
         }
 
