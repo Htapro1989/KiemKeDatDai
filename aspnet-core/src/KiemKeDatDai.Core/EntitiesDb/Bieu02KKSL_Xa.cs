@@ -19,6 +19,7 @@ namespace KiemKeDatDai.EntitiesDb
         public DateTime NgayLapBieu { get; set; }
         public DateTime NgayDuyet { get; set; }
         public string MaXa { get; set; }
+        public long? XaId { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
     }

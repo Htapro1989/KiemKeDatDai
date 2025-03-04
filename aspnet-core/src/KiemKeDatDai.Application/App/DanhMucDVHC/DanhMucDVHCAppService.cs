@@ -98,7 +98,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                      Parent_id = dvhc.Parent_id,
                                      CapDVHCId = dvhc.CapDVHCId,
                                      Active = dvhc.Active,
-                                     Year_Id = dvhc.Year_Id,
+                                     Year = dvhc.Year,
                                      TrangThaiDuyet = dvhc.TrangThaiDuyet,
                                      ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
                                  });
@@ -145,7 +145,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                  Parent_id = dvhc.Parent_id,
                                  CapDVHCId = dvhc.CapDVHCId,
                                  Active = dvhc.Active,
-                                 Year_Id = dvhc.Year_Id,
+                                 Year = dvhc.Year,
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
                                  ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
                              });
@@ -192,7 +192,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         data.Parent_id = input.Parent_id;
                         data.CapDVHCId = input.CapDVHCId;
                         data.Active = input.Active;
-                        data.Year_Id = input.Year_Id;
+                        data.Year = input.Year;
                         data.TrangThaiDuyet = input.TrangThaiDuyet;
                         await _dvhcRepos.UpdateAsync(data);
                         //insert log

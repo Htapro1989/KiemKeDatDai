@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("CapDVHC")]
-    public class CapDVHC : FullAuditedEntity<long>
+    [Table("KyThongKeKiemKe")]
+    public class KyThongKeKiemKe : FullAuditedEntity<long>
     {
-        public string MaCapDVHC { get; set; }
+        public string Ma { get; set; }
         public string Name { get; set; }
         public long Year { get; set; }
-        public bool? CapDVHCMin { get; set; }
         public bool? Active { get; set; }
     }
 }
