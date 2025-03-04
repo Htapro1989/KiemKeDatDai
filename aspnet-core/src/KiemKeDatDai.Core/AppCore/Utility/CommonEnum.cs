@@ -9,6 +9,8 @@ namespace KiemKeDatDai
 {
     public static class CommonEnum
     {
+        public const string FILE_ATTACHMENT = "FILE_ATTACHMENT";
+        public const string FILE_KYTHONGKE = "FILE_KYTHONGKE";
         public enum RESPONSE_CODE
         {
             SUCCESS = 200,
@@ -34,7 +36,7 @@ namespace KiemKeDatDai
             CHUA_DUYET = 1,
             DA_DUYET = 2
         }
-
+        
         public class ComboBoxDto
         {
             public long Id { get; set; }
