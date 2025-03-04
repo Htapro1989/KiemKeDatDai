@@ -87,7 +87,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  KyHieu = bm.KyHieu,
                                  NoiDung = bm.NoiDung,
                                  CapDVHC = bm.CapDVHC,
-                                 Activated = bm.Activated
+                                 Active = bm.Active
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
                 lstBM = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
@@ -121,7 +121,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  KyHieu = bm.KyHieu,
                                  NoiDung = bm.NoiDung,
                                  CapDVHC = bm.CapDVHC,
-                                 Activated = bm.Activated
+                                 Active = bm.Active
                              });
                 lstBM = await query.ToListAsync();
                 commonResponseDto.ReturnValue = lstBM;
@@ -151,7 +151,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         data.KyHieu = input.KyHieu;
                         data.NoiDung = input.NoiDung;
                         data.CapDVHC = input.CapDVHC;
-                        data.Activated = input.Activated;
+                        data.Active = input.Active;
                         await _dmbmRepos.UpdateAsync(data);
                         //insert log
                         //var log = new LogInputDto
