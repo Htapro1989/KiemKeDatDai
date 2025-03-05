@@ -46,6 +46,11 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Bieu01cKKNLT_Tinh> Bieu01cKKNLT_Tinh { get; set; }
         public virtual DbSet<Bieu01cKKNLT_Huyen> Bieu01cKKNLT_Huyen { get; set; }
         public virtual DbSet<Bieu01cKKNLT_Xa> Bieu01cKKNLT_Xa { get; set; }
+        public virtual DbSet<Bieu01TKKK> Bieu01TKKK { get; set; }
+        public virtual DbSet<Bieu01TKKK_Vung> Bieu01TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu01TKKK_Tinh> Bieu01TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu01TKKK_Huyen> Bieu01TKKK_Huyen { get; set; }
+        public virtual DbSet<Bieu01TKKK_Xa> Bieu01TKKK_Xa { get; set; }
         public virtual DbSet<DM_LoaiDat> DM_LoaiDat { get; set; }
 
         public KiemKeDatDaiDbContext(DbContextOptions<KiemKeDatDaiDbContext> options)
