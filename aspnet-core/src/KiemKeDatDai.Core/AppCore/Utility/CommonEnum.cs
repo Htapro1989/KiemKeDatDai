@@ -28,10 +28,10 @@ namespace KiemKeDatDai
             IsExistEmail = -1,
         }
 
-        public enum TRANG_THAI_SUYET
+        public enum TRANG_THAI_DUYET
         {
             CHUA_GUI = 0,
-            CHUA_DUYET = 1,
+            CHO_DUYET = 1,
             DA_DUYET = 2
         }
 
