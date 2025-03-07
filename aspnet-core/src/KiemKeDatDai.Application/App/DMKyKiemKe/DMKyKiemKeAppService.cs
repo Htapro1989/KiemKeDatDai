@@ -64,13 +64,12 @@ namespace KiemKeDatDai.App.DMBieuMau
             //_iLogAppService = iLogAppService;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> GetAll(DMKyKiemKeDto input)
+        public async Task<CommonResponseDto> GetAll(string filter)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 var lstBM = new List<DMKyKiemKeOuputDto>();
-                PagedResultDto<DMKyKiemKeDto> pagedResultDto = new PagedResultDto<DMKyKiemKeDto>();
                 var query = (from ky in _dmKyThongKeKiemKeRepos.GetAll()
                              select new DMKyKiemKeOuputDto
                              {
@@ -80,12 +79,11 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  Year = ky.Year,
                                  Active = ky.Active
                              })
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Ma.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Year == input.Year);
-                lstBM = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
-                var totalCout = await query.CountAsync();
-                pagedResultDto.TotalCount = totalCout;
+                             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Ma.ToLower().Contains(filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Name.ToLower().Contains(filter.ToLower()));
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {

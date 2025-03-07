@@ -13,10 +13,6 @@ namespace KiemKeDatDai.Dto
     public class DMKyKiemKeInputDto : KyThongKeKiemKe
     {
     }
-    public class DMKyKiemKeDto : PagedAndFilteredInputDto
-    {
-        public long Year { get; set; }
-    }
     public class DMKyKiemKeOuputDto : KyThongKeKiemKe
     {
     }

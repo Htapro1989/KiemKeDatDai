@@ -28,6 +28,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
+using static KiemKeDatDai.CommonEnum;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -85,10 +86,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                 if (objdata != null)
                 {
                     var xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == xaId);
-                    var data_xa = await _bieu01TKKK_XaRepos.FirstOrDefaultAsync(x => x.Id == xaId);
+                    var data_xa = await _bieu01TKKK_XaRepos.GetAllListAsync(x => x.Id == xaId);
                     if (data_xa != null)
                     {
-                        await CreateOrUpdateBieu01TKKK_Huyen(data_xa, objdata.Id);
+                        await CreateOrUpdateBieu01TKKK_Huyen(data_xa, objdata.Id, objdata.MaHuyen);
+                        xa.TrangThaiDuyet = (int)TRANG_THAI_SUYET.DA_DUYET;
+                        await _dvhcRepos.UpdateAsync(xa);
                     }
                     else
                     {
@@ -115,9 +118,104 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        private async Task CreateOrUpdateBieu01TKKK_Huyen(Bieu01TKKK_Xa xa, long huyenId)
+        private async Task CreateOrUpdateBieu01TKKK_Huyen(List<Bieu01TKKK_Xa> xa, long huyenId, string maHuyen)
         {
-            var data_huyen = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => xa.Id == huyenId);
+            var data_huyen = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.Id == huyenId);
+            if (data_huyen.Count == 0)
+            {
+                foreach (var item in xa)
+                {
+                    await CreateBieu01TKKK_Huyen(item, huyenId, maHuyen);
+                }
+            }
+            else
+            {
+                foreach (var item in xa)
+                {
+                    await UpdateBieu01TKKK_Huyen(item, huyenId, maHuyen);
+                }
+            }
+        }
+
+        private async Task CreateBieu01TKKK_Huyen(Bieu01TKKK_Xa xa, long huyenId, string maHuyen)
+        {
+            try
+            {
+                var objhuyen = new Bieu01TKKK_Huyen()
+                {
+                    STT = xa.STT,
+                    LoaiDat = xa.LoaiDat,
+                    Ma = xa.Ma,
+                    TongDienTichDVHC = xa.TongDienTichDVHC,
+                    TongSoTheoDoiTuongSuDung = xa.TongSoTheoDoiTuongSuDung,
+                    CaNhanTrongNuoc_CNV = xa.CaNhanTrongNuoc_CNV,
+                    NguoiVietNamONuocNgoai_CNN = xa.NguoiVietNamONuocNgoai_CNN,
+                    CoQuanNhaNuoc_TCN = xa.CoQuanNhaNuoc_TCN,
+                    DonViSuNghiep_TSN = xa.DonViSuNghiep_TSN,
+                    ToChucXaHoi_TXH = xa.ToChucXaHoi_TXH,
+                    ToChucKinhTe_TKT = xa.ToChucKinhTe_TKT,
+                    ToChucKhac_TKH = xa.ToChucKhac_TKH,
+                    ToChucTonGiao_TTG = xa.ToChucTonGiao_TTG,
+                    CongDongDanCu_CDS = xa.CongDongDanCu_CDS,
+                    ToChucNuocNgoai_TNG = xa.ToChucNuocNgoai_TNG,
+                    NguoiGocVietNamONuocNgoai_NGV = xa.NguoiGocVietNamONuocNgoai_NGV,
+                    ToChucKinhTeVonNuocNgoai_TVN = xa.ToChucKinhTeVonNuocNgoai_TVN,
+                    TongSoTheoDoiTuongDuocGiaoQuanLy = xa.TongSoTheoDoiTuongDuocGiaoQuanLy,
+                    CoQuanNhaNuoc_TCQ = xa.CoQuanNhaNuoc_TCQ,
+                    DonViSuNghiep_TSQ = xa.DonViSuNghiep_TSQ,
+                    ToChucKinhTe_KTQ = xa.ToChucKinhTe_KTQ,
+                    CongDongDanCu_CDQ = xa.CongDongDanCu_CDQ,
+                    HuyenId = huyenId,
+                    MaHuyen = maHuyen,
+                    Year = xa.Year,
+                    Active = true,
+                };
+                await _bieu01TKKK_HuyenRepos.InsertAsync(objhuyen);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        private async Task UpdateBieu01TKKK_Huyen(Bieu01TKKK_Xa xa, long huyenId, string maHuyen)
+        {
+            try
+            {
+                var objhuyen = await _bieu01TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.Id == huyenId && x.Ma == xa.Ma);
+                if (objhuyen != null)
+                {
+                    objhuyen.TongDienTichDVHC += xa.TongDienTichDVHC;
+                    objhuyen.TongSoTheoDoiTuongSuDung += xa.TongSoTheoDoiTuongSuDung;
+                    objhuyen.CaNhanTrongNuoc_CNV += xa.CaNhanTrongNuoc_CNV;
+                    objhuyen.NguoiVietNamONuocNgoai_CNN += xa.NguoiVietNamONuocNgoai_CNN;
+                    objhuyen.CoQuanNhaNuoc_TCN += xa.CoQuanNhaNuoc_TCN;
+                    objhuyen.DonViSuNghiep_TSN += xa.DonViSuNghiep_TSN;
+                    objhuyen.ToChucXaHoi_TXH += xa.ToChucXaHoi_TXH;
+                    objhuyen.ToChucKinhTe_TKT += xa.ToChucKinhTe_TKT;
+                    objhuyen.ToChucKhac_TKH += xa.ToChucKhac_TKH;
+                    objhuyen.ToChucTonGiao_TTG += xa.ToChucTonGiao_TTG;
+                    objhuyen.CongDongDanCu_CDS += xa.CongDongDanCu_CDS;
+                    objhuyen.ToChucNuocNgoai_TNG += xa.ToChucNuocNgoai_TNG;
+                    objhuyen.NguoiGocVietNamONuocNgoai_NGV += xa.NguoiGocVietNamONuocNgoai_NGV;
+                    objhuyen.ToChucKinhTeVonNuocNgoai_TVN += xa.ToChucKinhTeVonNuocNgoai_TVN;
+                    objhuyen.TongSoTheoDoiTuongDuocGiaoQuanLy += xa.TongSoTheoDoiTuongDuocGiaoQuanLy;
+                    objhuyen.CoQuanNhaNuoc_TCQ += xa.CoQuanNhaNuoc_TCQ;
+                    objhuyen.DonViSuNghiep_TSQ += xa.DonViSuNghiep_TSQ;
+                    objhuyen.ToChucKinhTe_KTQ += xa.ToChucKinhTe_KTQ;
+                    objhuyen.CongDongDanCu_CDQ += xa.CongDongDanCu_CDQ;
+                    await _bieu01TKKK_HuyenRepos.InsertAsync(objhuyen);
+                }
+                else
+                {
+                    await CreateBieu01TKKK_Huyen(xa, huyenId, maHuyen);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }
