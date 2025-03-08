@@ -29,8 +29,6 @@ namespace KiemKeDatDai
         {
             IsExistEmail = -1,
         }
-
-        public enum TRANG_THAI_DUYET
         public enum TRANG_THAI_DUYET
         {
             CHUA_GUI = 0,
