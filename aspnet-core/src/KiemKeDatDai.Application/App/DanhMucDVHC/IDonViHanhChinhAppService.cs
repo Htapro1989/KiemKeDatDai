@@ -11,7 +11,7 @@ namespace KiemKeDatDai.RisApplication
 {
     public interface IDonViHanhChinhAppService : IApplicationService
     {
-        Task<CommonResponseDto> GetByUser(long userId);
+        Task<CommonResponseDto> GetByUser(DVHCInput input);
         Task<CommonResponseDto> GetById(long id);
         Task<CommonResponseDto> CreateOrUpdate(DVHCInputDto input);
         Task<CommonResponseDto> Delete(long id);

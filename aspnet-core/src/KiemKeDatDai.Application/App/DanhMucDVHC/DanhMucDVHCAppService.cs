@@ -71,53 +71,59 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             //_iLogAppService = iLogAppService;
         }        
         [AbpAuthorize]
-        public async Task<CommonResponseDto> GetByUser(long userId)
+        public async Task<CommonResponseDto> GetByUser(DVHCInput input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 var lstDVHC = new List<DVHCOutputDto>();
                 PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
-                var userObj = await _userRepos.FirstOrDefaultAsync(x => x.Id == userId);
-                var dvhcId = userObj != null ? userObj.DonViHanhChinhId : 0;
-                if (dvhcId != 0)
+                var userObj = await _userRepos.FirstOrDefaultAsync(input.UserId.Value);
+                if (userObj != null)
                 {
-                    var query = (from  dvhc in _dvhcRepos.GetAll()
-                                 join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
-                                 where dvhc.Id == dvhcId
-                                 select new DVHCOutputDto
-                                 {
-                                     Id = dvhc.Id,
-                                     TenTinh = dvhc.TenTinh,
-                                     MaTinh = dvhc.MaTinh,
-                                     TenHuyen = dvhc.TenHuyen,
-                                     MaHuyen = dvhc.MaHuyen,
-                                     TenXa = dvhc.TenXa,
-                                     MaXa = dvhc.MaXa,
-                                     Name = dvhc.Name,
-                                     Parent_id = dvhc.Parent_id,
-                                     CapDVHCId = dvhc.CapDVHCId,
-                                     Active = dvhc.Active,
-                                     Year = dvhc.Year,
-                                     TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                     ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
-                                 });
-                    lstDVHC = await query.ToListAsync();
-                    commonResponseDto.ReturnValue = lstDVHC;
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
-                    commonResponseDto.Message = "Thành Công";
+                    var dvhcId = userObj.DonViHanhChinhId;
+                    if (dvhcId != 0)
+                    {
+                        var query = (from dvhc in _dvhcRepos.GetAll()
+                                     join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
+                                     where dvhc.Id == dvhcId && dvhc.Year == input.year
+                                     select new DVHCOutputDto
+                                     {
+                                         Id = dvhc.Id,
+                                         TenVung = dvhc.TenVung,
+                                         MaVung = dvhc.MaVung,
+                                         TenTinh = dvhc.TenTinh,
+                                         MaTinh = dvhc.MaTinh,
+                                         TenHuyen = dvhc.TenHuyen,
+                                         MaHuyen = dvhc.MaHuyen,
+                                         TenXa = dvhc.TenXa,
+                                         MaXa = dvhc.MaXa,
+                                         Name = dvhc.Name,
+                                         Parent_id = dvhc.Parent_id,
+                                         CapDVHCId = dvhc.CapDVHCId,
+                                         Active = dvhc.Active,
+                                         Year = dvhc.Year,
+                                         TrangThaiDuyet = dvhc.TrangThaiDuyet,
+                                         ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                                     });
+                        lstDVHC = await query.ToListAsync();
+                        commonResponseDto.ReturnValue = lstDVHC;
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                        commonResponseDto.Message = "Thành Công";
+                    }
+                    else
+                    {
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Message = "Không tìm thấy tài khoản người dùng trong hệ thống!";
+                    }
                 }
-                else
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Không tìm thấy tài khoản người dùng trong hệ thống!";
-                }
+                
             }
             catch (Exception ex)
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }
