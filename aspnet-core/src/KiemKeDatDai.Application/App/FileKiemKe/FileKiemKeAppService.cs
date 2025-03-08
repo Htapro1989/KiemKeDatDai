@@ -168,6 +168,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 throw;
             }
         }
+        // [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
         {
@@ -211,7 +212,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 }
 
                 //get dvhcid
-                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.year == input.Year);
+                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.year_id == input.Year);
                 if (currentFile != null)
                 {
                     //delete file
@@ -228,11 +229,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                     FileName = input.File.FileName,
                     FilePath = filePath,
                     MaDVHC = input.MaDVHC,
-                    year = input.Year,
+                    year_id = input.Year,
                     FileType = CommonEnum.FILE_KYTHONGKE,
                     DVHCId = objDVHC?.Id
                 };
-                await _fileRepos.InsertAsync(fileEntity);
+                var insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
+                fileEntity.Id = insertedFileID;
 
                 //push message to rabbitmq
                 await _rabbitMQService.SendMessage<EntitiesDb.File>(fileEntity);
@@ -246,6 +248,61 @@ namespace KiemKeDatDai.App.DMBieuMau
                 throw;
             }
             return commonResponseDto;
+        }
+
+        // [AbpAuthorize]
+        [HttpGet]
+        public async Task<IActionResult> DownloadFile(long year, string maDVHC)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.year_id == year && x.MaDVHC == maDVHC && x.FileType == CommonEnum.FILE_KYTHONGKE && !x.IsDeleted);
+            if (fileEntity == null)
+            {
+                return new NotFoundObjectResult(new { Message = "File not found on server" });
+            }
+
+            var filePath = fileEntity.FilePath;
+            if (!System.IO.File.Exists(filePath))
+            {
+                return new NotFoundObjectResult(new { Message = "File not found on server" });
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return new FileStreamResult(memory, GetContentType(filePath))
+            {
+                FileDownloadName = fileEntity.FileName
+            };
+        }
+
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types.ContainsKey(ext) ? types[ext] : "application/octet-stream";
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                { ".txt", "text/plain" },
+                { ".pdf", "application/pdf" },
+                { ".doc", "application/vnd.ms-word" },
+                { ".docx", "application/vnd.ms-word" },
+                { ".xls", "application/vnd.ms-excel" },
+                { ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+                { ".png", "image/png" },
+                { ".jpg", "image/jpeg" },
+                { ".jpeg", "image/jpeg" },
+                { ".gif", "image/gif" },
+                { ".csv", "text/csv" }
+            };
         }
     }
 }

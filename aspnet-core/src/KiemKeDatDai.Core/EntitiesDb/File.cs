@@ -16,7 +16,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string FilePath { get; set; }
         public long Url { get; set; }
         public bool Active { get; set; }
-        public long year { get; set; }
+        public long year_id { get; set; }
         public string MaDVHC { get; set; }
         public long? DVHCId { get; set; }
     }
