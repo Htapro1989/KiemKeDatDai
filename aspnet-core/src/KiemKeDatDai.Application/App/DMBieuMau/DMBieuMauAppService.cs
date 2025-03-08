@@ -78,8 +78,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var lstBM = new List<DMBieuMauOuputDto>();
-                PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
+                PagedResultDto<DMBieuMauOuputDto> pagedResultDto = new PagedResultDto<DMBieuMauOuputDto>();
                 var query = (from bm in _dmbmRepos.GetAll()
                              select new DMBieuMauOuputDto
                              {
@@ -87,18 +86,20 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  KyHieu = bm.KyHieu,
                                  NoiDung = bm.NoiDung,
                                  CapDVHC = bm.CapDVHC,
-                                 Active = bm.Active
+                                 //Active = bm.Active
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
-                lstBM = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
-                var totalCout = await query.CountAsync();
-                pagedResultDto.TotalCount = totalCout;
+                pagedResultDto.Items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
+                pagedResultDto.TotalCount = await query.CountAsync(); 
+                commonResponseDto.ReturnValue = pagedResultDto;
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);   
             }
             return commonResponseDto;
         }
@@ -109,8 +110,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var lstBM = new List<DMBieuMauOuputDto>();
-                PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
-                var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == dvhcId);
+                var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(dvhcId);
                 var dvhcLevel = dvhcObj != null ? dvhcObj.CapDVHCId : 0;
                 var query = (from bm in _dmbmRepos.GetAll()
                              join dmdvhcbm in _dmdvhcbmRepos.GetAll() on bm.Id equals dmdvhcbm.BieuMauId
@@ -121,7 +121,6 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  KyHieu = bm.KyHieu,
                                  NoiDung = bm.NoiDung,
                                  CapDVHC = bm.CapDVHC,
-                                 Active = bm.Active
                              });
                 lstBM = await query.ToListAsync();
                 commonResponseDto.ReturnValue = lstBM;
@@ -132,7 +131,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }
@@ -145,21 +144,14 @@ namespace KiemKeDatDai.App.DMBieuMau
                 var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
-                    var data = await _dmbmRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
+                    var data = await _dmbmRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
                         data.KyHieu = input.KyHieu;
                         data.NoiDung = input.NoiDung;
                         data.CapDVHC = input.CapDVHC;
-                        data.Active = input.Active;
+                        //data.Active = input.Active;
                         await _dmbmRepos.UpdateAsync(data);
-                        //insert log
-                        //var log = new LogInputDto
-                        //{
-                        //    UserId = currentUser.Id,
-                        //    Describle = "sửa dữ liệu thông tin hồ chứa"
-                        //};
-                        //_iLogAppService.Create(log);
                     }
                     else
                     {
@@ -172,13 +164,6 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     var objBM = input.MapTo<DMBieuMauInputDto>();
                     await _dmbmRepos.InsertAsync(objBM);
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Thêm dữ liệu thông tin hồ chứa"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -187,7 +172,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }
@@ -199,19 +184,12 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var currentUser = await GetCurrentUserAsync();
-                var objBM = await _dmbmRepos.FirstOrDefaultAsync(x => x.Id == id);
+                var objBM = await _dmbmRepos.FirstOrDefaultAsync(id);
                 if (objBM != null)
                 {
                     await _dmbmRepos.DeleteAsync(objBM);
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Xoá dữ liệu đơn vị hành chính"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 else
                 {
@@ -224,7 +202,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }

@@ -20,7 +20,4 @@
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AppCore\DanhMucDVHC\" />
-  </ItemGroup>
 </Project>
