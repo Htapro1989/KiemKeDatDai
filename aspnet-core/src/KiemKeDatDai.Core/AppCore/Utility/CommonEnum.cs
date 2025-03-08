@@ -9,6 +9,8 @@ namespace KiemKeDatDai
 {
     public static class CommonEnum
     {
+        public const string FILE_ATTACHMENT = "FILE_ATTACHMENT";
+        public const string FILE_KYTHONGKE = "FILE_KYTHONGKE";
         public enum RESPONSE_CODE
         {
             SUCCESS = 200,
@@ -28,6 +30,7 @@ namespace KiemKeDatDai
             IsExistEmail = -1,
         }
 
+        public enum TRANG_THAI_DUYET
         public enum TRANG_THAI_DUYET
         {
             CHUA_GUI = 0,

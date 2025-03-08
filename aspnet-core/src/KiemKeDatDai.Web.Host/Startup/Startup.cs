@@ -80,6 +80,7 @@ namespace KiemKeDatDai.Web.Host.Startup
                     )
                 )
             );
+            services.AddSingleton<RabbitMQService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
