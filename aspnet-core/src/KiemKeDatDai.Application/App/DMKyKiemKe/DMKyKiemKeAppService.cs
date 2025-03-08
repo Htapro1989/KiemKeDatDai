@@ -64,13 +64,12 @@ namespace KiemKeDatDai.App.DMBieuMau
             //_iLogAppService = iLogAppService;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> GetAll(DMKyKiemKeDto input)
+        public async Task<CommonResponseDto> GetAll(string filter)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 var lstBM = new List<DMKyKiemKeOuputDto>();
-                PagedResultDto<DMKyKiemKeDto> pagedResultDto = new PagedResultDto<DMKyKiemKeDto>();
                 var query = (from ky in _dmKyThongKeKiemKeRepos.GetAll()
                              select new DMKyKiemKeOuputDto
                              {
@@ -80,18 +79,17 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  Year = ky.Year,
                                  Active = ky.Active
                              })
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Ma.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Year == input.Year);
-                lstBM = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
-                var totalCout = await query.CountAsync();
-                pagedResultDto.TotalCount = totalCout;
+                             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Ma.ToLower().Contains(filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Name.ToLower().Contains(filter.ToLower()));
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }
@@ -101,7 +99,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var objKyKiemKe = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(x => x.Id == id);
+                var objKyKiemKe = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
                 commonResponseDto.ReturnValue = objKyKiemKe;
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -110,7 +108,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }
@@ -123,7 +121,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
-                    var data = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
+                    var data = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
                         data.Ma = input.Ma;
@@ -131,32 +129,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                         data.Year = input.Year;
                         data.Active = input.Active;
                         await _dmKyThongKeKiemKeRepos.UpdateAsync(data);
-                        //insert log
-                        //var log = new LogInputDto
-                        //{
-                        //    UserId = currentUser.Id,
-                        //    Describle = "sửa dữ liệu thông tin hồ chứa"
-                        //};
-                        //_iLogAppService.Create(log);
-                    }
-                    else
-                    {
-                        commonResponseDto.Message = "Xảy ra lỗi trong quá tình thêm mới!";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                        return commonResponseDto;
                     }
                 }
                 else
                 {
                     var objdata = input.MapTo<KyThongKeKiemKe>();
                     await _dmKyThongKeKiemKeRepos.InsertAsync(objdata);
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Thêm dữ liệu thông tin hồ chứa"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -165,7 +143,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }
@@ -177,32 +155,24 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var currentUser = await GetCurrentUserAsync();
-                var objdata = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(x => x.Id == id);
+                var objdata = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
                 if (objdata != null)
                 {
                     await _dmKyThongKeKiemKeRepos.DeleteAsync(objdata);
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Xoá dữ liệu đơn vị hành chính"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 else
                 {
                     commonResponseDto.Message = "Kỳ thống kê kiểm kê này không tồn tại";
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    return commonResponseDto;
                 }
             }
             catch (Exception ex)
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                throw;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }

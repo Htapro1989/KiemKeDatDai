@@ -22,4 +22,9 @@ namespace KiemKeDatDai.Dto
     {
         public int ChildStatus { get; set; }
     }
+    public class DVHCInput 
+    {
+        public long? UserId { get; set; }
+        public long? year { get; set; }
+    }
 }

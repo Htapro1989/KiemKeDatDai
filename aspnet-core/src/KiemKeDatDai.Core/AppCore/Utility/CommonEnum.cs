@@ -31,12 +31,26 @@ namespace KiemKeDatDai
         }
 
         public enum TRANG_THAI_DUYET
+        public enum TRANG_THAI_DUYET
         {
             CHUA_GUI = 0,
-            CHUA_DUYET = 1,
+            CHO_DUYET = 1,
             DA_DUYET = 2
         }
-        
+
+        public enum HAM_DUYET
+        {
+            DUYET = 1,
+            HUY = 2
+        }
+        public enum LOAI_DE_NGHI_DUYET_TAI_KHOAN_DOANH_NGHIEP
+        {
+            [EnumDisplayString("Đề nghị tạo tài khoản")]
+            DE_NGHI_KHOI_TAO_TAI_KHOAN = 1,
+            [EnumDisplayString("Đề nghị thay đổi thông tin")]
+            DE_NGHI_THAY_DOI_THONG_TIN = 2
+        }
+
         public class ComboBoxDto
         {
             public long Id { get; set; }

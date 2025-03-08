@@ -23,8 +23,6 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal BoiDapVungBoBien{ get; set; }
         public string MaHuyen  { get; set; }
         public long? HuyenId { get; set; }
-        public DateTime NgayLapBieu { get; set; }
-        public DateTime NgayDuyet { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
     }

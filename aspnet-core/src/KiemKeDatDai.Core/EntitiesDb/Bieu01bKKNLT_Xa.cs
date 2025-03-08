@@ -24,8 +24,6 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal DatBiLanChiem { get; set; }
         public decimal DatTranhChap { get; set; }
         public decimal DatGiaoQuanLyNhungChuaSuDung{ get; set; }
-        public DateTime NgayLapBieu { get; set; }
-        public DateTime NgayDuyet { get; set; }
         public string MaXa { get; set; }
         public long? XaId { get; set; }
         public long Year { get; set; }

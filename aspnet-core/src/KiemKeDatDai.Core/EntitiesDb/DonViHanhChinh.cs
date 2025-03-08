@@ -11,6 +11,8 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("DonViHanhChinh")]
     public class DonViHanhChinh : FullAuditedEntity<long>
     {
+        public string TenVung { get; set; }
+        public string MaVung { get; set; }
         public string TenTinh { get; set; }
         public string MaTinh { get; set; }
         public string TenHuyen { get; set; }
@@ -23,6 +25,10 @@ namespace KiemKeDatDai.EntitiesDb
         public long CapDVHCId { get; set; }
         public bool Active { get; set; }
         public long Year { get; set; }
-        public int TrangThaiDuyet { get; set; }
+        public int? TrangThaiDuyet { get; set; }
+        public DateTime? NgayGui { get; set; }
+        public DateTime? NgayDuyet { get; set; }
+        public int? SoDVHCCon { get; set; }
+        public int? SoDVHCDaDuyet { get; set; }
     }
 }

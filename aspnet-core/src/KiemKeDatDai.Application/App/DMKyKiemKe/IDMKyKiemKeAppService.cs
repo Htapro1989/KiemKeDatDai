@@ -1,6 +1,6 @@
 ﻿using Abp.Application.Services;
-using KiemKeDatDai.Dto;
 using KiemKeDatDai.ApplicationDto;
+using KiemKeDatDai.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.RisApplication
 {
-    public interface IDonViHanhChinhAppService : IApplicationService
+    public interface IDMKyKiemKeAppService : IApplicationService
     {
-        Task<CommonResponseDto> GetByUser(long userId);
-        Task<CommonResponseDto> GetById(long id);
-        Task<CommonResponseDto> CreateOrUpdate(DVHCInputDto input);
+        Task<CommonResponseDto> GetAll(string filter);
+        Task<CommonResponseDto> GetById(long dvhcId);
+        Task<CommonResponseDto> CreateOrUpdate(DMKyKiemKeInputDto input);
         Task<CommonResponseDto> Delete(long id);
     }
 }
