@@ -33,9 +33,6 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal DonViSuNghiep_TSQ { get; set; }
         public decimal ToChucKinhTe_KTQ { get; set; }
         public decimal CongDongDanCu_CDQ { get; set; }
-        public DateTime NgayLapBieu { get; set; }
-        public DateTime NgayGui { get; set; }
-        public DateTime NgayDuyet { get; set; }
         public string MaVung { get; set; }
         public long? VungId { get; set; }
         public long Year { get; set; }

@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250308063544_update_table_DVHC_Bieu_08032025")]
+    partial class update_table_DVHC_Bieu_08032025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
