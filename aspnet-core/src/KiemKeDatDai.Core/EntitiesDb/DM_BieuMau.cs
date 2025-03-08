@@ -14,6 +14,6 @@ namespace KiemKeDatDai.EntitiesDb
         public string KyHieu { get; set; }
         public string NoiDung { get; set; }
         public string CapDVHC { get; set; }
-        public bool Active { get; set; }
+        public bool? Active { get; set; }
     }
 }
