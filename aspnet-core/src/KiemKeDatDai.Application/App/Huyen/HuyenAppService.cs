@@ -71,6 +71,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             _dmKyThongKeKiemKeRepos = dmKyThongKeKiemKeRepos;
             _bieu01TKKK_HuyenRepos = bieu01TKKK_HuyenRepos;
             _bieu01TKKK_XaRepos = bieu01TKKK_XaRepos;
+            _unitOfWorkManager = unitOfWorkManager;
             _objectMapper = objectMapper;
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
@@ -80,7 +81,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
 
         [AbpAuthorize]
-        public async Task<CommonResponseDto> DuyetBaoCaoXa(long xaId)
+        public async Task<CommonResponseDto> DuyetBaoCaoXa(long xaId, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -103,7 +104,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             if (xa != null)
                             {
                                 //gọi hàm update biểu huyện
-                                commonResponseDto = await CreateOrUpdateBieuHuyen(objdata, xaId, (int)HAM_DUYET.DUYET);
+                                commonResponseDto = await CreateOrUpdateBieuHuyen(objdata, xaId, year, (int)HAM_DUYET.DUYET);
 
                                 #region cập nhật DVHC xã sau khi duyệt xã
                                 xa.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
@@ -145,7 +146,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> HuyDuyetBaoCaoXa(long xaId)
+        public async Task<CommonResponseDto> HuyDuyetBaoCaoXa(long xaId, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -168,7 +169,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             if (xa != null)
                             {
                                 //gọi hàm update biểu huyện
-                                commonResponseDto = await CreateOrUpdateBieuHuyen(objdata, xaId, (int)HAM_DUYET.HUY);
+                                commonResponseDto = await CreateOrUpdateBieuHuyen(objdata, xaId, year, (int)HAM_DUYET.HUY);
 
                                 #region cập nhật DVHC xã sau khi duyệt xã
                                 xa.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
@@ -218,6 +219,11 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
                     if (objdata != null)
                     {
+                        if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon)
+                        {
+                            commonResponseDto.Message = "Chưa duyệt hết các xã trong huyện";
+                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        }
                         objdata.NgayGui = DateTime.Now;
                         objdata.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
                         await _dvhcRepos.UpdateAsync(objdata);
@@ -240,14 +246,14 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        private async Task<CommonResponseDto> CreateOrUpdateBieuHuyen(DonViHanhChinh huyen, long xaId, int hamduyet)
+        private async Task<CommonResponseDto> CreateOrUpdateBieuHuyen(DonViHanhChinh huyen, long xaId, long year, int hamduyet)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            var data_xa = await _bieu01TKKK_XaRepos.GetAllListAsync(x => x.Id == xaId);
-            if (data_xa != null)
+            var data_xa = await _bieu01TKKK_XaRepos.GetAllListAsync(x => x.XaId == xaId && x.Year == year);
+            if (data_xa.Count > 0)
             {
-                await CreateOrUpdateBieu01TKKK_Huyen(data_xa, huyen.Id, huyen.MaHuyen, hamduyet);
+                await CreateOrUpdateBieu01TKKK_Huyen(data_xa, huyen.Id, huyen.MaHuyen, year, hamduyet);
             }
             else
             {
@@ -261,9 +267,9 @@ namespace KiemKeDatDai.App.DMBieuMau
         }
 
         #region Biểu 01TKKK
-        private async Task CreateOrUpdateBieu01TKKK_Huyen(List<Bieu01TKKK_Xa> xa, long huyenId, string maHuyen, int hamduyet)
+        private async Task CreateOrUpdateBieu01TKKK_Huyen(List<Bieu01TKKK_Xa> xa, long huyenId, string maHuyen, long year, int hamduyet)
         {
-            var data_huyen = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.Id == huyenId);
+            var data_huyen = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.HuyenId == huyenId && x.Year == year);
             if (data_huyen.Count == 0)
             {
                 foreach (var item in xa)
@@ -277,7 +283,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 foreach (var item in xa)
                 {
                     //Cập nhật các bản ghi huyện tương ứng với bản ghi xã
-                    await UpdateBieu01TKKK_Huyen(item, huyenId, maHuyen, hamduyet);
+                    await UpdateBieu01TKKK_Huyen(item, huyenId, maHuyen, year, hamduyet);
                 }
             }
         }
@@ -322,11 +328,11 @@ namespace KiemKeDatDai.App.DMBieuMau
                 Logger.Error(ex.Message);
             }
         }
-        private async Task UpdateBieu01TKKK_Huyen(Bieu01TKKK_Xa xa, long huyenId, string maHuyen, int hamduyet)
+        private async Task UpdateBieu01TKKK_Huyen(Bieu01TKKK_Xa xa, long huyenId, string maHuyen, long year, int hamduyet)
         {
             try
             {
-                var objhuyen = await _bieu01TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.Id == huyenId && x.Ma == xa.Ma);
+                var objhuyen = await _bieu01TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.HuyenId == huyenId && x.Ma == xa.Ma && x.Year == year);
                 if (objhuyen.Id > 0)
                 {
                     //update duyệt xã
