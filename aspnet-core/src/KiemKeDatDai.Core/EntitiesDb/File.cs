@@ -13,7 +13,7 @@ namespace KiemKeDatDai.EntitiesDb
     {
         public string FileName { get; set; }
         public string FileType { get; set; }
-        public long FilePath { get; set; }
+        public string FilePath { get; set; }
         public long Url { get; set; }
         public bool Active { get; set; }
         public long year { get; set; }
