@@ -20,5 +20,6 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal DienTich { get; set; }
         public long SoLuong { get; set; }
         public long LoaiChiTieu { get; set; }
+        long year { get; set; }
     }
 }

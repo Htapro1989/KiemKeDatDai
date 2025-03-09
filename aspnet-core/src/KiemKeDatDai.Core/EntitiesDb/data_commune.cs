@@ -29,7 +29,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string MdSDSanGon { get; set; }
         public string MdSDSanBay { get; set; }
         public long chiTieuId { get; set; }
-        public long year { get; set; }
         public bool? Status { get; set; }
+        public long Year { get; set; }
     }
 }

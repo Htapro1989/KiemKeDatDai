@@ -206,5 +206,37 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDetailBieuByKyHieu(long dvhcId)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var lstBM = new List<DMBieuMauOuputDto>();
+                var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(dvhcId);
+                var dvhcLevel = dvhcObj != null ? dvhcObj.CapDVHCId : 0;
+                var query = (from bm in _dmbmRepos.GetAll()
+                             join dmdvhcbm in _dmdvhcbmRepos.GetAll() on bm.Id equals dmdvhcbm.BieuMauId
+                             where dmdvhcbm.CapDVHCId == dvhcLevel
+                             select new DMBieuMauOuputDto
+                             {
+                                 Id = bm.Id,
+                                 KyHieu = bm.KyHieu,
+                                 NoiDung = bm.NoiDung,
+                                 CapDVHC = bm.CapDVHC,
+                             });
+                lstBM = await query.ToListAsync();
+                commonResponseDto.ReturnValue = lstBM;
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
     }
 }

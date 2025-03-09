@@ -20,4 +20,7 @@ namespace KiemKeDatDai.Dto
     public class DMBieuMauOuputDto : DM_BieuMau
     {
     }
+    public class BieuMauOuputDto
+    {
+    }
 }
