@@ -212,7 +212,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 }
 
                 //get dvhcid
-                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.year_id == input.Year);
+                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year);
                 if (currentFile != null)
                 {
                     //delete file
@@ -229,7 +229,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     FileName = input.File.FileName,
                     FilePath = filePath,
                     MaDVHC = input.MaDVHC,
-                    year_id = input.Year,
+                    Year = input.Year,
                     FileType = CommonEnum.FILE_KYTHONGKE,
                     DVHCId = objDVHC?.Id
                 };
@@ -255,7 +255,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         public async Task<IActionResult> DownloadFile(long year, string maDVHC)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
-            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.year_id == year && x.MaDVHC == maDVHC && x.FileType == CommonEnum.FILE_KYTHONGKE && !x.IsDeleted);
+            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Year == year && x.MaDVHC == maDVHC && x.FileType == CommonEnum.FILE_KYTHONGKE && !x.IsDeleted);
             if (fileEntity == null)
             {
                 return new NotFoundObjectResult(new { Message = "File not found on server" });
