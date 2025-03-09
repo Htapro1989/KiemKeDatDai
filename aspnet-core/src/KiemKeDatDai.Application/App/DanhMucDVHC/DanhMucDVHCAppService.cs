@@ -294,20 +294,35 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     var baoCaoDVHC = new BaoCaoDonViHanhChinhOutPutDto
                     {
                         Id = objdata.Id,
-                        Ten = objdata.TenTinh,
+                        Ten = objdata.Name,
+                        ParentId = objdata.Parent_id,
+                        NgayCapNhat = objdata.NgayGui,
+                        Tong = objdata.SoDVHCCon,
+                        TongDuyet = objdata.SoDVHCDaDuyet,
+                        TongNop = await _dvhcRepos.CountAsync(x=>x.Parent_id==objdata.Id && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET),
                     };
-                    if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon)
+                    lstBaoCao.Add(baoCaoDVHC);
+
+                    var lstChild = await _dvhcRepos.GetAllListAsync(x => x.Parent_id == objdata.Id);
+                    if (lstChild != null)
                     {
-                        commonResponseDto.Message = "Chưa duyệt hết các xã trong huyện";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        lstBaoCao.AddRange(lstChild.Select(x => new BaoCaoDonViHanhChinhOutPutDto
+                        {
+                            Id = x.Id,
+                            Ten = x.Name,
+                            ParentId = x.Parent_id,
+                            NgayCapNhat = x.NgayGui,
+                            TongDuyet = x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0,
+                            TongNop = x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0,
+                        }));
                     }
-                    objdata.NgayGui = DateTime.Now;
-                    objdata.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
-                    await _dvhcRepos.UpdateAsync(objdata);
+                    commonResponseDto.ReturnValue = lstBaoCao;
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
-                    commonResponseDto.Message = "Huyện này không tồn tại";
+                    commonResponseDto.Message = "ĐVHC này không tồn tại";
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 }
             }

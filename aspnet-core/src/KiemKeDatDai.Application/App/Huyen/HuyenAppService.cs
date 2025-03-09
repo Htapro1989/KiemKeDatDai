@@ -119,10 +119,17 @@ namespace KiemKeDatDai.App.DMBieuMau
                             }
 
                             #region cập nhật DVHC huyện sau khi duyệt xã
-                            objdata.SoDVHCDaDuyet++;
+                            if (objdata.SoDVHCDaDuyet == null)
+                            {
+                                objdata.SoDVHCDaDuyet = 1;
+                            }
+                            else
+                            {
+                                objdata.SoDVHCDaDuyet++;
+                            }
                             if (objdata.SoDVHCCon == null)
                             {
-                                objdata.SoDVHCCon = await _dvhcRepos.GetAll().Where(x => x.Parent_id == currentUser.DonViHanhChinhId.Value).CountAsync();
+                                objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_id == currentUser.DonViHanhChinhId.Value);
                             }
                             await _dvhcRepos.UpdateAsync(objdata);
                             #endregion

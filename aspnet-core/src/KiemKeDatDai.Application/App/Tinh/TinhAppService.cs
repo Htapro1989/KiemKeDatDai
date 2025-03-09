@@ -119,10 +119,17 @@ namespace KiemKeDatDai.App.DMBieuMau
                             }
 
                             #region cập nhật DVHC tỉnh sau khi duyệt huyện
-                            objdata.SoDVHCDaDuyet++;
+                            if (objdata.SoDVHCDaDuyet == null)
+                            {
+                                objdata.SoDVHCDaDuyet = 1;
+                            }
+                            else
+                            {
+                                objdata.SoDVHCDaDuyet++;
+                            }
                             if (objdata.SoDVHCCon == null)
                             {
-                                objdata.SoDVHCCon = await _dvhcRepos.GetAll().Where(x => x.Parent_id == currentUser.DonViHanhChinhId.Value).CountAsync();
+                                objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_id == currentUser.DonViHanhChinhId.Value);
                             }
                             await _dvhcRepos.UpdateAsync(objdata);
                             #endregion
@@ -250,7 +257,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            var data_huyen = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.HuyenId == huyenId);
+            var data_huyen = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.HuyenId == huyenId && x.Year == year);
             if (data_huyen != null)
             {
                 await CreateOrUpdateBieu01TKKK_Tinh(data_huyen, tinh.Id, tinh.MaHuyen, year, hamduyet);
@@ -269,7 +276,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         #region Biểu 01TKKK
         private async Task CreateOrUpdateBieu01TKKK_Tinh(List<Bieu01TKKK_Huyen> huyen, long tinhId, string maTinh, long year, int hamduyet)
         {
-            var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.TinhId == tinhId);
+            var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.TinhId == tinhId && x.Year == year);
             if (data_tinh.Count == 0)
             {
                 foreach (var item in huyen)
@@ -332,7 +339,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             try
             {
-                var objtinh = await _bieu01TKKK_TinhRepos.FirstOrDefaultAsync(x => x.TinhId == tinhId && x.Ma == huyen.Ma);
+                var objtinh = await _bieu01TKKK_TinhRepos.FirstOrDefaultAsync(x => x.TinhId == tinhId && x.Ma == huyen.Ma && x.Year == year);
                 if (objtinh.Id > 0)
                 {
                     //update duyệt xã
