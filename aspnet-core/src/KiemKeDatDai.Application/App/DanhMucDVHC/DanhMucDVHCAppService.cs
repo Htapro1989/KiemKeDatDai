@@ -28,6 +28,8 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
+using static KiemKeDatDai.CommonEnum;
+using System.Transactions;
 
 namespace KiemKeDatDai.App.DanhMucDVHC
 {
@@ -69,7 +71,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
-        }        
+        }
         [AbpAuthorize]
         public async Task<CommonResponseDto> GetByUser(DVHCInput input)
         {
@@ -117,7 +119,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         commonResponseDto.Message = "Không tìm thấy tài khoản người dùng trong hệ thống!";
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -276,6 +278,46 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             }
             return commonResponseDto;
         }
-       
+
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> BaoCaoDVHC()
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            try
+            {
+                var currentUser = await GetCurrentUserAsync();
+                var lstBaoCao = new List<BaoCaoDonViHanhChinhOutPutDto>();
+                var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+                if (objdata != null)
+                {
+                    var baoCaoDVHC = new BaoCaoDonViHanhChinhOutPutDto
+                    {
+                        Id = objdata.Id,
+                        Ten = objdata.TenTinh,
+                    };
+                    if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon)
+                    {
+                        commonResponseDto.Message = "Chưa duyệt hết các xã trong huyện";
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    }
+                    objdata.NgayGui = DateTime.Now;
+                    objdata.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
+                    await _dvhcRepos.UpdateAsync(objdata);
+                }
+                else
+                {
+                    commonResponseDto.Message = "Huyện này không tồn tại";
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                }
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Fatal(ex.Message);
+            }
+            return commonResponseDto;
+        }
     }
 }
