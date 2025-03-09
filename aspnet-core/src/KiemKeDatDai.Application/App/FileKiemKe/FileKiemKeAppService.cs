@@ -168,7 +168,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 throw;
             }
         }
-        // [AbpAuthorize]
+        [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
         {
@@ -250,7 +250,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        // [AbpAuthorize]
+        [AbpAuthorize]
         [HttpGet]
         public async Task<IActionResult> DownloadFile(long year, string maDVHC)
         {
