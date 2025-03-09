@@ -34,7 +34,7 @@ using System.Transactions;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
-    public class XaAppService : KiemKeDatDaiAppServiceBase, IXaAppService
+    public class BaoCaoAppService : KiemKeDatDaiAppServiceBase, IBaoCaoAppService
     {
         private readonly ICacheManager _cacheManager;
         private readonly IIocResolver _iocResolver;
@@ -52,7 +52,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
         private readonly ICache mainCache;
 
-        public XaAppService(ICacheManager cacheManager,
+        public BaoCaoAppService(ICacheManager cacheManager,
             IIocResolver iocResolver,
             IRepository<KyThongKeKiemKe, long> dmKyThongKeKiemKeRepos,
             IRepository<DonViHanhChinh, long> dvhcRepos,
@@ -81,7 +81,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
 
         [AbpAuthorize]
-        public async Task<CommonResponseDto> NopBaoCaoHuyen()
+        public async Task<CommonResponseDto> NopBaoCao()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -93,15 +93,22 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
                     if (objdata != null)
                     {
+                        if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon && objdata.CapDVHCId != 4)
+                        {
+                            commonResponseDto.Message = "Chưa duyệt hết các ĐVHC trực thuộc";
+                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        }
                         objdata.NgayGui = DateTime.Now;
                         objdata.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
                         await _dvhcRepos.UpdateAsync(objdata);
                     }
                     else
                     {
-                        commonResponseDto.Message = "Xã này không tồn tại";
+                        commonResponseDto.Message = "ĐVHC này không tồn tại";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     }
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Thành Công";
                     uow.Complete();
                 }
                 catch (Exception ex)

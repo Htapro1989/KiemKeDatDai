@@ -213,45 +213,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
-        public async Task<CommonResponseDto> NopBaoCaoTinh()
-        {
-            CommonResponseDto commonResponseDto = new CommonResponseDto();
-
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
-            {
-                try
-                {
-                    var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
-                    if (objdata != null)
-                    {
-                        if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon)
-                        {
-                            commonResponseDto.Message = "Chưa duyệt hết các xã trong huyện";
-                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                        }
-                        objdata.NgayGui = DateTime.Now;
-                        objdata.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
-                        await _dvhcRepos.UpdateAsync(objdata);
-                    }
-                    else
-                    {
-                        commonResponseDto.Message = "Huyện này không tồn tại";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    }
-                    uow.Complete();
-                }
-                catch (Exception ex)
-                {
-                    uow.Dispose();
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = ex.Message;
-                    Logger.Fatal(ex.Message);
-                }
-            }
-            return commonResponseDto;
-        }
 
 
         private async Task<CommonResponseDto> CreateOrUpdateBieuHuyen(DonViHanhChinh huyen, long xaId, long year, int hamduyet)

@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.RisApplication
 {
-    public interface IXaAppService : IApplicationService
+    public interface IBaoCaoAppService : IApplicationService
     {
-        Task<CommonResponseDto> NopBaoCaoHuyen();
+        Task<CommonResponseDto> NopBaoCao();
     }
 }

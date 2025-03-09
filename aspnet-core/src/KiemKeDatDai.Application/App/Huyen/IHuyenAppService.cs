@@ -13,6 +13,5 @@ namespace KiemKeDatDai.RisApplication
     {
         Task<CommonResponseDto> DuyetBaoCaoXa(long xaId, long year);
         Task<CommonResponseDto> HuyDuyetBaoCaoXa(long xaId, long year);
-        Task<CommonResponseDto> NopBaoCaoTinh();
     }
 }
