@@ -15,5 +15,6 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> GetByDVHC(long dvhcId);
         Task<CommonResponseDto> CreateOrUpdate(DMBieuMauInputDto input);
         Task<CommonResponseDto> Delete(long id);
+        Task<CommonResponseDto> GetDetailBieuByKyHieu(BieuMauDetailInputDto input);
     }
 }

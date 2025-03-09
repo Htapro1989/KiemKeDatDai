@@ -61,7 +61,6 @@ namespace KiemKeDatDai.Web.Host.Startup
                                 .ToArray()
                         )
                         .WithMethods("PUT", "DELETE", "GET", "POST", "OPTIONS")
-                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()

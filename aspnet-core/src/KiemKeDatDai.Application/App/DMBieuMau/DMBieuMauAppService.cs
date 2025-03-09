@@ -38,6 +38,11 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IRepository<DM_BieuMau, long> _dmbmRepos;
         private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
         private readonly IRepository<DM_DVCH_BM, long> _dmdvhcbmRepos;
+        private readonly IRepository<Bieu01TKKK, long> _bieu01TKKKRepos;
+        private readonly IRepository<Bieu01TKKK_Xa, long> _bieu01TKKK_XaRepos;
+        private readonly IRepository<Bieu01TKKK_Huyen, long> _bieu01TKKK_HuyenRepos;
+        private readonly IRepository<Bieu01TKKK_Tinh, long> _bieu01TKKK_TinhRepos;
+        private readonly IRepository<Bieu01TKKK_Vung, long> _bieu01TKKK_VungRepos;
         private readonly IRepository<User, long> _userRepos;
         private readonly IObjectMapper _objectMapper;
         private readonly IUserAppService _iUserAppService;
@@ -52,6 +57,11 @@ namespace KiemKeDatDai.App.DMBieuMau
             IRepository<DM_BieuMau, long> dmbmRepos,
             IRepository<DonViHanhChinh, long> dvhcRepos,
             IRepository<DM_DVCH_BM, long> dmdvhcbmRepos,
+            IRepository<Bieu01TKKK, long> bieu01TKKKRepos,
+            IRepository<Bieu01TKKK_Xa, long> bieu01TKKK_XaRepos,
+            IRepository<Bieu01TKKK_Huyen, long> bieu01TKKK_HuyenRepos,
+            IRepository<Bieu01TKKK_Tinh, long> bieu01TKKK_TinhRepos,
+            IRepository<Bieu01TKKK_Vung, long> bieu01TKKK_VungRepos,
             IRepository<User, long> userRepos,
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
@@ -66,6 +76,11 @@ namespace KiemKeDatDai.App.DMBieuMau
             _dmbmRepos = dmbmRepos;
             _dvhcRepos = dvhcRepos;
             _dmdvhcbmRepos = dmdvhcbmRepos;
+            _bieu01TKKKRepos = bieu01TKKKRepos;
+            _bieu01TKKK_XaRepos = bieu01TKKK_XaRepos;
+            _bieu01TKKK_HuyenRepos = bieu01TKKK_HuyenRepos;
+            _bieu01TKKK_TinhRepos = bieu01TKKK_TinhRepos;
+            _bieu01TKKK_VungRepos = bieu01TKKK_VungRepos;
             _objectMapper = objectMapper;
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
@@ -207,26 +222,49 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> GetDetailBieuByKyHieu(long dvhcId)
+        public async Task<CommonResponseDto> GetDetailBieuByKyHieu(BieuMauDetailInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var lstBM = new List<DMBieuMauOuputDto>();
-                var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(dvhcId);
-                var dvhcLevel = dvhcObj != null ? dvhcObj.CapDVHCId : 0;
-                var query = (from bm in _dmbmRepos.GetAll()
-                             join dmdvhcbm in _dmdvhcbmRepos.GetAll() on bm.Id equals dmdvhcbm.BieuMauId
-                             where dmdvhcbm.CapDVHCId == dvhcLevel
-                             select new DMBieuMauOuputDto
-                             {
-                                 Id = bm.Id,
-                                 KyHieu = bm.KyHieu,
-                                 NoiDung = bm.NoiDung,
-                                 CapDVHC = bm.CapDVHC,
-                             });
-                lstBM = await query.ToListAsync();
-                commonResponseDto.ReturnValue = lstBM;
+                switch (input.KyHieu)
+                {
+                    case "01/TKKK":
+                        {
+                            switch (input.CapDVHC)
+                            {
+                                case 1:
+                                    {
+                                        var data = await _bieu01TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.VungId == input.DVHCId);
+                                        commonResponseDto.ReturnValue = data;
+                                        break;
+                                    }
+                                case 2:
+                                    {
+                                        var data = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.TinhId == input.DVHCId);
+                                        commonResponseDto.ReturnValue = data;
+                                        break;
+                                    }
+                                case 3:
+                                    {
+                                        var data = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.HuyenId == input.DVHCId);
+                                        commonResponseDto.ReturnValue = data;
+                                        break;
+                                    }
+                                case 4:
+                                    {
+                                        var data = await _bieu01TKKK_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.XaId == input.DVHCId);
+                                        commonResponseDto.ReturnValue = data;
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    default:
+                        break;
+                }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
