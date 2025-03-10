@@ -81,7 +81,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
 
         [AbpAuthorize]
-        public async Task<CommonResponseDto> NopBaoCao()
+        public async Task<CommonResponseDto> NopBaoCao(long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -90,7 +90,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x=>x.Ma == currentUser.DonViHanhChinhCode && x.Year == year);
                     if (objdata != null)
                     {
                         if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon && objdata.CapDVHCId != 4)

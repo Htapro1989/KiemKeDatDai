@@ -83,7 +83,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
 
         [AbpAuthorize]
-        public async Task<CommonResponseDto> DuyetBaoCaoTinh(long tinhId, long year)
+        public async Task<CommonResponseDto> DuyetBaoCaoTinh(string ma, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -95,7 +95,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
                     if (objdata != null)
                     {
-                        var tinh = await _dvhcRepos.FirstOrDefaultAsync(tinhId);
+                        var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                         var vung = await _dvhcRepos.FirstOrDefaultAsync(x=>x.MaVung == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.Vung);
                         if (vung == null)
                         {
@@ -105,7 +105,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         if (tinh != null)
                         {
                             //gọi hàm update biểu tỉnh
-                            commonResponseDto = await CreateOrUpdateBieuTinh(objdata, tinhId, vung.Id, vung.MaVung, year, (int)HAM_DUYET.DUYET);
+                            commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, vung.Id, vung.MaVung, year, (int)HAM_DUYET.DUYET);
 
                             #region cập nhật DVHC tỉnh sau khi duyệt tỉnh
                             tinh.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
@@ -153,7 +153,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> HuyDuyetBaoCaoTinh(long tinhId, long year)
+        public async Task<CommonResponseDto> HuyDuyetBaoCaoTinh(string ma, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -165,12 +165,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
                     if (objdata != null)
                     {
-                        var tinh = await _dvhcRepos.FirstOrDefaultAsync(tinhId);
+                        var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                         var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.MaVung == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.Vung);
                         if (tinh != null)
                         {
                             //gọi hàm update biểu tỉnh
-                            commonResponseDto = await CreateOrUpdateBieuTinh(objdata, tinhId, vung.Id, vung.MaVung, year, (int)HAM_DUYET.HUY);
+                            commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, vung.Id, vung.MaVung, year, (int)HAM_DUYET.HUY);
 
                             #region cập nhật DVHC tỉnh sau khi duyệt tinh
                             tinh.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
@@ -207,11 +207,11 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, long tinhId, long vungId, string maVung, long year, int hamduyet)
+        private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, string ma, long vungId, string maVung, long year, int hamduyet)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.TinhId == tinhId && x.Year == year);
+            var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.Ma == ma && x.Year == year);
             if (data_tinh != null)
             {
                 await CreateOrUpdateBieu01TKKK_Tinh(data_tinh, vungId, maVung, year, hamduyet);
@@ -324,7 +324,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var objTW = await _bieu01TKKKRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year);
-                var objVung = await _bieu01TKKK_VungRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year && x.VungId == vungId);
+                var objVung = await _bieu01TKKK_VungRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year && x.MaVung == maVung);
                 if (objTW.Id > 0)
                 {
                     //update duyệt tỉnh

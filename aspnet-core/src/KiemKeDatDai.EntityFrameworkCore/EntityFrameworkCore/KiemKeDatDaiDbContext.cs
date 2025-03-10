@@ -26,7 +26,7 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Bieu01KKSL_Tinh> Bieu01KKSL_Tinh { get; set; }
         public virtual DbSet<Bieu01KKSL_Huyen> Bieu01KKSL_Huyen { get; set; }
         public virtual DbSet<Bieu01KKSL_Xa> Bieu01KKSL_Xa { get; set; }
-        public virtual DbSet<Bieu02KKSL> Bieu02KKSL { get; set; }
+        public virtual DbSet<Bieu06TKKKQPAN> Bieu02KKSL { get; set; }
         public virtual DbSet<Bieu02KKSL_Vung> Bieu02KKSL_Vung { get; set; }
         public virtual DbSet<Bieu02KKSL_Tinh> Bieu02KKSL_Tinh { get; set; }
         public virtual DbSet<Bieu02KKSL_Huyen> Bieu02KKSL_Huyen { get; set; }
@@ -51,6 +51,36 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Bieu01TKKK_Tinh> Bieu01TKKK_Tinh { get; set; }
         public virtual DbSet<Bieu01TKKK_Huyen> Bieu01TKKK_Huyen { get; set; }
         public virtual DbSet<Bieu01TKKK_Xa> Bieu01TKKK_Xa { get; set; }
+
+        public virtual DbSet<Bieu02TKKK> Bieu02TKKK { get; set; }
+        public virtual DbSet<Bieu02TKKK_Vung> Bieu02TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu02TKKK_Tinh> Bieu02TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu02TKKK_Huyen> Bieu02TKKK_Huyen { get; set; }
+        public virtual DbSet<Bieu02TKKK_Xa> Bieu02TKKK_Xa { get; set; }
+
+        public virtual DbSet<Bieu03TKKK> Bieu03TKKK { get; set; }
+        public virtual DbSet<Bieu03TKKK_Vung> Bieu03TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu03TKKK_Tinh> Bieu03TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu03TKKK_Huyen> Bieu03TKKK_Huyen { get; set; }
+
+        public virtual DbSet<Bieu04TKKK> Bieu04TKKK { get; set; }
+        public virtual DbSet<Bieu04TKKK_Vung> Bieu04TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu04TKKK_Tinh> Bieu04TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu04TKKK_Huyen> Bieu04TKKK_Huyen { get; set; }
+        public virtual DbSet<Bieu04TKKK_Xa> Bieu04TKKK_Xa { get; set; }
+
+        public virtual DbSet<Bieu05TKKK> Bieu05TKKK { get; set; }
+        public virtual DbSet<Bieu05TKKK_Vung> Bieu05TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu05TKKK_Tinh> Bieu05TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu05TKKK_Huyen> Bieu05TKKK_Huyen { get; set; }
+        public virtual DbSet<Bieu05TKKK_Xa> Bieu05TKKK_Xa { get; set; }
+
+        public virtual DbSet<Bieu06TKKKQPAN> Bieu06TKKKQPAN { get; set; }
+        public virtual DbSet<Bieu06TKKKQPAN_Tinh> Bieu06TKKKQPAN_Tinh { get; set; }
+
+        public virtual DbSet<BieuPhuLucIII> BieuPhuLucIII { get; set; }
+        public virtual DbSet<BieuPhuLucIV> BieuPhuLucIV { get; set; }
+
         public virtual DbSet<DM_LoaiDat> DM_LoaiDat { get; set; }
 
         public KiemKeDatDaiDbContext(DbContextOptions<KiemKeDatDaiDbContext> options)

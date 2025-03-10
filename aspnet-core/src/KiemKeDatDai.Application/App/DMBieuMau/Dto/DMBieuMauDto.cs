@@ -25,6 +25,6 @@ namespace KiemKeDatDai.Dto
         public string KyHieu { get; set; }
         public int? CapDVHC { get; set; }
         public long? Year { get; set; }
-        public long? DVHCId { get; set; }
+        public string MaDVHC { get; set; }
     }
 }

@@ -100,6 +100,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                          MaHuyen = dvhc.MaHuyen,
                                          TenXa = dvhc.TenXa,
                                          MaXa = dvhc.MaXa,
+                                         Ma = dvhc.Ma,
                                          Name = dvhc.Name,
                                          Parent_id = dvhc.Parent_id,
                                          CapDVHCId = dvhc.CapDVHCId,
@@ -149,6 +150,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                  MaHuyen = dvhc.MaHuyen,
                                  TenXa = dvhc.TenXa,
                                  MaXa = dvhc.MaXa,
+                                 Ma = dvhc.Ma,
                                  Name = dvhc.Name,
                                  Parent_id = dvhc.Parent_id,
                                  CapDVHCId = dvhc.CapDVHCId,
@@ -203,13 +205,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         data.Year = input.Year;
                         data.TrangThaiDuyet = input.TrangThaiDuyet;
                         await _dvhcRepos.UpdateAsync(data);
-                        //insert log
-                        //var log = new LogInputDto
-                        //{
-                        //    UserId = currentUser.Id,
-                        //    Describle = "sửa dữ liệu thông tin hồ chứa"
-                        //};
-                        //_iLogAppService.Create(log);
                     }
                     else
                     {
@@ -222,13 +217,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 {
                     var dvhc = input.MapTo<DVHCInputDto>();
                     await _dvhcRepos.InsertAsync(dvhc);
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Thêm dữ liệu thông tin hồ chứa"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -255,13 +243,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     await _dvhcRepos.DeleteAsync(objDVHC);
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Xoá dữ liệu đơn vị hành chính"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 else
                 {

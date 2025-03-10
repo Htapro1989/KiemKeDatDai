@@ -19,6 +19,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string MaHuyen { get; set; }
         public string TenXa { get; set; }
         public string MaXa { get; set; }
+        public string Ma { get; set; }
         public string Name { get; set; }
         public long? Parent_id { get; set; }
         public string Parent_Code { get; set; }

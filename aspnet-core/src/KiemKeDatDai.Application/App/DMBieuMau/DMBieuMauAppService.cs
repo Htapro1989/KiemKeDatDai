@@ -235,25 +235,25 @@ namespace KiemKeDatDai.App.DMBieuMau
                             {
                                 case 1:
                                     {
-                                        var data = await _bieu01TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.VungId == input.DVHCId);
+                                        var data = await _bieu01TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
                                         commonResponseDto.ReturnValue = data;
                                         break;
                                     }
                                 case 2:
                                     {
-                                        var data = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.TinhId == input.DVHCId);
+                                        var data = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
                                         commonResponseDto.ReturnValue = data;
                                         break;
                                     }
                                 case 3:
                                     {
-                                        var data = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.HuyenId == input.DVHCId);
+                                        var data = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
                                         commonResponseDto.ReturnValue = data;
                                         break;
                                     }
                                 case 4:
                                     {
-                                        var data = await _bieu01TKKK_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.XaId == input.DVHCId);
+                                        var data = await _bieu01TKKK_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
                                         commonResponseDto.ReturnValue = data;
                                         break;
                                     }
