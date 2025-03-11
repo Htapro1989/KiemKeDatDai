@@ -97,6 +97,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         {
                             commonResponseDto.Message = "Tỉnh đã được duyệt, không thể duyệt huyện";
                             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
                         }
                         else
                         {
@@ -116,6 +117,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             {
                                 commonResponseDto.Message = "Huyện này không tồn tại";
                                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                                return commonResponseDto;
                             }
 
                             #region cập nhật DVHC tỉnh sau khi duyệt huyện
@@ -139,6 +141,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     {
                         commonResponseDto.Message = "Tỉnh này không tồn tại";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
                     }
                     uow.Complete();
                 }
@@ -169,6 +172,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         {
                             commonResponseDto.Message = "Tỉnh đã được duyệt, không thể hủy duyệt huyện";
                             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
                         }
                         else
                         {
@@ -188,6 +192,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             {
                                 commonResponseDto.Message = "Huyện này không tồn tại";
                                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                                return commonResponseDto;
                             }
 
                             #region cập nhật DVHC tỉnh sau khi duyệt huyện
@@ -200,6 +205,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     {
                         commonResponseDto.Message = "Tỉnh này không tồn tại";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
                     }
                     uow.Complete();
                 }
@@ -214,19 +220,20 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, string ma, long year, int hamduyet)
+        private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, string maHuyen, long year, int hamduyet)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            var data_huyen = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.Ma == ma && x.Year == year);
+            var data_huyen = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
             if (data_huyen != null)
             {
-                await CreateOrUpdateBieu01TKKK_Tinh(data_huyen, tinh.Id, tinh.MaHuyen, year, hamduyet);
+                await CreateOrUpdateBieu01TKKK_Tinh(data_huyen, tinh.Id, tinh.MaTinh, year, hamduyet);
             }
             else
             {
                 commonResponseDto.Message = "Dữ liệu huyện biểu 01TKKK không tồn tại";
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                return commonResponseDto;
             }
 
             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
@@ -237,7 +244,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         #region Biểu 01TKKK
         private async Task CreateOrUpdateBieu01TKKK_Tinh(List<Bieu01TKKK_Huyen> huyen, long tinhId, string maTinh, long year, int hamduyet)
         {
-            var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.Ma == maTinh && x.Year == year);
+            var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
             if (data_tinh.Count == 0)
             {
                 foreach (var item in huyen)
@@ -250,7 +257,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 foreach (var item in huyen)
                 {
-                    //Cập nhật các bản ghi huyện tương ứng với bản ghi xã
+                    //Cập nhật các bản ghi tỉnh tương ứng với bản ghi huyện
                     await UpdateBieu01TKKK_Tinh(item, tinhId, maTinh, year, hamduyet);
                 }
             }
@@ -300,7 +307,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             try
             {
-                var objtinh = await _bieu01TKKK_TinhRepos.FirstOrDefaultAsync(x => x.Ma == maTinh && x.Year == year);
+                var objtinh = await _bieu01TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year);
                 if (objtinh.Id > 0)
                 {
                     //update duyệt xã

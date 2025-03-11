@@ -96,11 +96,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
-                        var vung = await _dvhcRepos.FirstOrDefaultAsync(x=>x.MaVung == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
+                        var vung = await _dvhcRepos.FirstOrDefaultAsync(x=>x.Ma == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
                         if (vung == null)
                         {
                             commonResponseDto.Message = "Tỉnh này không nằm trong vùng nào";
                             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
                         }
                         if (tinh != null)
                         {
@@ -117,6 +118,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         {
                             commonResponseDto.Message = "Tỉnh này không tồn tại";
                             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
                         }
 
                         #region cập nhật DVHC TW sau khi duyệt Tỉnh
@@ -139,6 +141,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     {
                         commonResponseDto.Message = "ĐVHC này không tồn tại";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
                     }
                     uow.Complete();
                 }
@@ -166,7 +169,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
-                        var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.MaVung == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
+                        var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
                         if (tinh != null)
                         {
                             //gọi hàm update biểu tỉnh
@@ -182,6 +185,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         {
                             commonResponseDto.Message = "Tỉnh này không tồn tại";
                             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
                         }
 
                         #region cập nhật DVHC TW sau khi duyệt tỉnh
@@ -193,6 +197,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     {
                         commonResponseDto.Message = "ĐVHC này không tồn tại";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
                     }
                     uow.Complete();
                 }
@@ -207,11 +212,11 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, string ma, long vungId, string maVung, long year, int hamduyet)
+        private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, string maTinh, long vungId, string maVung, long year, int hamduyet)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.Ma == ma && x.Year == year);
+            var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
             if (data_tinh != null)
             {
                 await CreateOrUpdateBieu01TKKK_Tinh(data_tinh, vungId, maVung, year, hamduyet);
@@ -220,6 +225,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 commonResponseDto.Message = "Dữ liệu tỉnh biểu 01TKKK không tồn tại";
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                return commonResponseDto;
             }
 
             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
@@ -235,7 +241,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 foreach (var item in tinh)
                 {
-                    //Tạo các bản ghi huyện tương ứng với bản ghi tỉnh
+                    //Tạo các bản ghi trung ương tương ứng với bản ghi tỉnh
                     await CreateBieu01TKKK_Tinh(item, vungId, maVung);
                 }
             }
@@ -243,7 +249,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 foreach (var item in tinh)
                 {
-                    //Cập nhật các bản ghi huyện tương ứng với bản ghi tỉnh
+                    //Cập nhật các bản ghi trung ương tương ứng với bản ghi tỉnh
                     await UpdateBieu01TKKK_Tinh(item, vungId, maVung, year, hamduyet);
                 }
             }
