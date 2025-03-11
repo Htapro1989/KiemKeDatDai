@@ -26,7 +26,7 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Bieu01KKSL_Tinh> Bieu01KKSL_Tinh { get; set; }
         public virtual DbSet<Bieu01KKSL_Huyen> Bieu01KKSL_Huyen { get; set; }
         public virtual DbSet<Bieu01KKSL_Xa> Bieu01KKSL_Xa { get; set; }
-        public virtual DbSet<Bieu06TKKKQPAN> Bieu02KKSL { get; set; }
+        public virtual DbSet<Bieu02KKSL> Bieu02KKSL { get; set; }
         public virtual DbSet<Bieu02KKSL_Vung> Bieu02KKSL_Vung { get; set; }
         public virtual DbSet<Bieu02KKSL_Tinh> Bieu02KKSL_Tinh { get; set; }
         public virtual DbSet<Bieu02KKSL_Huyen> Bieu02KKSL_Huyen { get; set; }
