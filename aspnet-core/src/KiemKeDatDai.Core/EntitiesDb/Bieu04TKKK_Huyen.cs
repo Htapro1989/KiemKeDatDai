@@ -20,7 +20,6 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal CaNhanTrongNuoc_CNV_CC { get; set; }
         public decimal NguoiVietNamONuocNgoai_CNN_DT { get; set; }
         public decimal NguoiVietNamONuocNgoai_CNN_CC { get; set; }
-        public decimal CoQuanNhaNuoc_TCN { get; set; }
         public decimal CoQuanNhaNuoc_TCN_DT { get; set; }
         public decimal CoQuanNhaNuoc_TCN_CC { get; set; }
         public decimal DonViSuNghiep_TSN_DT { get; set; }
