@@ -279,8 +279,10 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         MaDVHC = objdata.Ma,
                         ParentId = objdata.Parent_id,
                         NgayCapNhat = objdata.NgayGui,
+                        TrangThaiDuyet = objdata.TrangThaiDuyet,
                         ChildStatus = 1
                     };
+                    baoCaoDVHC.Root = currentUser.DonViHanhChinhCode == input.Ma ? true : false;
                     switch (objdata.CapDVHCId)
                     {
                         case (int)CAP_DVHC.TRUNG_UONG:
@@ -304,12 +306,27 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                             baoCaoDVHC.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == objdata.MaTinh && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                             baoCaoDVHC.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == objdata.MaTinh && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
                             break;
+                        case (int)CAP_DVHC.XA:
+                            baoCaoDVHC.Tong = 1;
+                            baoCaoDVHC.TongDuyet = objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0;
+                            baoCaoDVHC.TongNop = objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0;
+                            baoCaoDVHC.ChildStatus = 0;
+                            break;
                         default:
                             break;
                     }
-                    lstBaoCao.Add(baoCaoDVHC);
 
-                    var lstChild = await _dvhcRepos.GetAllListAsync(x => x.Parent_Code == input.Ma);
+                    var lstChild = await _dvhcRepos.GetAllListAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year);
+                    //Xác định  trạng thái button nộp báo cáo
+                    if (baoCaoDVHC.Root == true)
+                    {
+                        var soDaDuyet = await _dvhcRepos.CountAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                        if (soDaDuyet == lstChild.Count)
+                            baoCaoDVHC.IsNopBaoCao = true;
+                        else
+                            baoCaoDVHC.IsNopBaoCao = false;
+                    }
+                    lstBaoCao.Add(baoCaoDVHC);
                     if (lstChild != null)
                     {
                         foreach (var item in lstChild)
@@ -322,6 +339,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                 MaDVHC = item.Ma,
                                 ParentId = item.Parent_id,
                                 NgayCapNhat = item.NgayGui,
+                                TrangThaiDuyet = item.TrangThaiDuyet,
+                                IsNopBaoCao = false
                             };
                             switch (item.CapDVHCId)
                             {

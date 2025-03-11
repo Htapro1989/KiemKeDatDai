@@ -39,9 +39,12 @@ namespace KiemKeDatDai.Dto
         public string MaDVHC { get; set; }
         public long? ParentId { get; set; }
         public DateTime? NgayCapNhat { get; set; }
+        public int? TrangThaiDuyet { get; set; }
         public int? TongNop { get; set; }
         public int? TongDuyet { get; set; }
         public int? Tong { get; set; }
         public int ChildStatus { get; set; }
+        public bool? Root { get; set; }
+        public bool? IsNopBaoCao { get; set; }
     }
 }

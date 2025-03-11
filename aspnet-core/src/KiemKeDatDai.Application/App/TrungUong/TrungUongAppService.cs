@@ -96,7 +96,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
-                        var vung = await _dvhcRepos.FirstOrDefaultAsync(x=>x.MaVung == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.Vung);
+                        var vung = await _dvhcRepos.FirstOrDefaultAsync(x=>x.MaVung == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
                         if (vung == null)
                         {
                             commonResponseDto.Message = "Tỉnh này không nằm trong vùng nào";
@@ -166,7 +166,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
-                        var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.MaVung == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.Vung);
+                        var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.MaVung == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
                         if (tinh != null)
                         {
                             //gọi hàm update biểu tỉnh
