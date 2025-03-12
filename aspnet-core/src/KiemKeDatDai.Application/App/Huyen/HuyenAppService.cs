@@ -263,11 +263,13 @@ namespace KiemKeDatDai.App.DMBieuMau
                             var xa = await _dvhcRepos.FirstOrDefaultAsync(x=>x.Ma==ma);
                             if (xa != null)
                             {
-                                //gọi hàm update biểu huyện
-                                commonResponseDto = await CreateOrUpdateBieuHuyen(objdata, ma, year, (int)HAM_DUYET.HUY);
-
+                                //gọi hàm update biểu huyện(trường hợp xã đã duyệt)
+                                if (xa.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                                {
+                                    commonResponseDto = await CreateOrUpdateBieuHuyen(objdata, ma, year, (int)HAM_DUYET.HUY);
+                                }
                                 #region cập nhật DVHC xã sau khi duyệt xã
-                                xa.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
+                                xa.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHUA_GUI;
                                 xa.NgayDuyet = DateTime.Now;
                                 await _dvhcRepos.UpdateAsync(xa);
                                 #endregion
