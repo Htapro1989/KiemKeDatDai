@@ -43,58 +43,29 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IRepository<Bieu01TKKK_Huyen, long> _bieu01TKKK_HuyenRepos;
         private readonly IRepository<Bieu01TKKK_Xa, long> _bieu01TKKK_XaRepos;
 
-        private readonly IRepository<Bieu02TKKK, long> _bieu02TKKKRepos;
         private readonly IRepository<Bieu02TKKK_Xa, long> _bieu02TKKK_XaRepos;
         private readonly IRepository<Bieu02TKKK_Huyen, long> _bieu02TKKK_HuyenRepos;
-        private readonly IRepository<Bieu02TKKK_Tinh, long> _bieu02TKKK_TinhRepos;
-        private readonly IRepository<Bieu02TKKK_Vung, long> _bieu02TKKK_VungRepos;
 
-        private readonly IRepository<Bieu03TKKK, long> _bieu03TKKKRepos;
-        private readonly IRepository<Bieu03TKKK_Huyen, long> _bieu03TKKK_HuyenRepos;
-        private readonly IRepository<Bieu03TKKK_Tinh, long> _bieu03TKKK_TinhRepos;
-        private readonly IRepository<Bieu03TKKK_Vung, long> _bieu03TKKK_VungRepos;
-
-        private readonly IRepository<Bieu04TKKK, long> _bieu04TKKKRepos;
         private readonly IRepository<Bieu04TKKK_Xa, long> _bieu04TKKK_XaRepos;
         private readonly IRepository<Bieu04TKKK_Huyen, long> _bieu04TKKK_HuyenRepos;
-        private readonly IRepository<Bieu04TKKK_Tinh, long> _bieu04TKKK_TinhRepos;
-        private readonly IRepository<Bieu04TKKK_Vung, long> _bieu04TKKK_VungRepos;
 
-        private readonly IRepository<Bieu05TKKK, long> _bieu05TKKKRepos;
         private readonly IRepository<Bieu05TKKK_Xa, long> _bieu05TKKK_XaRepos;
         private readonly IRepository<Bieu05TKKK_Huyen, long> _bieu05TKKK_HuyenRepos;
-        private readonly IRepository<Bieu05TKKK_Tinh, long> _bieu05TKKK_TinhRepos;
-        private readonly IRepository<Bieu05TKKK_Vung, long> _bieu05TKKK_VungRepos;
 
-        private readonly IRepository<Bieu01KKSL, long> _bieu01KKSLRepos;
         private readonly IRepository<Bieu01KKSL_Xa, long> _bieu01KKSL_XaRepos;
         private readonly IRepository<Bieu01KKSL_Huyen, long> _bieu01KKSL_HuyenRepos;
-        private readonly IRepository<Bieu01KKSL_Tinh, long> _bieu01KKSL_TinhRepos;
-        private readonly IRepository<Bieu01KKSL_Vung, long> _bieu01KKSL_VungRepos;
 
-        private readonly IRepository<Bieu02KKSL, long> _bieu02KKSLRepos;
         private readonly IRepository<Bieu02KKSL_Xa, long> _bieu02KKSL_XaRepos;
         private readonly IRepository<Bieu02KKSL_Huyen, long> _bieu02KKSL_HuyenRepos;
-        private readonly IRepository<Bieu02KKSL_Tinh, long> _bieu02KKSL_TinhRepos;
-        private readonly IRepository<Bieu02KKSL_Vung, long> _bieu02KKSL_VungRepos;
 
-        private readonly IRepository<Bieu01aKKNLT, long> _bieu01aKKNLTRepos;
         private readonly IRepository<Bieu01aKKNLT_Xa, long> _bieu01aKKNLT_XaRepos;
         private readonly IRepository<Bieu01aKKNLT_Huyen, long> _bieu01aKKNLT_HuyenRepos;
-        private readonly IRepository<Bieu01aKKNLT_Tinh, long> _bieu01aKKNLT_TinhRepos;
-        private readonly IRepository<Bieu01aKKNLT_Vung, long> _bieu01aKKNLT_VungRepos;
 
-        private readonly IRepository<Bieu01bKKNLT, long> _bieu01bKKNLTRepos;
         private readonly IRepository<Bieu01bKKNLT_Xa, long> _bieu01bKKNLT_XaRepos;
         private readonly IRepository<Bieu01bKKNLT_Huyen, long> _bieu01bKKNLT_HuyenRepos;
-        private readonly IRepository<Bieu01bKKNLT_Tinh, long> _bieu01bKKNLT_TinhRepos;
-        private readonly IRepository<Bieu01bKKNLT_Vung, long> _bieu01bKKNLT_VungRepos;
 
-        private readonly IRepository<Bieu01cKKNLT, long> _bieu01cKKNLTRepos;
         private readonly IRepository<Bieu01cKKNLT_Xa, long> _bieu01cKKNLT_XaRepos;
         private readonly IRepository<Bieu01cKKNLT_Huyen, long> _bieu01cKKNLT_HuyenRepos;
-        private readonly IRepository<Bieu01cKKNLT_Tinh, long> _bieu01cKKNLT_TinhRepos;
-        private readonly IRepository<Bieu01cKKNLT_Vung, long> _bieu01cKKNLT_VungRepos;
 
         private readonly IRepository<Bieu06TKKKQPAN, long> _bieu06TKKKQPANRepos;
         private readonly IRepository<Bieu06TKKKQPAN_Tinh, long> _bieu06TKKKQPAN_TinhRepos;
@@ -350,16 +321,38 @@ namespace KiemKeDatDai.App.DMBieuMau
                 return commonResponseDto;
             }
 
-            //var data_bieu02TKKK = await _bieu02TKKK_XaRepos.GetAllListAsync(x => x.MaXa == ma && x.Year == year);
-            //if (data_bieu02TKKK.Count > 0)
-            //{
-            //    await CreateOrUpdateBieu02TKKK_Huyen(data_bieu02TKKK, huyen.Id, huyen.MaHuyen, year, hamduyet);
-            //}
-            //else
-            //{
-            //    commonResponseDto.Message = "Dữ liệu xã biểu 01TKKK không tồn tại";
-            //    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-            //}
+            var data_bieu02TKKK = await _bieu02TKKK_XaRepos.GetAllListAsync(x => x.MaXa == maXa && x.Year == year);
+            if (data_bieu02TKKK.Count > 0)
+            {
+                await CreateOrUpdateBieu02TKKK_Huyen(data_bieu02TKKK, huyen.Id, huyen.MaHuyen, year, hamduyet);
+            }
+            else
+            {
+                commonResponseDto.Message = "Dữ liệu xã biểu 02TKKK không tồn tại";
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+            }
+
+            var data_bieu04TKKK = await _bieu04TKKK_XaRepos.GetAllListAsync(x => x.MaXa == maXa && x.Year == year);
+            if (data_bieu04TKKK.Count > 0)
+            {
+                await CreateOrUpdateBieu04TKKK_Huyen(data_bieu04TKKK, huyen.Id, huyen.MaHuyen, year, hamduyet);
+            }
+            else
+            {
+                commonResponseDto.Message = "Dữ liệu xã biểu 04TKKK không tồn tại";
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+            }
+
+            var data_bieu05TKKK = await _bieu05TKKK_XaRepos.GetAllListAsync(x => x.MaXa == maXa && x.Year == year);
+            if (data_bieu05TKKK.Count > 0)
+            {
+                await CreateOrUpdateBieu05TKKK_Huyen(data_bieu05TKKK, huyen.Id, huyen.MaHuyen, year, hamduyet);
+            }
+            else
+            {
+                commonResponseDto.Message = "Dữ liệu xã biểu 05TKKK không tồn tại";
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+            }
 
             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
@@ -609,6 +602,414 @@ namespace KiemKeDatDai.App.DMBieuMau
                 else
                 {
                     await CreateBieu02TKKK_Huyen(xa, huyenId, maHuyen);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Biểu 04TKKK
+        private async Task CreateOrUpdateBieu04TKKK_Huyen(List<Bieu04TKKK_Xa> xa, long huyenId, string maHuyen, long year, int hamduyet)
+        {
+            var data_huyen = await _bieu04TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+            if (data_huyen.Count == 0)
+            {
+                foreach (var item in xa)
+                {
+                    //Tạo các bản ghi huyện tương ứng với bản ghi xã
+                    await CreateBieu04TKKK_Huyen(item, huyenId, maHuyen);
+                }
+            }
+            else
+            {
+                foreach (var item in xa)
+                {
+                    //Cập nhật các bản ghi huyện tương ứng với bản ghi xã
+                    await UpdateBieu04TKKK_Huyen(item, huyenId, maHuyen, year, hamduyet);
+                }
+            }
+        }
+
+        private async Task CreateBieu04TKKK_Huyen(Bieu04TKKK_Xa xa, long huyenId, string maHuyen)
+        {
+            try
+            {
+                var objhuyen = new Bieu04TKKK_Huyen()
+                {
+                    STT = xa.STT,
+                    LoaiDat = xa.LoaiDat,
+                    Ma = xa.Ma,
+                    TongSo_DT = xa.TongSo_DT,
+                    TongSo_CC = xa.TongSo_CC,
+                    CaNhanTrongNuoc_CNV_DT = xa.CaNhanTrongNuoc_CNV_DT,
+                    CaNhanTrongNuoc_CNV_CC = xa.CaNhanTrongNuoc_CNV_CC,
+                    NguoiVietNamONuocNgoai_CNN_DT = xa.NguoiVietNamONuocNgoai_CNN_DT,
+                    NguoiVietNamONuocNgoai_CNN_CC = xa.NguoiVietNamONuocNgoai_CNN_CC,
+                    CoQuanNhaNuoc_TCN_DT = xa.CoQuanNhaNuoc_TCN_DT,
+                    CoQuanNhaNuoc_TCN_CC = xa.CoQuanNhaNuoc_TCN_CC,
+                    DonViSuNghiep_TSN_DT = xa.NguoiVietNamONuocNgoai_CNN_DT,
+                    DonViSuNghiep_TSN_CC = xa.DonViSuNghiep_TSN_CC,
+                    ToChucXaHoi_TXH_DT = xa.ToChucXaHoi_TXH_DT,
+                    ToChucXaHoi_TXH_CC = xa.ToChucXaHoi_TXH_CC,
+                    ToChucKinhTe_TKT_DT = xa.ToChucKinhTe_TKT_DT,
+                    ToChucKinhTe_TKT_CC = xa.ToChucKinhTe_TKT_CC,
+                    ToChucKhac_TKH_DT = xa.ToChucKhac_TKH_DT,
+                    ToChucKhac_TKH_CC = xa.ToChucKhac_TKH_CC,
+                    ToChucTonGiao_TTG_DT = xa.ToChucTonGiao_TTG_DT,
+                    ToChucTonGiao_TTG_CC = xa.ToChucTonGiao_TTG_CC,
+                    CongDongDanCu_CDS_DT = xa.CongDongDanCu_CDS_DT,
+                    CongDongDanCu_CDS_CC = xa.CongDongDanCu_CDS_CC,
+                    ToChucNuocNgoai_TNG_DT = xa.ToChucNuocNgoai_TNG_DT,
+                    ToChucNuocNgoai_TNG_CC = xa.ToChucNuocNgoai_TNG_CC,
+                    NguoiGocVietNamONuocNgoai_CNN_DT = xa.NguoiGocVietNamONuocNgoai_CNN_DT,
+                    NguoiGocVietNamONuocNgoai_CNN_CC = xa.NguoiGocVietNamONuocNgoai_CNN_CC,
+                    ToChucKinhTeVonNuocNgoai_TVN_DT = xa.ToChucKinhTeVonNuocNgoai_TVN_DT,
+                    ToChucKinhTeVonNuocNgoai_TVN_CC = xa.ToChucKinhTeVonNuocNgoai_TVN_CC,
+                    CoQuanNhaNuoc_TCQ_DT = xa.CoQuanNhaNuoc_TCQ_DT,
+                    CoQuanNhaNuoc_TCQ_CC = xa.CoQuanNhaNuoc_TCQ_CC,
+                    DonViSuNghiep_TSQ_DT = xa.DonViSuNghiep_TSQ_DT,
+                    DonViSuNghiep_TSQ_CC = xa.DonViSuNghiep_TSQ_CC,
+                    ToChucKinhTe_KTQ_DT = xa.ToChucKinhTe_KTQ_DT,
+                    ToChucKinhTe_KTQ_CC = xa.ToChucKinhTe_KTQ_CC,
+                    CongDongDanCu_CDQ_DT = xa.CongDongDanCu_CDQ_DT,
+                    CongDongDanCu_CDQ_CC = xa.CongDongDanCu_CDQ_CC,
+                    HuyenId = huyenId,
+                    MaHuyen = maHuyen,
+                    Year = xa.Year,
+                    Active = true,
+                };
+                await _bieu04TKKK_HuyenRepos.InsertAsync(objhuyen);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        private async Task UpdateBieu04TKKK_Huyen(Bieu04TKKK_Xa xa, long huyenId, string maHuyen, long year, int hamduyet)
+        {
+            try
+            {
+                var objhuyen = await _bieu04TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.MaHuyen == maHuyen && x.Ma == xa.Ma && x.Year == year);
+                if (objhuyen.Id > 0)
+                {
+                    //update duyệt xã
+                    if (hamduyet == (int)HAM_DUYET.DUYET)
+                    {
+                        objhuyen.TongSo_DT += xa.TongSo_DT;
+                        objhuyen.TongSo_CC += xa.TongSo_CC;
+                        objhuyen.CaNhanTrongNuoc_CNV_DT += xa.CaNhanTrongNuoc_CNV_DT;
+                        objhuyen.CaNhanTrongNuoc_CNV_CC += xa.CaNhanTrongNuoc_CNV_CC;
+                        objhuyen.NguoiVietNamONuocNgoai_CNN_DT += xa.NguoiVietNamONuocNgoai_CNN_DT;
+                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC += xa.NguoiVietNamONuocNgoai_CNN_CC;
+                        objhuyen.CoQuanNhaNuoc_TCN_DT += xa.CoQuanNhaNuoc_TCN_DT;
+                        objhuyen.CoQuanNhaNuoc_TCN_CC += xa.CoQuanNhaNuoc_TCN_CC;
+                        objhuyen.DonViSuNghiep_TSN_DT += xa.DonViSuNghiep_TSN_DT;
+                        objhuyen.DonViSuNghiep_TSN_CC += xa.DonViSuNghiep_TSN_CC;
+                        objhuyen.ToChucXaHoi_TXH_DT += xa.ToChucXaHoi_TXH_DT;
+                        objhuyen.ToChucXaHoi_TXH_CC += xa.ToChucXaHoi_TXH_CC;
+                        objhuyen.ToChucKinhTe_TKT_DT += xa.ToChucKinhTe_TKT_DT;
+                        objhuyen.ToChucKinhTe_TKT_CC += xa.ToChucKinhTe_TKT_CC;
+                        objhuyen.ToChucKhac_TKH_DT += xa.ToChucKhac_TKH_DT;
+                        objhuyen.ToChucKhac_TKH_CC += xa.ToChucKhac_TKH_CC;
+                        objhuyen.ToChucTonGiao_TTG_DT += xa.ToChucTonGiao_TTG_DT;
+                        objhuyen.ToChucTonGiao_TTG_CC += xa.ToChucTonGiao_TTG_CC;
+                        objhuyen.CongDongDanCu_CDS_DT += xa.CongDongDanCu_CDS_DT;
+                        objhuyen.CongDongDanCu_CDS_CC += xa.CongDongDanCu_CDS_CC;
+                        objhuyen.ToChucNuocNgoai_TNG_DT += xa.ToChucNuocNgoai_TNG_DT;
+                        objhuyen.ToChucNuocNgoai_TNG_CC += xa.ToChucNuocNgoai_TNG_CC;
+                        objhuyen.NguoiGocVietNamONuocNgoai_CNN_DT += xa.NguoiGocVietNamONuocNgoai_CNN_DT;
+                        objhuyen.NguoiGocVietNamONuocNgoai_CNN_CC += xa.NguoiGocVietNamONuocNgoai_CNN_CC;
+                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT += xa.ToChucKinhTeVonNuocNgoai_TVN_DT;
+                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC += xa.ToChucKinhTeVonNuocNgoai_TVN_CC;
+                        objhuyen.CoQuanNhaNuoc_TCQ_DT += xa.CoQuanNhaNuoc_TCQ_DT;
+                        objhuyen.CoQuanNhaNuoc_TCQ_CC += xa.CoQuanNhaNuoc_TCQ_CC;
+                        objhuyen.DonViSuNghiep_TSQ_DT += xa.DonViSuNghiep_TSQ_DT;
+                        objhuyen.DonViSuNghiep_TSQ_CC += xa.DonViSuNghiep_TSQ_CC;
+                        objhuyen.ToChucKinhTe_KTQ_DT += xa.ToChucKinhTe_KTQ_DT;
+                        objhuyen.ToChucKinhTe_KTQ_CC += xa.ToChucKinhTe_KTQ_CC;
+                        objhuyen.CongDongDanCu_CDQ_DT += xa.CongDongDanCu_CDQ_DT;
+                        objhuyen.CongDongDanCu_CDQ_CC += xa.CongDongDanCu_CDQ_CC;
+                    }
+                    //update huỷ duyệt xã
+                    else
+                    {
+                        objhuyen.TongSo_DT -= xa.TongSo_DT;
+                        objhuyen.TongSo_CC -= xa.TongSo_CC;
+                        objhuyen.CaNhanTrongNuoc_CNV_DT -= xa.CaNhanTrongNuoc_CNV_DT;
+                        objhuyen.CaNhanTrongNuoc_CNV_CC -= xa.CaNhanTrongNuoc_CNV_CC;
+                        objhuyen.NguoiVietNamONuocNgoai_CNN_DT -= xa.NguoiVietNamONuocNgoai_CNN_DT;
+                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC -= xa.NguoiVietNamONuocNgoai_CNN_CC;
+                        objhuyen.CoQuanNhaNuoc_TCN_DT -= xa.CoQuanNhaNuoc_TCN_DT;
+                        objhuyen.CoQuanNhaNuoc_TCN_CC -= xa.CoQuanNhaNuoc_TCN_CC;
+                        objhuyen.DonViSuNghiep_TSN_DT -= xa.DonViSuNghiep_TSN_DT;
+                        objhuyen.DonViSuNghiep_TSN_CC -= xa.DonViSuNghiep_TSN_CC;
+                        objhuyen.ToChucXaHoi_TXH_DT -= xa.ToChucXaHoi_TXH_DT;
+                        objhuyen.ToChucXaHoi_TXH_CC -= xa.ToChucXaHoi_TXH_CC;
+                        objhuyen.ToChucKinhTe_TKT_DT -= xa.ToChucKinhTe_TKT_DT;
+                        objhuyen.ToChucKinhTe_TKT_CC -= xa.ToChucKinhTe_TKT_CC;
+                        objhuyen.ToChucKhac_TKH_DT -= xa.ToChucKhac_TKH_DT;
+                        objhuyen.ToChucKhac_TKH_CC -= xa.ToChucKhac_TKH_CC;
+                        objhuyen.ToChucTonGiao_TTG_DT -= xa.ToChucTonGiao_TTG_DT;
+                        objhuyen.ToChucTonGiao_TTG_CC -= xa.ToChucTonGiao_TTG_CC;
+                        objhuyen.CongDongDanCu_CDS_DT -= xa.CongDongDanCu_CDS_DT;
+                        objhuyen.CongDongDanCu_CDS_CC -= xa.CongDongDanCu_CDS_CC;
+                        objhuyen.ToChucNuocNgoai_TNG_DT -= xa.ToChucNuocNgoai_TNG_DT;
+                        objhuyen.ToChucNuocNgoai_TNG_CC -= xa.ToChucNuocNgoai_TNG_CC;
+                        objhuyen.NguoiGocVietNamONuocNgoai_CNN_DT -= xa.NguoiGocVietNamONuocNgoai_CNN_DT;
+                        objhuyen.NguoiGocVietNamONuocNgoai_CNN_CC -= xa.NguoiGocVietNamONuocNgoai_CNN_CC;
+                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT -= xa.ToChucKinhTeVonNuocNgoai_TVN_DT;
+                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC -= xa.ToChucKinhTeVonNuocNgoai_TVN_CC;
+                        objhuyen.CoQuanNhaNuoc_TCQ_DT -= xa.CoQuanNhaNuoc_TCQ_DT;
+                        objhuyen.CoQuanNhaNuoc_TCQ_CC -= xa.CoQuanNhaNuoc_TCQ_CC;
+                        objhuyen.DonViSuNghiep_TSQ_DT -= xa.DonViSuNghiep_TSQ_DT;
+                        objhuyen.DonViSuNghiep_TSQ_CC -= xa.DonViSuNghiep_TSQ_CC;
+                        objhuyen.ToChucKinhTe_KTQ_DT -= xa.ToChucKinhTe_KTQ_DT;
+                        objhuyen.ToChucKinhTe_KTQ_CC -= xa.ToChucKinhTe_KTQ_CC;
+                        objhuyen.CongDongDanCu_CDQ_DT -= xa.CongDongDanCu_CDQ_DT;
+                        objhuyen.CongDongDanCu_CDQ_CC -= xa.CongDongDanCu_CDQ_CC;
+                    }
+                    await _bieu04TKKK_HuyenRepos.UpdateAsync(objhuyen);
+                }
+                else
+                {
+                    await CreateBieu04TKKK_Huyen(xa, huyenId, maHuyen);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Biểu 05TKKK
+        private async Task CreateOrUpdateBieu05TKKK_Huyen(List<Bieu05TKKK_Xa> xa, long huyenId, string maHuyen, long year, int hamduyet)
+        {
+            var data_huyen = await _bieu05TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+            if (data_huyen.Count == 0)
+            {
+                foreach (var item in xa)
+                {
+                    //Tạo các bản ghi huyện tương ứng với bản ghi xã
+                    await CreateBieu05TKKK_Huyen(item, huyenId, maHuyen);
+                }
+            }
+            else
+            {
+                foreach (var item in xa)
+                {
+                    //Cập nhật các bản ghi huyện tương ứng với bản ghi xã
+                    await UpdateBieu05TKKK_Huyen(item, huyenId, maHuyen, year, hamduyet);
+                }
+            }
+        }
+
+        private async Task CreateBieu05TKKK_Huyen(Bieu05TKKK_Xa xa, long huyenId, string maHuyen)
+        {
+            try
+            {
+                var objhuyen = new Bieu05TKKK_Huyen()
+                {
+                    STT = xa.STT,
+                    LoaiDat = xa.LoaiDat,
+                    Ma = xa.Ma,
+                    Nam = xa.Nam,
+                    LUA = xa.LUA,
+                    HNK = xa.HNK,
+                    CLN = xa.CLN,
+                    RDD = xa.RDD,
+                    RPH = xa.RPH,
+                    RSX = xa.RSX,
+                    NTS = xa.NTS,
+                    CNT = xa.CNT,
+                    LMU = xa.LMU,
+                    NKH = xa.NKH,
+                    ONT = xa.ONT,
+                    ODT = xa.ODT,
+                    TSC = xa.TSC,
+                    CQP = xa.CQP,
+                    CAN = xa.CAN,
+                    DVH = xa.DVH,
+                    DXH = xa.DXH,
+                    DYT = xa.DYT,
+                    DGD = xa.DGD,
+                    DTT = xa.DTT,
+                    DKH = xa.DKH,
+                    DMT = xa.DMT,
+                    DKT = xa.DKT,
+                    DNG = xa.DNG,
+                    DSK = xa.DSK,
+                    SKK = xa.SKK,
+                    SKN = xa.SKN,
+                    SCT = xa.SCT,
+                    TMD = xa.TMD,
+                    SKC = xa.SKC,
+                    SKS = xa.SKS,
+                    DGT = xa.DGT,
+                    DTL = xa.DTL,
+                    DCT = xa.DCT,
+                    DPC = xa.DPC,
+                    DDD = xa.DDD,
+                    DRA = xa.DRA,
+                    DNL = xa.DNL,
+                    DBV = xa.DBV,
+                    DCH = xa.DCH,
+                    DKV = xa.DKV,
+                    TON = xa.TON,
+                    TIN = xa.TIN,
+                    NTD = xa.NTD,
+                    MNC = xa.MNC,
+                    SON = xa.SON,
+                    PNK = xa.PNK,
+                    CGT = xa.CGT,
+                    BCS = xa.BCS,
+                    DCS = xa.DCS,
+                    NCS = xa.NCS,
+                    MCS = xa.MCS,
+                    GiamKhac = xa.GiamKhac,
+                    HuyenId = huyenId,
+                    MaHuyen = maHuyen,
+                    Year = xa.Year,
+                    Active = true,
+                };
+                await _bieu05TKKK_HuyenRepos.InsertAsync(objhuyen);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        private async Task UpdateBieu05TKKK_Huyen(Bieu05TKKK_Xa xa, long huyenId, string maHuyen, long year, int hamduyet)
+        {
+            try
+            {
+                var objhuyen = await _bieu05TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.MaHuyen == maHuyen && x.Ma == xa.Ma && x.Year == year);
+                if (objhuyen.Id > 0)
+                {
+                    //update duyệt xã
+                    if (hamduyet == (int)HAM_DUYET.DUYET)
+                    {
+                        objhuyen.Nam += xa.Nam;
+                        objhuyen.LUA += xa.LUA;
+                        objhuyen.HNK += xa.HNK;
+                        objhuyen.CLN += xa.CLN;
+                        objhuyen.RDD += xa.RDD;
+                        objhuyen.RPH += xa.RPH;
+                        objhuyen.RSX += xa.RSX;
+                        objhuyen.NTS += xa.NTS;
+                        objhuyen.CNT += xa.CNT;
+                        objhuyen.LMU += xa.LMU;
+                        objhuyen.NKH += xa.NKH;
+                        objhuyen.ONT += xa.ONT;
+                        objhuyen.ODT += xa.ODT;
+                        objhuyen.TSC += xa.TSC;
+                        objhuyen.CQP += xa.CQP;
+                        objhuyen.CAN += xa.CAN;
+                        objhuyen.DVH += xa.DVH;
+                        objhuyen.DXH += xa.DXH;
+                        objhuyen.DYT += xa.DYT;
+                        objhuyen.DGD += xa.DGD;
+                        objhuyen.DTT += xa.DTT;
+                        objhuyen.DKH += xa.DKH;
+                        objhuyen.DMT += xa.DMT;
+                        objhuyen.DKT += xa.DKT;
+                        objhuyen.DNG += xa.DNG;
+                        objhuyen.DSK += xa.DSK;
+                        objhuyen.SKK += xa.SKK;
+                        objhuyen.SKN += xa.SKN;
+                        objhuyen.SCT += xa.SCT;
+                        objhuyen.TMD += xa.TMD;
+                        objhuyen.SKC += xa.SKC;
+                        objhuyen.SKS += xa.SKS;
+                        objhuyen.DGT += xa.DGT;
+                        objhuyen.DTL += xa.DTL;
+                        objhuyen.DCT += xa.DCT;
+                        objhuyen.DPC += xa.DPC;
+                        objhuyen.DDD += xa.DDD;
+                        objhuyen.DRA += xa.DRA;
+                        objhuyen.DNL += xa.DNL;
+                        objhuyen.DBV += xa.DBV;
+                        objhuyen.DCH += xa.DCH;
+                        objhuyen.DKV += xa.DKV;
+                        objhuyen.TON += xa.TON;
+                        objhuyen.TIN += xa.TIN;
+                        objhuyen.NTD += xa.NTD;
+                        objhuyen.MNC += xa.MNC;
+                        objhuyen.SON += xa.SON;
+                        objhuyen.PNK += xa.PNK;
+                        objhuyen.CGT += xa.CGT;
+                        objhuyen.BCS += xa.BCS;
+                        objhuyen.DCS += xa.DCS;
+                        objhuyen.NCS += xa.NCS;
+                        objhuyen.MCS += xa.MCS;
+                        objhuyen.GiamKhac += xa.GiamKhac;
+                    }
+                    //update huỷ duyệt xã
+                    else
+                    {
+                        objhuyen.Nam -= xa.Nam;
+                        objhuyen.LUA -= xa.LUA;
+                        objhuyen.HNK -= xa.HNK;
+                        objhuyen.CLN -= xa.CLN;
+                        objhuyen.RDD -= xa.RDD;
+                        objhuyen.RPH -= xa.RPH;
+                        objhuyen.RSX -= xa.RSX;
+                        objhuyen.NTS -= xa.NTS;
+                        objhuyen.CNT -= xa.CNT;
+                        objhuyen.LMU -= xa.LMU;
+                        objhuyen.NKH -= xa.NKH;
+                        objhuyen.ONT -= xa.ONT;
+                        objhuyen.ODT -= xa.ODT;
+                        objhuyen.TSC -= xa.TSC;
+                        objhuyen.CQP -= xa.CQP;
+                        objhuyen.CAN -= xa.CAN;
+                        objhuyen.DVH -= xa.DVH;
+                        objhuyen.DXH -= xa.DXH;
+                        objhuyen.DYT -= xa.DYT;
+                        objhuyen.DGD -= xa.DGD;
+                        objhuyen.DTT -= xa.DTT;
+                        objhuyen.DKH -= xa.DKH;
+                        objhuyen.DMT -= xa.DMT;
+                        objhuyen.DKT -= xa.DKT;
+                        objhuyen.DNG -= xa.DNG;
+                        objhuyen.DSK -= xa.DSK;
+                        objhuyen.SKK -= xa.SKK;
+                        objhuyen.SKN -= xa.SKN;
+                        objhuyen.SCT -= xa.SCT;
+                        objhuyen.TMD -= xa.TMD;
+                        objhuyen.SKC -= xa.SKC;
+                        objhuyen.SKS -= xa.SKS;
+                        objhuyen.DGT -= xa.DGT;
+                        objhuyen.DTL -= xa.DTL;
+                        objhuyen.DCT -= xa.DCT;
+                        objhuyen.DPC -= xa.DPC;
+                        objhuyen.DDD -= xa.DDD;
+                        objhuyen.DRA -= xa.DRA;
+                        objhuyen.DNL -= xa.DNL;
+                        objhuyen.DBV -= xa.DBV;
+                        objhuyen.DCH -= xa.DCH;
+                        objhuyen.DKV -= xa.DKV;
+                        objhuyen.TON -= xa.TON;
+                        objhuyen.TIN -= xa.TIN;
+                        objhuyen.NTD -= xa.NTD;
+                        objhuyen.MNC -= xa.MNC;
+                        objhuyen.SON -= xa.SON;
+                        objhuyen.PNK -= xa.PNK;
+                        objhuyen.CGT -= xa.CGT;
+                        objhuyen.BCS -= xa.BCS;
+                        objhuyen.DCS -= xa.DCS;
+                        objhuyen.NCS -= xa.NCS;
+                        objhuyen.MCS -= xa.MCS;
+                        objhuyen.GiamKhac -= xa.GiamKhac;
+                    }
+                    await _bieu05TKKK_HuyenRepos.UpdateAsync(objhuyen);
+                }
+                else
+                {
+                    await CreateBieu05TKKK_Huyen(xa, huyenId, maHuyen);
                 }
             }
             catch (Exception ex)

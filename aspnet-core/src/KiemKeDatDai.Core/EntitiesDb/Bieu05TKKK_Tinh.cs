@@ -15,7 +15,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string LoaiDat { get; set; }
         public string Ma { get; set; }
         public decimal Nam { get; set; }
-        public decimal KUA { get; set; }
+        public decimal LUA { get; set; }
         public decimal HNK { get; set; }
         public decimal CLN { get; set; }
         public decimal RDD { get; set; }
