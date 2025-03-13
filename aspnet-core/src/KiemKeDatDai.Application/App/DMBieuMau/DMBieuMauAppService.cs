@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using KiemKeDatDai.App.Huyen.Dto;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {

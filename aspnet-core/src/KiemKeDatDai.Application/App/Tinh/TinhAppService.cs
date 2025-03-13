@@ -230,6 +230,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Logger.Fatal(ex.Message);
                 }
             }
+            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
         [AbpAuthorize]
@@ -297,6 +299,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Logger.Fatal(ex.Message);
                 }
             }
+            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
 
