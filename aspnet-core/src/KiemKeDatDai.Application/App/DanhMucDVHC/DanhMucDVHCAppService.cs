@@ -320,11 +320,18 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     //Xác định  trạng thái button nộp báo cáo
                     if (baoCaoDVHC.Root == true)
                     {
-                        var soDaDuyet = await _dvhcRepos.CountAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                        if (soDaDuyet == lstChild.Count && baoCaoDVHC.ChildStatus > 0)
-                            baoCaoDVHC.IsNopBaoCao = true;
+                        if (baoCaoDVHC.ChildStatus == 0)
+                        {
+                            baoCaoDVHC.IsNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
+                        }
                         else
-                            baoCaoDVHC.IsNopBaoCao = false;
+                        {
+                            var soDaDuyet = await _dvhcRepos.CountAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                            if (soDaDuyet == lstChild.Count && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET)
+                                baoCaoDVHC.IsNopBaoCao = true;
+                            else
+                                baoCaoDVHC.IsNopBaoCao = false;
+                        }
                     }
                     lstBaoCao.Add(baoCaoDVHC);
                     if (lstChild != null)
