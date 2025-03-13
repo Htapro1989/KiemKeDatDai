@@ -31,5 +31,6 @@ namespace KiemKeDatDai.EntitiesDb
         public long chiTieuId { get; set; }
         public bool? Status { get; set; }
         public long Year { get; set; }
+        public byte[] Geo { get; set; }
     }
 }

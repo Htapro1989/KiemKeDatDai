@@ -257,6 +257,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Logger.Fatal(ex.Message);
                 }
             }
+            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
         [AbpAuthorize]
@@ -277,10 +279,13 @@ namespace KiemKeDatDai.App.DMBieuMau
                         if (tinh != null)
                         {
                             //gọi hàm update biểu tỉnh
-                            commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, vung.Id, vung.MaVung, year, (int)HAM_DUYET.HUY);
+                            if (tinh.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                            {
+                                commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, vung.Id, vung.MaVung, year, (int)HAM_DUYET.HUY);
+                            }
 
                             #region cập nhật DVHC tỉnh sau khi duyệt tinh
-                            tinh.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
+                            tinh.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHUA_GUI;
                             tinh.NgayDuyet = DateTime.Now;
                             await _dvhcRepos.UpdateAsync(tinh);
                             #endregion
@@ -313,6 +318,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Logger.Fatal(ex.Message);
                 }
             }
+            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
 

@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250313080522_update_table_Data_Commune_13032025")]
+    partial class update_table_Data_Commune_13032025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7288,9 +7291,6 @@ namespace KiemKeDatDai.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("CapLoaiDat")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("ChiTieu")
                         .HasColumnType("nvarchar(max)");
 
@@ -7333,79 +7333,6 @@ namespace KiemKeDatDai.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DM_LoaiDat");
-                });
-
-            modelBuilder.Entity("KiemKeDatDai.EntitiesDb.Data_BienDong", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("DTSauBienDong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DTTruocBienDong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DiaChiThuaDat")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("DienTichBienDong")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("MDSDSauBienDong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MDSDTruocBienDong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MaXa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NDThayDoi")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SHKDSauBienDong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SHKDTruocBienDong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TenChuSuDung")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ThuaSauBienDong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ThuaTruocBienDong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Data_BienDong");
                 });
 
             modelBuilder.Entity("KiemKeDatDai.EntitiesDb.Data_Commune", b =>
@@ -7885,67 +7812,6 @@ namespace KiemKeDatDai.Migrations
                     b.ToTable("File");
                 });
 
-            modelBuilder.Entity("KiemKeDatDai.EntitiesDb.KhoanhDat_KyTruoc", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("DTKhongGian")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DienTichKT")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("LoaiDatId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("MaLoaiDat")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MaLoaiDatKT")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MaXa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("STT")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("KhoanhDat_KyTruoc");
-                });
-
             modelBuilder.Entity("KiemKeDatDai.EntitiesDb.KyThongKeKiemKe", b =>
                 {
                     b.Property<long>("Id")
@@ -7990,55 +7856,6 @@ namespace KiemKeDatDai.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("KyThongKeKiemKe");
-                });
-
-            modelBuilder.Entity("KiemKeDatDai.EntitiesDb.SoLieuKyTruoc", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("LoaiDatId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("MaLoaiDat")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MaXa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SoLieuKyTruoc");
                 });
 
             modelBuilder.Entity("KiemKeDatDai.MultiTenancy.Tenant", b =>
