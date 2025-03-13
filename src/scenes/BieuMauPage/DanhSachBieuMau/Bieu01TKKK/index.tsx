@@ -1,44 +1,27 @@
 import HeaderBieuMau from '../components/Header'
 import '../components/index.less'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import "../components/ReportTable.less";
-import { useParams } from 'react-router-dom';
-import bieuMauService from '../../../../services/bieuMau/bieuMauService';
 import ReportLoading from '../components/ReportLoading';
 import ReportEmptyData from '../components/ReportEmptyData';
 
-export default function Bieu01TKKK() {
-    const { reportInfo } = useParams<{ reportInfo: string }>();
+export interface IBieuMauProps {
+    isFetching: boolean;
+    reportData: any
+}
 
-    const [isFetchingData, setIsFetchingData] = useState(false)
-    const [reportData, setReportData] = useState<any[]>()
 
-    const reportInfoDecode = JSON.parse(atob(reportInfo || ""));
-    console.log("Bieu01TKKK: ", reportInfoDecode)
+export default function Bieu01TKKK(props: IBieuMauProps) {
 
-    const getBieuMauDetail = async () => {
-        setIsFetchingData(true)
-        const response = await bieuMauService.getDetailBieuMau(reportInfoDecode.loaiBieuMau, reportInfoDecode.capDVHC, reportInfoDecode.year, reportInfoDecode.dvhcId);
-
-        if (!response || response.code != 1 || response?.returnValue?.length <= 0) {
-            setIsFetchingData(false)
-            return
-        };
-        setReportData(response.returnValue)
-        setIsFetchingData(false)
-
-    }
-
-    useEffect(() => {
-        getBieuMauDetail();
-    }, [])
+    const reportData = props.reportData;
+    const isFetchingData = props.isFetching
 
 
     const reportDataComponent = () => {
         if ((!reportData || reportData?.length <= 0) && !isFetchingData) {
             return null;
         }
-        return reportData?.map(data => {
+        return reportData?.map((data: any) => {
             return (<tr key={data.id}>
                 <td>{data.stt}</td>
                 <td>{data.loaiDat}</td>
@@ -64,7 +47,6 @@ export default function Bieu01TKKK() {
                 <td>{data.congDongDanCu_CDQ}</td>
             </tr>)
         })
-
     }
 
 

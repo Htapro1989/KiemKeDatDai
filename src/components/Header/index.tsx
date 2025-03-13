@@ -69,10 +69,18 @@ const MenuBar = () => {
           Báo cáo
         </Link>
       </Menu.Item>
-      <Menu.Item key="mail3">
-        Quản lý hệ thống
-      </Menu.Item>
-      <Menu.Item key="mail4">
+      <Menu.SubMenu title='Quản lý hệ thống'>
+        <Menu.Item key="kyKiemKe">
+          Quản lý kỳ kiểm kê
+        </Menu.Item>
+        <Menu.Item key="nguoiDung">
+          Quản lý người dùng
+        </Menu.Item>
+        <Menu.Item key="quyenNguoiDung">
+          Quản lý quyền
+        </Menu.Item>
+      </Menu.SubMenu>
+      <Menu.Item key="banDo">
         Bản đồ
       </Menu.Item>
     </Menu>

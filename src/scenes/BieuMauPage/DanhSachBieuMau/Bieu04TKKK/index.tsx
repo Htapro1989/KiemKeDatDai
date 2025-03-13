@@ -1,6 +1,8 @@
 import React from 'react'
 import '../components/index.less'
 import HeaderBieuMau from '../components/Header'
+import "../components/ReportTable.less";
+
 
 
 export default function Bieu04TKKK() {

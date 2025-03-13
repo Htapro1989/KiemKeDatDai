@@ -107,13 +107,13 @@ class Login extends React.Component<ILoginProps, ILoginState> {
           label={"Mật khẩu"}
           name={'password'}
           rules={rules.password}>
-          <Input placeholder={"Nhập mật khẩu"} type="password" size="large" />
+          <Input placeholder={"Nhập mật khẩu"} type="password" size="large"/>
         </Form.Item>
         <Button
           loading={this.state.loading}
           style={{ marginTop: 40, width: '100%' }}
           htmlType={'submit'} type='primary'>
-          {L('LogIn')}
+          Đăng nhập
         </Button>
 
       </Form>

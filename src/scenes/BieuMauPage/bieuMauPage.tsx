@@ -1,5 +1,5 @@
 import './index.less'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Bieu01TKKK from './DanhSachBieuMau/Bieu01TKKK'
 import { useParams } from 'react-router-dom';
 import Bieu02TKKK from './DanhSachBieuMau/Bieu02TKKK';
@@ -13,19 +13,55 @@ import Bieu01aKKNLT from './DanhSachBieuMau/Bieu01aKKNLT';
 import Bieu01bKKNLT from './DanhSachBieuMau/Bieu01bKKNLT';
 import Bieu01cKKNLT from './DanhSachBieuMau/Bieu01cKKNLT';
 import Bieu02KKKNLT from './DanhSachBieuMau/Bieu02KKKNLT';
+import bieuMauService from '../../services/bieuMau/bieuMauService';
+import ChiTietBieuMauRequest from '../../models/BieuMau/ChiTietBieuMauRequest';
 
 
 
-const BieuMauPage: React.FC = () => {
+
+interface IBieuMauProps {
+  bieuMauRequest?: ChiTietBieuMauRequest;
+  isReload: boolean
+}
+
+
+const BieuMauPage = (props: IBieuMauProps) => {
   const { reportInfo } = useParams<{ reportInfo: string }>();
-  const reportInfoDecode = JSON.parse(atob(reportInfo || ""));
+  // const reportInfoDecode = JSON.parse(atob(reportInfo || ""));
+
+  const [isFetchingData, setIsFetchingData] = useState(false)
+  const [reportData, setReportData] = useState<any[]>()
+
+  const { capDVHC, loaiBieuMau, maDVHC, year } = props.bieuMauRequest!
+  console.log("ReportInfo: ", reportInfo)
+
+  const getBieuMauDetail = async () => {
+    setIsFetchingData(true)
+    const response = await bieuMauService.getDetailBieuMau(loaiBieuMau, capDVHC, year, maDVHC);
+
+    if (!response || response.code != 1 || response?.returnValue?.length <= 0) {
+      setIsFetchingData(false)
+      return
+    };
+    setReportData(response.returnValue)
+    setIsFetchingData(false)
+
+  }
+
+  useEffect(() => {
+    if (props.isReload) {
+      getBieuMauDetail();
+    }
+  }, [props.isReload])
+
+  if (!props.bieuMauRequest) return null;
 
   const genBieuMau = () => {
-    switch (reportInfoDecode?.loaiBieuMau) {
+    switch (loaiBieuMau) {
       case "01/TKKK":
-        return <Bieu01TKKK />
+        return <Bieu01TKKK isFetching={isFetchingData} reportData={reportData} />
       case "02/TKKK":
-        return <Bieu02TKKK />
+        return <Bieu02TKKK isFetching={isFetchingData} reportData={reportData} />
       case "03/TKKK":
         return <Bieu03TKKK />
       case "04/TKKK":

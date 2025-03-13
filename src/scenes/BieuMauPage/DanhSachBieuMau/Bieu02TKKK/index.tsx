@@ -1,8 +1,44 @@
 import React from 'react'
 import '../components/index.less'
 import HeaderBieuMau from '../components/Header'
+import ReportEmptyData from '../components/ReportEmptyData';
+import ReportLoading from '../components/ReportLoading';
+import { IBieuMauProps } from '../Bieu01TKKK';
 
-export default function Bieu02TKKK() {
+export default function Bieu02TKKK(props: IBieuMauProps) {
+    const reportData = props.reportData;
+    const isFetchingData = props.isFetching
+    const reportDataComponent = () => {
+        if ((!reportData || reportData?.length <= 0) && !isFetchingData) {
+            return null;
+        }
+        return reportData?.map((data: any) => {
+            return (<tr key={data.id}>
+                <td>{data.stt}</td>
+                <td>{data.loaiDat}</td>
+                <td>{data.ma}</td>
+                <td>{data.tongSo}</td>
+                <td>{data.caNhanTrongNuoc_CNV}</td>
+                <td>{data.nguoiVietNamONuocNgoai_CNN}</td>
+                <td>{data.coQuanNhaNuoc_TCN}</td>
+                <td>{data.donViSuNghiep_TSN}</td>
+                <td>{data.toChucXaHoi_TXH}</td>
+                <td>{data.toChucKinhTe_TKT}</td>
+                <td>{data.toChucKhac_TKH}</td>
+                <td>{data.toChucTonGiao_TTG}</td>
+                <td>{data.congDongDanCu_CDS}</td>
+                <td>{data.toChucNuocNgoai_TNG}</td>
+                <td>{data.nguoiVietNamONuocNgoai_CNN}</td>
+                <td>{data.toChucKinhTeVonNuocNgoai_TVN}</td>
+                <td>{data.coQuanNhaNuoc_TCQ}</td>
+                <td>{data.donViSuNghiep_TSQ}</td>
+                <td>{data.toChucKinhTe_KTQ}</td>
+                <td>{data.congDongDanCu_CDQ}</td>
+            </tr>)
+        })
+    }
+
+
     return (
         <div className='bieu-mau__layout-wrapper'>
             <HeaderBieuMau maBieu='Biểu 02/TKKK' tenBieu='THỐNG KÊ, KIỂM KÊ ĐỐI TƯỢNG SỬ DỤNG ĐẤT VÀ ĐỐI TƯỢNG ĐƯỢC GIAO QUẢN LÝ ĐẤT' />
@@ -62,8 +98,11 @@ export default function Bieu02TKKK() {
                         <td>(19)</td>
                         <td>(20)</td>
                     </tr>
+                    {reportDataComponent()}
                 </tbody>
             </table>
+            <ReportEmptyData isEmpty={(!reportData || reportData?.length <= 0) && !isFetchingData} />
+            <ReportLoading isLoading={isFetchingData} />
         </div>
     )
 }
