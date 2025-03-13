@@ -321,7 +321,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     if (baoCaoDVHC.Root == true)
                     {
                         var soDaDuyet = await _dvhcRepos.CountAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                        if (soDaDuyet == lstChild.Count)
+                        if (soDaDuyet == lstChild.Count && baoCaoDVHC.ChildStatus > 0)
                             baoCaoDVHC.IsNopBaoCao = true;
                         else
                             baoCaoDVHC.IsNopBaoCao = false;
