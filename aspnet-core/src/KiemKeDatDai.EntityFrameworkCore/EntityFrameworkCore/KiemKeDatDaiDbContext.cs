@@ -82,6 +82,9 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<BieuPhuLucIV> BieuPhuLucIV { get; set; }
 
         public virtual DbSet<DM_LoaiDat> DM_LoaiDat { get; set; }
+        public virtual DbSet<KhoanhDat_KyTruoc> KhoanhDat_KyTruoc { get; set; }
+        public virtual DbSet<SoLieuKyTruoc> SoLieuKyTruoc { get; set; }
+        public virtual DbSet<Data_BienDong> Data_BienDong { get; set; }
 
         public KiemKeDatDaiDbContext(DbContextOptions<KiemKeDatDaiDbContext> options)
             : base(options)

@@ -15,5 +15,6 @@ namespace KiemKeDatDai.EntitiesDb
         public string parent_code { get; set; }
         public string ThuTuHienThi { get; set; }
         public bool InDam { get; set; }
+        public long CapLoaiDat { get; set; }
     }
 }
