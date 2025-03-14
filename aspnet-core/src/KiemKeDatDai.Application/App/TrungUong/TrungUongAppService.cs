@@ -31,6 +31,8 @@ using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Transactions;
+using KiemKeDatDai.App.Huyen.Dto;
+using NuGet.Protocol;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -38,7 +40,6 @@ namespace KiemKeDatDai.App.DMBieuMau
     {
         private readonly ICacheManager _cacheManager;
         private readonly IIocResolver _iocResolver;
-        private readonly IRepository<KyThongKeKiemKe, long> _dmKyThongKeKiemKeRepos;
         private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
         private readonly IRepository<Bieu01TKKK_Tinh, long> _bieu01TKKK_TinhRepos;
         private readonly IRepository<Bieu01TKKK_Vung, long> _bieu01TKKK_VungRepos;
@@ -49,7 +50,6 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IRepository<Bieu02TKKK_Vung, long> _bieu02TKKK_VungRepos;
 
         private readonly IRepository<Bieu03TKKK, long> _bieu03TKKKRepos;
-        private readonly IRepository<Bieu03TKKK_Huyen, long> _bieu03TKKK_HuyenRepos;
         private readonly IRepository<Bieu03TKKK_Tinh, long> _bieu03TKKK_TinhRepos;
         private readonly IRepository<Bieu03TKKK_Vung, long> _bieu03TKKK_VungRepos;
 
@@ -102,6 +102,10 @@ namespace KiemKeDatDai.App.DMBieuMau
             IRepository<Bieu02TKKK_Tinh, long> bieu02TKKK_TinhRepos,
             IRepository<Bieu02TKKK_Vung, long> bieu02TKKK_VungRepos,
 
+            IRepository<Bieu03TKKK, long> bieu03TKKKRepos,
+            IRepository<Bieu03TKKK_Tinh, long> bieu03TKKK_TinhRepos,
+            IRepository<Bieu03TKKK_Vung, long> bieu03TKKK_VungRepos,
+
             IRepository<Bieu04TKKK, long> bieu04TKKKRepos,
             IRepository<Bieu04TKKK_Tinh, long> bieu04TKKK_TinhRepos,
             IRepository<Bieu04TKKK_Vung, long> bieu04TKKK_VungRepos,
@@ -139,7 +143,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             )
         {
             _dvhcRepos = dvhcRepos;
-            _dmKyThongKeKiemKeRepos = dmKyThongKeKiemKeRepos;
 
             _bieu01TKKK_TinhRepos = bieu01TKKK_TinhRepos;
             _bieu01TKKK_VungRepos = bieu01TKKK_VungRepos;
@@ -148,6 +151,10 @@ namespace KiemKeDatDai.App.DMBieuMau
             _bieu02TKKKRepos = bieu02TKKKRepos;
             _bieu02TKKK_TinhRepos = bieu02TKKK_TinhRepos;
             _bieu02TKKK_VungRepos = bieu02TKKK_VungRepos;
+
+            _bieu03TKKKRepos = bieu03TKKKRepos;
+            _bieu03TKKK_TinhRepos = bieu03TKKK_TinhRepos;
+            _bieu03TKKK_VungRepos = bieu03TKKK_VungRepos;
 
             _bieu04TKKKRepos = bieu04TKKKRepos;
             _bieu04TKKK_TinhRepos = bieu04TKKK_TinhRepos;
@@ -347,6 +354,18 @@ namespace KiemKeDatDai.App.DMBieuMau
             else
             {
                 commonResponseDto.Message = "Dữ liệu tỉnh biểu 02TKKK không tồn tại";
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                return commonResponseDto;
+            }
+
+            var data_bieu03TKKK = await _bieu03TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
+            if (data_bieu03TKKK != null)
+            {
+                await CreateOrUpdateBieu03TKKK_Tinh(data_bieu03TKKK, vungId, maVung, year, hamduyet);
+            }
+            else
+            {
+                commonResponseDto.Message = "Dữ liệu tỉnh biểu 03TKKK không tồn tại";
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
@@ -719,41 +738,41 @@ namespace KiemKeDatDai.App.DMBieuMau
                     //update huỷ duyệt tỉnh
                     else
                     {
-                        objTW.TongSo += tinh.TongSo;
-                        objTW.CaNhanTrongNuoc_CNV += tinh.CaNhanTrongNuoc_CNV;
-                        objTW.NguoiVietNamONuocNgoai_CNN += tinh.NguoiVietNamONuocNgoai_CNN;
-                        objTW.CoQuanNhaNuoc_TCN += tinh.CoQuanNhaNuoc_TCN;
-                        objTW.DonViSuNghiep_TSN += tinh.DonViSuNghiep_TSN;
-                        objTW.ToChucXaHoi_TXH += tinh.ToChucXaHoi_TXH;
-                        objTW.ToChucKinhTe_TKT += tinh.ToChucKinhTe_TKT;
-                        objTW.ToChucKhac_TKH += tinh.ToChucKhac_TKH;
-                        objTW.ToChucTonGiao_TTG += tinh.ToChucTonGiao_TTG;
-                        objTW.CongDongDanCu_CDS += tinh.CongDongDanCu_CDS;
-                        objTW.ToChucNuocNgoai_TNG += tinh.ToChucNuocNgoai_TNG;
-                        objTW.NguoiGocVietNamONuocNgoai_NGV += tinh.NguoiGocVietNamONuocNgoai_NGV;
-                        objTW.ToChucKinhTeVonNuocNgoai_TVN += tinh.ToChucKinhTeVonNuocNgoai_TVN;
-                        objTW.CoQuanNhaNuoc_TCQ += tinh.CoQuanNhaNuoc_TCQ;
-                        objTW.DonViSuNghiep_TSQ += tinh.DonViSuNghiep_TSQ;
-                        objTW.ToChucKinhTe_KTQ += tinh.ToChucKinhTe_KTQ;
-                        objTW.CongDongDanCu_CDQ += tinh.CongDongDanCu_CDQ;
+                        objTW.TongSo -= tinh.TongSo;
+                        objTW.CaNhanTrongNuoc_CNV -= tinh.CaNhanTrongNuoc_CNV;
+                        objTW.NguoiVietNamONuocNgoai_CNN -= tinh.NguoiVietNamONuocNgoai_CNN;
+                        objTW.CoQuanNhaNuoc_TCN -= tinh.CoQuanNhaNuoc_TCN;
+                        objTW.DonViSuNghiep_TSN -= tinh.DonViSuNghiep_TSN;
+                        objTW.ToChucXaHoi_TXH -= tinh.ToChucXaHoi_TXH;
+                        objTW.ToChucKinhTe_TKT -= tinh.ToChucKinhTe_TKT;
+                        objTW.ToChucKhac_TKH -= tinh.ToChucKhac_TKH;
+                        objTW.ToChucTonGiao_TTG -= tinh.ToChucTonGiao_TTG;
+                        objTW.CongDongDanCu_CDS -= tinh.CongDongDanCu_CDS;
+                        objTW.ToChucNuocNgoai_TNG -= tinh.ToChucNuocNgoai_TNG;
+                        objTW.NguoiGocVietNamONuocNgoai_NGV -= tinh.NguoiGocVietNamONuocNgoai_NGV;
+                        objTW.ToChucKinhTeVonNuocNgoai_TVN -= tinh.ToChucKinhTeVonNuocNgoai_TVN;
+                        objTW.CoQuanNhaNuoc_TCQ -= tinh.CoQuanNhaNuoc_TCQ;
+                        objTW.DonViSuNghiep_TSQ -= tinh.DonViSuNghiep_TSQ;
+                        objTW.ToChucKinhTe_KTQ -= tinh.ToChucKinhTe_KTQ;
+                        objTW.CongDongDanCu_CDQ -= tinh.CongDongDanCu_CDQ;
 
-                        objVung.TongSo += tinh.TongSo;
-                        objVung.CaNhanTrongNuoc_CNV += tinh.CaNhanTrongNuoc_CNV;
-                        objVung.NguoiVietNamONuocNgoai_CNN += tinh.NguoiVietNamONuocNgoai_CNN;
-                        objVung.CoQuanNhaNuoc_TCN += tinh.CoQuanNhaNuoc_TCN;
-                        objVung.DonViSuNghiep_TSN += tinh.DonViSuNghiep_TSN;
-                        objVung.ToChucXaHoi_TXH += tinh.ToChucXaHoi_TXH;
-                        objVung.ToChucKinhTe_TKT += tinh.ToChucKinhTe_TKT;
-                        objVung.ToChucKhac_TKH += tinh.ToChucKhac_TKH;
-                        objVung.ToChucTonGiao_TTG += tinh.ToChucTonGiao_TTG;
-                        objVung.CongDongDanCu_CDS += tinh.CongDongDanCu_CDS;
-                        objVung.ToChucNuocNgoai_TNG += tinh.ToChucNuocNgoai_TNG;
-                        objVung.NguoiGocVietNamONuocNgoai_NGV += tinh.NguoiGocVietNamONuocNgoai_NGV;
-                        objVung.ToChucKinhTeVonNuocNgoai_TVN += tinh.ToChucKinhTeVonNuocNgoai_TVN;
-                        objVung.CoQuanNhaNuoc_TCQ += tinh.CoQuanNhaNuoc_TCQ;
-                        objVung.DonViSuNghiep_TSQ += tinh.DonViSuNghiep_TSQ;
-                        objVung.ToChucKinhTe_KTQ += tinh.ToChucKinhTe_KTQ;
-                        objVung.CongDongDanCu_CDQ += tinh.CongDongDanCu_CDQ;
+                        objVung.TongSo -= tinh.TongSo;
+                        objVung.CaNhanTrongNuoc_CNV -= tinh.CaNhanTrongNuoc_CNV;
+                        objVung.NguoiVietNamONuocNgoai_CNN -= tinh.NguoiVietNamONuocNgoai_CNN;
+                        objVung.CoQuanNhaNuoc_TCN -= tinh.CoQuanNhaNuoc_TCN;
+                        objVung.DonViSuNghiep_TSN -= tinh.DonViSuNghiep_TSN;
+                        objVung.ToChucXaHoi_TXH -= tinh.ToChucXaHoi_TXH;
+                        objVung.ToChucKinhTe_TKT -= tinh.ToChucKinhTe_TKT;
+                        objVung.ToChucKhac_TKH -= tinh.ToChucKhac_TKH;
+                        objVung.ToChucTonGiao_TTG -= tinh.ToChucTonGiao_TTG;
+                        objVung.CongDongDanCu_CDS -= tinh.CongDongDanCu_CDS;
+                        objVung.ToChucNuocNgoai_TNG -= tinh.ToChucNuocNgoai_TNG;
+                        objVung.NguoiGocVietNamONuocNgoai_NGV -= tinh.NguoiGocVietNamONuocNgoai_NGV;
+                        objVung.ToChucKinhTeVonNuocNgoai_TVN -= tinh.ToChucKinhTeVonNuocNgoai_TVN;
+                        objVung.CoQuanNhaNuoc_TCQ -= tinh.CoQuanNhaNuoc_TCQ;
+                        objVung.DonViSuNghiep_TSQ -= tinh.DonViSuNghiep_TSQ;
+                        objVung.ToChucKinhTe_KTQ -= tinh.ToChucKinhTe_KTQ;
+                        objVung.CongDongDanCu_CDQ -= tinh.CongDongDanCu_CDQ;
                     }
                     await _bieu02TKKKRepos.UpdateAsync(objTW);
                     await _bieu02TKKK_VungRepos.UpdateAsync(objVung);
@@ -761,6 +780,132 @@ namespace KiemKeDatDai.App.DMBieuMau
                 else
                 {
                     await CreateBieu02TKKK_Tinh(tinh, vungId, maVung);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Biểu 03TKKK
+        private async Task CreateOrUpdateBieu03TKKK_Tinh(List<Bieu03TKKK_Tinh> tinh, long vungId, string maVung, long year, int hamduyet)
+        {
+            var data_TW = await _bieu03TKKKRepos.GetAllListAsync(x => x.Year == year);
+            if (data_TW.Count == 0)
+            {
+                foreach (var item in tinh)
+                {
+                    //Tạo các bản ghi trung ương tương ứng với bản ghi tỉnh
+                    await CreateBieu03TKKK_Tinh(item, vungId, maVung);
+                }
+            }
+            else
+            {
+                foreach (var item in tinh)
+                {
+                    //Cập nhật các bản ghi trung ương tương ứng với bản ghi tỉnh
+                    await UpdateBieu03TKKK_Tinh(item, vungId, maVung, year, hamduyet);
+                }
+            }
+        }
+
+        private async Task CreateBieu03TKKK_Tinh(Bieu03TKKK_Tinh tinh, long vungId, string maVung)
+        {
+            try
+            {
+                var bieu03Tkkk_tinh = new DVHCBieu03TKKKDto
+                {
+                    TenDVHC = _dvhcRepos.Single(x => x.Ma == tinh.MaTinh).Name,
+                    MaDVHC = tinh.MaTinh,
+                    TenLoaiDat = tinh.LoaiDat,
+                    MaLoaiDat = tinh.Ma,
+                    DienTich = tinh.TongDienTich,
+                };
+                var lstBieu03Tkkk_tinh = new List<DVHCBieu03TKKKDto>();
+                lstBieu03Tkkk_tinh.Add(bieu03Tkkk_tinh);
+                //Thêm mới bản ghi trung ương
+                var objTW = new Bieu03TKKK()
+                {
+                    STT = tinh.STT,
+                    LoaiDat = tinh.LoaiDat,
+                    Ma = tinh.Ma,
+                    TongDienTich = tinh.TongDienTich,
+                    DienTichTheoDVHC = lstBieu03Tkkk_tinh.ToJson(),
+                    Year = tinh.Year,
+                    Active = true,
+                };
+                await _bieu03TKKKRepos.InsertAsync(objTW);
+                //Thêm mới bản ghi vùng
+                var objVung = new Bieu03TKKK_Vung()
+                {
+                    STT = tinh.STT,
+                    LoaiDat = tinh.LoaiDat,
+                    Ma = tinh.Ma,
+                    TongDienTich = tinh.TongDienTich,
+                    DienTichTheoDVHC = lstBieu03Tkkk_tinh.ToJson(),
+                    Year = tinh.Year,
+                    VungId = vungId,
+                    MaVung = maVung,
+                    Active = true,
+                };
+                await _bieu03TKKK_VungRepos.InsertAsync(objVung);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        private async Task UpdateBieu03TKKK_Tinh(Bieu03TKKK_Tinh tinh, long vungId, string maVung, long year, int hamduyet)
+        {
+            try
+            {
+                var objTW = await _bieu03TKKKRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year);
+                var objVung = await _bieu03TKKK_VungRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year && x.MaVung == maVung);
+                if (objTW.Id > 0)
+                {
+                    var dientichtheoDVHC_TW = objTW.DienTichTheoDVHC.FromJson<List<DVHCBieu03TKKKDto>>();
+                    var dientichtheoDVHC_Vung = objVung.DienTichTheoDVHC.FromJson<List<DVHCBieu03TKKKDto>>();
+                    //update duyệt tỉnh
+                    if (hamduyet == (int)HAM_DUYET.DUYET)
+                    {
+                        var bieu03Tkkk_tinh = new DVHCBieu03TKKKDto
+                        {
+                            TenDVHC = _dvhcRepos.Single(x => x.Ma == tinh.MaTinh).Name,
+                            MaDVHC = tinh.MaTinh,
+                            TenLoaiDat = tinh.LoaiDat,
+                            MaLoaiDat = tinh.Ma,
+                            DienTich = tinh.TongDienTich,
+                        };
+
+                        objTW.TongDienTich += tinh.TongDienTich;
+                        dientichtheoDVHC_TW.Add(bieu03Tkkk_tinh);
+                        objTW.DienTichTheoDVHC = dientichtheoDVHC_TW.ToJson();
+
+                        objVung.TongDienTich += tinh.TongDienTich;
+                        dientichtheoDVHC_Vung.Add(bieu03Tkkk_tinh);
+                        objVung.DienTichTheoDVHC = dientichtheoDVHC_Vung.ToJson();
+                    }
+                    //update huỷ duyệt tỉnh
+                    else
+                    {
+                        objTW.TongDienTich -= tinh.TongDienTich;
+                        if (dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma) != null)
+                            dientichtheoDVHC_TW.Remove(dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma));
+                        objTW.DienTichTheoDVHC = dientichtheoDVHC_TW.ToJson();
+
+                        objVung.TongDienTich -= tinh.TongDienTich;
+                        if (dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma) != null)
+                            dientichtheoDVHC_Vung.Remove(dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma));
+                        objVung.DienTichTheoDVHC = dientichtheoDVHC_Vung.ToJson();
+                    }
+                    await _bieu03TKKKRepos.UpdateAsync(objTW);
+                    await _bieu03TKKK_VungRepos.UpdateAsync(objVung);
+                }
+                else
+                {
+                    await CreateBieu03TKKK_Tinh(tinh, vungId, maVung);
                 }
             }
             catch (Exception ex)
