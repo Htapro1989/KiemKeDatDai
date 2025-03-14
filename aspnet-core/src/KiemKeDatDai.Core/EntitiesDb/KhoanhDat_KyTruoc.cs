@@ -12,7 +12,7 @@ namespace KiemKeDatDai.EntitiesDb
     public class KhoanhDat_KyTruoc : FullAuditedEntity<long>
     {
         public string MaXa { get; set; }
-        public string STT { get; set; }
+        public int STT { get; set; }
         public decimal DienTich { get; set; }
         public string MaLoaiDat { get; set; }
         public long LoaiDatId { get; set; }
@@ -20,6 +20,6 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal DienTichKT { get; set; }
         public long Year { get; set; }
         public decimal DTKhongGian { get; set; }
-
+        public byte[] Geo { get; set; }
     }
 }

@@ -706,7 +706,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     else
                     {
                         objhuyen.TongDienTich -= xa.TongDienTichDVHC;
-                        if (dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma) != null)
+                        if (dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma) != null) 
                             dientichtheoDVHC.Remove(dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma));
                         objhuyen.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
                     }

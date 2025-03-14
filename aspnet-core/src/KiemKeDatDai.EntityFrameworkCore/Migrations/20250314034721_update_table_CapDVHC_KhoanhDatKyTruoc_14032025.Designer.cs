@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314034721_update_table_CapDVHC_KhoanhDatKyTruoc_14032025")]
+    partial class update_table_CapDVHC_KhoanhDatKyTruoc_14032025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7938,8 +7941,8 @@ namespace KiemKeDatDai.Migrations
                     b.Property<string>("MaXa")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("STT")
-                        .HasColumnType("int");
+                    b.Property<string>("STT")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");

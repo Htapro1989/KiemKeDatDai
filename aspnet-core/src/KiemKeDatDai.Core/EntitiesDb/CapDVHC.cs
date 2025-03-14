@@ -11,7 +11,7 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("CapDVHC")]
     public class CapDVHC : FullAuditedEntity<long>
     {
-        public string MaCapDVHC { get; set; }
+        public int MaCapDVHC { get; set; }
         public string Name { get; set; }
         public long Year { get; set; }
         public bool? CapDVHCMin { get; set; }

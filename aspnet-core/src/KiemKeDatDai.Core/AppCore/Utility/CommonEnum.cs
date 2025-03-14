@@ -37,7 +37,7 @@ namespace KiemKeDatDai
         }
         public enum CAP_DVHC
         {
-            TRUNG_UONG = 9,
+            TRUNG_UONG = 0,
             VUNG = 1,
             TINH = 2,
             HUYEN = 3,

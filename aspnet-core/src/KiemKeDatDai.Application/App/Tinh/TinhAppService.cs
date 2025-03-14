@@ -31,6 +31,8 @@ using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Transactions;
+using KiemKeDatDai.App.Huyen.Dto;
+using NuGet.Protocol;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -45,6 +47,9 @@ namespace KiemKeDatDai.App.DMBieuMau
 
         private readonly IRepository<Bieu02TKKK_Huyen, long> _bieu02TKKK_HuyenRepos;
         private readonly IRepository<Bieu02TKKK_Tinh, long> _bieu02TKKK_TinhRepos;
+
+        private readonly IRepository<Bieu03TKKK_Huyen, long> _bieu03TKKK_HuyenRepos;
+        private readonly IRepository<Bieu03TKKK_Tinh, long> _bieu03TKKK_TinhRepos;
 
         private readonly IRepository<Bieu04TKKK_Huyen, long> _bieu04TKKK_HuyenRepos;
         private readonly IRepository<Bieu04TKKK_Tinh, long> _bieu04TKKK_TinhRepos;
@@ -87,6 +92,9 @@ namespace KiemKeDatDai.App.DMBieuMau
             IRepository<Bieu02TKKK_Tinh, long> bieu02TKKK_TinhRepos,
             IRepository<Bieu02TKKK_Huyen, long> bieu02TKKK_HuyenRepos,
 
+            IRepository<Bieu03TKKK_Tinh, long> bieu03TKKK_TinhRepos,
+            IRepository<Bieu03TKKK_Huyen, long> bieu03TKKK_HuyenRepos,
+
             IRepository<Bieu04TKKK_Tinh, long> bieu04TKKK_TinhRepos,
             IRepository<Bieu04TKKK_Huyen, long> bieu04TKKK_HuyenRepos,
 
@@ -126,6 +134,9 @@ namespace KiemKeDatDai.App.DMBieuMau
 
             _bieu02TKKK_TinhRepos = bieu02TKKK_TinhRepos;
             _bieu02TKKK_HuyenRepos = bieu02TKKK_HuyenRepos;
+
+            _bieu03TKKK_TinhRepos = bieu03TKKK_TinhRepos;
+            _bieu03TKKK_HuyenRepos = bieu03TKKK_HuyenRepos;
 
             _bieu04TKKK_TinhRepos = bieu04TKKK_TinhRepos;
             _bieu04TKKK_HuyenRepos = bieu04TKKK_HuyenRepos;
@@ -328,6 +339,18 @@ namespace KiemKeDatDai.App.DMBieuMau
             else
             {
                 commonResponseDto.Message = "Dữ liệu huyện biểu 02TKKK không tồn tại";
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                return commonResponseDto;
+            }
+
+            var data_bieu03TKKK = await _bieu03TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+            if (data_bieu03TKKK != null)
+            {
+                await CreateOrUpdateBieu03TKKK_Tinh(data_bieu03TKKK, tinh.Id, tinh.MaTinh, year, hamduyet);
+            }
+            else
+            {
+                commonResponseDto.Message = "Dữ liệu huyện biểu 03TKKK không tồn tại";
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
@@ -604,6 +627,106 @@ namespace KiemKeDatDai.App.DMBieuMau
                 else
                 {
                     await CreateBieu02TKKK_Tinh(huyen, tinhId, maTinh);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Biểu 03TKKK
+        private async Task CreateOrUpdateBieu03TKKK_Tinh(List<Bieu03TKKK_Huyen> huyen, long tinhId, string maTinh, long year, int hamduyet)
+        {
+            var data_tinh = await _bieu03TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
+            if (data_tinh.Count == 0)
+            {
+                foreach (var item in huyen)
+                {
+                    //Tạo các bản ghi tỉnh tương ứng với bản ghi huyện
+                    await CreateBieu03TKKK_Tinh(item, tinhId, maTinh);
+                }
+            }
+            else
+            {
+                foreach (var item in huyen)
+                {
+                    //Cập nhật các bản ghi tỉnh tương ứng với bản ghi huyện
+                    await UpdateBieu03TKKK_Tinh(item, tinhId, maTinh, year, hamduyet);
+                }
+            }
+        }
+
+        private async Task CreateBieu03TKKK_Tinh(Bieu03TKKK_Huyen huyen, long tinhId, string maTinh)
+        {
+            try
+            {
+                var bieu03Tkkk_huyen = new DVHCBieu03TKKKDto
+                {
+                    TenDVHC = _dvhcRepos.Single(x => x.Ma == huyen.MaHuyen).Name,
+                    MaDVHC = huyen.MaHuyen,
+                    TenLoaiDat = huyen.LoaiDat,
+                    MaLoaiDat = huyen.Ma,
+                    DienTich = huyen.TongDienTich,
+                };
+                var lstBieu03Tkkk_huyen = new List<DVHCBieu03TKKKDto>();
+                lstBieu03Tkkk_huyen.Add(bieu03Tkkk_huyen);
+                var objtinh = new Bieu03TKKK_Tinh()
+                {
+                    STT = huyen.STT,
+                    LoaiDat = huyen.LoaiDat,
+                    Ma = huyen.Ma,
+                    TongDienTich = huyen.TongDienTich,
+                    DienTichTheoDVHC = lstBieu03Tkkk_huyen.ToJson(),
+                    TinhId = tinhId,
+                    MaTinh = maTinh,
+                    Year = huyen.Year,
+                    Active = true,
+                };
+                await _bieu03TKKK_TinhRepos.InsertAsync(objtinh);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        private async Task UpdateBieu03TKKK_Tinh(Bieu03TKKK_Huyen huyen, long tinhId, string maTinh, long year, int hamduyet)
+        {
+            try
+            {
+                var objtinh = await _bieu03TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year);
+                if (objtinh.Id > 0)
+                {
+                    var dientichtheoDVHC = objtinh.DienTichTheoDVHC.FromJson<List<DVHCBieu03TKKKDto>>();
+                    //update duyệt huyện
+                    if (hamduyet == (int)HAM_DUYET.DUYET)
+                    {
+                        var bieu03Tkkk_huyen = new DVHCBieu03TKKKDto
+                        {
+                            TenDVHC = _dvhcRepos.Single(x => x.Ma == huyen.MaHuyen).Name,
+                            MaDVHC = huyen.MaHuyen,
+                            TenLoaiDat = huyen.LoaiDat,
+                            MaLoaiDat = huyen.Ma,
+                            DienTich = huyen.TongDienTich,
+                        };
+                        objtinh.TongDienTich += huyen.TongDienTich;
+                        dientichtheoDVHC.Add(bieu03Tkkk_huyen);
+                        objtinh.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
+                    }
+                    //update huỷ duyệt huyện
+                    else
+                    {
+                        objtinh.TongDienTich -= huyen.TongDienTich;
+                        if (dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == huyen.MaHuyen && x.MaLoaiDat == huyen.Ma) != null)
+                            dientichtheoDVHC.Remove(dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == huyen.MaHuyen && x.MaLoaiDat == huyen.Ma));
+                        objtinh.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
+                    }
+                    await _bieu03TKKK_TinhRepos.UpdateAsync(objtinh);
+                }
+                else
+                {
+                    await CreateBieu03TKKK_Tinh(huyen, tinhId, maTinh);
                 }
             }
             catch (Exception ex)
