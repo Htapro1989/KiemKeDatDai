@@ -49,7 +49,7 @@ export class SiderMenu extends React.Component<ISideMenuProps, ISideMenuState> {
 
 
   render(): React.ReactNode {
-    const { donViHanhChinhList, isFetchingDonViHanhChinh, dmKyKiemKe, dmKyKiemKeSelected, donViHanhChinhSelected } = this.props.donViHanhChinhStore!
+    const { donViHanhChinhList, isFetchingDonViHanhChinh, dmKyKiemKe, dmKyKiemKeSelected, donViHanhChinhSelected, sideMenuExpanedKeys } = this.props.donViHanhChinhStore!
     return (
       <Sider trigger={null} className={'sidebar'} width={326} collapsible collapsed={false}
         theme='light'>
@@ -63,11 +63,15 @@ export class SiderMenu extends React.Component<ISideMenuProps, ISideMenuState> {
           <div className='sidebar-content-layout-divider'></div>
           {isFetchingDonViHanhChinh ? <Skeleton active /> : <div className='tree-menu-layout'>
             <Tree
+              autoExpandParent={true}
               treeData={donViHanhChinhList as any}
               loadData={this.onLoadData}
+              expandedKeys={sideMenuExpanedKeys ? sideMenuExpanedKeys : [donViHanhChinhSelected?.key]}
+              onExpand={(keys) => {
+                this.props.donViHanhChinhStore?.onSetSideMenuExpanedKey(keys)
+              }}
               selectedKeys={[donViHanhChinhSelected?.key]}
               onSelect={(selectedKeys, info) => {
-                console.log("Menu select ", info)
                 this.props.donViHanhChinhStore?.selectDonViHanhChinh(info.node);
               }
               }

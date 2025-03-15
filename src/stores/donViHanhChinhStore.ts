@@ -12,6 +12,7 @@ class DonViHanhChinhStore {
     @observable dmKyKiemKeSelected: string = '';
     @observable donViHanhChinhSelected: any;
     @observable donViHanhChinhOfUser: any
+    @observable sideMenuExpanedKeys: any;
 
     @action
     async fetchDonViHanhChinhList(userId: any) {
@@ -23,7 +24,6 @@ class DonViHanhChinhStore {
         this.dmKyKiemKe = dmKyKiemKeResponse.returnValue.map(DmKyKiemKeMapper.toDmKyKiemKeDto);
         this.dmKyKiemKeSelected = this.dmKyKiemKe[0].value;
 
-
         const dvhcByUserResponse = await dvhcService.getByUser(userId, this.dmKyKiemKeSelected)
         if (!dvhcByUserResponse || dvhcByUserResponse.code != 1 || dvhcByUserResponse.returnValue.length <= 0) return;
 
@@ -33,10 +33,15 @@ class DonViHanhChinhStore {
         this.donViHanhChinhSelected = this.donViHanhChinhList?.[0];
         this.donViHanhChinhOfUser = this.donViHanhChinhList?.[0];
         this.isFetchingDonViHanhChinh = false;
+
+        //load root parent child and default expand
+        await this.fetchDonViHanhChinhListByParentKey(this.donViHanhChinhSelected?.id)
+        // this.onSetSideMenuExpanedKey([22]);
     }
 
     @action
     async fetchDonViHanhChinhListByParentKey(parentId: string) {
+        if (!parentId) return;
         const dvhcByParentIdResponse = await dvhcService.getByParentId(parentId)
         if (!dvhcByParentIdResponse || dvhcByParentIdResponse.code != 1 || dvhcByParentIdResponse.returnValue.length <= 0) return;
 
@@ -44,7 +49,7 @@ class DonViHanhChinhStore {
 
         const updateTreeData = (list: DonViHanhChinhMenu[], key: string, children: DonViHanhChinhMenu[]): DonViHanhChinhMenu[] =>
             list.map(node => {
-                if (node.key === key) {
+                if (node.key == key) {
                     return {
                         ...node,
                         children,
@@ -58,6 +63,7 @@ class DonViHanhChinhStore {
                 }
                 return node;
             });
+
         this.donViHanhChinhList = updateTreeData(this.donViHanhChinhList, parentId, children);
     }
 
@@ -66,8 +72,10 @@ class DonViHanhChinhStore {
         this.donViHanhChinhSelected = dvhc;
     }
 
-
+    @action
+    async onSetSideMenuExpanedKey(keys: any[]) {
+        this.sideMenuExpanedKeys = keys;
+    }
 }
-
 
 export default DonViHanhChinhStore;

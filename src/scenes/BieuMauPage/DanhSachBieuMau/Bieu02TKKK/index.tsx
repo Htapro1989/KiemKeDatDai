@@ -9,10 +9,10 @@ export default function Bieu02TKKK(props: IBieuMauProps) {
     const reportData = props.reportData;
     const isFetchingData = props.isFetching
     const reportDataComponent = () => {
-        if ((!reportData || reportData?.length <= 0) && !isFetchingData) {
+        if (!reportData) {
             return null;
         }
-        return reportData?.map((data: any) => {
+        return reportData.data.map((data: any) => {
             return (<tr key={data.id}>
                 <td>{data.stt}</td>
                 <td>{data.loaiDat}</td>
@@ -41,7 +41,10 @@ export default function Bieu02TKKK(props: IBieuMauProps) {
 
     return (
         <div className='bieu-mau__layout-wrapper'>
-            <HeaderBieuMau maBieu='Biểu 02/TKKK' tenBieu='THỐNG KÊ, KIỂM KÊ ĐỐI TƯỢNG SỬ DỤNG ĐẤT VÀ ĐỐI TƯỢNG ĐƯỢC GIAO QUẢN LÝ ĐẤT' />
+            <HeaderBieuMau
+                donViBaoCao={reportData}
+                maBieu='Biểu 02/TKKK'
+                tenBieu='THỐNG KÊ, KIỂM KÊ ĐỐI TƯỢNG SỬ DỤNG ĐẤT VÀ ĐỐI TƯỢNG ĐƯỢC GIAO QUẢN LÝ ĐẤT' />
             <table className="report-table">
                 <thead>
                     <tr>

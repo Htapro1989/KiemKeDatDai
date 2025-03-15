@@ -28,12 +28,11 @@ export default function BieuDoTab(props: IBieuDoTabProps) {
             render: (text: string, record: any) => <a style={{ textAlign: 'center' }} onClick={() => openReport(record)} target="_blank">Xem</a>
         },
     ]
-
     const openReport = (record: any) => {
         const reportObject = {
             loaiBieuMau: record?.kyHieu,
-            capDVHC: '4',
-            maDVHC: '06493',
+            capDVHC: props.donViHanhChinhSelected?.capDVHCId,
+            maDVHC: props.donViHanhChinhSelected?.ma,
             year: props.donViHanhChinhSelected.year
         }
 
@@ -71,7 +70,6 @@ export default function BieuDoTab(props: IBieuDoTabProps) {
                 columns={columns}
                 loading={isFetchBaoCao}
                 dataSource={listBaoCao}
-                scroll={{ y: 420 }}
                 pagination={false}
             />
 

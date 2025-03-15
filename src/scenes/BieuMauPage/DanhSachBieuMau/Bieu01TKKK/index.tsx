@@ -7,7 +7,7 @@ import ReportEmptyData from '../components/ReportEmptyData';
 
 export interface IBieuMauProps {
     isFetching: boolean;
-    reportData: any
+    reportData: any;
 }
 
 
@@ -18,10 +18,10 @@ export default function Bieu01TKKK(props: IBieuMauProps) {
 
 
     const reportDataComponent = () => {
-        if ((!reportData || reportData?.length <= 0) && !isFetchingData) {
+        if (!reportData) {
             return null;
         }
-        return reportData?.map((data: any) => {
+        return reportData.data.map((data: any) => {
             return (<tr key={data.id}>
                 <td>{data.stt}</td>
                 <td>{data.loaiDat}</td>
@@ -49,10 +49,12 @@ export default function Bieu01TKKK(props: IBieuMauProps) {
         })
     }
 
-
     return (
         <div className='bieu-mau__layout-wrapper'>
-            <HeaderBieuMau maBieu='Biểu 01/TKKK' tenBieu='THỐNG KÊ, KIỂM KÊ DIỆN TÍCH ĐẤT ĐAI (1)' />
+            <HeaderBieuMau
+                donViBaoCao={reportData}
+                maBieu='Biểu 01/TKKK'
+                tenBieu='THỐNG KÊ, KIỂM KÊ DIỆN TÍCH ĐẤT ĐAI (1)' />
             <table className="report-table">
                 <thead>
                     <tr>

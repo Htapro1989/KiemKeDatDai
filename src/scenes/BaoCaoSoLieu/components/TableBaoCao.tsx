@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import dvhcService from '../../../services/dvhc/dvhcService';
 import baoCaoService from '../../../services/baoCao/baoCaoService';
 import ConfirmButton from '../../../components/AppComponentBase/ConfirmButton';
+import { CAP_DVHC_ENUM } from '../../../models/enum';
 
 interface ITableBaoCaoProps {
     maDVHC: any;
@@ -14,14 +15,16 @@ interface ITableBaoCaoProps {
 
 export default function TableBaoCao(props: ITableBaoCaoProps) {
     const [listDvhc, setListDvhc] = useState([])
-    const [isLoading, setIsLoading] = useState<any>()
+    const [isActioning, setIsActioning] = useState<any>()
+    const [expandedKeys, setExpandedKeys] = useState<any[]>([])
 
     const renderTrangThaiBaoCao: any = (text: string, item: any) => {
+
         if (item.root && item.isNopBaoCao)
             return <Button
                 type="primary"
                 size='small'
-                loading={isLoading?.maDv == item.maDVHC && isLoading?.loading}
+                loading={isActioning?.maDv == item.maDVHC && isActioning?.loading}
                 onClick={onNopBaoCao}>Nộp</Button>
         if (!item.root && (item.trangThaiDuyet == 1 || item.trangThaiDuyet == 2))
             return (
@@ -30,7 +33,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                         size='small'
                         type="primary"
                         disabled={item.trangThaiDuyet == 2}
-                        loading={isLoading?.maDv == item.maDVHC && isLoading?.loading && isLoading.action == 'DUYET'}
+                        loading={isActioning?.maDv == item.maDVHC && isActioning?.loading && isActioning.action == 'DUYET'}
                         onClick={() => onDuyetBaoCaoDonViBenDuoi(item.maDVHC)}
                         style={{ marginRight: 4 }}>Duyệt</Button>
                     <ConfirmButton
@@ -42,7 +45,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                         buttonProps={{
                             type: "ghost",
                             size: 'small',
-                            loading: isLoading?.maDv == item.maDVHC && isLoading?.loading
+                            loading: isActioning?.maDv == item.maDVHC && isActioning?.loading
                         }}
                     />
                 </Row>
@@ -51,7 +54,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
     }
 
     const onDuyetBaoCaoDonViBenDuoi = async (maDVHCNopBaoCao: string) => {
-        setIsLoading({
+        setIsActioning({
             maDv: maDVHCNopBaoCao,
             loading: true,
             action: 'DUYET'
@@ -68,12 +71,12 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                 message: response?.message ? response?.message : "Thất bại. Vui lòng thử lại"
             })
         }
-        setIsLoading({
+        setIsActioning({
             loading: false
         })
     }
     const onHuyDuyetBaoCaoDonViBenDuoi = async (maDVHCNopBaoCao: string) => {
-        setIsLoading({
+        setIsActioning({
             maDv: maDVHCNopBaoCao,
             loading: true
         })
@@ -89,13 +92,13 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                 message: response?.message ? response?.message : "Thất bại. Vui lòng thử lại"
             })
         }
-        setIsLoading({
+        setIsActioning({
             loading: false
         })
     }
 
     const onNopBaoCao = async () => {
-        setIsLoading({
+        setIsActioning({
             maDv: props.maDVHC,
             loading: true
         })
@@ -111,7 +114,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                 message: response?.message ? response?.message : "Thất bại. Vui lòng thử lại"
             })
         }
-        setIsLoading({
+        setIsActioning({
             loading: false
         })
     }
@@ -119,21 +122,23 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
     const columns: ColumnsType<any> = [
         { title: 'Đơn vị hành chính', dataIndex: 'ten', key: 'ten' },
         {
-            title: 'Ngày cập nhật', dataIndex: 'ngayCapNhat', key: 'ngayCapNhat', align: "center", width: 180,
+            title: 'Ngày cập nhật', dataIndex: 'ngayCapNhat', key: 'ngayCapNhat', align: "center",
             render: (text: string, item: any) => (<div>{item?.ngayCapNhat ? moment(item?.ngayCapNhat, 'YYYY-MM-DD').format("DD/MM/YYYY") : ''}</div>)
         },
         {
-            title: 'Tổng nộp/Tổng xã', dataIndex: 'tongNopTrenTongXa', key: 'tongNop', width: 160, align: "center",
+            title: 'Tổng nộp/Tổng xã', dataIndex: 'tongNopTrenTongXa', key: 'tongNop',
+            align: "center",
             render: (text: string, item: any) => (<div>{item?.tongNop}/{item?.tong}</div>)
         },
         {
             title: 'Tổng duyệt/Tổng xã', dataIndex: 'tongDuyetTrenTongXa', key: 'tongDuyet', align: "center",
-            width: 170,
             render: (text: string, item: any) => (<div>{item?.tongDuyet}/{item?.tong}</div>)
         },
         {
             title: 'Trạng thái', dataIndex: 'status', key: 'status', align: "center",
-            render: renderTrangThaiBaoCao
+            render: renderTrangThaiBaoCao,
+            //Vùng ko đc phép duyệt/nộp báo cáo
+            className: CAP_DVHC_ENUM.VUNG == props.capDVHCID ? "hidden-column" : '',
         },
     ];
 
@@ -152,6 +157,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         if (!baoCaoResponse || baoCaoResponse.code != 1 || baoCaoResponse.returnValue.length <= 0) return;
         const newListDvhc: any = onRefactorBaoCaoList(props.maDVHC, baoCaoResponse.returnValue);
         setListDvhc(newListDvhc)
+        setExpandedKeys([props.maDVHC])
     }
 
     const updateChild = (list: any, id: any, children: any) => {
@@ -194,12 +200,17 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                 rowKey="maDVHC"
                 bordered={true}
                 columns={columns}
-                expandedRowKeys={[props.maDVHC]}
+                // 
+
                 expandable={{
                     onExpand: (expanded, record) => {
                         if (record.children.length > 0) return
                         getChildBaoCao(record.maDVHC, props.year, record.id);
                     },
+                    onExpandedRowsChange: (key) => {
+                        setExpandedKeys(key)
+                    },
+                    expandedRowKeys: expandedKeys
                 }}
                 dataSource={listDvhc}
                 pagination={false}

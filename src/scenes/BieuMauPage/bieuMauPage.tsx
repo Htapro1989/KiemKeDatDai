@@ -1,7 +1,6 @@
 import './index.less'
 import React, { useEffect, useState } from 'react'
 import Bieu01TKKK from './DanhSachBieuMau/Bieu01TKKK'
-import { useParams } from 'react-router-dom';
 import Bieu02TKKK from './DanhSachBieuMau/Bieu02TKKK';
 import Bieu03TKKK from './DanhSachBieuMau/Bieu03TKKK';
 import Bieu04TKKK from './DanhSachBieuMau/Bieu04TKKK';
@@ -26,21 +25,18 @@ interface IBieuMauProps {
 
 
 const BieuMauPage = (props: IBieuMauProps) => {
-  const { reportInfo } = useParams<{ reportInfo: string }>();
-  // const reportInfoDecode = JSON.parse(atob(reportInfo || ""));
-
-  const [isFetchingData, setIsFetchingData] = useState(false)
-  const [reportData, setReportData] = useState<any[]>()
 
   const { capDVHC, loaiBieuMau, maDVHC, year } = props.bieuMauRequest!
-  console.log("ReportInfo: ", reportInfo)
+
+  const [isFetchingData, setIsFetchingData] = useState(false)
+  const [reportData, setReportData] = useState<any>()
 
   const getBieuMauDetail = async () => {
     setIsFetchingData(true)
     const response = await bieuMauService.getDetailBieuMau(loaiBieuMau, capDVHC, year, maDVHC);
-
-    if (!response || response.code != 1 || response?.returnValue?.length <= 0) {
+    if (!response || response.code != 1) {
       setIsFetchingData(false)
+      setReportData(null)
       return
     };
     setReportData(response.returnValue)
@@ -59,9 +55,11 @@ const BieuMauPage = (props: IBieuMauProps) => {
   const genBieuMau = () => {
     switch (loaiBieuMau) {
       case "01/TKKK":
-        return <Bieu01TKKK isFetching={isFetchingData} reportData={reportData} />
+        return <Bieu01TKKK
+          isFetching={isFetchingData} reportData={reportData} />
       case "02/TKKK":
-        return <Bieu02TKKK isFetching={isFetchingData} reportData={reportData} />
+        return <Bieu02TKKK
+          isFetching={isFetchingData} reportData={reportData} />
       case "03/TKKK":
         return <Bieu03TKKK />
       case "04/TKKK":

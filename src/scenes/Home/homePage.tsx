@@ -1,4 +1,4 @@
-import { Layout, Tabs } from 'antd';
+import { Card, Layout, Tabs } from 'antd';
 import './index.less';
 import React from 'react'
 import SiderMenu from '../../components/SiderMenu';
@@ -7,6 +7,7 @@ import Stores from '../../stores/storeIdentifier';
 import DonViHanhChinhStore from '../../stores/donViHanhChinhStore';
 import SessionStore from '../../stores/sessionStore';
 import BieuDoTab from './components/BieuDoTab';
+import TrangThaiDVHCTab from './components/TrangThaiDVHCTab';
 
 export interface IHomePageProps {
   donViHanhChinhStore?: DonViHanhChinhStore;
@@ -39,15 +40,19 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         <div className='home-page-wrapper'>
           <h1 className='txt-page-header'>{donViHanhChinhSelected?.title}</h1>
 
-          <Tabs defaultActiveKey="1">
-            <Tabs.TabPane tab="Biểu đồ tổng hợp" key="1">
-              <BieuDoTab donViHanhChinhSelected={donViHanhChinhSelected} />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Quản lý file" key="2">
-              Content of Tab Pane 2
-            </Tabs.TabPane>
-
-          </Tabs>
+          <Card style={{ flex: 1 }}>
+            <Tabs defaultActiveKey="1">
+              <Tabs.TabPane tab="Biểu tổng hợp" key="1">
+                <BieuDoTab donViHanhChinhSelected={donViHanhChinhSelected} />
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Tài liệu" key="2">
+                Content of Tab Pane 2
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Trạng thái báo cáo" key="3">
+                <TrangThaiDVHCTab dvhcRoot={donViHanhChinhSelected} />
+              </Tabs.TabPane>
+            </Tabs>
+          </Card>
 
         </div>
 
