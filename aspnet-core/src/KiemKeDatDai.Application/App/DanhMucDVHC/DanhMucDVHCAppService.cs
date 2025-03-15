@@ -87,8 +87,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     if (dvhcId != 0)
                     {
                         var query = (from dvhc in _dvhcRepos.GetAll()
-                                     join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
-                                     where dvhc.Id == dvhcId && dvhc.Year == input.year
+                                     join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
+                                     where dvhc.Id == dvhcId && dvhc.Year == input.Year
                                      select new DVHCOutputDto
                                      {
                                          Id = dvhc.Id,
@@ -100,6 +100,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                          MaHuyen = dvhc.MaHuyen,
                                          TenXa = dvhc.TenXa,
                                          MaXa = dvhc.MaXa,
+                                         Ma = dvhc.Ma,
                                          Name = dvhc.Name,
                                          Parent_id = dvhc.Parent_id,
                                          CapDVHCId = dvhc.CapDVHCId,
@@ -138,7 +139,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 var lstDVHC = new List<DVHCOutputDto>();
                 PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
                 var query = (from dvhc in _dvhcRepos.GetAll()
-                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
+                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
                              where dvhc.Parent_id == id
                              select new DVHCOutputDto
                              {
@@ -149,6 +150,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                  MaHuyen = dvhc.MaHuyen,
                                  TenXa = dvhc.TenXa,
                                  MaXa = dvhc.MaXa,
+                                 Ma = dvhc.Ma,
                                  Name = dvhc.Name,
                                  Parent_id = dvhc.Parent_id,
                                  CapDVHCId = dvhc.CapDVHCId,
@@ -203,13 +205,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         data.Year = input.Year;
                         data.TrangThaiDuyet = input.TrangThaiDuyet;
                         await _dvhcRepos.UpdateAsync(data);
-                        //insert log
-                        //var log = new LogInputDto
-                        //{
-                        //    UserId = currentUser.Id,
-                        //    Describle = "sửa dữ liệu thông tin hồ chứa"
-                        //};
-                        //_iLogAppService.Create(log);
                     }
                     else
                     {
@@ -222,13 +217,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 {
                     var dvhc = input.MapTo<DVHCInputDto>();
                     await _dvhcRepos.InsertAsync(dvhc);
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Thêm dữ liệu thông tin hồ chứa"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -255,13 +243,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     await _dvhcRepos.DeleteAsync(objDVHC);
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Xoá dữ liệu đơn vị hành chính"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 else
                 {
@@ -280,7 +261,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
         }
 
         [AbpAuthorize]
-        public async Task<CommonResponseDto> BaoCaoDVHC()
+        public async Task<CommonResponseDto> BaoCaoDVHC(BaoCaoInPutDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -288,26 +269,126 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var currentUser = await GetCurrentUserAsync();
                 var lstBaoCao = new List<BaoCaoDonViHanhChinhOutPutDto>();
-                var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+                var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.Ma && x.Year == input.Year);
                 if (objdata != null)
                 {
                     var baoCaoDVHC = new BaoCaoDonViHanhChinhOutPutDto
                     {
                         Id = objdata.Id,
-                        Ten = objdata.TenTinh,
+                        Ten = objdata.Name,
+                        MaDVHC = objdata.Ma,
+                        ParentId = objdata.Parent_id,
+                        NgayCapNhat = objdata.NgayGui,
+                        TrangThaiDuyet = objdata.TrangThaiDuyet,
+                        ChildStatus = 1
                     };
-                    if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon)
+                    baoCaoDVHC.Root = currentUser.DonViHanhChinhCode == input.Ma ? true : false;
+                    switch (objdata.CapDVHCId)
                     {
-                        commonResponseDto.Message = "Chưa duyệt hết các xã trong huyện";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        case (int)CAP_DVHC.TRUNG_UONG:
+                            baoCaoDVHC.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA);
+                            baoCaoDVHC.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                            baoCaoDVHC.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
+                            break;
+                        case (int)CAP_DVHC.VUNG:
+                            var lstMaTinh = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == objdata.Ma).Select(x => x.Ma).ToArrayAsync();
+                            baoCaoDVHC.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh));
+                            baoCaoDVHC.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                            baoCaoDVHC.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
+                            break;
+                        case (int)CAP_DVHC.TINH:
+                            baoCaoDVHC.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == objdata.MaTinh);
+                            baoCaoDVHC.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == objdata.MaTinh && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                            baoCaoDVHC.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == objdata.MaTinh && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
+                            break;
+                        case (int)CAP_DVHC.HUYEN:
+                            baoCaoDVHC.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaHuyen == objdata.MaHuyen);
+                            baoCaoDVHC.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaHuyen == objdata.MaHuyen && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                            baoCaoDVHC.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaHuyen == objdata.MaHuyen && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
+                            break;
+                        case (int)CAP_DVHC.XA:
+                            baoCaoDVHC.Tong = 1;
+                            baoCaoDVHC.TongDuyet = objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0;
+                            baoCaoDVHC.TongNop = objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0;
+                            baoCaoDVHC.ChildStatus = 0;
+                            break;
+                        default:
+                            break;
                     }
-                    objdata.NgayGui = DateTime.Now;
-                    objdata.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
-                    await _dvhcRepos.UpdateAsync(objdata);
+
+                    var lstChild = await _dvhcRepos.GetAllListAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year);
+                    //Xác định  trạng thái button nộp báo cáo
+                    if (baoCaoDVHC.Root == true)
+                    {
+                        if (baoCaoDVHC.ChildStatus == 0)
+                        {
+                            baoCaoDVHC.IsNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
+                        }
+                        else
+                        {
+                            var soDaDuyet = await _dvhcRepos.CountAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                            if (soDaDuyet == lstChild.Count && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET)
+                                baoCaoDVHC.IsNopBaoCao = true;
+                            else
+                                baoCaoDVHC.IsNopBaoCao = false;
+                        }
+                    }
+                    lstBaoCao.Add(baoCaoDVHC);
+                    if (lstChild != null)
+                    {
+                        foreach (var item in lstChild)
+                        {
+
+                            var baoCaoDVHC_child = new BaoCaoDonViHanhChinhOutPutDto
+                            {
+                                Id = item.Id,
+                                Ten = item.Name,
+                                MaDVHC = item.Ma,
+                                ParentId = item.Parent_id,
+                                NgayCapNhat = item.NgayGui,
+                                TrangThaiDuyet = item.TrangThaiDuyet,
+                                IsNopBaoCao = false
+                            };
+                            switch (item.CapDVHCId)
+                            {
+                                case (int)CAP_DVHC.VUNG:
+                                    var lstMaTinh = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == objdata.Ma).Select(x => x.Ma).ToArrayAsync();
+                                    baoCaoDVHC_child.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh));
+                                    baoCaoDVHC_child.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                                    baoCaoDVHC_child.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
+                                    baoCaoDVHC_child.ChildStatus = 1;
+                                    break;
+                                case (int)CAP_DVHC.TINH:
+                                    baoCaoDVHC_child.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == item.MaTinh);
+                                    baoCaoDVHC_child.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == item.MaTinh && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                                    baoCaoDVHC_child.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == item.MaTinh && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
+                                    baoCaoDVHC_child.ChildStatus = 1;
+                                    break;
+                                case (int)CAP_DVHC.HUYEN:
+                                    baoCaoDVHC_child.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaHuyen == item.MaHuyen);
+                                    baoCaoDVHC_child.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaHuyen == item.MaHuyen && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                                    baoCaoDVHC_child.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaHuyen == item.MaHuyen && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
+                                    baoCaoDVHC_child.ChildStatus = 1;
+                                    break;
+                                case (int)CAP_DVHC.XA:
+                                    baoCaoDVHC_child.Tong = 1;
+                                    baoCaoDVHC_child.TongDuyet = item.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0;
+                                    baoCaoDVHC_child.TongNop = item.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0;
+                                    baoCaoDVHC_child.ChildStatus = 0;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            lstBaoCao.Add(baoCaoDVHC_child);
+                        }
+                    }
+                    commonResponseDto.ReturnValue = lstBaoCao;
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
-                    commonResponseDto.Message = "Huyện này không tồn tại";
+                    commonResponseDto.Message = "ĐVHC này không tồn tại";
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 }
             }

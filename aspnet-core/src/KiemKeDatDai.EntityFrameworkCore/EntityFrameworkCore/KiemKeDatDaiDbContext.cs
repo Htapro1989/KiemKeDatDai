@@ -51,7 +51,40 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Bieu01TKKK_Tinh> Bieu01TKKK_Tinh { get; set; }
         public virtual DbSet<Bieu01TKKK_Huyen> Bieu01TKKK_Huyen { get; set; }
         public virtual DbSet<Bieu01TKKK_Xa> Bieu01TKKK_Xa { get; set; }
+
+        public virtual DbSet<Bieu02TKKK> Bieu02TKKK { get; set; }
+        public virtual DbSet<Bieu02TKKK_Vung> Bieu02TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu02TKKK_Tinh> Bieu02TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu02TKKK_Huyen> Bieu02TKKK_Huyen { get; set; }
+        public virtual DbSet<Bieu02TKKK_Xa> Bieu02TKKK_Xa { get; set; }
+
+        public virtual DbSet<Bieu03TKKK> Bieu03TKKK { get; set; }
+        public virtual DbSet<Bieu03TKKK_Vung> Bieu03TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu03TKKK_Tinh> Bieu03TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu03TKKK_Huyen> Bieu03TKKK_Huyen { get; set; }
+
+        public virtual DbSet<Bieu04TKKK> Bieu04TKKK { get; set; }
+        public virtual DbSet<Bieu04TKKK_Vung> Bieu04TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu04TKKK_Tinh> Bieu04TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu04TKKK_Huyen> Bieu04TKKK_Huyen { get; set; }
+        public virtual DbSet<Bieu04TKKK_Xa> Bieu04TKKK_Xa { get; set; }
+
+        public virtual DbSet<Bieu05TKKK> Bieu05TKKK { get; set; }
+        public virtual DbSet<Bieu05TKKK_Vung> Bieu05TKKK_Vung { get; set; }
+        public virtual DbSet<Bieu05TKKK_Tinh> Bieu05TKKK_Tinh { get; set; }
+        public virtual DbSet<Bieu05TKKK_Huyen> Bieu05TKKK_Huyen { get; set; }
+        public virtual DbSet<Bieu05TKKK_Xa> Bieu05TKKK_Xa { get; set; }
+
+        public virtual DbSet<Bieu06TKKKQPAN> Bieu06TKKKQPAN { get; set; }
+        public virtual DbSet<Bieu06TKKKQPAN_Tinh> Bieu06TKKKQPAN_Tinh { get; set; }
+
+        public virtual DbSet<BieuPhuLucIII> BieuPhuLucIII { get; set; }
+        public virtual DbSet<BieuPhuLucIV> BieuPhuLucIV { get; set; }
+
         public virtual DbSet<DM_LoaiDat> DM_LoaiDat { get; set; }
+        public virtual DbSet<KhoanhDat_KyTruoc> KhoanhDat_KyTruoc { get; set; }
+        public virtual DbSet<SoLieuKyTruoc> SoLieuKyTruoc { get; set; }
+        public virtual DbSet<Data_BienDong> Data_BienDong { get; set; }
 
         public KiemKeDatDaiDbContext(DbContextOptions<KiemKeDatDaiDbContext> options)
             : base(options)

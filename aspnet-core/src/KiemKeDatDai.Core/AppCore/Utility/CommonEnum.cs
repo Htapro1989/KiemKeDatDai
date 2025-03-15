@@ -35,6 +35,14 @@ namespace KiemKeDatDai
             CHO_DUYET = 1,
             DA_DUYET = 2
         }
+        public enum CAP_DVHC
+        {
+            TRUNG_UONG = 0,
+            VUNG = 1,
+            TINH = 2,
+            HUYEN = 3,
+            XA = 4
+        }
 
         public enum HAM_DUYET
         {

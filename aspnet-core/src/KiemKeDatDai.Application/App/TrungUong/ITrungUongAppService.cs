@@ -11,7 +11,7 @@ namespace KiemKeDatDai.RisApplication
 {
     public interface ITrungUongAppService : IApplicationService
     {
-        Task<CommonResponseDto> DuyetBaoCaoTinh(long tinhId);
-        Task<CommonResponseDto> HuyDuyetBaoCaoTinh(long tinhId);
+        Task<CommonResponseDto> DuyetBaoCaoTinh(string ma, long year);
+        Task<CommonResponseDto> HuyDuyetBaoCaoTinh(string ma, long year);
     }
 }
