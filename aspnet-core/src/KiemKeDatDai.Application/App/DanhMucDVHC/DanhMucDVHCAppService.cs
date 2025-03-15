@@ -320,18 +320,21 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     //Xác định  trạng thái button nộp báo cáo
                     if (baoCaoDVHC.Root == true)
                     {
-                        if (baoCaoDVHC.ChildStatus == 0)
-                        {
-                            baoCaoDVHC.IsNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
-                        }
-                        else
-                        {
-                            var soDaDuyet = await _dvhcRepos.CountAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                            if (soDaDuyet == lstChild.Count && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET)
-                                baoCaoDVHC.IsNopBaoCao = true;
-                            else
-                                baoCaoDVHC.IsNopBaoCao = false;
-                        }
+                        baoCaoDVHC.IsNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
+
+                        //----------Tạm bỏ điều kiện check nộp
+                        //if (baoCaoDVHC.ChildStatus == 0)
+                        //{
+                        //    baoCaoDVHC.IsNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
+                        //}
+                        //else
+                        //{
+                        //    var soDaDuyet = await _dvhcRepos.CountAsync(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                        //    if (soDaDuyet == lstChild.Count && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET)
+                        //        baoCaoDVHC.IsNopBaoCao = true;
+                        //    else
+                        //        baoCaoDVHC.IsNopBaoCao = false;
+                        //}
                     }
                     lstBaoCao.Add(baoCaoDVHC);
                     if (lstChild != null)

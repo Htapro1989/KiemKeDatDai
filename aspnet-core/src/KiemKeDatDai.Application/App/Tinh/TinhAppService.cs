@@ -319,6 +319,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
+            #region biểu 01TKKK
             var data_bieu01TKKK = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
             if (data_bieu01TKKK != null)
             {
@@ -330,7 +331,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 02TKKK
             var data_bieu02TKKK = await _bieu02TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
             if (data_bieu02TKKK != null)
             {
@@ -342,7 +345,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 03TKKK
             var data_bieu03TKKK = await _bieu03TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
             if (data_bieu03TKKK != null)
             {
@@ -354,7 +359,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 04TKKK
             var data_bieu04TKKK = await _bieu04TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
             if (data_bieu04TKKK != null)
             {
@@ -366,7 +373,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 05TKKK
             var data_bieu05TKKK = await _bieu05TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
             if (data_bieu05TKKK != null)
             {
@@ -378,6 +387,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";

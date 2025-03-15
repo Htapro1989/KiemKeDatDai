@@ -321,6 +321,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
+            #region biểu 01TKKK 03TKKK
             var data_bieu01TKKK = await _bieu01TKKK_XaRepos.GetAllListAsync(x => x.MaXa == maXa && x.Year == year);
             if (data_bieu01TKKK.Count > 0)
             {
@@ -333,7 +334,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 02TKKK
             var data_bieu02TKKK = await _bieu02TKKK_XaRepos.GetAllListAsync(x => x.MaXa == maXa && x.Year == year);
             if (data_bieu02TKKK.Count > 0)
             {
@@ -344,7 +347,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Message = "Dữ liệu xã biểu 02TKKK không tồn tại";
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
             }
+            #endregion
 
+            #region biểu 04TKKK
             var data_bieu04TKKK = await _bieu04TKKK_XaRepos.GetAllListAsync(x => x.MaXa == maXa && x.Year == year);
             if (data_bieu04TKKK.Count > 0)
             {
@@ -355,7 +360,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Message = "Dữ liệu xã biểu 04TKKK không tồn tại";
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
             }
+            #endregion
 
+            #region biểu 05TKKK
             var data_bieu05TKKK = await _bieu05TKKK_XaRepos.GetAllListAsync(x => x.MaXa == maXa && x.Year == year);
             if (data_bieu05TKKK.Count > 0)
             {
@@ -366,6 +373,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 commonResponseDto.Message = "Dữ liệu xã biểu 05TKKK không tồn tại";
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
             }
+            #endregion
 
             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";

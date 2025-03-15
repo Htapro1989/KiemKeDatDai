@@ -76,6 +76,7 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Bieu05TKKK_Xa> Bieu05TKKK_Xa { get; set; }
 
         public virtual DbSet<Bieu06TKKKQPAN> Bieu06TKKKQPAN { get; set; }
+        public virtual DbSet<Bieu06TKKKQPAN_Vung> Bieu06TKKKQPAN_Vung { get; set; }
         public virtual DbSet<Bieu06TKKKQPAN_Tinh> Bieu06TKKKQPAN_Tinh { get; set; }
 
         public virtual DbSet<BieuPhuLucIII> BieuPhuLucIII { get; set; }

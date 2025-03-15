@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250315105358_update_table_Bieu06TKKKQPAN_15032025")]
+    partial class update_table_Bieu06TKKKQPAN_15032025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6948,88 +6951,6 @@ namespace KiemKeDatDai.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Bieu06TKKKQPAN_Tinh");
-                });
-
-            modelBuilder.Entity("KiemKeDatDai.EntitiesDb.Bieu06TKKKQPAN_Vung", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool?>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DiaChi")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("DienTichDaCapGCN")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DienTichDaDoDac")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DienTichDatQuocPhong")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DienTichKetHopKhac")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("DonVi")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GhiChu")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("LoaiDatKetHopKhac")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("MaTinh")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MaVung")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("STT")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("SoGCNDaCap")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<long?>("TinhId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("VungId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Bieu06TKKKQPAN_Vung");
                 });
 
             modelBuilder.Entity("KiemKeDatDai.EntitiesDb.BieuPhuLucIII", b =>
