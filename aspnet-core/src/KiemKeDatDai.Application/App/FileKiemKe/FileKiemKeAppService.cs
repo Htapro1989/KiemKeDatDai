@@ -212,7 +212,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 }
 
                 //get dvhcid
-                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year);
+                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted);
                 if (currentFile != null)
                 {
                     //delete file
