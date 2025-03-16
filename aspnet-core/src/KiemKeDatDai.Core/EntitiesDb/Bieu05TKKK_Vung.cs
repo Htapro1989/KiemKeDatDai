@@ -72,5 +72,6 @@ namespace KiemKeDatDai.EntitiesDb
         public long? VungId { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
+        public long? sequence { get; set; }
     }
 }

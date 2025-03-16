@@ -19,5 +19,6 @@ namespace KiemKeDatDai.EntitiesDb
         public string DienTichTheoDVHC { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
+        public long? sequence { get; set; }
     }
 }

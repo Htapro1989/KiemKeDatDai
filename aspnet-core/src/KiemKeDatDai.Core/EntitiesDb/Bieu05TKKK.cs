@@ -70,5 +70,6 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal GiamKhac { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
+        public long? sequence { get; set; }
     }
 }

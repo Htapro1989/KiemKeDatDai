@@ -16,5 +16,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string ThuTuHienThi { get; set; }
         public bool InDam { get; set; }
         public long CapLoaiDat { get; set; }
+        public long? sequence { get; set; }
+        public int LoaiDat { get; set; }
     }
 }

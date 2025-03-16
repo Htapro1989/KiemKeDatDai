@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250316090038_huy_update_20250316")]
+    partial class huy_update_20250316
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2064,9 +2067,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu01TKKK");
@@ -2177,9 +2177,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -2294,9 +2291,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu01TKKK_Tinh");
@@ -2409,9 +2403,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu01TKKK_Vung");
@@ -2522,9 +2513,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -4288,9 +4276,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu02TKKK");
@@ -4395,9 +4380,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -4506,9 +4488,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu02TKKK_Tinh");
@@ -4613,9 +4592,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -4724,9 +4700,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu02TKKK_Xa");
@@ -4780,9 +4753,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -4846,9 +4816,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu03TKKK_Huyen");
@@ -4910,9 +4877,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu03TKKK_Tinh");
@@ -4972,9 +4936,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -5126,9 +5087,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -5288,9 +5246,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu04TKKK_Huyen");
@@ -5446,9 +5401,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -5608,9 +5560,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu04TKKK_Vung");
@@ -5766,9 +5715,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -5980,9 +5926,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -6202,9 +6145,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu05TKKK_Huyen");
@@ -6420,9 +6360,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -6642,9 +6579,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("sequence")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bieu05TKKK_Vung");
@@ -6860,9 +6794,6 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("sequence")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -7477,9 +7408,6 @@ namespace KiemKeDatDai.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<int>("LoaiDat")
-                        .HasColumnType("int");
 
                     b.Property<string>("MaLoaiDat")
                         .HasColumnType("nvarchar(max)");

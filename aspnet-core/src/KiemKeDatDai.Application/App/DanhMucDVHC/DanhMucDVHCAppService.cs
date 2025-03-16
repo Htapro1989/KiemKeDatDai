@@ -87,7 +87,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     if (dvhcId != 0)
                     {
                         var query = (from dvhc in _dvhcRepos.GetAll()
-                                     join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
+                                     join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
                                      where dvhc.Id == dvhcId && dvhc.Year == input.Year
                                      select new DVHCOutputDto
                                      {
@@ -139,7 +139,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 var lstDVHC = new List<DVHCOutputDto>();
                 PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
                 var query = (from dvhc in _dvhcRepos.GetAll()
-                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
+                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
                              where dvhc.Parent_id == id
                              select new DVHCOutputDto
                              {

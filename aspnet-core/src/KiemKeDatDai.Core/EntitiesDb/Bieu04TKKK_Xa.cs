@@ -52,5 +52,6 @@ namespace KiemKeDatDai.EntitiesDb
         public long? XaId { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
+        public long? sequence { get; set; }
     }
 }

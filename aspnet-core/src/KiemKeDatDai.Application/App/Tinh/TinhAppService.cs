@@ -33,6 +33,11 @@ using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Transactions;
 using KiemKeDatDai.App.Huyen.Dto;
 using NuGet.Protocol;
+using System.IO;
+using System.ComponentModel;
+using OfficeOpenXml;
+using Newtonsoft.Json.Linq;
+using KiemKeDatDai.App.Tinh.Dto;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -56,6 +61,8 @@ namespace KiemKeDatDai.App.DMBieuMau
 
         private readonly IRepository<Bieu05TKKK_Huyen, long> _bieu05TKKK_HuyenRepos;
         private readonly IRepository<Bieu05TKKK_Tinh, long> _bieu05TKKK_TinhRepos;
+
+        private readonly IRepository<Bieu06TKKKQPAN_Tinh, long> _bieu06TKKKQPAN_TinhRepos;
 
         private readonly IRepository<Bieu01KKSL_Huyen, long> _bieu01KKSL_HuyenRepos;
         private readonly IRepository<Bieu01KKSL_Tinh, long> _bieu01KKSL_TinhRepos;
@@ -101,6 +108,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             IRepository<Bieu05TKKK_Tinh, long> bieu05TKKK_TinhRepos,
             IRepository<Bieu05TKKK_Huyen, long> bieu05TKKK_HuyenRepos,
 
+            IRepository<Bieu06TKKKQPAN_Tinh, long> bieu06TKKKQPAN_TinhRepos,
+
             IRepository<Bieu01KKSL_Tinh, long> bieu01KKSL_TinhRepos,
             IRepository<Bieu01KKSL_Huyen, long> bieu01KKSL_HuyenRepos,
 
@@ -143,6 +152,8 @@ namespace KiemKeDatDai.App.DMBieuMau
 
             _bieu05TKKK_TinhRepos = bieu05TKKK_TinhRepos;
             _bieu05TKKK_HuyenRepos = bieu05TKKK_HuyenRepos;
+
+            _bieu06TKKKQPAN_TinhRepos = bieu06TKKKQPAN_TinhRepos;
 
             _bieu01KKSL_TinhRepos = bieu01KKSL_TinhRepos;
             _bieu01KKSL_HuyenRepos = bieu01KKSL_HuyenRepos;
@@ -313,6 +324,85 @@ namespace KiemKeDatDai.App.DMBieuMau
             commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
+        }
+
+        public async Task<CommonResponseDto> UploadBieuExcel(IFormFile fileUplaod, long bieuId, string matinh, long year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                //var results = new List<List<DamInfoJsonOutput>>();
+                var urlFile = await WriteFile(fileUplaod, matinh);
+
+                var dt = new System.Data.DataTable();
+                var fi = new FileInfo(urlFile);
+                // Check if the file exists
+                if (!fi.Exists)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "File " + urlFile + " không tồn tại";
+                }
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
+
+                var worksheets = excel.Workbook.Worksheets;
+                if (worksheets == null)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Không đọc được file";
+                }
+                else
+                {
+                    foreach (var sheet in worksheets)
+                    {
+                        var table = sheet.Tables.FirstOrDefault();
+                        if (table != null)
+                        {
+                            if (sheet.Index == 0)
+                            {
+                                await _bieu06TKKKQPAN_TinhRepos.DeleteAsync(x => x.MaTinh == matinh && x.Year == year);
+                            }
+                            var tableData = table.ToDataTable();
+                            var jArray = JArray.FromObject(tableData);
+                            foreach (var item in jArray)
+                            {
+                                if (item != null)
+                                {
+                                    var data = JObject.FromObject(new Bieu06TKKKQPAN_TinhInputDto()
+                                    {
+                                        STT = item.Value<string>("STT"),
+                                        DonVi = item.Value<string>("DonVi"),
+                                        DiaChi = item.Value<string>("DiaChi"),
+                                        DienTichDatQuocPhong = item.Value<decimal>("DienTichDatQuocPhong"),
+                                        DienTichKetHopKhac = item.Value<decimal>("DienTichKetHopKhac"),
+                                        LoaiDatKetHopKhac = item.Value<decimal>("LoaiDatKetHopKhac"),
+                                        DienTichDaDoDac = item.Value<decimal>("DienTichDaDoDac"),
+                                        SoGCNDaCap = item.Value<decimal>("SoGCNDaCap"),
+                                        DienTichDaCapGCN = item.Value<decimal>("DienTichDaCapGCN"),
+                                        GhiChu = item.Value<string>("GhiChu"),
+                                        TinhId = item.Value<long>("TinhId"),
+                                        Year = item.Value<long>("Year"),
+                                        Active = item.Value<bool>("Active")
+                                    });
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return null;
+        }
+
+        public async Task<CommonResponseDto> UpdateBieuTinh(string matinh, long year)
+        {
+
+            return null;
         }
 
         private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, string maHuyen, long year, int hamduyet)
@@ -1151,6 +1241,35 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 Logger.Error(ex.Message);
             }
+        }
+        #endregion
+        #region Write file into server
+        private async Task<string> WriteFile(IFormFile file, string maDVHC)
+        {
+            string fileName = "";
+            string exactPathDirectory = "";
+            try
+            {
+                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+                fileName = DateTime.Now.Ticks.ToString() + extension;
+                var filePath = "wwwroot\\Uploads\\Files\\" + maDVHC;
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+                exactPathDirectory = "wwwroot\\Uploads\\Files\\" + maDVHC + "\\" + fileName;
+                var exactPath = "wwwroot\\Uploads\\Files\\" + maDVHC + "\\" + fileName;
+                using (var stream = new FileStream(exactPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return exactPathDirectory;
         }
         #endregion
     }

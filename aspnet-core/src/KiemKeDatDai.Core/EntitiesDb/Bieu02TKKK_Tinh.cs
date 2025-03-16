@@ -35,5 +35,6 @@ namespace KiemKeDatDai.EntitiesDb
         public long? TinhId { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
+        public long? sequence { get; set; }
     }
 }
