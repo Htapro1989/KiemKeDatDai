@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using System.Transactions;
+using KiemKeDatDai.AppCore.Utility;
 
 namespace KiemKeDatDai.App.DanhMucDVHC
 {
@@ -111,12 +112,12 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                      });
                         lstDVHC = await query.ToListAsync();
                         commonResponseDto.ReturnValue = lstDVHC;
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                        commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                         commonResponseDto.Message = "Thành Công";
                     }
                     else
                     {
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         commonResponseDto.Message = "Không tìm thấy tài khoản người dùng trong hệ thống!";
                     }
                 }
@@ -124,7 +125,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 Logger.Error(ex.Message);
             }
@@ -163,18 +164,18 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 {
                     lstDVHC = await query.ToListAsync();
                     commonResponseDto.ReturnValue = lstDVHC;
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Không có dữ liệu cấp dưới!";
                 }
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 throw;
             }
@@ -209,7 +210,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     else
                     {
                         commonResponseDto.Message = "Đơn vị hành chính này không tồn tại";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
                 }
@@ -218,12 +219,12 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     var dvhc = input.MapTo<DVHCInputDto>();
                     await _dvhcRepos.InsertAsync(dvhc);
                 }
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 throw;
             }
@@ -241,19 +242,19 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 if (objDVHC != null)
                 {
                     await _dvhcRepos.DeleteAsync(objDVHC);
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
                     commonResponseDto.Message = "Dơn vị hành chính này không tồn tại";
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     return commonResponseDto;
                 }
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 throw;
             }
@@ -386,20 +387,120 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         }
                     }
                     commonResponseDto.ReturnValue = lstBaoCao;
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
                     commonResponseDto.Message = "ĐVHC này không tồn tại";
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 }
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 Logger.Fatal(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownVung()
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.VUNG
+                             select new DropDownListDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownTinh()
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.TINH
+                             select new DropDownListDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownHuyenByTinhId(long tinhId)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.HUYEN && dvhc.Parent_id == tinhId
+                             select new DropDownListDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownXaByHuyenId(long huyenId)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.XA && dvhc.Parent_id == huyenId
+                             select new DropDownListDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
             }
             return commonResponseDto;
         }

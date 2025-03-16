@@ -184,7 +184,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
                         {
                             commonResponseDto.Message = "Tỉnh đã được duyệt, không thể duyệt huyện";
-                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
                         else
@@ -204,7 +204,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             else
                             {
                                 commonResponseDto.Message = "Huyện này không tồn tại";
-                                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                                 return commonResponseDto;
                             }
 
@@ -228,7 +228,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     else
                     {
                         commonResponseDto.Message = "Tỉnh này không tồn tại";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
                     uow.Complete();
@@ -236,12 +236,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                 catch (Exception ex)
                 {
                     uow.Dispose();
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = ex.Message;
                     Logger.Fatal(ex.Message);
                 }
             }
-            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
@@ -261,7 +261,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
                         {
                             commonResponseDto.Message = "Tỉnh đã được duyệt, không thể hủy duyệt huyện";
-                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
                         else
@@ -284,7 +284,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             else
                             {
                                 commonResponseDto.Message = "Huyện này không tồn tại";
-                                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                                 return commonResponseDto;
                             }
 
@@ -297,7 +297,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     else
                     {
                         commonResponseDto.Message = "Tỉnh này không tồn tại";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
                     uow.Complete();
@@ -305,12 +305,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                 catch (Exception ex)
                 {
                     uow.Dispose();
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = ex.Message;
                     Logger.Fatal(ex.Message);
                 }
             }
-            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
@@ -328,7 +328,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             else
             {
                 commonResponseDto.Message = "Dữ liệu huyện biểu 01TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
             #endregion
@@ -342,7 +342,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             else
             {
                 commonResponseDto.Message = "Dữ liệu huyện biểu 02TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
             #endregion
@@ -356,7 +356,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             else
             {
                 commonResponseDto.Message = "Dữ liệu huyện biểu 03TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
             #endregion
@@ -370,7 +370,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             else
             {
                 commonResponseDto.Message = "Dữ liệu huyện biểu 04TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
             #endregion
@@ -384,12 +384,12 @@ namespace KiemKeDatDai.App.DMBieuMau
             else
             {
                 commonResponseDto.Message = "Dữ liệu huyện biểu 05TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
             #endregion
 
-            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
