@@ -1,5 +1,6 @@
 using KiemKeDatDai.EntitiesDb;
 using Microsoft.AspNetCore.Http;
+namespace KiemKeDatDai.ApplicationDto;
 
 public class FileUploadInputDto
 {
@@ -7,3 +8,4 @@ public class FileUploadInputDto
     public string MaDVHC { get; set; }
     public int Year { get; set; }
 }
+

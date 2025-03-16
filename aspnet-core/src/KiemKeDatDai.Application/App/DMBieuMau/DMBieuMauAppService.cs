@@ -296,12 +296,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                 pagedResultDto.Items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
                 pagedResultDto.TotalCount = await query.CountAsync();
                 commonResponseDto.ReturnValue = pagedResultDto;
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 Logger.Error(ex.Message);
             }
@@ -328,12 +328,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                              });
                 lstBM = await query.ToListAsync();
                 commonResponseDto.ReturnValue = lstBM;
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 Logger.Error(ex.Message);
             }
@@ -360,7 +360,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     else
                     {
                         commonResponseDto.Message = "Xảy ra lỗi trong quá tình thêm mới!";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
                 }
@@ -369,12 +369,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var objBM = input.MapTo<DMBieuMauInputDto>();
                     await _dmbmRepos.InsertAsync(objBM);
                 }
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 Logger.Error(ex.Message);
             }
@@ -392,19 +392,19 @@ namespace KiemKeDatDai.App.DMBieuMau
                 if (objBM != null)
                 {
                     await _dmbmRepos.DeleteAsync(objBM);
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
                     commonResponseDto.Message = "Biểu mẫu này không tồn tại";
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     return commonResponseDto;
                 }
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 Logger.Error(ex.Message);
             }
@@ -1192,12 +1192,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                     default:
                         break;
                 }
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 Logger.Error(ex.Message);
             }
