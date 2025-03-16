@@ -1005,8 +1005,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                     CongDongDanCu_CDS_CC = tinh.CongDongDanCu_CDS_CC,
                     ToChucNuocNgoai_TNG_DT = tinh.ToChucNuocNgoai_TNG_DT,
                     ToChucNuocNgoai_TNG_CC = tinh.ToChucNuocNgoai_TNG_CC,
-                    NguoiGocVietNamONuocNgoai_CNN_DT = tinh.NguoiGocVietNamONuocNgoai_CNN_DT,
-                    NguoiGocVietNamONuocNgoai_CNN_CC = tinh.NguoiGocVietNamONuocNgoai_CNN_CC,
+                    NguoiGocVietNamONuocNgoai_NGV_DT = tinh.NguoiGocVietNamONuocNgoai_NGV_DT,
+                    NguoiGocVietNamONuocNgoai_NGV_CC = tinh.NguoiGocVietNamONuocNgoai_NGV_CC,
                     ToChucKinhTeVonNuocNgoai_TVN_DT = tinh.ToChucKinhTeVonNuocNgoai_TVN_DT,
                     ToChucKinhTeVonNuocNgoai_TVN_CC = tinh.ToChucKinhTeVonNuocNgoai_TVN_CC,
                     CoQuanNhaNuoc_TCQ_DT = tinh.CoQuanNhaNuoc_TCQ_DT,
@@ -1049,8 +1049,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                     CongDongDanCu_CDS_CC = tinh.CongDongDanCu_CDS_CC,
                     ToChucNuocNgoai_TNG_DT = tinh.ToChucNuocNgoai_TNG_DT,
                     ToChucNuocNgoai_TNG_CC = tinh.ToChucNuocNgoai_TNG_CC,
-                    NguoiGocVietNamONuocNgoai_CNN_DT = tinh.NguoiGocVietNamONuocNgoai_CNN_DT,
-                    NguoiGocVietNamONuocNgoai_CNN_CC = tinh.NguoiGocVietNamONuocNgoai_CNN_CC,
+                    NguoiGocVietNamONuocNgoai_NGV_DT = tinh.NguoiGocVietNamONuocNgoai_NGV_DT,
+                    NguoiGocVietNamONuocNgoai_NGV_CC = tinh.NguoiGocVietNamONuocNgoai_NGV_CC,
                     ToChucKinhTeVonNuocNgoai_TVN_DT = tinh.ToChucKinhTeVonNuocNgoai_TVN_DT,
                     ToChucKinhTeVonNuocNgoai_TVN_CC = tinh.ToChucKinhTeVonNuocNgoai_TVN_CC,
                     CoQuanNhaNuoc_TCQ_DT = tinh.CoQuanNhaNuoc_TCQ_DT,
@@ -1106,8 +1106,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objTW.CongDongDanCu_CDS_CC += tinh.CongDongDanCu_CDS_CC;
                         objTW.ToChucNuocNgoai_TNG_DT += tinh.ToChucNuocNgoai_TNG_DT;
                         objTW.ToChucNuocNgoai_TNG_CC += tinh.ToChucNuocNgoai_TNG_CC;
-                        objTW.NguoiGocVietNamONuocNgoai_CNN_DT += tinh.NguoiGocVietNamONuocNgoai_CNN_DT;
-                        objTW.NguoiGocVietNamONuocNgoai_CNN_CC += tinh.NguoiGocVietNamONuocNgoai_CNN_CC;
+                        objTW.NguoiGocVietNamONuocNgoai_NGV_DT += tinh.NguoiGocVietNamONuocNgoai_NGV_DT;
+                        objTW.NguoiGocVietNamONuocNgoai_NGV_CC += tinh.NguoiGocVietNamONuocNgoai_NGV_CC;
                         objTW.ToChucKinhTeVonNuocNgoai_TVN_DT += tinh.ToChucKinhTeVonNuocNgoai_TVN_DT;
                         objTW.ToChucKinhTeVonNuocNgoai_TVN_CC += tinh.ToChucKinhTeVonNuocNgoai_TVN_CC;
                         objTW.CoQuanNhaNuoc_TCQ_DT += tinh.CoQuanNhaNuoc_TCQ_DT;
@@ -1141,8 +1141,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objVung.CongDongDanCu_CDS_CC += tinh.CongDongDanCu_CDS_CC;
                         objVung.ToChucNuocNgoai_TNG_DT += tinh.ToChucNuocNgoai_TNG_DT;
                         objVung.ToChucNuocNgoai_TNG_CC += tinh.ToChucNuocNgoai_TNG_CC;
-                        objVung.NguoiGocVietNamONuocNgoai_CNN_DT += tinh.NguoiGocVietNamONuocNgoai_CNN_DT;
-                        objVung.NguoiGocVietNamONuocNgoai_CNN_CC += tinh.NguoiGocVietNamONuocNgoai_CNN_CC;
+                        objVung.NguoiGocVietNamONuocNgoai_NGV_DT += tinh.NguoiGocVietNamONuocNgoai_NGV_DT;
+                        objVung.NguoiGocVietNamONuocNgoai_NGV_CC += tinh.NguoiGocVietNamONuocNgoai_NGV_CC;
                         objVung.ToChucKinhTeVonNuocNgoai_TVN_DT += tinh.ToChucKinhTeVonNuocNgoai_TVN_DT;
                         objVung.ToChucKinhTeVonNuocNgoai_TVN_CC += tinh.ToChucKinhTeVonNuocNgoai_TVN_CC;
                         objVung.CoQuanNhaNuoc_TCQ_DT += tinh.CoQuanNhaNuoc_TCQ_DT;
@@ -1179,8 +1179,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objTW.CongDongDanCu_CDS_CC -= tinh.CongDongDanCu_CDS_CC;
                         objTW.ToChucNuocNgoai_TNG_DT -= tinh.ToChucNuocNgoai_TNG_DT;
                         objTW.ToChucNuocNgoai_TNG_CC -= tinh.ToChucNuocNgoai_TNG_CC;
-                        objTW.NguoiGocVietNamONuocNgoai_CNN_DT -= tinh.NguoiGocVietNamONuocNgoai_CNN_DT;
-                        objTW.NguoiGocVietNamONuocNgoai_CNN_CC -= tinh.NguoiGocVietNamONuocNgoai_CNN_CC;
+                        objTW.NguoiGocVietNamONuocNgoai_NGV_DT -= tinh.NguoiGocVietNamONuocNgoai_NGV_DT;
+                        objTW.NguoiGocVietNamONuocNgoai_NGV_CC -= tinh.NguoiGocVietNamONuocNgoai_NGV_CC;
                         objTW.ToChucKinhTeVonNuocNgoai_TVN_DT -= tinh.ToChucKinhTeVonNuocNgoai_TVN_DT;
                         objTW.ToChucKinhTeVonNuocNgoai_TVN_CC -= tinh.ToChucKinhTeVonNuocNgoai_TVN_CC;
                         objTW.CoQuanNhaNuoc_TCQ_DT -= tinh.CoQuanNhaNuoc_TCQ_DT;
@@ -1214,8 +1214,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objVung.CongDongDanCu_CDS_CC -= tinh.CongDongDanCu_CDS_CC;
                         objVung.ToChucNuocNgoai_TNG_DT -= tinh.ToChucNuocNgoai_TNG_DT;
                         objVung.ToChucNuocNgoai_TNG_CC -= tinh.ToChucNuocNgoai_TNG_CC;
-                        objVung.NguoiGocVietNamONuocNgoai_CNN_DT -= tinh.NguoiGocVietNamONuocNgoai_CNN_DT;
-                        objVung.NguoiGocVietNamONuocNgoai_CNN_CC -= tinh.NguoiGocVietNamONuocNgoai_CNN_CC;
+                        objVung.NguoiGocVietNamONuocNgoai_NGV_DT -= tinh.NguoiGocVietNamONuocNgoai_NGV_DT;
+                        objVung.NguoiGocVietNamONuocNgoai_NGV_CC -= tinh.NguoiGocVietNamONuocNgoai_NGV_CC;
                         objVung.ToChucKinhTeVonNuocNgoai_TVN_DT -= tinh.ToChucKinhTeVonNuocNgoai_TVN_DT;
                         objVung.ToChucKinhTeVonNuocNgoai_TVN_CC -= tinh.ToChucKinhTeVonNuocNgoai_TVN_CC;
                         objVung.CoQuanNhaNuoc_TCQ_DT -= tinh.CoQuanNhaNuoc_TCQ_DT;

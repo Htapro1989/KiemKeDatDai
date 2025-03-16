@@ -36,8 +36,8 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal CongDongDanCu_CDS_CC { get; set; }
         public decimal ToChucNuocNgoai_TNG_DT { get; set; }
         public decimal ToChucNuocNgoai_TNG_CC { get; set; }
-        public decimal NguoiGocVietNamONuocNgoai_CNN_DT { get; set; }
-        public decimal NguoiGocVietNamONuocNgoai_CNN_CC { get; set; }
+        public decimal NguoiGocVietNamONuocNgoai_NGV_DT { get; set; }
+        public decimal NguoiGocVietNamONuocNgoai_NGV_CC { get; set; }
         public decimal ToChucKinhTeVonNuocNgoai_TVN_DT { get; set; }
         public decimal ToChucKinhTeVonNuocNgoai_TVN_CC { get; set; }
         public decimal CoQuanNhaNuoc_TCQ_DT { get; set; }
