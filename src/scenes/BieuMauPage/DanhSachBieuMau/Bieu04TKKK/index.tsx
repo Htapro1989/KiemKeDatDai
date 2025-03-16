@@ -2,13 +2,83 @@ import React from 'react'
 import '../components/index.less'
 import HeaderBieuMau from '../components/Header'
 import "../components/ReportTable.less";
+import { IBieuMauProps } from '../Bieu01TKKK';
+import ReportEmptyData from '../components/ReportEmptyData';
+import ReportLoading from '../components/ReportLoading';
 
 
 
-export default function Bieu04TKKK() {
+export default function Bieu04TKKK(props: IBieuMauProps) {
+    const reportData = props.reportData;
+    const isFetchingData = props.isFetching
+    const reportDataComponent = () => {
+        if (!reportData) {
+            return null;
+        }
+        return reportData.data.map((data: any) => {
+            return (<tr key={data.id}>
+                <td>{data.stt}</td>
+                <td>{data.loaiDat}</td>
+                <td>{data.ma}</td>
+
+                <td>{data.tongSo_DT}</td>
+                <td>{data.tongSo_CC}</td>
+
+                <td>{data.caNhanTrongNuoc_CNV_DT}</td>
+                <td>{data.caNhanTrongNuoc_CNV_CC}</td>
+
+                <td>{data.nguoiVietNamONuocNgoai_CNN_DT}</td>
+                <td>{data.nguoiVietNamONuocNgoai_CNN_CC}</td>
+
+                <td>{data.coQuanNhaNuoc_TCN_DT}</td>
+                <td>{data.coQuanNhaNuoc_TCN_CC}</td>
+
+                <td>{data.donViSuNghiep_TSN_DT}</td>
+                <td>{data.donViSuNghiep_TSN_CC}</td>
+
+                <td>{data.toChucXaHoi_TXH_DT}</td>
+                <td>{data.toChucXaHoi_TXH_CC}</td>
+
+                <td>{data.toChucKinhTe_TKT_DT}</td>
+                <td>{data.toChucKinhTe_TKT_CC}</td>
+
+                <td>{data.toChucKhac_TKH_DT}</td>
+                <td>{data.toChucKhac_TKH_CC}</td>
+
+                <td>{data.toChucTonGiao_TTG_DT}</td>
+                <td>{data.toChucTonGiao_TTG_CC}</td>
+
+                <td>{data.congDongDanCu_CDS_DT}</td>
+                <td>{data.congDongDanCu_CDS_CC}</td>
+
+                <td>{data.toChucNuocNgoai_TNG_DT}</td>
+                <td>{data.toChucNuocNgoai_TNG_CC}</td>
+
+                <td>{data.nguoiGocVietNamONuocNgoai_CNN_DT}</td>
+                <td>{data.nguoiGocVietNamONuocNgoai_CNN_CC}</td>
+
+                <td>{data.toChucKinhTeVonNuocNgoai_TVN_DT}</td>
+                <td>{data.toChucKinhTeVonNuocNgoai_TVN_CC}</td>
+
+                <td>{data.coQuanNhaNuoc_TCQ_DT}</td>
+                <td>{data.coQuanNhaNuoc_TCQ_CC}</td>
+
+                <td>{data.donViSuNghiep_TSQ_DT}</td>
+                <td>{data.donViSuNghiep_TSQ_CC}</td>
+
+                <td>{data.toChucKinhTe_KTQ_DT}</td>
+                <td>{data.toChucKinhTe_KTQ_CC}</td>
+
+                <td>{data.congDongDanCu_CDQ_DT}</td>
+                <td>{data.congDongDanCu_CDQ_CC}</td>
+            </tr>)
+        })
+    }
     return (
         <div className='bieu-mau__layout-wrapper'>
-            <HeaderBieuMau maBieu='Biểu 04/TKKK' tenBieu='CƠ CẤU, DIỆN TÍCH THEO LOẠI ĐẤT, ĐỐI TƯỢNG SỬ DỤNG ĐẤT VÀ ĐỐI TƯỢNG ĐƯỢC GIAO QUẢN LÝ ĐẤT' />
+            <HeaderBieuMau
+                donViBaoCao={reportData}
+                maBieu='Biểu 04/TKKK' tenBieu='CƠ CẤU, DIỆN TÍCH THEO LOẠI ĐẤT, ĐỐI TƯỢNG SỬ DỤNG ĐẤT VÀ ĐỐI TƯỢNG ĐƯỢC GIAO QUẢN LÝ ĐẤT' />
             <table className="report-table">
                 <thead>
                     <tr>
@@ -85,8 +155,11 @@ export default function Bieu04TKKK() {
                             return (<td key={a}>({a})</td>)
                         })}
                     </tr>
+                    {reportDataComponent()}
                 </tbody>
             </table>
+            <ReportEmptyData isEmpty={(!reportData || reportData?.data?.length <= 0) && !isFetchingData} />
+            <ReportLoading isLoading={isFetchingData} />
         </div>
     )
 }

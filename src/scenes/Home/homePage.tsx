@@ -7,7 +7,8 @@ import Stores from '../../stores/storeIdentifier';
 import DonViHanhChinhStore from '../../stores/donViHanhChinhStore';
 import SessionStore from '../../stores/sessionStore';
 import BieuDoTab from './components/BieuDoTab';
-import TrangThaiDVHCTab from './components/TrangThaiDVHCTab';
+import TableBaoCao from '../BaoCaoSoLieu/components/TableBaoCao';
+// import TrangThaiDVHCTab from './components/TrangThaiDVHCTab';
 
 export interface IHomePageProps {
   donViHanhChinhStore?: DonViHanhChinhStore;
@@ -48,8 +49,12 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
               <Tabs.TabPane tab="Tài liệu" key="2">
                 Content of Tab Pane 2
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Trạng thái báo cáo" key="3">
-                <TrangThaiDVHCTab dvhcRoot={donViHanhChinhSelected} />
+              <Tabs.TabPane tab="Báo cáo" key="3">
+                <TableBaoCao
+                  capDVHCID={donViHanhChinhSelected?.capDVHCId}
+                  maDVHC={donViHanhChinhSelected?.ma}
+                  year={donViHanhChinhSelected?.year} />
+                {/* <TrangThaiDVHCTab dvhcRoot={donViHanhChinhSelected} /> */}
               </Tabs.TabPane>
             </Tabs>
           </Card>

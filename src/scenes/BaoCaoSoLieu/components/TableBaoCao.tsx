@@ -1,4 +1,4 @@
-import { Button, notification, Row, Table } from 'antd';
+import { Button, notification, Row, Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
@@ -6,6 +6,7 @@ import dvhcService from '../../../services/dvhc/dvhcService';
 import baoCaoService from '../../../services/baoCao/baoCaoService';
 import ConfirmButton from '../../../components/AppComponentBase/ConfirmButton';
 import { CAP_DVHC_ENUM } from '../../../models/enum';
+import './style.less'
 
 interface ITableBaoCaoProps {
     maDVHC: any;
@@ -17,15 +18,15 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
     const [listDvhc, setListDvhc] = useState([])
     const [isActioning, setIsActioning] = useState<any>()
     const [expandedKeys, setExpandedKeys] = useState<any[]>([])
+    const [isFetchingData, setIsFetchingData] = useState(false)
 
     const renderTrangThaiBaoCao: any = (text: string, item: any) => {
-
         if (item.root && item.isNopBaoCao)
             return <Button
                 type="primary"
                 size='small'
                 loading={isActioning?.maDv == item.maDVHC && isActioning?.loading}
-                onClick={onNopBaoCao}>Nộp</Button>
+                onClick={onNopBaoCao}>Nộp dữ liệu</Button>
         if (!item.root && (item.trangThaiDuyet == 1 || item.trangThaiDuyet == 2))
             return (
                 <Row>
@@ -135,7 +136,15 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
             render: (text: string, item: any) => (<div>{item?.tongDuyet}/{item?.tong}</div>)
         },
         {
-            title: 'Trạng thái', dataIndex: 'status', key: 'status', align: "center",
+            title: 'Trạng thái', dataIndex: 'trangThaiDuyet', key: 'trangThaiDuyet',
+            render(value, record, index) {
+                if (value == 1) return <Tag color="warning">Chờ duyệt</Tag>
+                if (value == 2) return <Tag color="success">Đã duyệt</Tag>
+                return <Tag color="error">Chưa duyệt</Tag>
+            },
+        },
+        {
+            title: 'Hành động', dataIndex: 'action', key: 'action', align: "center",
             render: renderTrangThaiBaoCao,
             //Vùng ko đc phép duyệt/nộp báo cáo
             className: CAP_DVHC_ENUM.VUNG == props.capDVHCID ? "hidden-column" : '',
@@ -153,11 +162,13 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
     }
 
     const getAllBaoCao = async () => {
+        setIsFetchingData(true)
         const baoCaoResponse = await dvhcService.getBaoCaoDVHC(props.maDVHC, props.year);
         if (!baoCaoResponse || baoCaoResponse.code != 1 || baoCaoResponse.returnValue.length <= 0) return;
         const newListDvhc: any = onRefactorBaoCaoList(props.maDVHC, baoCaoResponse.returnValue);
         setListDvhc(newListDvhc)
         setExpandedKeys([props.maDVHC])
+        setIsFetchingData(false)
     }
 
     const updateChild = (list: any, id: any, children: any) => {
@@ -200,8 +211,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                 rowKey="maDVHC"
                 bordered={true}
                 columns={columns}
-                // 
-
+                loading={isFetchingData}
                 expandable={{
                     onExpand: (expanded, record) => {
                         if (record.children.length > 0) return

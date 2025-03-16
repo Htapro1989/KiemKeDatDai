@@ -12,7 +12,7 @@ export interface Bieu06Item {
     donVi: string;
     diaChiSuDungDat: string;
     dienTichDatQP: string
-    dienTich: string
+    dienTichKetHop: string
     loaiDatKetHop: string
     dienTichDaDo: string
     soGiayChungNhan: string
@@ -28,7 +28,8 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     record: Bieu06Item;
     index: number;
     children: React.ReactNode;
-    hasChild: boolean
+    hasChild: boolean;
+    customChill: any
 }
 
 
@@ -43,20 +44,6 @@ export const EditableCellBieu06: React.FC<EditableCellProps> = ({
     hasChild,
     ...restProps
 }) => {
-    console.log("=>",
-        {
-            editing,
-            dataIndex,
-            title,
-            inputType,
-            record,
-            index,
-            children,
-            ...restProps
-        }
-    );
-
-
     return (
         <td {...restProps}>
             {editing ? (
@@ -70,7 +57,9 @@ export const EditableCellBieu06: React.FC<EditableCellProps> = ({
                         },
                     ]}
                 >
-                    <Input />
+                    <Input.TextArea
+                        style={{ fontSize: 12 }}
+                        rows={4} />
                 </Form.Item>
             ) : (
                 children

@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { Input, Modal, Tabs, Form, Checkbox } from 'antd';
-import { GetAllPermissionsOutput } from '../../../services/role/dto/getAllPermissionsOutput';
-import { L } from '../../../lib/abpUtility';
-import RoleStore from '../../../stores/roleStore';
+import { GetAllPermissionsOutput } from '../../../../services/role/dto/getAllPermissionsOutput';
+import { L } from '../../../../lib/abpUtility';
+import RoleStore from '../../../../stores/roleStore';
 import rules from './createOrUpdateRole.validation';
 import { FormInstance } from 'antd/lib/form';
 
@@ -75,24 +75,24 @@ class CreateOrUpdateRole extends React.Component<ICreateOrUpdateRoleProps> {
         cancelText={L('Cancel')}
         okText={L('OK')}
         onCancel={this.props.onCancel}
-        title={L('Role')}
+        title={'Quản lý quyền'}
         onOk={this.props.onOk}
         destroyOnClose={true}
       >
-        <Form ref={this.props.formRef}>
+        <Form ref={this.props.formRef} layout='vertical'>
           <Tabs defaultActiveKey={'role'} size={'small'} tabBarGutter={64}>
-            <TabPane tab={L('RoleDetails')} key={'role'}>
-              <Form.Item label={L('RoleName')} name={'name'} rules={rules.name} {...formItemLayout}>
+            <TabPane tab={'Vai trò'} key={'role'}>
+              <Form.Item label={'Vai trò'} name={'name'} rules={rules.name} {...formItemLayout}>
                 <Input />
               </Form.Item>
-              <Form.Item label={L('DisplayName')} name={'displayName'} rules={rules.displayName} {...formItemLayout}>
+              <Form.Item label={'Tên hiển thị'} name={'displayName'} rules={rules.displayName} {...formItemLayout}>
                 <Input />
               </Form.Item>
-              <Form.Item label={L('Description')} name={'description'} {...formItemLayout}>
+              <Form.Item label={'Mô tả'} name={'description'} {...formItemLayout}>
                 <Input />
               </Form.Item>
             </TabPane>
-            <TabPane tab={L('RolePermission')} key={'permission'} forceRender={true}>
+            <TabPane tab={"Quyền"} key={'permission'} forceRender={true}>
               <Form.Item {...tailFormItemLayout} name={'grantedPermissions'} valuePropName={'value'}>
                 <Checkbox.Group options={options} />
               </Form.Item>

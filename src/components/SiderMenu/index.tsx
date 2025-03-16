@@ -51,7 +51,7 @@ export class SiderMenu extends React.Component<ISideMenuProps, ISideMenuState> {
   render(): React.ReactNode {
     const { donViHanhChinhList, isFetchingDonViHanhChinh, dmKyKiemKe, dmKyKiemKeSelected, donViHanhChinhSelected, sideMenuExpanedKeys } = this.props.donViHanhChinhStore!
     return (
-      <Sider trigger={null} className={'sidebar'} width={326} collapsible collapsed={false}
+      <Sider trigger={null} className={'sidebar'} width={310} collapsible collapsed={false}
         theme='light'>
         <div
           className='sidebar-content-layout'>

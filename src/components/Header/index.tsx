@@ -3,7 +3,8 @@ import './index.less';
 
 import * as React from 'react';
 
-import profilePicture from '../../images/user.png';
+// import profilePicture from '../../images/user.png';
+import profileDefault from '../../images/avatar-default.png';
 import { LogoutOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -12,6 +13,7 @@ import { inject, observer } from 'mobx-react';
 import Stores from '../../stores/storeIdentifier';
 import SessionStore from '../../stores/sessionStore';
 import { ROUTER_PATH } from '../Router/router.config';
+import { isGranted } from '../../lib/abpUtility';
 
 export interface IHeaderProps {
   collapsed?: any;
@@ -34,7 +36,7 @@ const UserAvatar = (props: any) => {
   return (
     <Dropdown overlay={userDropdownMenu} trigger={['click']}>
       <div className={'user-avatar'}>
-        <Avatar style={{ height: 32, width: 32 }} shape="circle" alt={'profile'} src={profilePicture} />
+        <Avatar style={{ height: 32, width: 32 }} shape="circle" alt={'profile'} src={profileDefault} />
         <div className={'user-info'}>
           <div className='user-name'>{props.userName}</div>
         </div>
@@ -61,28 +63,41 @@ const MenuBar = () => {
           Trang chủ
         </Link>
       </Menu.Item>
-      <Menu.Item key="mail1">
-        Nhập dữ liệu thống kê
-      </Menu.Item>
-      <Menu.Item key={ROUTER_PATH.REPORT}>
+      {/* <Menu.Item key={ROUTER_PATH.REPORT}>
         <Link to={ROUTER_PATH.REPORT}>
           Báo cáo
         </Link>
-      </Menu.Item>
-      <Menu.SubMenu title='Quản lý hệ thống'>
-        <Menu.Item key="kyKiemKe">
-          Quản lý kỳ kiểm kê
-        </Menu.Item>
-        <Menu.Item key="nguoiDung">
-          Quản lý người dùng
-        </Menu.Item>
-        <Menu.Item key="quyenNguoiDung">
-          Quản lý quyền
-        </Menu.Item>
-      </Menu.SubMenu>
-      <Menu.Item key="banDo">
-        Bản đồ
-      </Menu.Item>
+      </Menu.Item> */}
+      {
+        isGranted('Pages.Roles') && (
+          <Menu.SubMenu title='Quản lý hệ thống'>
+            <Menu.Item key="capDVHC">
+              Quản lý Cấp đơn vị hành chính
+            </Menu.Item>
+            <Menu.Item key="kyKiemKe">
+              Quản lý kỳ thống kê, kiểm kê
+            </Menu.Item>
+            <Menu.Item key="dvhc">
+              Quản lý Đơn vị hành chính
+            </Menu.Item>
+            <Menu.Item key="nguoiDung">
+              Quản lý người dùng
+            </Menu.Item>
+            <Menu.Item key={ROUTER_PATH.ROLES}>
+              <Link to={ROUTER_PATH.ROLES}>
+                Quản lý quyền
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="cauHinhHeThong">
+              Cấu hình hệ thống
+            </Menu.Item>
+            <Menu.Item key="yKienNguoiDung">
+              Ý kiến người dùng
+            </Menu.Item>
+          </Menu.SubMenu>
+        )
+      }
+
     </Menu>
   )
 }
@@ -96,7 +111,7 @@ export class Header extends React.Component<IHeaderProps> {
 
     return (
       <div className={'header-container'}>
-        <div style={{ width: 310 }}>
+        <div style={{ width: 294 }}>
           <img className='header_logo_layout' src='https://tk.gdla.gov.vn/Images/monre-logo2023.png' />
         </div>
 

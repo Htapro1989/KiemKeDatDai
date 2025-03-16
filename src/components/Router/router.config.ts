@@ -3,7 +3,8 @@ import { HomeOutlined, UserOutlined, TagsOutlined, AppstoreOutlined, InfoCircleO
 
 export const ROUTER_PATH = {
   HOME: "/home",
-  REPORT: "/report"
+  REPORT: "/report",
+  ROLES: "/roles"
 
 }
 
@@ -64,13 +65,13 @@ export const appRouters: any = [
     component: LoadableComponent(() => import('../../scenes/Users')),
   },
   {
-    path: '/roles',
+    path: ROUTER_PATH.ROLES,
     permission: 'Pages.Roles',
     title: 'Roles',
     name: 'role',
     icon: TagsOutlined,
     showInMenu: true,
-    component: LoadableComponent(() => import('../../scenes/Roles')),
+    component: LoadableComponent(() => import('../../scenes/Admin/Roles')),
   },
   {
     path: '/tenants',

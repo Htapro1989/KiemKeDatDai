@@ -104,7 +104,7 @@ export default function Bieu02TKKK(props: IBieuMauProps) {
                     {reportDataComponent()}
                 </tbody>
             </table>
-            <ReportEmptyData isEmpty={(!reportData || reportData?.length <= 0) && !isFetchingData} />
+            <ReportEmptyData isEmpty={(!reportData || reportData?.data?.length <= 0) && !isFetchingData} />
             <ReportLoading isLoading={isFetchingData} />
         </div>
     )
