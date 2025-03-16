@@ -196,7 +196,14 @@ namespace KiemKeDatDai.App.DMBieuMau
                     commonResponseDto.Message = "Không có file nào được upload.";
                     return commonResponseDto;
                 }
-
+                // Check if the file is a ZIP file
+                var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
+                if (fileExtension != ".zip")
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Chỉ chấp nhận file ZIP.";
+                    return commonResponseDto;
+                }
                 // Save the file to a directory
                 var uploadsFolder = _configuration["FileUpload:FilePath"];
                 if (!Directory.Exists(uploadsFolder))
@@ -212,18 +219,18 @@ namespace KiemKeDatDai.App.DMBieuMau
                 }
 
                 //get dvhcid
-                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted);
-                if (currentFile != null)
-                {
-                    //delete file
-                    var path = currentFile.FilePath;
-                    if (System.IO.File.Exists(path))
-                    {
-                        System.IO.File.Delete(path);
-                    }
-                    await _fileRepos.DeleteAsync(currentFile);
+                // var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted);
+                // if (currentFile != null)
+                // {
+                //     //delete file
+                //     var path = currentFile.FilePath;
+                //     if (System.IO.File.Exists(path))
+                //     {
+                //         System.IO.File.Delete(path);
+                //     }
+                //     await _fileRepos.DeleteAsync(currentFile);
 
-                }
+                // }
                 var fileEntity = new EntitiesDb.File
                 {
                     FileName = input.File.FileName,
@@ -244,7 +251,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             catch (Exception ex)
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                commonResponseDto.Message = ex.Message;
+                commonResponseDto.Message = ex.ToString();
                 throw;
             }
             return commonResponseDto;
