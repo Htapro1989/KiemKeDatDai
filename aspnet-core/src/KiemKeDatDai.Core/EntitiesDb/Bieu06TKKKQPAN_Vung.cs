@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.EntitiesDb
 {
-    [Table("Bieu06TKKKQPAN")]
-    public class Bieu06TKKKQPAN : FullAuditedEntity<long>
+    [Table("Bieu06TKKKQPAN_Vung")]
+    public class Bieu06TKKKQPAN_Vung : FullAuditedEntity<long>
     {
         public string STT { get; set; }
         public string DonVi { get; set; }
@@ -23,6 +23,8 @@ namespace KiemKeDatDai.EntitiesDb
         public string GhiChu { get; set; }
         public string MaTinh { get; set; }
         public long? TinhId { get; set; }
+        public string MaVung { get; set; }
+        public long? VungId { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
     }

@@ -61,6 +61,10 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IRepository<Bieu05TKKK_Tinh, long> _bieu05TKKK_TinhRepos;
         private readonly IRepository<Bieu05TKKK_Vung, long> _bieu05TKKK_VungRepos;
 
+        private readonly IRepository<Bieu06TKKKQPAN, long> _bieu06TKKKQPANRepos;
+        private readonly IRepository<Bieu06TKKKQPAN_Tinh, long> _bieu06TKKKQPAN_TinhRepos;
+        private readonly IRepository<Bieu06TKKKQPAN_Vung, long> _bieu06TKKKQPAN_VungRepos;
+
         private readonly IRepository<Bieu01KKSL, long> _bieu01KKSLRepos;
         private readonly IRepository<Bieu01KKSL_Tinh, long> _bieu01KKSL_TinhRepos;
         private readonly IRepository<Bieu01KKSL_Vung, long> _bieu01KKSL_VungRepos;
@@ -114,6 +118,10 @@ namespace KiemKeDatDai.App.DMBieuMau
             IRepository<Bieu05TKKK_Tinh, long> bieu05TKKK_TinhRepos,
             IRepository<Bieu05TKKK_Vung, long> bieu05TKKK_VungRepos,
 
+            IRepository<Bieu06TKKKQPAN, long> bieu06TKKKQPANRepos,
+            IRepository<Bieu06TKKKQPAN_Tinh, long> bieu06TKKKQPAN_TinhRepos,
+            IRepository<Bieu06TKKKQPAN_Vung, long> bieu06TKKKQPAN_VungRepos,
+
             IRepository<Bieu01KKSL, long> bieu01KKSLRepos,
             IRepository<Bieu01KKSL_Tinh, long> bieu01KKSL_TinhRepos,
             IRepository<Bieu01KKSL_Vung, long> bieu01KKSL_VungRepos,
@@ -164,6 +172,10 @@ namespace KiemKeDatDai.App.DMBieuMau
             _bieu05TKKK_TinhRepos = bieu05TKKK_TinhRepos;
             _bieu05TKKK_VungRepos = bieu05TKKK_VungRepos;
 
+            _bieu06TKKKQPANRepos = bieu06TKKKQPANRepos;
+            _bieu06TKKKQPAN_TinhRepos = bieu06TKKKQPAN_TinhRepos;
+            _bieu06TKKKQPAN_VungRepos = bieu06TKKKQPAN_VungRepos;
+
             _bieu01KKSLRepos = bieu01KKSLRepos;
             _bieu01KKSL_TinhRepos = bieu01KKSL_TinhRepos;
             _bieu01KKSL_VungRepos = bieu01KKSL_VungRepos;
@@ -211,7 +223,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         if (vung == null)
                         {
                             commonResponseDto.Message = "Tỉnh này không nằm trong vùng nào";
-                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
                         if (tinh != null)
@@ -228,7 +240,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         else
                         {
                             commonResponseDto.Message = "Tỉnh này không tồn tại";
-                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
 
@@ -251,7 +263,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     else
                     {
                         commonResponseDto.Message = "ĐVHC này không tồn tại";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
                     uow.Complete();
@@ -259,12 +271,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                 catch (Exception ex)
                 {
                     uow.Dispose();
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = ex.Message;
                     Logger.Fatal(ex.Message);
                 }
             }
-            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
@@ -300,7 +312,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         else
                         {
                             commonResponseDto.Message = "Tỉnh này không tồn tại";
-                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
 
@@ -312,7 +324,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     else
                     {
                         commonResponseDto.Message = "ĐVHC này không tồn tại";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
                     uow.Complete();
@@ -320,12 +332,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                 catch (Exception ex)
                 {
                     uow.Dispose();
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = ex.Message;
                     Logger.Fatal(ex.Message);
                 }
             }
-            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
@@ -334,42 +346,49 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
+            #region biểu 01TKKK
             var data_bieu01TKKK = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
-            if (data_bieu01TKKK != null)
+            if (data_bieu01TKKK.Count > 0)
             {
                 await CreateOrUpdateBieu01TKKK_Tinh(data_bieu01TKKK, vungId, maVung, year, hamduyet);
             }
             else
             {
                 commonResponseDto.Message = "Dữ liệu tỉnh biểu 01TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 02TKKK
             var data_bieu02TKKK = await _bieu02TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
-            if (data_bieu02TKKK != null)
+            if (data_bieu02TKKK.Count > 0)
             {
                 await CreateOrUpdateBieu02TKKK_Tinh(data_bieu02TKKK, vungId, maVung, year, hamduyet);
             }
             else
             {
                 commonResponseDto.Message = "Dữ liệu tỉnh biểu 02TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 03TKKK
             var data_bieu03TKKK = await _bieu03TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
-            if (data_bieu03TKKK != null)
+            if (data_bieu03TKKK.Count > 0)
             {
                 await CreateOrUpdateBieu03TKKK_Tinh(data_bieu03TKKK, vungId, maVung, year, hamduyet);
             }
             else
             {
                 commonResponseDto.Message = "Dữ liệu tỉnh biểu 03TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 04TKKK
             var data_bieu04TKKK = await _bieu04TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
             if (data_bieu04TKKK != null)
             {
@@ -378,23 +397,40 @@ namespace KiemKeDatDai.App.DMBieuMau
             else
             {
                 commonResponseDto.Message = "Dữ liệu tỉnh biểu 04TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
+            #region biểu 05TKKK
             var data_bieu05TKKK = await _bieu05TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
-            if (data_bieu05TKKK != null)
+            if (data_bieu05TKKK.Count > 0)
             {
                 await CreateOrUpdateBieu05TKKK_Tinh(data_bieu05TKKK, vungId, maVung, year, hamduyet);
             }
             else
             {
                 commonResponseDto.Message = "Dữ liệu tỉnh biểu 05TKKK không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 return commonResponseDto;
             }
+            #endregion
 
-            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+            #region biểu 06TKKKQPAN
+            var data_bieu06TKKKQPAN = await _bieu06TKKKQPAN_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
+            if (data_bieu06TKKKQPAN.Count > 0)
+            {
+                await CreateOrDeleteBieu06TKKKQPAN_Tinh(data_bieu06TKKKQPAN, vungId, maVung, year, hamduyet);
+            }
+            else
+            {
+                commonResponseDto.Message = "Dữ liệu tỉnh biểu 06TKKKQPAN không tồn tại";
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                return commonResponseDto;
+            }
+            #endregion
+
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
@@ -1608,6 +1644,109 @@ namespace KiemKeDatDai.App.DMBieuMau
                 else
                 {
                     await CreateBieu05TKKK_Tinh(tinh, vungId, maVung);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Biểu 06TKKK
+        private async Task CreateOrDeleteBieu06TKKKQPAN_Tinh(List<Bieu06TKKKQPAN_Tinh> tinh, long vungId, string maVung, long year, int hamduyet)
+        {
+            var data_TW = await _bieu06TKKKQPANRepos.GetAllListAsync(x => x.Year == year);
+            if (hamduyet == (int)HAM_DUYET.DUYET)
+            {
+                foreach (var item in tinh)
+                {
+                    //Tạo các bản ghi trung ương tương ứng với bản ghi tỉnh
+                    await CreateBieu06TKKK(item, vungId, maVung);
+                }
+            }
+            else
+            {
+                foreach (var item in tinh)
+                {
+                    //Xoá các bản ghi trung ương tương ứng với bản ghi tỉnh
+                    await DeleteBieu06TKKK(item, vungId, maVung, year);
+                }
+            }
+        }
+
+        private async Task CreateBieu06TKKK(Bieu06TKKKQPAN_Tinh tinh, long vungId, string maVung)
+        {
+            try
+            {
+                //Thêm mới bản ghi trung ương
+                var objTW = new Bieu06TKKKQPAN()
+                {
+                    STT = tinh.STT,
+                    DonVi = tinh.DonVi,
+                    DiaChi = tinh.DiaChi,
+                    DienTichDatQuocPhong = tinh.DienTichDatQuocPhong,
+                    DienTichKetHopKhac = tinh.DienTichKetHopKhac,
+                    LoaiDatKetHopKhac = tinh.LoaiDatKetHopKhac,
+                    DienTichDaDoDac = tinh.DienTichDaDoDac,
+                    SoGCNDaCap = tinh.SoGCNDaCap,
+                    DienTichDaCapGCN = tinh.DienTichDaCapGCN,
+                    GhiChu = tinh.GhiChu,
+                    MaTinh = tinh.MaTinh,
+                    TinhId = tinh.TinhId,
+                    Year = tinh.Year,
+                    Active = true,
+                };
+                await _bieu06TKKKQPANRepos.InsertAsync(objTW);
+                //Thêm mới bản ghi vùng
+                var objVung = new Bieu06TKKKQPAN_Vung()
+                {
+                    STT = tinh.STT,
+                    DonVi = tinh.DonVi,
+                    DiaChi = tinh.DiaChi,
+                    DienTichDatQuocPhong = tinh.DienTichDatQuocPhong,
+                    DienTichKetHopKhac = tinh.DienTichKetHopKhac,
+                    LoaiDatKetHopKhac = tinh.LoaiDatKetHopKhac,
+                    DienTichDaDoDac = tinh.DienTichDaDoDac,
+                    SoGCNDaCap = tinh.SoGCNDaCap,
+                    DienTichDaCapGCN = tinh.DienTichDaCapGCN,
+                    GhiChu = tinh.GhiChu,
+                    MaTinh = tinh.MaTinh,
+                    TinhId = tinh.TinhId,
+                    Year = tinh.Year,
+                    VungId = vungId,
+                    MaVung = maVung,
+                    Active = true,
+                };
+                await _bieu06TKKKQPAN_VungRepos.InsertAsync(objVung);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+        }
+
+        private async Task DeleteBieu06TKKK(Bieu06TKKKQPAN_Tinh tinh, long vungId, string maVung, long year)
+        {
+            try
+            {
+                //xoá biểu trung ương
+                var lstbieu06TKKKQPAN = await _bieu06TKKKQPANRepos.GetAllListAsync(x => x.MaTinh == tinh.MaTinh && x.Year == year);
+                if (lstbieu06TKKKQPAN.Count > 0)
+                {
+                    foreach (var item in lstbieu06TKKKQPAN)
+                    {
+                        await _bieu06TKKKQPANRepos.DeleteAsync(item);
+                    }
+                }
+                //xoá biểu vùng
+                var lstbieu06TKKKQPAN_vung = await _bieu06TKKKQPAN_VungRepos.GetAllListAsync(x => x.MaVung == maVung && x.Year == year);
+                if (lstbieu06TKKKQPAN_vung.Count > 0)
+                {
+                    foreach (var vung in lstbieu06TKKKQPAN_vung)
+                    {
+                        await _bieu06TKKKQPAN_VungRepos.DeleteAsync(vung);
+                    }
                 }
             }
             catch (Exception ex)

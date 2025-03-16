@@ -16,5 +16,9 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> CreateOrUpdate(DVHCInputDto input);
         Task<CommonResponseDto> Delete(long id);
         Task<CommonResponseDto> BaoCaoDVHC(BaoCaoInPutDto input);
+        Task<CommonResponseDto> GetDropDownVung();
+        Task<CommonResponseDto> GetDropDownTinh();
+        Task<CommonResponseDto> GetDropDownHuyenByTinhId(long tinhId);
+        Task<CommonResponseDto> GetDropDownXaByHuyenId(long huyenId);
     }
 }

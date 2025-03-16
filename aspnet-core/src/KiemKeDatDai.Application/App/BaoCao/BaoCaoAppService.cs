@@ -93,11 +93,11 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(x=>x.Ma == currentUser.DonViHanhChinhCode && x.Year == year);
                     if (objdata != null)
                     {
-                        if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon && objdata.CapDVHCId != 4)
-                        {
-                            commonResponseDto.Message = "Chưa duyệt hết các ĐVHC trực thuộc";
-                            commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                        }
+                        //if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon && objdata.CapDVHCId != 4)
+                        //{
+                        //    commonResponseDto.Message = "Chưa duyệt hết các ĐVHC trực thuộc";
+                        //    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        //}
                         objdata.NgayGui = DateTime.Now;
                         objdata.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
                         await _dvhcRepos.UpdateAsync(objdata);
@@ -105,16 +105,16 @@ namespace KiemKeDatDai.App.DMBieuMau
                     else
                     {
                         commonResponseDto.Message = "ĐVHC này không tồn tại";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     }
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                     uow.Complete();
                 }
                 catch (Exception ex)
                 {
                     uow.Dispose();
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = ex.Message;
                     Logger.Fatal(ex.Message);
                 }

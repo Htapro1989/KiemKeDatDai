@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250315110305_create_table_Bieu06TKKKQPAN_Vung_15032025")]
+    partial class create_table_Bieu06TKKKQPAN_Vung_15032025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -8130,67 +8133,6 @@ namespace KiemKeDatDai.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SoLieuKyTruoc");
-                });
-
-            modelBuilder.Entity("KiemKeDatDai.EntitiesDb.YKien", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool?>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DonViCongTac")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NoiDungTraLoi")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NoiDungYKien")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("PheDuyet")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Year")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("YKien");
                 });
 
             modelBuilder.Entity("KiemKeDatDai.MultiTenancy.Tenant", b =>
