@@ -447,7 +447,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
                                     {
-                                        var data = await _bieu01TKKKRepos.GetAllListAsync(x => x.Year == input.Year);
+                                        var data = await _bieu01TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -459,7 +459,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.VUNG:
                                     {
-                                        var data = await _bieu01TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                                        var data = await _bieu01TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -471,7 +471,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.TINH:
                                     {
-                                        var data = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+                                        var data = await _bieu01TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -483,7 +483,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.HUYEN:
                                     {
-                                        var data = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+                                        var data = await _bieu01TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -495,7 +495,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.XA:
                                     {
-                                        var data = await _bieu01TKKK_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+                                        var data = await _bieu01TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -511,79 +511,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                             break;
                         }
                     case "02/TKKK":
-                        switch (input.CapDVHC)
-                        {
-                            case (int)CAP_DVHC.TRUNG_UONG:
-                                {
-                                    var data = await _bieu02TKKKRepos.GetAllListAsync(x => x.Year == input.Year);
-                                    commonResponseDto.ReturnValue = new
-                                    {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.VUNG:
-                                {
-                                    var data = await _bieu02TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
-                                    commonResponseDto.ReturnValue = new
-                                    {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.TINH:
-                                {
-                                    var data = await _bieu02TKKK_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
-                                    commonResponseDto.ReturnValue = new
-                                    {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.HUYEN:
-                                {
-                                    var data = await _bieu02TKKK_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
-                                    commonResponseDto.ReturnValue = new
-                                    {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.XA:
-                                {
-                                    var data = await _bieu02TKKK_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
-                                    commonResponseDto.ReturnValue = new
-                                    {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    case "03/TKKK":
                         {
                             switch (input.CapDVHC)
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
                                     {
-                                        var data = await _bieu03TKKKRepos.GetAllListAsync(x => x.Year == input.Year);
+                                        var data = await _bieu02TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -595,7 +528,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.VUNG:
                                     {
-                                        var data = await _bieu03TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                                        var data = await _bieu02TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -607,7 +540,19 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.TINH:
                                     {
-                                        var data = await _bieu03TKKK_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+                                        var data = await _bieu02TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data 
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.HUYEN:
+                                    {
+                                        var data = await _bieu02TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -617,9 +562,66 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         };
                                         break;
                                     }
+                                case (int)CAP_DVHC.XA:
+                                    {
+                                        var data = await _bieu02TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    case "03/TKKK":
+                        {
+                            switch (input.CapDVHC)
+                            {
+                                case (int)CAP_DVHC.TRUNG_UONG:
+                                    {
+                                        var data = await _bieu03TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.VUNG:
+                                    {
+                                        var data = await _bieu03TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.TINH:
+                                    {
+                                        var data = await _bieu03TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data 
+                                        };
+                                        break;
+                                    }
                                 case (int)CAP_DVHC.HUYEN:
                                     {
-                                        var data = await _bieu03TKKK_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+                                        var data = await _bieu03TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -635,148 +637,143 @@ namespace KiemKeDatDai.App.DMBieuMau
                             break;
                         }
                     case "04/TKKK":
-                        switch (input.CapDVHC)
                         {
-                            case (int)CAP_DVHC.TRUNG_UONG:
-                                {
-                                    var data = await _bieu04TKKKRepos.GetAllListAsync(x => x.Year == input.Year);
-                                    commonResponseDto.ReturnValue = new
+                            switch (input.CapDVHC)
+                            {
+                                case (int)CAP_DVHC.TRUNG_UONG:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.VUNG:
-                                {
-                                    var data = await _bieu04TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
-
-                                    commonResponseDto.ReturnValue = new
+                                        var data = await _bieu04TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.VUNG:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.TINH:
-                                {
-                                    var data = await _bieu04TKKK_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
-
-                                    commonResponseDto.ReturnValue = new
+                                        var data = await _bieu04TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.TINH:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.HUYEN:
-                                {
-                                    var data = await _bieu04TKKK_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
-
-                                    commonResponseDto.ReturnValue = new
+                                        var data = await _bieu04TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data 
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.HUYEN:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.XA:
-                                {
-                                    var data = await _bieu04TKKK_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
-
-                                    commonResponseDto.ReturnValue = new
+                                        var data = await _bieu04TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.XA:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
+                                        var data = await _bieu04TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                default:
                                     break;
-                                }
-                            default:
-                                break;
+                            }
+                            break;
                         }
-                        break;
                     case "05/TKKK":
-                        switch (input.CapDVHC)
                         {
-                            case (int)CAP_DVHC.TRUNG_UONG:
-                                {
-                                    var data = await _bieu05TKKKRepos.GetAllListAsync(x => x.Year == input.Year);
-
-                                    commonResponseDto.ReturnValue = new
+                            switch (input.CapDVHC)
+                            {
+                                case (int)CAP_DVHC.TRUNG_UONG:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.VUNG:
-                                {
-                                    var data = await _bieu05TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
-
-                                    commonResponseDto.ReturnValue = new
+                                        var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.VUNG:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.TINH:
-                                {
-                                    var data = await _bieu05TKKK_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
-
-                                    commonResponseDto.ReturnValue = new
+                                        var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.TINH:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.HUYEN:
-                                {
-                                    var data = await _bieu05TKKK_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
-
-                                    commonResponseDto.ReturnValue = new
+                                        var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data 
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.HUYEN:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
-                                    break;
-                                }
-                            case (int)CAP_DVHC.XA:
-                                {
-                                    var data = await _bieu05TKKK_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
-
-                                    commonResponseDto.ReturnValue = new
+                                        var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.XA:
                                     {
-                                        tenXa = _tenxa,
-                                        tenHuyen = _tenHuyen,
-                                        tenTinh = _tenTinh,
-                                        data
-                                    };
+                                        var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        commonResponseDto.ReturnValue = new
+                                        {
+                                            tenXa = _tenxa,
+                                            tenHuyen = _tenHuyen,
+                                            tenTinh = _tenTinh,
+                                            data
+                                        };
+                                        break;
+                                    }
+                                default:
                                     break;
-                                }
-                            default:
-                                break;
+                            }
+                            break;
                         }
-                        break;
                     case "06/TKKKQPAN":
                         switch (input.CapDVHC)
                         {
