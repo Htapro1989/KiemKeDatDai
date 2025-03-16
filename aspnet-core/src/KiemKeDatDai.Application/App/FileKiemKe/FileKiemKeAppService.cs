@@ -180,6 +180,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Đơn vị hành chính không tồn tại";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHKHONGTONTAI";
                     return commonResponseDto;
                 }
 
@@ -187,6 +188,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Đơn vị hành chính đã được duyệt không thể thêm file";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHDADUYET";
                     return commonResponseDto;
                 }
 
@@ -194,6 +196,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Không có file nào được upload.";
+                    commonResponseDto.ErrorCode = "FILEKHONGTONTAI";
+
                     return commonResponseDto;
                 }
                 // Check if the file is a ZIP file
@@ -202,6 +206,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Chỉ chấp nhận file ZIP.";
+                    commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
+
                     return commonResponseDto;
                 }
                 // Save the file to a directory
@@ -245,6 +251,14 @@ namespace KiemKeDatDai.App.DMBieuMau
                 fileOutput.DeletedFilePath = pathDeleted;
                 //push message to rabbitmq
                 await _rabbitMQService.SendMessage<FileKiemKeOuputDto>(fileOutput);
+                //return number of file uploaded and last file uploaded
+                var count = _fileRepos.Count(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year);
+                var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+                if (lastUploaded != null)
+                {
+                    commonResponseDto.NumberRequest = count;
+                    commonResponseDto.LastRequest = lastUploaded.CreationTime;
+                }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "File upload thành công";
             }
