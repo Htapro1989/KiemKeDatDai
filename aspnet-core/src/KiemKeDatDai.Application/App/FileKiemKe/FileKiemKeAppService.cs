@@ -219,18 +219,15 @@ namespace KiemKeDatDai.App.DMBieuMau
                 }
 
                 //get dvhcid
-                // var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted);
-                // if (currentFile != null)
-                // {
-                //     //delete file
-                //     var path = currentFile.FilePath;
-                //     if (System.IO.File.Exists(path))
-                //     {
-                //         System.IO.File.Delete(path);
-                //     }
-                //     await _fileRepos.DeleteAsync(currentFile);
+                var pathDeleted = "";
+                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted);
+                if (currentFile != null)
+                {
+                    //delete file
+                    pathDeleted = currentFile.FilePath;
+                    await _fileRepos.DeleteAsync(currentFile);
+                }
 
-                // }
                 var fileEntity = new EntitiesDb.File
                 {
                     FileName = input.File.FileName,
@@ -240,11 +237,14 @@ namespace KiemKeDatDai.App.DMBieuMau
                     FileType = CommonEnum.FILE_KYTHONGKE,
                     DVHCId = objDVHC?.Id
                 };
-                var insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
-                fileEntity.Id = insertedFileID;
 
+                var insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
+
+                fileEntity.Id = insertedFileID;
+                var fileOutput = _objectMapper.Map<FileKiemKeOuputDto>(fileEntity);
+                fileOutput.DeletedFilePath = pathDeleted;
                 //push message to rabbitmq
-                await _rabbitMQService.SendMessage<EntitiesDb.File>(fileEntity);
+                await _rabbitMQService.SendMessage<FileKiemKeOuputDto>(fileOutput);
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "File upload thành công";
             }

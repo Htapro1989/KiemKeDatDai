@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KiemKeDatDai.Dto
+namespace KiemKeDatDai.ApplicationDto
 {
     [AutoMap(typeof(File))]
     public class FileKiemKeInputDto : KyThongKeKiemKe
@@ -17,7 +17,19 @@ namespace KiemKeDatDai.Dto
     {
         public long Year { get; set; }
     }
-    public class FileiemKeOuputDto : KyThongKeKiemKe
+    public class FileKiemKeOuputDto
     {
+        public string FileName { get; set; } = "";
+        public string FileType { get; set; } = "";
+        public string FilePath { get; set; } = "";
+        public long Url { get; set; }
+        public bool Active { get; set; }
+        public long Year { get; set; }
+        public string MaDVHC { get; set; } = "";
+        public long? DVHCId { get; set; }
+        public string DeletedFilePath { get; set; } = "";
+
+        public long Id { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
