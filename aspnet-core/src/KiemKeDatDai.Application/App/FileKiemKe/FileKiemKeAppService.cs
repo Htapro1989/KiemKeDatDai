@@ -169,6 +169,46 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
         }
         [AbpAuthorize]
+        public async Task<CommonResponseDto> CountRequestByCommune(string MaDVHC, int Year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var count = await _fileRepos.CountAsync(x => x.MaDVHC == MaDVHC && x.Year == Year);
+                    var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == MaDVHC && x.Year == Year).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+                    if (lastUploaded != null)
+                    {
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                        commonResponseDto.Message = "Thành Công";
+                        commonResponseDto.ReturnValue = new FileStatisticalOutputDto
+                        {
+                            UploadFileCount = (int)count,
+                            LastUploaded = lastUploaded.CreationTime
+                        };
+                        return commonResponseDto;
+                    }
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Chưa có File nào được upload";
+                    commonResponseDto.ReturnValue = new FileStatisticalOutputDto
+                    {
+                        UploadFileCount = (int)count,
+                        LastUploaded = null
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                throw;
+            }
+            return commonResponseDto;
+        }
+
+        [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
         {
@@ -180,6 +220,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Đơn vị hành chính không tồn tại";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHKHONGTONTAI";
                     return commonResponseDto;
                 }
 
@@ -187,6 +228,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Đơn vị hành chính đã được duyệt không thể thêm file";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHDADUYET";
                     return commonResponseDto;
                 }
 
@@ -194,6 +236,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Không có file nào được upload.";
+                    commonResponseDto.ErrorCode = "FILEKHONGTONTAI";
+
                     return commonResponseDto;
                 }
                 // Check if the file is a ZIP file
@@ -202,6 +246,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Chỉ chấp nhận file ZIP.";
+                    commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
+
                     return commonResponseDto;
                 }
                 // Save the file to a directory
@@ -245,6 +291,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 fileOutput.DeletedFilePath = pathDeleted;
                 //push message to rabbitmq
                 await _rabbitMQService.SendMessage<FileKiemKeOuputDto>(fileOutput);
+
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "File upload thành công";
             }
