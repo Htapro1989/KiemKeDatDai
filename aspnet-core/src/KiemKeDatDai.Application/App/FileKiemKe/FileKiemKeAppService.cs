@@ -169,6 +169,46 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
         }
         [AbpAuthorize]
+        public async Task<CommonResponseDto> CountRequestByCommune(string MaDVHC, int Year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var count = await _fileRepos.CountAsync(x => x.MaDVHC == MaDVHC && x.Year == Year);
+                    var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == MaDVHC && x.Year == Year).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+                    if (lastUploaded != null)
+                    {
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                        commonResponseDto.Message = "Thành Công";
+                        commonResponseDto.ReturnValue = new FileStatisticalOutputDto
+                        {
+                            UploadFileCount = (int)count,
+                            LastUploaded = lastUploaded.CreationTime
+                        };
+                        return commonResponseDto;
+                    }
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Chưa có File nào được upload";
+                    commonResponseDto.ReturnValue = new FileStatisticalOutputDto
+                    {
+                        UploadFileCount = (int)count,
+                        LastUploaded = null
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                throw;
+            }
+            return commonResponseDto;
+        }
+
+        [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
         {
@@ -251,14 +291,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 fileOutput.DeletedFilePath = pathDeleted;
                 //push message to rabbitmq
                 await _rabbitMQService.SendMessage<FileKiemKeOuputDto>(fileOutput);
-                //return number of file uploaded and last file uploaded
-                var count = _fileRepos.Count(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year);
-                var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year).OrderByDescending(x => x.CreationTime).FirstOrDefault();
-                if (lastUploaded != null)
-                {
-                    commonResponseDto.NumberRequest = count;
-                    commonResponseDto.LastRequest = lastUploaded.CreationTime;
-                }
+
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "File upload thành công";
             }

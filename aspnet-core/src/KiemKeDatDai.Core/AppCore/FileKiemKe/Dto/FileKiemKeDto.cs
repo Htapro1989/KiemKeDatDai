@@ -17,6 +17,16 @@ namespace KiemKeDatDai.ApplicationDto
     {
         public long Year { get; set; }
     }
+    public class FileStatisticalDto 
+    {
+        public string MaDVHC { get; set; }
+        public int Year { get; set; }
+    }
+    public class FileStatisticalOutputDto
+    {
+        public int? UploadFileCount { get; set; }
+        public DateTime? LastUploaded { get; set; }
+    }
     public class FileKiemKeOuputDto
     {
         public string FileName { get; set; } = "";
