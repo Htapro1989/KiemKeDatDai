@@ -9,3 +9,9 @@ public class FileUploadInputDto
     public int Year { get; set; }
 }
 
+public class FileAttachUploadInputDto
+{
+    public IFormFile File { get; set; }
+    public int DVHCId{get;set;}
+    public int Year { get; set; }
+}

@@ -47,4 +47,11 @@ namespace KiemKeDatDai.Dto
         public bool? Root { get; set; }
         public bool? IsNopBaoCao { get; set; }
     }
+
+    public class DonViHanhChinhXaDto{
+        public long Id { get; set; }
+        public string Ten { get; set; }
+        public string MaXa { get; set; }
+        public long Parent_id { get; set; }
+    }
 }
