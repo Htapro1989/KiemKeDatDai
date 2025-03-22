@@ -79,7 +79,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  Name = cap.Name,
                                  Year = cap.Year,
                                  CapDVHCMin = cap.CapDVHCMin,
-                                 Active = cap.Active
+                                 Active = cap.Active,
+                                 CreationTime = cap.CreationTime
                              })
                              .WhereIf((input.MaCapDVHC != null), x => x.MaCapDVHC == input.MaCapDVHC)
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()));

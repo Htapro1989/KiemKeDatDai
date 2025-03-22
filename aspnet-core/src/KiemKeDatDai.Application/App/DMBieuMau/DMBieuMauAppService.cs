@@ -290,6 +290,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  KyHieu = bm.KyHieu,
                                  NoiDung = bm.NoiDung,
                                  CapDVHC = bm.CapDVHC,
+                                 CreationTime = bm.CreationTime,
                                  //Active = bm.Active
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));

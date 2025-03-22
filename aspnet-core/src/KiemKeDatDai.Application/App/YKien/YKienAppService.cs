@@ -32,11 +32,11 @@ using static KiemKeDatDai.CommonEnum;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
-    public class DMKyKiemKeAppService : KiemKeDatDaiAppServiceBase, IDMKyKiemKeAppService
+    public class YKienAppService : KiemKeDatDaiAppServiceBase, IYKienAppService
     {
         private readonly ICacheManager _cacheManager;
         private readonly IIocResolver _iocResolver;
-        private readonly IRepository<KyThongKeKiemKe, long> _dmKyThongKeKiemKeRepos;
+        private readonly IRepository<YKien, long> _yKienRepos;
         private readonly IRepository<User, long> _userRepos;
         private readonly IObjectMapper _objectMapper;
         private readonly IUserAppService _iUserAppService;
@@ -46,9 +46,9 @@ namespace KiemKeDatDai.App.DMBieuMau
 
         private readonly ICache mainCache;
 
-        public DMKyKiemKeAppService(ICacheManager cacheManager,
+        public YKienAppService(ICacheManager cacheManager,
             IIocResolver iocResolver,
-            IRepository<KyThongKeKiemKe, long> dmKyThongKeKiemKeRepos,
+            IRepository<YKien, long> yKienRepos,
             IRepository<User, long> userRepos,
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
@@ -57,7 +57,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             //ILogAppService iLogAppService
             )
         {
-            _dmKyThongKeKiemKeRepos = dmKyThongKeKiemKeRepos;
+            _yKienRepos = yKienRepos;
             _objectMapper = objectMapper;
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
@@ -65,25 +65,37 @@ namespace KiemKeDatDai.App.DMBieuMau
             //_iLogAppService = iLogAppService;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> GetAll(string filter)
+        public async Task<CommonResponseDto> GetAll(YKienDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var lstBM = new List<DMKyKiemKeOuputDto>();
-                var query = (from ky in _dmKyThongKeKiemKeRepos.GetAll()
-                             select new DMKyKiemKeOuputDto
+                PagedResultDto<YKienOuputDto> pagedResultDto = new PagedResultDto<YKienOuputDto>();
+                var query = (from obj in _yKienRepos.GetAll()
+                             select new YKienOuputDto
                              {
-                                 Id = ky.Id,
-                                 Ma = ky.Ma,
-                                 Name = ky.Name,
-                                 Year = ky.Year,
-                                 Active = ky.Active,
-                                 CreationTime = ky.CreationTime
+                                 Id = obj.Id,
+                                 Name = obj.Name,
+                                 Email = obj.Email,
+                                 DonViCongTac = obj.DonViCongTac,
+                                 NoiDungYKien = obj.NoiDungYKien,
+                                 NoiDungTraLoi = obj.NoiDungTraLoi,
+                                 Year = obj.Year,
+                                 PheDuyet = obj.PheDuyet,
+                                 Url = obj.Url,
+                                 NgayTraLoi = obj.NgayTraLoi,
+                                 CreationTime = obj.CreationTime,
+                                 Active = obj.Active
                              })
-                             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Ma.ToLower().Contains(filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Name.ToLower().Contains(filter.ToLower()));
-                commonResponseDto.ReturnValue = await query.ToListAsync();
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Email.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.DonViCongTac.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDungYKien.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDungTraLoi.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()));
+                pagedResultDto.Items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
+                pagedResultDto.TotalCount = await query.CountAsync();
+                commonResponseDto.ReturnValue = pagedResultDto;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -101,8 +113,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var objKyKiemKe = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
-                commonResponseDto.ReturnValue = objKyKiemKe;
+                var objdata = await _yKienRepos.FirstOrDefaultAsync(id);
+                commonResponseDto.ReturnValue = objdata;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -115,7 +127,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> CreateOrUpdate(DMKyKiemKeInputDto input)
+        public async Task<CommonResponseDto> CreateOrUpdate(YKienInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
@@ -123,20 +135,17 @@ namespace KiemKeDatDai.App.DMBieuMau
                 var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
-                    var data = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(input.Id);
+                    var data = await _yKienRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
-                        data.Ma = input.Ma;
-                        data.Name = input.Name;
-                        data.Year = input.Year;
-                        data.Active = input.Active;
-                        await _dmKyThongKeKiemKeRepos.UpdateAsync(data);
+                        input.MapTo(data);
+                        await _yKienRepos.UpdateAsync(data);
                     }
                 }
                 else
                 {
-                    var objdata = input.MapTo<KyThongKeKiemKe>();
-                    await _dmKyThongKeKiemKeRepos.InsertAsync(objdata);
+                    var objdata = input.MapTo<YKien>();
+                    await _yKienRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -157,16 +166,16 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var currentUser = await GetCurrentUserAsync();
-                var objdata = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
+                var objdata = await _yKienRepos.FirstOrDefaultAsync(id);
                 if (objdata != null)
                 {
-                    await _dmKyThongKeKiemKeRepos.DeleteAsync(objdata);
+                    await _yKienRepos.DeleteAsync(objdata);
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
-                    commonResponseDto.Message = "Kỳ thống kê kiểm kê này không tồn tại";
+                    commonResponseDto.Message = "Ý kiến này không tồn tại";
                     commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 }
             }

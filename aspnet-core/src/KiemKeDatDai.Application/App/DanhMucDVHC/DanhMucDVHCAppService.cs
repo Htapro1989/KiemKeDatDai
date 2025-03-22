@@ -108,7 +108,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                          Active = dvhc.Active,
                                          Year = dvhc.Year,
                                          TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                         ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                                         ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
+                                         CreationTime = dvhc.CreationTime
                                      });
                         lstDVHC = await query.ToListAsync();
                         commonResponseDto.ReturnValue = lstDVHC;
