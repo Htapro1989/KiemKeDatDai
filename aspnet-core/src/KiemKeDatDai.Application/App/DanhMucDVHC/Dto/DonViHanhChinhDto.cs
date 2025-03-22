@@ -15,8 +15,9 @@ namespace KiemKeDatDai.Dto
     }
     public class DVHCDto : PagedAndFilteredInputDto
     {
-        public long? UserId { get; set; }
-        public string DVHCName { get; set; }
+        public long? Year { get; set; }
+        public string MaVung { get; set; }
+        public string MaTinh { get; set; }
     }
     public class DVHCOutputDto : DonViHanhChinh
     {
