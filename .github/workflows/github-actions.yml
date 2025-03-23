@@ -17,9 +17,15 @@ jobs:
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai
             git pull origin main
-            cd C:\Windows\System32\inetsrv\
-            appcmd stop site /site.name:"KiemKeDatDai_auto"
+      - name: Stop IIS Website
+        run: |
+            cd C:\Windows\System32\inetsrv
+            .\appcmd.exe stop site /site.name:"KiemKeDatDai_auto"
+      - name: publish dotnet
+        run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish
+      - name: start IIS Website
+        run: |
             cd %windir%\system32\inetsrv
             appcmd start site /site.name:"KiemKeDatDai_auto"
