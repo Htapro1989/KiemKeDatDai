@@ -20,11 +20,13 @@ jobs:
       - name: Stop IIS Website
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KiemKeDatDai_auto'" -Verb RunAs
+      - name: Restore dependencies
+        run: |
+            dotnet restore
       - name: publish dotnet
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
-            dotnet publish
+            dotnet publish --no-restore
       - name: start IIS Website
         run: |
-            cd %windir%\system32\inetsrv
-            appcmd start site /site.name:"KiemKeDatDai_auto"
+            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KiemKeDatDai_auto'" -Verb RunAs
