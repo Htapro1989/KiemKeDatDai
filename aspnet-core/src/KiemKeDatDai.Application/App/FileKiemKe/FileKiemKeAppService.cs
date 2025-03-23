@@ -446,7 +446,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 FileDownloadName = fileEntity.FileName
             };
         }
-
+        [AbpAuthorize]
         [HttpGet]
         public async Task<IActionResult> DownloadFileByID(int FileId)
         {
