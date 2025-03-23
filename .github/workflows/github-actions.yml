@@ -20,3 +20,5 @@ jobs:
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai
             git pull origin main
+            cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            dotnet publish
