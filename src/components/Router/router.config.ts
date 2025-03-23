@@ -4,7 +4,11 @@ import { HomeOutlined, UserOutlined, TagsOutlined, AppstoreOutlined, InfoCircleO
 export const ROUTER_PATH = {
   HOME: "/home",
   REPORT: "/report",
-  ROLES: "/roles"
+  ROLES: "/roles",
+  USERS: "/users",
+  CAPDVHC: "/capdvhc",
+  KYKIEMKE: "/ky-thong-ke-kiem-ke",
+  CAUHINH: "/cauhinh",
 
 }
 
@@ -56,13 +60,13 @@ export const appRouters: any = [
     component: LoadableComponent(() => import('../../scenes/Dashboard')),
   },
   {
-    path: '/users',
+    path: ROUTER_PATH.USERS,
     permission: 'Pages.Users',
     title: 'Users',
     name: 'user',
     icon: UserOutlined,
     showInMenu: true,
-    component: LoadableComponent(() => import('../../scenes/Users')),
+    component: LoadableComponent(() => import('../../scenes/Admin/Users')),
   },
   {
     path: ROUTER_PATH.ROLES,
@@ -72,6 +76,33 @@ export const appRouters: any = [
     icon: TagsOutlined,
     showInMenu: true,
     component: LoadableComponent(() => import('../../scenes/Admin/Roles')),
+  },
+  {
+    path: ROUTER_PATH.CAPDVHC,
+    permission: 'Pages.Roles',
+    title: 'Cấp đơn vị hành chính',
+    name: 'capdvhc',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/Admin/CapDonViHanhChinh')),
+  },
+  {
+    path: ROUTER_PATH.KYKIEMKE,
+    permission: 'Pages.Roles',
+    title: 'Kỳ thống kê kiểm kê',
+    name: 'kykiemke',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/Admin/KyKiemKe')),
+  },
+  {
+    path: ROUTER_PATH.CAUHINH,
+    permission: 'Pages.Roles',
+    title: 'Cấu hình hệ thống',
+    name: 'cauhinh',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/Admin/CauHinhHeThong')),
   },
   {
     path: '/tenants',

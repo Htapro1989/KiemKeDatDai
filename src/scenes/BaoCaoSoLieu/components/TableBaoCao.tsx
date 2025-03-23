@@ -124,7 +124,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         { title: 'Đơn vị hành chính', dataIndex: 'ten', key: 'ten' },
         {
             title: 'Ngày cập nhật', dataIndex: 'ngayCapNhat', key: 'ngayCapNhat', align: "center",
-            render: (text: string, item: any) => (<div>{item?.ngayCapNhat ? moment(item?.ngayCapNhat, 'YYYY-MM-DD').format("DD/MM/YYYY") : ''}</div>)
+            render: (text: string, item: any) => (<div>{item?.ngayCapNhat ? moment(item?.ngayCapNhat).format("DD/MM/YYYY HH:mm:ss") : ''}</div>)
         },
         {
             title: 'Tổng nộp/Tổng xã', dataIndex: 'tongNopTrenTongXa', key: 'tongNop',
@@ -140,7 +140,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
             render(value, record, index) {
                 if (value == 1) return <Tag color="warning">Chờ duyệt</Tag>
                 if (value == 2) return <Tag color="success">Đã duyệt</Tag>
-                return <Tag color="error">Chưa duyệt</Tag>
+                return <Tag color="error">Chưa nộp</Tag>
             },
         },
         {
@@ -193,8 +193,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         const baoCaoResponse = await dvhcService.getBaoCaoDVHC(ma, year);
         if (!baoCaoResponse || baoCaoResponse.code != 1 || baoCaoResponse.returnValue.length <= 0) return;
         const newList = baoCaoResponse.returnValue
-            .filter(e => e.maDVHC != ma)
-            .map(e => ({ ...e, trangThaiDuyet: null }));
+            .filter(e => e.maDVHC != ma);
         const newListDvhc: any = updateChild(listDvhc, parentId, newList);
         setListDvhc(newListDvhc)
     }

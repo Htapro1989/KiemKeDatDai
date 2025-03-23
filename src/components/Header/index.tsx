@@ -71,25 +71,35 @@ const MenuBar = () => {
       {
         isGranted('Pages.Roles') && (
           <Menu.SubMenu title='Quản lý hệ thống'>
-            <Menu.Item key="capDVHC">
-              Quản lý Cấp đơn vị hành chính
+            <Menu.Item key={ROUTER_PATH.CAPDVHC}>
+              <Link to={ROUTER_PATH.CAPDVHC}>
+                Quản lý Cấp đơn vị hành chính
+              </Link>
             </Menu.Item>
-            <Menu.Item key="kyKiemKe">
-              Quản lý kỳ thống kê, kiểm kê
+            <Menu.Item key={ROUTER_PATH.KYKIEMKE}>
+              <Link to={ROUTER_PATH.KYKIEMKE}>
+                Quản lý kỳ thống kê, kiểm kê
+              </Link>
             </Menu.Item>
-            <Menu.Item key="dvhc">
+            <Menu.Item >
+              {/* <Link to={ROUTER_PATH.CAPDVHC}> */}
               Quản lý Đơn vị hành chính
+              {/* </Link> */}
             </Menu.Item>
-            <Menu.Item key="nguoiDung">
-              Quản lý người dùng
+            <Menu.Item key={ROUTER_PATH.USERS}>
+              <Link to={ROUTER_PATH.USERS}>
+                Quản lý người dùng
+              </Link>
             </Menu.Item>
             <Menu.Item key={ROUTER_PATH.ROLES}>
               <Link to={ROUTER_PATH.ROLES}>
                 Quản lý quyền
               </Link>
             </Menu.Item>
-            <Menu.Item key="cauHinhHeThong">
-              Cấu hình hệ thống
+            <Menu.Item key={ROUTER_PATH.CAUHINH}>
+              <Link to={ROUTER_PATH.CAUHINH}>
+                Cấu hình hệ thống
+              </Link>
             </Menu.Item>
             <Menu.Item key="yKienNguoiDung">
               Ý kiến người dùng

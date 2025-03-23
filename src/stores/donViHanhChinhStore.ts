@@ -76,6 +76,15 @@ class DonViHanhChinhStore {
     async onSetSideMenuExpanedKey(keys: any[]) {
         this.sideMenuExpanedKeys = keys;
     }
+
+    @action
+    async fetchAllCapDonViHanhChinh() {
+        return dvhcService.getAllCapDVHC()
+    }
+    @action
+    async deleteCapDonViHanhChinh(id: any) {
+        return dvhcService.deleteCapDVHC(id);
+    }
 }
 
 export default DonViHanhChinhStore;

@@ -5,8 +5,10 @@ TrangThaiDuyet  = 1(chờ duyệt) hiển thị 2 button "Duyệt" "Trả lại"
 TrangThaiDuyet  = 2(đã duyệt) hiển thị 2 button "Duyệt" "Trả lại" nhưng button "Duyệt" disabled
 
 
-TK: 
-tinhlangson, tinhlangson_huyenchilang, tinhlangson_huyenchilang_xabangmac
-Tkkk$2025
-
-![alt text](image.png)
+export const CAP_DVHC_ENUM = {
+    TRUNG_UONG: '0',
+    VUNG: '1',
+    TINH: '2',
+    HUYEN: '3',
+    XA: '4',
+}

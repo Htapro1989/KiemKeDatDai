@@ -27,7 +27,7 @@ export default function Bieu01TKKK(props: IBieuMauProps) {
                 <td>{data.loaiDat}</td>
                 <td>{data.ma}</td>
                 <td>{data.tongDienTichDVHC}</td>
-                <td>{data.tongSoTheoDoiTuongDuocGiaoQuanLy}</td>
+                <td>{data.tongSoTheoDoiTuongSuDung}</td>
                 <td>{data.caNhanTrongNuoc_CNV}</td>
                 <td>{data.nguoiVietNamONuocNgoai_CNN}</td>
                 <td>{data.coQuanNhaNuoc_TCN}</td>
@@ -40,7 +40,7 @@ export default function Bieu01TKKK(props: IBieuMauProps) {
                 <td>{data.toChucNuocNgoai_TNG}</td>
                 <td>{data.nguoiGocVietNamONuocNgoai_NGV}</td>
                 <td>{data.toChucKinhTeVonNuocNgoai_TVN}</td>
-                <td>{data.tongSoTheoDoiTuongSuDung}</td>
+                <td>{data.tongSoTheoDoiTuongDuocGiaoQuanLy}</td>
                 <td>{data.coQuanNhaNuoc_TCQ}</td>
                 <td>{data.donViSuNghiep_TSQ}</td>
                 <td>{data.toChucKinhTe_KTQ}</td>

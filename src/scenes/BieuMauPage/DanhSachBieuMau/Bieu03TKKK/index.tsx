@@ -14,14 +14,71 @@ export default function Bieu03TKKK(props: IBieuMauProps) {
             return null;
         }
         return reportData.data.map((data: any) => {
+            const genItem = () => {
+                try {
+                    const listDienTich = JSON.parse(data.dienTichTheoDVHC)
+                    if (listDienTich.length > 0) {
+                        return (<>
+                            {listDienTich.map((e: any) => {
+                                return (<td>{e.DienTich}</td>)
+                            })}
+                        </>)
+                    }
+                } catch (error) {
+                    return null;
+                }
+                return null;
+            }
+
             return (<tr key={data.id}>
                 <td>{data.stt}</td>
                 <td>{data.loaiDat}</td>
                 <td>{data.ma}</td>
                 <td>{data.tongDienTich}</td>
+                {genItem()}
             </tr>)
         })
     }
+
+    const genReportHeader = () => {
+        if (!reportData?.data) {
+            return null;
+        }
+        try {
+            const listDienTich = JSON.parse(reportData.data[0].dienTichTheoDVHC)
+            if (listDienTich.length > 0) {
+                return (<tr>
+                    {listDienTich.map((e: any) => {
+                        return (<th className='vertical-align-center-text'>{e.TenDVHC}</th>)
+                    })}
+                </tr>)
+            }
+        } catch (error) {
+            console.log(error)
+            return null;
+        }
+        return null;
+    }
+    const genReportIndex = () => {
+        if (!reportData?.data) {
+            return null;
+        }
+        try {
+            const listDienTich = JSON.parse(reportData.data[0].dienTichTheoDVHC)
+            if (listDienTich.length > 0) {
+                return (<>
+                    {listDienTich.map((e: any, index: any) => {
+                        return (<td>({4 + index + 1})</td>)
+                    })}
+                </>)
+            }
+        } catch (error) {
+            console.log(error)
+            return null;
+        }
+        return null;
+    }
+
     return (
         <div className='bieu-mau__layout-wrapper'>
             <HeaderBieuMau
@@ -31,13 +88,13 @@ export default function Bieu03TKKK(props: IBieuMauProps) {
             <table className="report-table">
                 <thead>
                     <tr>
-                        <th className='vertical-align-center-text'>Thứ tự</th>
-                        <th className='vertical-align-center-text'>Loại đất</th>
-                        <th className='vertical-align-center-text'>Mã</th>
-                        <th className='vertical-align-center-text'>Tổng diện tích</th>
-                        <th className='vertical-align-center-text'>Diện tích theo từng đơn vị hành chính trực thuộc</th>
-
+                        <th rowSpan={2} className='vertical-align-center-text'>Thứ tự</th>
+                        <th rowSpan={2} className='vertical-align-center-text'>Loại đất</th>
+                        <th rowSpan={2} className='vertical-align-center-text'>Mã</th>
+                        <th rowSpan={2} className='vertical-align-center-text'>Tổng diện tích</th>
+                        <th rowSpan={1} className='vertical-align-center-text'>Diện tích theo từng đơn vị hành chính trực thuộc</th>
                     </tr>
+                    {genReportHeader()}
 
                 </thead>
                 <tbody>
@@ -46,6 +103,7 @@ export default function Bieu03TKKK(props: IBieuMauProps) {
                         <td>(2)</td>
                         <td>(3)</td>
                         <td>(4)</td>
+                        {genReportIndex()}
                     </tr>
                     {reportDataComponent()}
                 </tbody>
