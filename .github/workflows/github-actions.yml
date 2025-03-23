@@ -22,6 +22,7 @@ jobs:
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KiemKeDatDai_auto'" -Verb RunAs
       - name: Restore dependencies
         run: |
+            cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet restore
       - name: publish dotnet
         run: |
