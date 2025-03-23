@@ -106,7 +106,7 @@ namespace KiemKeDatDai.App.BieuPhuLuc
                     //            MaKhuVucTongHop = "",
                     //            GhiChu = ""
                     //    }).ToList();
-                    result.BieuPhuLucIIIs = await query.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                    result.BieuPhuLucIIIDtos = await query.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
                     //result.BieuPhuLucIIIs = await query.ToListAsync();
                     result.TenTinh = dvhcObj.TenTinh;
                     result.TenHuyen = dvhcObj.TenHuyen;
@@ -136,7 +136,7 @@ namespace KiemKeDatDai.App.BieuPhuLuc
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var result = new BieuPhuLucIIIOutputDto();
+                var result = new BieuPhuLucIVOutputDto();
                 var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == input.dvhcId && x.Year == input.year);
                 if (dvhcObj != null)
                 {
@@ -166,7 +166,7 @@ namespace KiemKeDatDai.App.BieuPhuLuc
                     //            MaKhuVucTongHop = "",
                     //            GhiChu = ""
                     //    }).ToList();
-                    result.BieuPhuLucIIIs = await query.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                    result.BieuPhuLucIVDtos = await query.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
                     //result.BieuPhuLucIIIs = await query.ToListAsync();
                     result.TenTinh = dvhcObj.TenTinh;
                     result.TenHuyen = dvhcObj.TenHuyen;

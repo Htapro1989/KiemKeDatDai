@@ -28,7 +28,7 @@ namespace KiemKeDatDai.Dto
     }
     public class BieuPhuLucIIIOutputDto
     {
-        public List<BieuPhuLucIIIDto> BieuPhuLucIIIs { get; set; }
+        public List<BieuPhuLucIIIDto> BieuPhuLucIIIDtos { get; set; }
         public string TenTinh { get; set; }
         public string TenHuyen { get; set; }
         public string TenXa { get; set; }
