@@ -26,8 +26,12 @@ namespace KiemKeDatDai.EntitiesDb
         public string MucDichSuDung { get; set; }
         public string MucDichSuDungNLT { get; set; }
         public string MdSDSatLoBoiDap { get; set; }
+        public string MdSDSoLuongDoiTuong { get; set; }
         public string MdSDSanGon { get; set; }
         public string MdSDSanBay { get; set; }
+        public string MdSDLuaChuyenDoi { get; set; }
+        public string MucDichSuDungKyTruoc { get; set; }
+        public decimal DienTichMucDich { get; set; }
         public long chiTieuId { get; set; }
         public bool? Status { get; set; }
         public long Year { get; set; }
