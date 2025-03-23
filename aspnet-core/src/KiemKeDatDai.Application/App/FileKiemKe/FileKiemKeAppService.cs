@@ -448,10 +448,10 @@ namespace KiemKeDatDai.App.DMBieuMau
         }
         [AbpAuthorize]
         [HttpGet]
-        public async Task<IActionResult> DownloadAttachFile(long year, int DVHCId)
+        public async Task<IActionResult> DownloadFileByID(int FileId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
-            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Year == year && x.DVHCId == DVHCId && x.FileType == CommonEnum.FILE_ATTACHMENT);
+            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Id == FileId);
             if (fileEntity == null)
             {
                 return new NotFoundObjectResult(new { Message = "File not found on server" });
