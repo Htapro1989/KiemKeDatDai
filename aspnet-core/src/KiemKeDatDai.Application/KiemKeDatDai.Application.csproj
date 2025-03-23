@@ -18,7 +18,7 @@
     <Folder Include="App\Log\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="7.6.1" />
+    <PackageReference Include="EPPlus" Version="8.0.0-beta" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.1" />
   </ItemGroup>
 </Project>

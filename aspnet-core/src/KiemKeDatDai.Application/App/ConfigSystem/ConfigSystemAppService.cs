@@ -32,11 +32,11 @@ using static KiemKeDatDai.CommonEnum;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
-    public class DMKyKiemKeAppService : KiemKeDatDaiAppServiceBase, IDMKyKiemKeAppService
+    public class ConfigSystemAppService : KiemKeDatDaiAppServiceBase, IConfigSystemAppService
     {
         private readonly ICacheManager _cacheManager;
         private readonly IIocResolver _iocResolver;
-        private readonly IRepository<KyThongKeKiemKe, long> _dmKyThongKeKiemKeRepos;
+        private readonly IRepository<ConfigSystem, long> _configSystemRepos;
         private readonly IRepository<User, long> _userRepos;
         private readonly IObjectMapper _objectMapper;
         private readonly IUserAppService _iUserAppService;
@@ -46,9 +46,9 @@ namespace KiemKeDatDai.App.DMBieuMau
 
         private readonly ICache mainCache;
 
-        public DMKyKiemKeAppService(ICacheManager cacheManager,
+        public ConfigSystemAppService(ICacheManager cacheManager,
             IIocResolver iocResolver,
-            IRepository<KyThongKeKiemKe, long> dmKyThongKeKiemKeRepos,
+            IRepository<ConfigSystem, long> configSystemRepos,
             IRepository<User, long> userRepos,
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
@@ -57,7 +57,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             //ILogAppService iLogAppService
             )
         {
-            _dmKyThongKeKiemKeRepos = dmKyThongKeKiemKeRepos;
+            _configSystemRepos = configSystemRepos;
             _objectMapper = objectMapper;
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
@@ -70,19 +70,15 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var lstBM = new List<DMKyKiemKeOuputDto>();
-                var query = (from ky in _dmKyThongKeKiemKeRepos.GetAll()
-                             select new DMKyKiemKeOuputDto
+                var query = (from con in _configSystemRepos.GetAll()
+                             select new ConfigSystem
                              {
-                                 Id = ky.Id,
-                                 Ma = ky.Ma,
-                                 Name = ky.Name,
-                                 Year = ky.Year,
-                                 Active = ky.Active,
-                                 CreationTime = ky.CreationTime
-                             })
-                             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Ma.ToLower().Contains(filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Name.ToLower().Contains(filter.ToLower()));
+                                 Id = con.Id,
+                                 expired_auth = con.expired_auth,
+                                 server_file_upload = con.server_file_upload,
+                                 Active = con.Active,
+                                 CreationTime = con.CreationTime
+                             });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -101,8 +97,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var objKyKiemKe = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
-                commonResponseDto.ReturnValue = objKyKiemKe;
+                var objdata = await _configSystemRepos.FirstOrDefaultAsync(id);
+                commonResponseDto.ReturnValue = objdata;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -115,7 +111,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> CreateOrUpdate(DMKyKiemKeInputDto input)
+        public async Task<CommonResponseDto> CreateOrUpdate(ConfigSystem input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
@@ -123,20 +119,19 @@ namespace KiemKeDatDai.App.DMBieuMau
                 var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
-                    var data = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(input.Id);
+                    var data = await _configSystemRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
-                        data.Ma = input.Ma;
-                        data.Name = input.Name;
-                        data.Year = input.Year;
+                        data.expired_auth = input.expired_auth;
+                        data.server_file_upload = input.server_file_upload;
                         data.Active = input.Active;
-                        await _dmKyThongKeKiemKeRepos.UpdateAsync(data);
+                        await _configSystemRepos.UpdateAsync(data);
                     }
                 }
                 else
                 {
-                    var objdata = input.MapTo<KyThongKeKiemKe>();
-                    await _dmKyThongKeKiemKeRepos.InsertAsync(objdata);
+                    var objdata = input.MapTo<ConfigSystem>();
+                    await _configSystemRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -157,16 +152,16 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var currentUser = await GetCurrentUserAsync();
-                var objdata = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
+                var objdata = await _configSystemRepos.FirstOrDefaultAsync(id);
                 if (objdata != null)
                 {
-                    await _dmKyThongKeKiemKeRepos.DeleteAsync(objdata);
+                    await _configSystemRepos.DeleteAsync(objdata);
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
-                    commonResponseDto.Message = "Kỳ thống kê kiểm kê này không tồn tại";
+                    commonResponseDto.Message = "Cấu hình này không tồn tại";
                     commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 }
             }
@@ -177,6 +172,19 @@ namespace KiemKeDatDai.App.DMBieuMau
                 Logger.Error(ex.Message);
             }
             return commonResponseDto;
+        }
+        public async Task<int> GetByActive()
+        {
+            try
+            {
+                var objdata = await _configSystemRepos.FirstOrDefaultAsync(x => x.Active == true);
+                return objdata.expired_auth.Value;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+            return 0;
         }
     }
 }

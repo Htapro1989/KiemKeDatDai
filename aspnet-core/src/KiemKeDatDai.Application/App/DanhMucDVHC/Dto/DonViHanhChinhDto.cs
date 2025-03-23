@@ -15,8 +15,9 @@ namespace KiemKeDatDai.Dto
     }
     public class DVHCDto : PagedAndFilteredInputDto
     {
-        public long? UserId { get; set; }
-        public string DVHCName { get; set; }
+        public long? Year { get; set; }
+        public string MaVung { get; set; }
+        public string MaTinh { get; set; }
     }
     public class DVHCOutputDto : DonViHanhChinh
     {
@@ -46,5 +47,12 @@ namespace KiemKeDatDai.Dto
         public int ChildStatus { get; set; }
         public bool? Root { get; set; }
         public bool? IsNopBaoCao { get; set; }
+    }
+
+    public class DonViHanhChinhXaDto{
+        public long Id { get; set; }
+        public string Ten { get; set; }
+        public string MaXa { get; set; }
+        public long Parent_id { get; set; }
     }
 }

@@ -74,6 +74,58 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             //_iLogAppService = iLogAppService;
         }
         [AbpAuthorize]
+        public async Task<CommonResponseDto> GetAll(DVHCDto input)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                PagedResultDto<DVHCOutputDto> pagedResultDto = new PagedResultDto<DVHCOutputDto>();
+                var query = (from obj in _dvhcRepos.GetAll()
+                             where obj.Year == input.Year
+                             select new DVHCOutputDto
+                             {
+                                 Id = obj.Id,
+                                 Name = obj.Name,
+                                 TenVung = obj.TenVung,
+                                 MaVung = obj.MaVung,
+                                 TenTinh = obj.TenTinh,
+                                 MaTinh = obj.MaTinh,
+                                 TenHuyen = obj.TenHuyen,
+                                 MaHuyen = obj.MaHuyen,
+                                 TenXa = obj.TenXa,
+                                 MaXa = obj.MaXa,
+                                 Ma = obj.Ma,
+                                 Parent_id = obj.Parent_id,
+                                 Parent_Code = obj.Parent_Code,
+                                 CapDVHCId = obj.CapDVHCId,
+                                 TrangThaiDuyet = obj.TrangThaiDuyet,
+                                 Year = obj.Year,
+                                 CreationTime = obj.CreationTime,
+                                 Active = obj.Active
+                             })
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenVung.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenTinh.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenHuyen.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenXa.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.MaVung), x => x.Ma.ToLower() == input.MaVung.ToLower() && x.CapDVHCId == (int)CAP_DVHC.VUNG)
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.MaVung), x => x.Ma.ToLower() == input.MaTinh.ToLower() && x.CapDVHCId == (int)CAP_DVHC.TINH)
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Ma.ToLower().Contains(input.Filter.ToLower()));
+                pagedResultDto.Items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
+                pagedResultDto.TotalCount = await query.CountAsync();
+                commonResponseDto.ReturnValue = pagedResultDto;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
         public async Task<CommonResponseDto> GetByUser(DVHCInput input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -108,7 +160,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                          Active = dvhc.Active,
                                          Year = dvhc.Year,
                                          TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                         ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                                         ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
+                                         CreationTime = dvhc.CreationTime
                                      });
                         lstDVHC = await query.ToListAsync();
                         commonResponseDto.ReturnValue = lstDVHC;

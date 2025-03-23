@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250322101258_update_table_YKien_22032025")]
+    partial class update_table_YKien_22032025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7603,9 +7606,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<decimal>("DienTich")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("DienTichMucDich")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<byte[]>("Geo")
                         .HasColumnType("varbinary(max)");
 
@@ -7642,9 +7642,6 @@ namespace KiemKeDatDai.Migrations
                     b.Property<string>("MaXa")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MdSDLuaChuyenDoi")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("MdSDSanBay")
                         .HasColumnType("nvarchar(max)");
 
@@ -7654,13 +7651,7 @@ namespace KiemKeDatDai.Migrations
                     b.Property<string>("MdSDSatLoBoiDap")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MdSDSoLuongDoiTuong")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("MucDichSuDung")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MucDichSuDungKyTruoc")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDungNLT")

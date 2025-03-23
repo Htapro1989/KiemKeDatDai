@@ -1,4 +1,6 @@
-﻿using Abp.Application.Services.Dto;
+﻿using System.Collections.Generic;
+using Abp.Application.Services.Dto;
+using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using KiemKeDatDai.Authorization.Users;
 
@@ -14,4 +16,7 @@ public class UserLoginInfoDto : EntityDto<long>
     public string UserName { get; set; }
 
     public string EmailAddress { get; set; }
+    public bool IsAdmin { get; set; }
+    public string Role { get; set; }
+    public string RoleDescription { get; set; }
 }

@@ -13,7 +13,6 @@ namespace KiemKeDatDai.ApplicationDto
         public string ErrorCode { get; set; }
         public string Message { get; set; }
         public object ReturnValue { get; set; }
-
         //Khong them moi bat ki truong nao vao day -> hoi y kien a tung
 
         public CommonResponseDto()

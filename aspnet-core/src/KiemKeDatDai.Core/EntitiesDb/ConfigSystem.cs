@@ -11,8 +11,8 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("ConfigSystem")]
     public class ConfigSystem : FullAuditedEntity<long>
     {
-        public int expired_auth { get; set; }
+        public int? expired_auth { get; set; }
         public string server_file_upload { get; set; }
-
+        public bool? Active { get; set; }
     }
 }

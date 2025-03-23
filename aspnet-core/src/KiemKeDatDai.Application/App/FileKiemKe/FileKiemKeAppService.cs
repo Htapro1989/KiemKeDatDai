@@ -52,6 +52,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IRepository<DonViHanhChinh, long> _donViHanhChinhRepos;
         private readonly RabbitMQService _rabbitMQService;
         private readonly IConfiguration _configuration;
+
         //private readonly ILogAppService _iLogAppService;
 
         private readonly ICache mainCache;
@@ -93,71 +94,110 @@ namespace KiemKeDatDai.App.DMBieuMau
             _donViHanhChinhRepos = donViHanhChinhRepos;
             _rabbitMQService = rabbitMQService;
             _configuration = configuration;
-
             //_iLogAppService = iLogAppService;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> GetAll(FileKiemKeInputDto input)
+        public async Task<CommonResponseDto> GetFileKyThongKeByDVHC(FileKiemKeFilterDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                _fileRepos.GetAll().WhereIf(!input.Name.IsNullOrEmpty(), x => x.FileName.Contains(input.Name));
-            }
-            catch (Exception ex)
-            {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                commonResponseDto.Message = ex.Message;
-                throw;
-            }
-            return commonResponseDto;
-        }
-        [AbpAuthorize]
-        public async Task<CommonResponseDto> GetById(long id)
-        {
-            CommonResponseDto commonResponseDto = new CommonResponseDto();
-            try
-            {
+                var objDVHC = await _donViHanhChinhRepos.FirstOrDefaultAsync(input.id) ?? new DonViHanhChinh();
+                var lstAllDVHC = await _donViHanhChinhRepos.GetAllListAsync();
 
+                var lstMaXa = new List<string>();
+                switch (objDVHC.CapDVHCId)
+                {
+                    case 0:
+                        lstMaXa = lstAllDVHC.Where(x => !string.IsNullOrEmpty(x.MaXa))
+                        .Select(x => x.MaXa)
+                        .ToList();
+                    break;
+                    case long v when v > 0 && v < 3:
+                        lstMaXa = lstAllDVHC.Join(lstAllDVHC, c => c.MaTinh, p => p.MaTinh,
+                        (c, p) => new DonViHanhChinhXaDto
+                        {
+                            Id = c.Id,
+                            MaXa = c.MaXa,
+                            Ten = c.Name,
+                            Parent_id = p.Parent_id ?? 0
+                        })
+                        .Where(x => x.Parent_id == input.id && !string.IsNullOrEmpty(x.MaXa))
+                        .Select(x => x.MaXa)
+                        .ToList()
+                        ;
+
+                        break;
+                    case 3:
+                        lstMaXa = lstAllDVHC
+                                .Where(x => x.Parent_id == input.id && !string.IsNullOrEmpty(x.MaXa))
+                                .Select(x => x.MaXa)
+                                .ToList()
+                                ;
+                        break;
+                    case 4:
+                        lstMaXa.Add(objDVHC.MaXa);
+                        break;
+                }
+
+                var results = await _fileRepos.GetAll()
+                .Where(x => lstMaXa.Contains(x.MaDVHC) && x.FileType == CommonEnum.FILE_KYTHONGKE)
+                .WhereIf(!string.IsNullOrEmpty(input.Filter),x=>x.FileName.Contains(input.Filter.Trim()))
+                .Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime)
+                .ToListAsync();
+                var fileDto = _objectMapper.Map<List<FileKiemKeOuputDto>>(results);
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
+                commonResponseDto.ReturnValue = fileDto;
             }
             catch (Exception ex)
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
+                Console.WriteLine(ex.ToString());
                 throw;
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize]
-        public async Task<CommonResponseDto> CreateOrUpdate(FileKiemKeInputDto input)
+        public async Task<CommonResponseDto> GetFileAttachByDVHC(FileKiemKeFilterDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-
+                var objDVHC = await _donViHanhChinhRepos.FirstOrDefaultAsync(input.id) ?? new DonViHanhChinh();
+                
+                var results = await _fileRepos.GetAll()
+                .Where(x => x.MaDVHC.Equals(objDVHC.Ma) && x.FileType == CommonEnum.FILE_ATTACHMENT)
+                .WhereIf(!string.IsNullOrEmpty(input.Filter),x=>x.FileName.Contains(input.Filter.Trim()))
+                .Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime)
+                .ToListAsync();
+                var fileDto = _objectMapper.Map<List<FileKiemKeOuputDto>>(results);
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
+                commonResponseDto.ReturnValue = fileDto;
             }
             catch (Exception ex)
             {
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
+                Console.WriteLine(ex.ToString());
                 throw;
             }
             return commonResponseDto;
         }
 
         [AbpAuthorize]
-        public async Task<CommonResponseDto> Delete(long id)
+        public async Task<CommonResponseDto> DeleteAttachFile(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-
-                commonResponseDto.Message = "Kỳ thống kê kiểm kê này không tồn tại";
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                var results = await _fileRepos.FirstOrDefaultAsync(x => x.Id == id);
+                await _fileRepos.DeleteAsync(results);
+                commonResponseDto.Message = "Xóa file thành công.";
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 return commonResponseDto;
 
             }
@@ -168,6 +208,46 @@ namespace KiemKeDatDai.App.DMBieuMau
                 throw;
             }
         }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> CountRequestByCommune(string MaDVHC, int Year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var count = await _fileRepos.CountAsync(x => x.MaDVHC == MaDVHC && x.Year == Year);
+                    var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == MaDVHC && x.Year == Year).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+                    if (lastUploaded != null)
+                    {
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                        commonResponseDto.Message = "Thành Công";
+                        commonResponseDto.ReturnValue = new FileStatisticalOutputDto
+                        {
+                            UploadFileCount = (int)count,
+                            LastUploaded = lastUploaded.CreationTime
+                        };
+                        return commonResponseDto;
+                    }
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Chưa có File nào được upload";
+                    commonResponseDto.ReturnValue = new FileStatisticalOutputDto
+                    {
+                        UploadFileCount = (int)count,
+                        LastUploaded = null
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                throw;
+            }
+            return commonResponseDto;
+        }
+
         [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
@@ -180,6 +260,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Đơn vị hành chính không tồn tại";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHKHONGTONTAI";
                     return commonResponseDto;
                 }
 
@@ -187,6 +268,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Đơn vị hành chính đã được duyệt không thể thêm file";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHDADUYET";
                     return commonResponseDto;
                 }
 
@@ -194,6 +276,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Không có file nào được upload.";
+                    commonResponseDto.ErrorCode = "FILEKHONGTONTAI";
+
                     return commonResponseDto;
                 }
                 // Check if the file is a ZIP file
@@ -202,6 +286,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Chỉ chấp nhận file ZIP.";
+                    commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
+
                     return commonResponseDto;
                 }
                 // Save the file to a directory
@@ -245,6 +331,80 @@ namespace KiemKeDatDai.App.DMBieuMau
                 fileOutput.DeletedFilePath = pathDeleted;
                 //push message to rabbitmq
                 await _rabbitMQService.SendMessage<FileKiemKeOuputDto>(fileOutput);
+
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "File upload thành công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.ToString();
+                throw;
+            }
+            return commonResponseDto;
+        }
+
+        [AbpAuthorize]
+        [HttpPost]
+        public async Task<CommonResponseDto> UploadAttachFile([FromForm] FileAttachUploadInputDto input)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var objDVHC = _donViHanhChinhRepos.FirstOrDefault(x => x.Id == input.DVHCId & x.Year == input.Year);
+                if (objDVHC == null)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Đơn vị hành chính không tồn tại";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHKHONGTONTAI";
+                    return commonResponseDto;
+                }
+
+                if (input.File == null || input.File.Length == 0)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Không có file nào được upload.";
+                    commonResponseDto.ErrorCode = "FILEKHONGTONTAI";
+
+                    return commonResponseDto;
+                }
+                // Check if the file is a ZIP file
+                var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
+                string[] fileExtensions = { ".zip", ".zar", ".pdf", ".docx", ".doc", ".xls", ".xlsx" };
+
+                if (!fileExtensions.Contains(fileExtension) )
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Chỉ chấp nhận những định dạng sau: Word, Excel, zip, rar, PDF.";
+                    commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
+
+                    return commonResponseDto;
+                }
+                // Save the file to a directory
+                var uploadsFolder = _configuration["FileUpload:FilePath"];
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(input.File.FileName)}";
+
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await input.File.CopyToAsync(stream);
+                }
+                var fileEntity = new EntitiesDb.File
+                {
+                    FileName = input.File.FileName,
+                    FilePath = filePath,
+                    MaDVHC = objDVHC.Ma,
+                    Year = input.Year,
+                    FileType = CommonEnum.FILE_ATTACHMENT,
+                    DVHCId = objDVHC?.Id
+                };
+
+                var insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
+
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "File upload thành công";
             }
@@ -286,7 +446,35 @@ namespace KiemKeDatDai.App.DMBieuMau
                 FileDownloadName = fileEntity.FileName
             };
         }
+        [AbpAuthorize]
+        [HttpGet]
+        public async Task<IActionResult> DownloadAttachFile(long year, int DVHCId)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Year == year && x.DVHCId == DVHCId && x.FileType == CommonEnum.FILE_ATTACHMENT);
+            if (fileEntity == null)
+            {
+                return new NotFoundObjectResult(new { Message = "File not found on server" });
+            }
 
+            var filePath = fileEntity.FilePath;
+            if (!System.IO.File.Exists(filePath))
+            {
+                return new NotFoundObjectResult(new { Message = "File not found on server" });
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return new FileStreamResult(memory, GetContentType(filePath))
+            {
+                FileDownloadName = fileEntity.FileName
+            };
+        }
         private string GetContentType(string path)
         {
             var types = GetMimeTypes();

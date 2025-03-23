@@ -13,9 +13,20 @@ namespace KiemKeDatDai.ApplicationDto
     public class FileKiemKeInputDto : KyThongKeKiemKe
     {
     }
-    public class FileKiemKeDto : PagedAndFilteredInputDto
+    public class FileKiemKeFilterDto : PagedAndFilteredInputDto
     {
+        public long id{get;set;}
         public long Year { get; set; }
+    }
+    public class FileStatisticalDto 
+    {
+        public string MaDVHC { get; set; }
+        public int Year { get; set; }
+    }
+    public class FileStatisticalOutputDto
+    {
+        public int? UploadFileCount { get; set; }
+        public DateTime? LastUploaded { get; set; }
     }
     public class FileKiemKeOuputDto
     {
