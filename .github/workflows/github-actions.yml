@@ -20,4 +20,3 @@ jobs:
         run: |
             cd C:\inetpub\wwwroot\
             git pull origin main
-          EOF
