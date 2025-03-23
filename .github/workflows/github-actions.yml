@@ -19,8 +19,7 @@ jobs:
             git pull origin main
       - name: Stop IIS Website
         run: |
-            cd C:\Windows\System32\inetsrv
-            .\appcmd.exe stop site /site.name:"KiemKeDatDai_auto"
+            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KiemKeDatDai_auto'" -Verb RunAs
       - name: publish dotnet
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
