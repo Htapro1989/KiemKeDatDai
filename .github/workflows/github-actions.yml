@@ -16,7 +16,7 @@ jobs:
       - name: Deploy to server
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai
-            git pull origin main
+            git pull origin release
       - name: Stop IIS Website
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KiemKeDatDai_auto'" -Verb RunAs
