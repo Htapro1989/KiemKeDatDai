@@ -17,7 +17,7 @@ jobs:
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai
             git pull origin main
-            cd "$env:WINDIR\system32\inetsrv"
+            cd C:\Windows\System32\inetsrv\
             appcmd stop site /site.name:"KiemKeDatDai_auto"
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish
