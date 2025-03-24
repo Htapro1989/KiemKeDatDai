@@ -23,7 +23,8 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Aspose.Cells">
-      <HintPath>..\..\..\..\..\..\DLL\Aspose\aspose23.8\aspose23.8\Aspose.Cells.23.8.0\lib\net7.0\Aspose.Cells.dll</HintPath>
+      <HintPath>C:\Users\htapr\Documents\Zalo Received Files\Aspose.Cells.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
 </Project>
