@@ -20,7 +20,7 @@ namespace KiemKeDatDai.Dto
     public class DMBieuMauOuputDto : DM_BieuMau
     {
     }
-    public class BieuMauDetailInputDto
+    public class BieuMauDetailInputDto : PagedAndFilteredInputDto
     {
         public string KyHieu { get; set; }
         public int? CapDVHC { get; set; }
