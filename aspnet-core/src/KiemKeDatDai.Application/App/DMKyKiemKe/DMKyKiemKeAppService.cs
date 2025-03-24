@@ -151,6 +151,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         }
 
         [AbpAuthorize]
+        [HttpDelete]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();

@@ -60,10 +60,11 @@ namespace KiemKeDatDai.Web.Host.Startup
                                 .Select(o => o.RemovePostFix("/"))
                                 .ToArray()
                         )
-                        .WithMethods("PUT", "DELETE", "GET", "POST", "OPTIONS")
+                        .WithMethods("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()
+                        .SetPreflightMaxAge(TimeSpan.FromSeconds(2500))
                 )
             );
 
