@@ -332,7 +332,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         Ten = objdata.Name,
                         MaDVHC = objdata.Ma,
                         ParentId = objdata.Parent_id,
-                        NgayCapNhat = objdata.NgayGui,
+                        NgayCapNhat = objdata.NgayGui != null ? objdata.NgayGui : objdata.CreationTime,
                         TrangThaiDuyet = objdata.TrangThaiDuyet,
                         ChildStatus = 1
                     };
@@ -402,7 +402,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                 Ten = item.Name,
                                 MaDVHC = item.Ma,
                                 ParentId = item.Parent_id,
-                                NgayCapNhat = item.NgayGui,
+                                NgayCapNhat = item.NgayGui != null ? item.NgayGui : objdata.CreationTime,
                                 TrangThaiDuyet = item.TrangThaiDuyet,
                                 IsNopBaoCao = false
                             };
