@@ -42,6 +42,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
         private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
         private readonly IRepository<CapDVHC, long> _cdvhcRepos;
         private readonly IRepository<User, long> _userRepos;
+        private readonly IRepository<Bieu01TKKK_Xa, long> _bieu01TKKK_XaXaRepos;
         private readonly IObjectMapper _objectMapper;
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -55,6 +56,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             IRepository<DonViHanhChinh, long> dvhcRepos,
             IRepository<CapDVHC, long> cdvhcRepos,
             IRepository<User, long> userRepos,
+            IRepository<Bieu01TKKK_Xa, long> bieu01TKKK_XaXaRepos,
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
@@ -67,6 +69,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             _dvhcRepos = dvhcRepos;
             _cdvhcRepos = cdvhcRepos;
             _userRepos = userRepos;
+            _bieu01TKKK_XaXaRepos = bieu01TKKK_XaXaRepos;
             _objectMapper = objectMapper;
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
@@ -332,7 +335,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         Ten = objdata.Name,
                         MaDVHC = objdata.Ma,
                         ParentId = objdata.Parent_id,
-                        NgayCapNhat = objdata.NgayGui != null ? objdata.NgayGui : objdata.CreationTime,
+                        NgayCapNhat = objdata.NgayGui,
                         TrangThaiDuyet = objdata.TrangThaiDuyet,
                         ChildStatus = 1
                     };
@@ -365,6 +368,9 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                             baoCaoDVHC.TongDuyet = objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0;
                             baoCaoDVHC.TongNop = objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0;
                             baoCaoDVHC.ChildStatus = 0;
+                            var _bieu01TKKK = await _bieu01TKKK_XaXaRepos.FirstOrDefaultAsync(x => x.MaXa == objdata.Ma && x.Year == input.Year);
+                            if (_bieu01TKKK != null)
+                                baoCaoDVHC.NgayCapNhat = _bieu01TKKK.CreationTime;
                             break;
                         default:
                             break;
@@ -402,7 +408,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                 Ten = item.Name,
                                 MaDVHC = item.Ma,
                                 ParentId = item.Parent_id,
-                                NgayCapNhat = item.NgayGui != null ? item.NgayGui : objdata.CreationTime,
+                                NgayCapNhat = item.NgayGui,
                                 TrangThaiDuyet = item.TrangThaiDuyet,
                                 IsNopBaoCao = false
                             };
@@ -432,6 +438,9 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                     baoCaoDVHC_child.TongDuyet = item.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0;
                                     baoCaoDVHC_child.TongNop = item.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0;
                                     baoCaoDVHC_child.ChildStatus = 0;
+                                    var _bieu01TKKK = await _bieu01TKKK_XaXaRepos.FirstOrDefaultAsync(x => x.MaXa == item.Ma && x.Year == input.Year);
+                                    if (_bieu01TKKK != null)
+                                        baoCaoDVHC.NgayCapNhat = _bieu01TKKK.CreationTime;
                                     break;
                                 default:
                                     break;
