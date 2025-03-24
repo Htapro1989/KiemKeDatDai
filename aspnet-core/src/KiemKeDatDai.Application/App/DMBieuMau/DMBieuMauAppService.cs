@@ -31,6 +31,10 @@ using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using KiemKeDatDai.App.Huyen.Dto;
+using Microsoft.AspNetCore.StaticFiles;
+using System.IO;
+using Microsoft.VisualBasic;
+using Aspose.Cells;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -41,6 +45,8 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IRepository<DM_BieuMau, long> _dmbmRepos;
         private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
         private readonly IRepository<DM_DVCH_BM, long> _dmdvhcbmRepos;
+        private readonly IRepository<Data_Commune, long> _dcRepos;
+        private readonly IRepository<Data_BienDong, long> _dbdRepos;
 
         #region biểu mẫu
         private readonly IRepository<Bieu01TKKK, long> _bieu01TKKKRepos;
@@ -122,6 +128,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             IRepository<DM_BieuMau, long> dmbmRepos,
             IRepository<DonViHanhChinh, long> dvhcRepos,
             IRepository<DM_DVCH_BM, long> dmdvhcbmRepos,
+            IRepository<Data_Commune, long> dcRepos,
+            IRepository<Data_BienDong, long> dbdRepos,
 
         #region biểu mẫu
             IRepository<Bieu01TKKK, long> bieu01TKKKRepos,
@@ -203,6 +211,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             _dmbmRepos = dmbmRepos;
             _dvhcRepos = dvhcRepos;
             _dmdvhcbmRepos = dmdvhcbmRepos;
+            _dcRepos = dcRepos;
+            _dbdRepos = dbdRepos;
 
             #region biểu mẫu
             _bieu01TKKKRepos = bieu01TKKKRepos;
@@ -1167,26 +1177,94 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                         break;
                     case "PL.III":
-                        var dataPLIII = await _bieuPhuLucIIIRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
-                        commonResponseDto.ReturnValue = new
+                        switch (input.CapDVHC)
                         {
-                            tenXa = _tenxa,
-                            tenHuyen = _tenHuyen,
-                            tenTinh = _tenTinh,
-                            dataPLIII
-                        };
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var data = new BieuPhuLucIIIOutputDto();
+                                    //var dvhcPL3 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+                                    var queryPL3 = (from item in _dcRepos.GetAll()
+                                                    where item.MaXa == input.MaDVHC && item.Year == input.Year
+                                                    select new BieuPhuLucIIIDto()
+                                                    {
+                                                        DienTich = item.DienTich,
+                                                        MaLoaiDatHienTrang = item.MucDichSuDung,
+                                                        MaLoaiDatKyTruoc = item.MucDichSuDungKyTruoc,
+                                                        MaLoaiDatSuDungKetHop = "",
+                                                        MaDoiTuongHienTrang = item.MaDoiTuong,
+                                                        MaDoiTuongKyTruoc = item.MaDoiTuongKyTruoc,
+                                                        MaKhuVucTongHop = "",
+                                                        GhiChu = "",
+                                                        MaXa = item.MaXa
+                                                    });
+                                    data.BieuPhuLucIIIDtos = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    //result.BieuPhuLucIIIs = await query.ToListAsync();
+                                    commonResponseDto.ReturnValue = new
+                                    {
+                                        tenXa = _tenxa,
+                                        tenHuyen = _tenHuyen,
+                                        tenTinh = _tenTinh,
+                                        data
+                                    };
+                                    //var dataPLIII = await _bieuPhuLucIIIRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+                                    //commonResponseDto.ReturnValue = new
+                                    //{
+                                    //    tenXa = _tenxa,
+                                    //    tenHuyen = _tenHuyen,
+                                    //    tenTinh = _tenTinh,
+                                    //    dataPLIII
+                                    //};
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
                         break;
                     case "PL.IV":
-                        var dataPLIV = await _bieuPhuLucIVRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
-
-                        commonResponseDto.ReturnValue = new
+                        switch (input.CapDVHC)
                         {
-                            tenXa = _tenxa,
-                            tenHuyen = _tenHuyen,
-                            tenTinh = _tenTinh,
-                            dataPLIV
-                        };
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var data = new BieuPhuLucIVOutputDto();
+                                    //var dvhcPL4 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+                                    var queryPL4 = (from item in _dbdRepos.GetAll()
+                                                    where item.MaXa == input.MaDVHC
+                                                    select new BieuPhuLucIVDto()
+                                                    {
+                                                        SHTDTruocBD = item.SHKDTruocBienDong,
+                                                        SHTDSauBD = item.SHKDSauBienDong,
+                                                        TenNguoiSDDat = item.TenChuSuDung,
+                                                        DiaChiThuaDat = item.DiaChiThuaDat,
+                                                        DienTichBD = item.DienTichBienDong,
+                                                        MaLoaiDatTruocBD = item.MDSDTruocBienDong,
+                                                        MaLoaiDatSauBD = item.MDSDSauBienDong,
+                                                        NDTD = item.NDThayDoi
+                                                    });
+                                    data.BieuPhuLucIVDtos = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    //result.BieuPhuLucIIIs = await query.ToListAsync();
+                                    commonResponseDto.ReturnValue = new
+                                    {
+                                        tenXa = _tenxa,
+                                        tenHuyen = _tenHuyen,
+                                        tenTinh = _tenTinh,
+                                        data
+                                    };
+                                    //var dataPLIV = await _bieuPhuLucIVRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+
+                                    //commonResponseDto.ReturnValue = new
+                                    //{
+                                    //    tenXa = _tenxa,
+                                    //    tenHuyen = _tenHuyen,
+                                    //    tenTinh = _tenTinh,
+                                    //    dataPLIV
+                                    //};
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
                         break;
+                        
                     default:
                         break;
                 }
@@ -1200,6 +1278,931 @@ namespace KiemKeDatDai.App.DMBieuMau
                 Logger.Error(ex.Message);
             }
             return commonResponseDto;
+        }
+        public async Task<FileStreamResult> DownloadBieuMau(BieuMauDetailInputDto input)
+        {
+            //CommonResponseDto commonResponseDto = new CommonResponseDto();
+            //try
+            //{
+            //    string _tenxa = "";
+            //    string _tenHuyen = "";
+            //    string _tenTinh = "";
+            //    switch ((input.CapDVHC))
+            //    {
+            //        case (int)CAP_DVHC.TINH:
+            //            _tenTinh = _dvhcRepos.Single(x => x.Ma == input.MaDVHC && x.Year == input.Year).Name;
+            //            break;
+            //        case (int)CAP_DVHC.HUYEN:
+            //            var _huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+            //            _tenHuyen = _huyen != null ? _huyen.Name : "";
+            //            _tenTinh = _huyen != null ? _dvhcRepos.Single(x => x.Ma == _huyen.MaTinh && x.Year == input.Year).Name : "";
+            //            break;
+            //        case (int)CAP_DVHC.XA:
+            //            var _xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+            //            _tenxa = _xa != null ? _xa.Name : "";
+            //            var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == _xa.MaHuyen && x.Year == input.Year);
+            //            _tenHuyen = huyen != null ? huyen.Name : "";
+            //            _tenTinh = huyen != null ? _dvhcRepos.Single(x => x.Ma == huyen.MaTinh && x.Year == input.Year).Name : "";
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //    switch (input.KyHieu)
+            //    {
+            //        case "01/TKKK":
+            //            {
+            //                switch (input.CapDVHC)
+            //                {
+            //                    case (int)CAP_DVHC.TRUNG_UONG:
+            //                        {
+            //                            var data = await _bieu01TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+            //                            if (data.Count == 0)
+            //                            {
+            //                                var excelMemoryStream = new MemoryStream();
+            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_UnearnPolicy.xlsx"))));
+            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
+            //                                //data.TableName = "data";
+            //                                wd.SetDataSource("data",data);
+            //                                wd.SetDataSource("Header", new[] { new
+            //                                {
+            //                                    tinh = _tenTinh,
+            //                                    huyen = _tenHuyen,
+            //                                    xa = _tenxa,
+            //                                    year = input.Year
+            //                                }});
+            //                                wd.Process();
+            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
+            //                                excelMemoryStream.Position = 0;
+            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            //                                {
+            //                                    FileDownloadName = "UnearnPolicy.xlsx"
+            //                                };
+            //                            }
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.VUNG:
+            //                        {
+            //                            var data = await _bieu01TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            if (data.Count == 0)
+            //                            {
+            //                                var excelMemoryStream = new MemoryStream();
+            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_UnearnPolicy.xlsx"))));
+            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
+            //                                //data.TableName = "data";
+            //                                wd.SetDataSource("data", data);
+            //                                wd.SetDataSource("Header", new[] { new
+            //                                {
+            //                                    tinh = _tenTinh,
+            //                                    huyen = _tenHuyen,
+            //                                    xa = _tenxa,
+            //                                    year = input.Year
+            //                                }});
+            //                                wd.Process();
+            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
+            //                                excelMemoryStream.Position = 0;
+            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            //                                {
+            //                                    FileDownloadName = "UnearnPolicy.xlsx"
+            //                                };
+            //                            }
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.TINH:
+            //                        {
+            //                            var data = await _bieu01TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            if (data.Count == 0)
+            //                            {
+            //                                var excelMemoryStream = new MemoryStream();
+            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_UnearnPolicy.xlsx"))));
+            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
+            //                                //data.TableName = "data";
+            //                                wd.SetDataSource("data", data);
+            //                                wd.SetDataSource("Header", new[] { new
+            //                                {
+            //                                    tinh = _tenTinh,
+            //                                    huyen = _tenHuyen,
+            //                                    xa = _tenxa,
+            //                                    year = input.Year
+            //                                }});
+            //                                wd.Process();
+            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
+            //                                excelMemoryStream.Position = 0;
+            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            //                                {
+            //                                    FileDownloadName = "UnearnPolicy.xlsx"
+            //                                };
+            //                            }
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.HUYEN:
+            //                        {
+            //                            var data = await _bieu01TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            if (data.Count == 0)
+            //                            {
+            //                                var excelMemoryStream = new MemoryStream();
+            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_UnearnPolicy.xlsx"))));
+            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
+            //                                //data.TableName = "data";
+            //                                wd.SetDataSource("data", data);
+            //                                wd.SetDataSource("Header", new[] { new
+            //                                {
+            //                                    tinh = _tenTinh,
+            //                                    huyen = _tenHuyen,
+            //                                    xa = _tenxa,
+            //                                    year = input.Year
+            //                                }});
+            //                                wd.Process();
+            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
+            //                                excelMemoryStream.Position = 0;
+            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            //                                {
+            //                                    FileDownloadName = "UnearnPolicy.xlsx"
+            //                                };
+            //                            }
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.XA:
+            //                        {
+            //                            var data = await _bieu01TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            if (data.Count > 0)
+            //                            {
+            //                                var excelMemoryStream = new MemoryStream();
+            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
+            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
+            //                                //data.TableName = "data";
+            //                                wd.SetDataSource("data", data);
+            //                                wd.SetDataSource("Header", new[] { new
+            //                                {
+            //                                    tinh = _tenTinh,
+            //                                    huyen = _tenHuyen,
+            //                                    xa = _tenxa,
+            //                                    year = input.Year
+            //                                }});
+            //                                wd.Process();
+            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
+            //                                excelMemoryStream.Position = 0;
+            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            //                                {
+            //                                    FileDownloadName = "UnearnPolicy.xlsx"
+            //                                };
+            //                            }
+            //                            break;
+            //                        }
+            //                    default:
+            //                        break;
+            //                }
+            //                break;
+            //            }
+            //        case "02/TKKK":
+            //            {
+            //                switch (input.CapDVHC)
+            //                {
+            //                    case (int)CAP_DVHC.TRUNG_UONG:
+            //                        {
+            //                            var data = await _bieu02TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.VUNG:
+            //                        {
+            //                            var data = await _bieu02TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.TINH:
+            //                        {
+            //                            var data = await _bieu02TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.HUYEN:
+            //                        {
+            //                            var data = await _bieu02TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.XA:
+            //                        {
+            //                            var data = await _bieu02TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    default:
+            //                        break;
+            //                }
+            //                break;
+            //            }
+            //        case "03/TKKK":
+            //            {
+            //                switch (input.CapDVHC)
+            //                {
+            //                    case (int)CAP_DVHC.TRUNG_UONG:
+            //                        {
+            //                            var data = await _bieu03TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.VUNG:
+            //                        {
+            //                            var data = await _bieu03TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.TINH:
+            //                        {
+            //                            var data = await _bieu03TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.HUYEN:
+            //                        {
+            //                            var data = await _bieu03TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    default:
+            //                        break;
+            //                }
+            //                break;
+            //            }
+            //        case "04/TKKK":
+            //            {
+            //                switch (input.CapDVHC)
+            //                {
+            //                    case (int)CAP_DVHC.TRUNG_UONG:
+            //                        {
+            //                            var data = await _bieu04TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.VUNG:
+            //                        {
+            //                            var data = await _bieu04TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.TINH:
+            //                        {
+            //                            var data = await _bieu04TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.HUYEN:
+            //                        {
+            //                            var data = await _bieu04TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.XA:
+            //                        {
+            //                            var data = await _bieu04TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    default:
+            //                        break;
+            //                }
+            //                break;
+            //            }
+            //        case "05/TKKK":
+            //            {
+            //                switch (input.CapDVHC)
+            //                {
+            //                    case (int)CAP_DVHC.TRUNG_UONG:
+            //                        {
+            //                            var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.VUNG:
+            //                        {
+            //                            var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.TINH:
+            //                        {
+            //                            var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.HUYEN:
+            //                        {
+            //                            var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    case (int)CAP_DVHC.XA:
+            //                        {
+            //                            var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+            //                            commonResponseDto.ReturnValue = new
+            //                            {
+            //                                tenXa = _tenxa,
+            //                                tenHuyen = _tenHuyen,
+            //                                tenTinh = _tenTinh,
+            //                                data
+            //                            };
+            //                            break;
+            //                        }
+            //                    default:
+            //                        break;
+            //                }
+            //                break;
+            //            }
+            //        case "06/TKKKQPAN":
+            //            switch (input.CapDVHC)
+            //            {
+            //                case (int)CAP_DVHC.TRUNG_UONG:
+            //                    {
+            //                        var data = await _bieu06TKKKQPANRepos.GetAllListAsync(x => x.Year == input.Year);
+            //                        commonResponseDto.ReturnValue = data;
+            //                        break;
+            //                    }
+            //                //case (int)CAP_DVHC.VUNG:
+            //                //    {
+            //                //        var data = await _bieu05TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+            //                //        commonResponseDto.ReturnValue = data;
+            //                //        break;
+            //                //    }
+            //                case (int)CAP_DVHC.TINH:
+            //                    {
+            //                        var data = await _bieu06TKKKQPAN_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                default:
+            //                    break;
+            //            }
+            //            break;
+            //        case "01/KKSL":
+            //            switch (input.CapDVHC)
+            //            {
+            //                case (int)CAP_DVHC.TRUNG_UONG:
+            //                    {
+            //                        var data = await _bieu01KKSLRepos.GetAllListAsync(x => x.Year == input.Year);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.VUNG:
+            //                    {
+            //                        var data = await _bieu01KKSL_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.TINH:
+            //                    {
+            //                        var data = await _bieu01KKSL_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.HUYEN:
+            //                    {
+            //                        var data = await _bieu01KKSL_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.XA:
+            //                    {
+            //                        var data = await _bieu01KKSL_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                default:
+            //                    break;
+            //            }
+            //            break;
+            //        case "02/KKSL":
+            //            switch (input.CapDVHC)
+            //            {
+            //                case (int)CAP_DVHC.TRUNG_UONG:
+            //                    {
+            //                        var data = await _bieu02KKSLRepos.GetAllListAsync(x => x.Year == input.Year);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.VUNG:
+            //                    {
+            //                        var data = await _bieu02KKSL_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.TINH:
+            //                    {
+            //                        var data = await _bieu02KKSL_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.HUYEN:
+            //                    {
+            //                        var data = await _bieu02KKSL_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.XA:
+            //                    {
+            //                        var data = await _bieu02KKSL_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                default:
+            //                    break;
+            //            }
+            //            break;
+            //        case "01a/KKNLT":
+            //            switch (input.CapDVHC)
+            //            {
+            //                case (int)CAP_DVHC.TRUNG_UONG:
+            //                    {
+            //                        var data = await _bieu01aKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.VUNG:
+            //                    {
+            //                        var data = await _bieu01aKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.TINH:
+            //                    {
+            //                        var data = await _bieu01aKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.HUYEN:
+            //                    {
+            //                        var data = await _bieu01aKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.XA:
+            //                    {
+            //                        var data = await _bieu01aKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                default:
+            //                    break;
+            //            }
+            //            break;
+            //        case "01b/KKNLT":
+            //            switch (input.CapDVHC)
+            //            {
+            //                case (int)CAP_DVHC.TRUNG_UONG:
+            //                    {
+            //                        var data = await _bieu01bKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.VUNG:
+            //                    {
+            //                        var data = await _bieu01bKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.TINH:
+            //                    {
+            //                        var data = await _bieu01bKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.HUYEN:
+            //                    {
+            //                        var data = await _bieu01bKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.XA:
+            //                    {
+            //                        var data = await _bieu01bKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                default:
+            //                    break;
+            //            }
+            //            break;
+            //        case "01c/KKNLT":
+            //            switch (input.CapDVHC)
+            //            {
+            //                case (int)CAP_DVHC.TRUNG_UONG:
+            //                    {
+            //                        var data = await _bieu01cKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.VUNG:
+            //                    {
+            //                        var data = await _bieu01cKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.TINH:
+            //                    {
+            //                        var data = await _bieu01cKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.HUYEN:
+            //                    {
+            //                        var data = await _bieu01cKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                case (int)CAP_DVHC.XA:
+            //                    {
+            //                        var data = await _bieu01cKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+
+            //                        commonResponseDto.ReturnValue = new
+            //                        {
+            //                            tenXa = _tenxa,
+            //                            tenHuyen = _tenHuyen,
+            //                            tenTinh = _tenTinh,
+            //                            data
+            //                        };
+            //                        break;
+            //                    }
+            //                default:
+            //                    break;
+            //            }
+            //            break;
+            //        case "PL.III":
+            //            switch (input.CapDVHC)
+            //            {
+            //                case (int)CAP_DVHC.XA:
+            //                    {
+            //                        var resultPL3 = new BieuPhuLucIIIOutputDto();
+            //                        var queryPL3 = (from item in _dcRepos.GetAll()
+            //                                        where item.MaXa == input.MaDVHC && item.Year == input.Year
+            //                                        select new BieuPhuLucIIIDto()
+            //                                        {
+            //                                            DienTich = item.DienTich,
+            //                                            MaLoaiDatHienTrang = item.MucDichSuDung,
+            //                                            MaLoaiDatKyTruoc = item.MucDichSuDungKyTruoc,
+            //                                            MaLoaiDatSuDungKetHop = "",
+            //                                            MaDoiTuongHienTrang = item.MaDoiTuong,
+            //                                            MaDoiTuongKyTruoc = item.MaDoiTuongKyTruoc,
+            //                                            MaKhuVucTongHop = "",
+            //                                            GhiChu = "",
+            //                                            MaXa = item.MaXa
+            //                                        });
+            //                        resultPL3.BieuPhuLucIIIDtos = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+            //                        resultPL3.TenTinh = _tenTinh;
+            //                        resultPL3.TenHuyen = _tenHuyen;
+            //                        resultPL3.TenXa = _tenxa;
+            //                        resultPL3.Year = input.Year;
+            //                        commonResponseDto.ReturnValue = resultPL3;
+            //                        break;
+            //                    }
+            //                default:
+            //                    break;
+            //            }
+            //            break;
+            //        case "PL.IV":
+            //            switch (input.CapDVHC)
+            //            {
+            //                case (int)CAP_DVHC.XA:
+            //                    {
+            //                        var resultPL4 = new BieuPhuLucIVOutputDto();
+            //                        var queryPL4 = (from item in _dbdRepos.GetAll()
+            //                                        where item.MaXa == input.MaDVHC
+            //                                        select new BieuPhuLucIVDto()
+            //                                        {
+            //                                            SHTDTruocBD = item.SHKDTruocBienDong,
+            //                                            SHTDSauBD = item.SHKDSauBienDong,
+            //                                            TenNguoiSDDat = item.TenChuSuDung,
+            //                                            DiaChiThuaDat = item.DiaChiThuaDat,
+            //                                            DienTichBD = item.DienTichBienDong,
+            //                                            MaLoaiDatTruocBD = item.MDSDTruocBienDong,
+            //                                            MaLoaiDatSauBD = item.MDSDSauBienDong,
+            //                                            NDTD = item.NDThayDoi
+            //                                        });
+            //                        resultPL4.BieuPhuLucIVDtos = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+            //                        resultPL4.TenTinh = _tenTinh;
+            //                        resultPL4.TenHuyen = _tenHuyen;
+            //                        resultPL4.TenXa = _tenxa;
+            //                        resultPL4.Year = input.Year;
+            //                        commonResponseDto.ReturnValue = resultPL4;
+            //                        commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+            //                        commonResponseDto.Message = "Thành Công";
+            //                        break;
+            //                    }
+            //                default:
+            //                    break;
+            //            }
+            //            break;
+
+            //        default:
+            //            break;
+            //    }
+            //    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+            //    commonResponseDto.Message = "Thành Công";
+            //}
+            //catch (Exception ex)
+            //{
+            //    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+            //    commonResponseDto.Message = ex.Message;
+            //    Logger.Error(ex.Message);
+            //}
+            return null;
+            //var _GetFilePath = filePath;
+            //var provider = new FileExtensionContentTypeProvider();
+            //if (!provider.TryGetContentType(filePath, out var contentType))
+            //{
+            //    contentType = "application/octet-stream";
+            //}
+            //return new FileStreamResult(new FileStream(filePath, FileMode.Open), contentType)
+            //{
+            //    FileDownloadName = Path.GetFileName(filePath)
+            //};
+
         }
     }
 }

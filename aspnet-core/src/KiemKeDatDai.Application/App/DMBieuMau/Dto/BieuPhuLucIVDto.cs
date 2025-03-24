@@ -31,6 +31,6 @@ namespace KiemKeDatDai.Dto
         public string TenTinh { get; set; }
         public string TenHuyen { get; set; }
         public string TenXa { get; set; }
-        public long year { get; set; }
+        public long? Year { get; set; }
     }
 }

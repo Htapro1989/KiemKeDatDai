@@ -2,6 +2,7 @@
 using KiemKeDatDai.App.Huyen.Dto;
 using KiemKeDatDai.ApplicationDto;
 using KiemKeDatDai.Dto;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> CreateOrUpdate(DMBieuMauInputDto input);
         Task<CommonResponseDto> Delete(long id);
         Task<CommonResponseDto> GetDetailBieuByKyHieu(BieuMauDetailInputDto input);
+        Task<FileStreamResult> DownloadBieuMau(BieuMauDetailInputDto input);
     }
 }
