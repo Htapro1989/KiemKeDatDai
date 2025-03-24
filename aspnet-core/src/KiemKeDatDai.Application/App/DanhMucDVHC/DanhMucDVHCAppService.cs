@@ -109,7 +109,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenHuyen.ToLower().Contains(input.Filter.ToLower()))
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenXa.ToLower().Contains(input.Filter.ToLower()))
                              .WhereIf(!string.IsNullOrWhiteSpace(input.MaVung), x => x.Ma.ToLower() == input.MaVung.ToLower() && x.CapDVHCId == (int)CAP_DVHC.VUNG)
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.MaVung), x => x.Ma.ToLower() == input.MaTinh.ToLower() && x.CapDVHCId == (int)CAP_DVHC.TINH)
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.MaTinh), x => x.Ma.ToLower() == input.MaTinh.ToLower() && x.CapDVHCId == (int)CAP_DVHC.TINH)
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Ma.ToLower().Contains(input.Filter.ToLower()));
                 pagedResultDto.Items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
                 pagedResultDto.TotalCount = await query.CountAsync();
@@ -140,7 +140,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     if (dvhcId != 0)
                     {
                         var query = (from dvhc in _dvhcRepos.GetAll()
-                                     join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
+                                     join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
                                      where dvhc.Id == dvhcId && dvhc.Year == input.Year
                                      select new DVHCOutputDto
                                      {
