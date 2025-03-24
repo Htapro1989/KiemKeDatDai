@@ -1181,7 +1181,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         {
                             case (int)CAP_DVHC.XA:
                                 {
-                                    var resultPL3 = new BieuPhuLucIIIOutputDto();
+                                    var data = new BieuPhuLucIIIOutputDto();
                                     //var dvhcPL3 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                                     var queryPL3 = (from item in _dcRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC && item.Year == input.Year
@@ -1197,14 +1197,14 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                         GhiChu = "",
                                                         MaXa = item.MaXa
                                                     });
-                                    resultPL3.BieuPhuLucIIIDtos = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    data.BieuPhuLucIIIDtos = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
                                     //result.BieuPhuLucIIIs = await query.ToListAsync();
                                     commonResponseDto.ReturnValue = new
                                     {
                                         tenXa = _tenxa,
                                         tenHuyen = _tenHuyen,
                                         tenTinh = _tenTinh,
-                                        resultPL3
+                                        data
                                     };
                                     //var dataPLIII = await _bieuPhuLucIIIRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
                                     //commonResponseDto.ReturnValue = new
@@ -1225,7 +1225,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         {
                             case (int)CAP_DVHC.XA:
                                 {
-                                    var resultPL4 = new BieuPhuLucIVOutputDto();
+                                    var data = new BieuPhuLucIVOutputDto();
                                     //var dvhcPL4 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                                     var queryPL4 = (from item in _dbdRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC
@@ -1240,14 +1240,14 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                         MaLoaiDatSauBD = item.MDSDSauBienDong,
                                                         NDTD = item.NDThayDoi
                                                     });
-                                    resultPL4.BieuPhuLucIVDtos = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    data.BieuPhuLucIVDtos = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
                                     //result.BieuPhuLucIIIs = await query.ToListAsync();
                                     commonResponseDto.ReturnValue = new
                                     {
                                         tenXa = _tenxa,
                                         tenHuyen = _tenHuyen,
                                         tenTinh = _tenTinh,
-                                        resultPL4
+                                        data
                                     };
                                     //var dataPLIV = await _bieuPhuLucIVRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
 
