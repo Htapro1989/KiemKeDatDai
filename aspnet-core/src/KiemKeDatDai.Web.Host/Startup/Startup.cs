@@ -37,6 +37,8 @@ namespace KiemKeDatDai.Web.Host.Startup
 
         public void ConfigureServices(IServiceCollection services)
         {
+            string xmlData = _appConfiguration["Aspose:License"];
+            Aspose.Cells.License license = new Aspose.Cells.License();
             //MVC
             services.AddControllersWithViews(options =>
             {
