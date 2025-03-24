@@ -24,7 +24,6 @@
   <ItemGroup>
     <Reference Include="Aspose.Cells">
       <HintPath>C:\Users\htapr\Documents\Zalo Received Files\Aspose.Cells.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
 </Project>
