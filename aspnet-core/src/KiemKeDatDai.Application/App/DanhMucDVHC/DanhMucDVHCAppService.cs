@@ -424,7 +424,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                     baoCaoDVHC_child.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                                     baoCaoDVHC_child.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
                                     baoCaoDVHC_child.ChildStatus = 1;
-                                    baoCaoDVHC.TrangThaiDuyet = null;
+                                    baoCaoDVHC_child.TrangThaiDuyet = null;
                                     break;
                                 case (int)CAP_DVHC.TINH:
                                     baoCaoDVHC_child.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == item.MaTinh);
