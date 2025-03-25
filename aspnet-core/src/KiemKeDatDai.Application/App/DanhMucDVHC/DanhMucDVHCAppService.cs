@@ -479,10 +479,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.VUNG
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -504,10 +505,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.TINH && dvhc.Parent_id == vungId
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -529,10 +531,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.TINH
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -554,10 +557,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.HUYEN && dvhc.Parent_id == tinhId
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -579,10 +583,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.XA && dvhc.Parent_id == huyenId
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
