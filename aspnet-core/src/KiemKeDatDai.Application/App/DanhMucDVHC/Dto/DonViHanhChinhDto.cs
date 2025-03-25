@@ -38,6 +38,7 @@ namespace KiemKeDatDai.Dto
         public long Id { get; set; }
         public string Ten { get; set; }
         public string MaDVHC { get; set; }
+        public long? CapDVHC { get; set; }
         public long? ParentId { get; set; }
         public DateTime? NgayCapNhat { get; set; }
         public int? TrangThaiDuyet { get; set; }
