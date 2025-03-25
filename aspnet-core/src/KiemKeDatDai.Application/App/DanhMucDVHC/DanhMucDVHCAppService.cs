@@ -410,7 +410,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                 Id = item.Id,
                                 Ten = item.Name,
                                 MaDVHC = item.Ma,
-                                CapDVHC = objdata.CapDVHCId,
+                                CapDVHC = item.CapDVHCId,
                                 ParentId = item.Parent_id,
                                 NgayCapNhat = item.NgayGui,
                                 TrangThaiDuyet = item.TrangThaiDuyet,
