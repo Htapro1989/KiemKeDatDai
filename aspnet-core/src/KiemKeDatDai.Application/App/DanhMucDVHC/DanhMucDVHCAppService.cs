@@ -334,6 +334,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         Id = objdata.Id,
                         Ten = objdata.Name,
                         MaDVHC = objdata.Ma,
+                        CapDVHC = objdata.CapDVHCId,
                         ParentId = objdata.Parent_id,
                         NgayCapNhat = objdata.NgayGui,
                         TrangThaiDuyet = objdata.TrangThaiDuyet,
@@ -381,7 +382,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     if (baoCaoDVHC.Root == true)
                     {
                         baoCaoDVHC.IsNopBaoCao = (baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.CHO_DUYET && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET) ? true : false;
-
+                        if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG ||baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
+                            baoCaoDVHC.IsNopBaoCao = false;
                         //----------Tạm bỏ điều kiện check nộp
                         //if (baoCaoDVHC.ChildStatus == 0)
                         //{
@@ -407,6 +409,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                 Id = item.Id,
                                 Ten = item.Name,
                                 MaDVHC = item.Ma,
+                                CapDVHC = objdata.CapDVHCId,
                                 ParentId = item.Parent_id,
                                 NgayCapNhat = item.NgayGui,
                                 TrangThaiDuyet = item.TrangThaiDuyet,
