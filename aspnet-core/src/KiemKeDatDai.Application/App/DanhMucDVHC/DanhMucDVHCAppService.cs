@@ -497,6 +497,31 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             return commonResponseDto;
         }
         [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownTinhByVungId(long vungId)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.TINH && dvhc.Parent_id == vungId
+                             select new DropDownListDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
         public async Task<CommonResponseDto> GetDropDownTinh()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
