@@ -722,7 +722,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
                                     {
-                                        var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.STT).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -734,7 +734,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.VUNG:
                                     {
-                                        var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.STT).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -746,7 +746,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.TINH:
                                     {
-                                        var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.STT).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -758,7 +758,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.HUYEN:
                                     {
-                                        var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.STT).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -770,7 +770,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.XA:
                                     {
-                                        var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.STT).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -1281,916 +1281,1690 @@ namespace KiemKeDatDai.App.DMBieuMau
         }
         public async Task<FileStreamResult> DownloadBieuMau(BieuMauDetailInputDto input)
         {
-            //CommonResponseDto commonResponseDto = new CommonResponseDto();
-            //try
-            //{
-            //    string _tenxa = "";
-            //    string _tenHuyen = "";
-            //    string _tenTinh = "";
-            //    switch ((input.CapDVHC))
-            //    {
-            //        case (int)CAP_DVHC.TINH:
-            //            _tenTinh = _dvhcRepos.Single(x => x.Ma == input.MaDVHC && x.Year == input.Year).Name;
-            //            break;
-            //        case (int)CAP_DVHC.HUYEN:
-            //            var _huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
-            //            _tenHuyen = _huyen != null ? _huyen.Name : "";
-            //            _tenTinh = _huyen != null ? _dvhcRepos.Single(x => x.Ma == _huyen.MaTinh && x.Year == input.Year).Name : "";
-            //            break;
-            //        case (int)CAP_DVHC.XA:
-            //            var _xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
-            //            _tenxa = _xa != null ? _xa.Name : "";
-            //            var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == _xa.MaHuyen && x.Year == input.Year);
-            //            _tenHuyen = huyen != null ? huyen.Name : "";
-            //            _tenTinh = huyen != null ? _dvhcRepos.Single(x => x.Ma == huyen.MaTinh && x.Year == input.Year).Name : "";
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //    switch (input.KyHieu)
-            //    {
-            //        case "01/TKKK":
-            //            {
-            //                switch (input.CapDVHC)
-            //                {
-            //                    case (int)CAP_DVHC.TRUNG_UONG:
-            //                        {
-            //                            var data = await _bieu01TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
-            //                            if (data.Count == 0)
-            //                            {
-            //                                var excelMemoryStream = new MemoryStream();
-            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_UnearnPolicy.xlsx"))));
-            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
-            //                                //data.TableName = "data";
-            //                                wd.SetDataSource("data",data);
-            //                                wd.SetDataSource("Header", new[] { new
-            //                                {
-            //                                    tinh = _tenTinh,
-            //                                    huyen = _tenHuyen,
-            //                                    xa = _tenxa,
-            //                                    year = input.Year
-            //                                }});
-            //                                wd.Process();
-            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
-            //                                excelMemoryStream.Position = 0;
-            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            //                                {
-            //                                    FileDownloadName = "UnearnPolicy.xlsx"
-            //                                };
-            //                            }
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.VUNG:
-            //                        {
-            //                            var data = await _bieu01TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            if (data.Count == 0)
-            //                            {
-            //                                var excelMemoryStream = new MemoryStream();
-            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_UnearnPolicy.xlsx"))));
-            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
-            //                                //data.TableName = "data";
-            //                                wd.SetDataSource("data", data);
-            //                                wd.SetDataSource("Header", new[] { new
-            //                                {
-            //                                    tinh = _tenTinh,
-            //                                    huyen = _tenHuyen,
-            //                                    xa = _tenxa,
-            //                                    year = input.Year
-            //                                }});
-            //                                wd.Process();
-            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
-            //                                excelMemoryStream.Position = 0;
-            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            //                                {
-            //                                    FileDownloadName = "UnearnPolicy.xlsx"
-            //                                };
-            //                            }
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.TINH:
-            //                        {
-            //                            var data = await _bieu01TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            if (data.Count == 0)
-            //                            {
-            //                                var excelMemoryStream = new MemoryStream();
-            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_UnearnPolicy.xlsx"))));
-            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
-            //                                //data.TableName = "data";
-            //                                wd.SetDataSource("data", data);
-            //                                wd.SetDataSource("Header", new[] { new
-            //                                {
-            //                                    tinh = _tenTinh,
-            //                                    huyen = _tenHuyen,
-            //                                    xa = _tenxa,
-            //                                    year = input.Year
-            //                                }});
-            //                                wd.Process();
-            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
-            //                                excelMemoryStream.Position = 0;
-            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            //                                {
-            //                                    FileDownloadName = "UnearnPolicy.xlsx"
-            //                                };
-            //                            }
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.HUYEN:
-            //                        {
-            //                            var data = await _bieu01TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            if (data.Count == 0)
-            //                            {
-            //                                var excelMemoryStream = new MemoryStream();
-            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_UnearnPolicy.xlsx"))));
-            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
-            //                                //data.TableName = "data";
-            //                                wd.SetDataSource("data", data);
-            //                                wd.SetDataSource("Header", new[] { new
-            //                                {
-            //                                    tinh = _tenTinh,
-            //                                    huyen = _tenHuyen,
-            //                                    xa = _tenxa,
-            //                                    year = input.Year
-            //                                }});
-            //                                wd.Process();
-            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
-            //                                excelMemoryStream.Position = 0;
-            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            //                                {
-            //                                    FileDownloadName = "UnearnPolicy.xlsx"
-            //                                };
-            //                            }
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.XA:
-            //                        {
-            //                            var data = await _bieu01TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            if (data.Count > 0)
-            //                            {
-            //                                var excelMemoryStream = new MemoryStream();
-            //                                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
-            //                                WorkbookDesigner wd = new WorkbookDesigner(wb);
-            //                                //data.TableName = "data";
-            //                                wd.SetDataSource("data", data);
-            //                                wd.SetDataSource("Header", new[] { new
-            //                                {
-            //                                    tinh = _tenTinh,
-            //                                    huyen = _tenHuyen,
-            //                                    xa = _tenxa,
-            //                                    year = input.Year
-            //                                }});
-            //                                wd.Process();
-            //                                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-            //                                byte[] bytesInStream = excelMemoryStream.ToArray();
-            //                                excelMemoryStream.Position = 0;
-            //                                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            //                                {
-            //                                    FileDownloadName = "UnearnPolicy.xlsx"
-            //                                };
-            //                            }
-            //                            break;
-            //                        }
-            //                    default:
-            //                        break;
-            //                }
-            //                break;
-            //            }
-            //        case "02/TKKK":
-            //            {
-            //                switch (input.CapDVHC)
-            //                {
-            //                    case (int)CAP_DVHC.TRUNG_UONG:
-            //                        {
-            //                            var data = await _bieu02TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.VUNG:
-            //                        {
-            //                            var data = await _bieu02TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.TINH:
-            //                        {
-            //                            var data = await _bieu02TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.HUYEN:
-            //                        {
-            //                            var data = await _bieu02TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.XA:
-            //                        {
-            //                            var data = await _bieu02TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    default:
-            //                        break;
-            //                }
-            //                break;
-            //            }
-            //        case "03/TKKK":
-            //            {
-            //                switch (input.CapDVHC)
-            //                {
-            //                    case (int)CAP_DVHC.TRUNG_UONG:
-            //                        {
-            //                            var data = await _bieu03TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.VUNG:
-            //                        {
-            //                            var data = await _bieu03TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.TINH:
-            //                        {
-            //                            var data = await _bieu03TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.HUYEN:
-            //                        {
-            //                            var data = await _bieu03TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    default:
-            //                        break;
-            //                }
-            //                break;
-            //            }
-            //        case "04/TKKK":
-            //            {
-            //                switch (input.CapDVHC)
-            //                {
-            //                    case (int)CAP_DVHC.TRUNG_UONG:
-            //                        {
-            //                            var data = await _bieu04TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.VUNG:
-            //                        {
-            //                            var data = await _bieu04TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.TINH:
-            //                        {
-            //                            var data = await _bieu04TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.HUYEN:
-            //                        {
-            //                            var data = await _bieu04TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.XA:
-            //                        {
-            //                            var data = await _bieu04TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    default:
-            //                        break;
-            //                }
-            //                break;
-            //            }
-            //        case "05/TKKK":
-            //            {
-            //                switch (input.CapDVHC)
-            //                {
-            //                    case (int)CAP_DVHC.TRUNG_UONG:
-            //                        {
-            //                            var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.VUNG:
-            //                        {
-            //                            var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.TINH:
-            //                        {
-            //                            var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.HUYEN:
-            //                        {
-            //                            var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    case (int)CAP_DVHC.XA:
-            //                        {
-            //                            var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-            //                            commonResponseDto.ReturnValue = new
-            //                            {
-            //                                tenXa = _tenxa,
-            //                                tenHuyen = _tenHuyen,
-            //                                tenTinh = _tenTinh,
-            //                                data
-            //                            };
-            //                            break;
-            //                        }
-            //                    default:
-            //                        break;
-            //                }
-            //                break;
-            //            }
-            //        case "06/TKKKQPAN":
-            //            switch (input.CapDVHC)
-            //            {
-            //                case (int)CAP_DVHC.TRUNG_UONG:
-            //                    {
-            //                        var data = await _bieu06TKKKQPANRepos.GetAllListAsync(x => x.Year == input.Year);
-            //                        commonResponseDto.ReturnValue = data;
-            //                        break;
-            //                    }
-            //                //case (int)CAP_DVHC.VUNG:
-            //                //    {
-            //                //        var data = await _bieu05TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
-            //                //        commonResponseDto.ReturnValue = data;
-            //                //        break;
-            //                //    }
-            //                case (int)CAP_DVHC.TINH:
-            //                    {
-            //                        var data = await _bieu06TKKKQPAN_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                string _tenxa = "";
+                string _tenHuyen = "";
+                string _tenTinh = "";
+                switch ((input.CapDVHC))
+                {
+                    case (int)CAP_DVHC.TINH:
+                        _tenTinh = _dvhcRepos.Single(x => x.Ma == input.MaDVHC && x.Year == input.Year).Name;
+                        break;
+                    case (int)CAP_DVHC.HUYEN:
+                        var _huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+                        _tenHuyen = _huyen != null ? _huyen.Name : "";
+                        _tenTinh = _huyen != null ? _dvhcRepos.Single(x => x.Ma == _huyen.MaTinh && x.Year == input.Year).Name : "";
+                        break;
+                    case (int)CAP_DVHC.XA:
+                        var _xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+                        _tenxa = _xa != null ? _xa.Name : "";
+                        var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == _xa.MaHuyen && x.Year == input.Year);
+                        _tenHuyen = huyen != null ? huyen.Name : "";
+                        _tenTinh = huyen != null ? _dvhcRepos.Single(x => x.Ma == huyen.MaTinh && x.Year == input.Year).Name : "";
+                        break;
+                    default:
+                        break;
+                }
+                switch (input.KyHieu)
+                {
+                    case "01/TKKK":
+                        {
+                            switch (input.CapDVHC)
+                            {
+                                case (int)CAP_DVHC.TRUNG_UONG:
+                                    {
+                                        var data = await _bieu01TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count == 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu01TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.VUNG:
+                                    {
+                                        var data = await _bieu01TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count == 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu01TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.TINH:
+                                    {
+                                        var data = await _bieu01TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count == 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu01TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.HUYEN:
+                                    {
+                                        var data = await _bieu01TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count == 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu01TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.XA:
+                                    {
+                                        var data = await _bieu01TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu01TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    case "02/TKKK":
+                        {
+                            switch (input.CapDVHC)
+                            {
+                                case (int)CAP_DVHC.TRUNG_UONG:
+                                    {
+                                        var data = await _bieu02TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu02TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.VUNG:
+                                    {
+                                        var data = await _bieu02TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu02TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.TINH:
+                                    {
+                                        var data = await _bieu02TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu02TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.HUYEN:
+                                    {
+                                        var data = await _bieu02TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu02TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.XA:
+                                    {
+                                        var data = await _bieu02TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = "Tỉnh: " + _tenTinh,
+                                                huyen = "Huyện: " + _tenHuyen,
+                                                xa = "Xã: " + _tenxa,
+                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu02TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    case "03/TKKK":
+                        {
+                            switch (input.CapDVHC)
+                            {
+                                case (int)CAP_DVHC.TRUNG_UONG:
+                                    {
+                                        var data = await _bieu03TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu03TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu03TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.VUNG:
+                                    {
+                                        var data = await _bieu03TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu03TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu03TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.TINH:
+                                    {
+                                        var data = await _bieu03TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu03TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu03TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.HUYEN:
+                                    {
+                                        var data = await _bieu03TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu03TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu03TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    case "04/TKKK":
+                        {
+                            switch (input.CapDVHC)
+                            {
+                                case (int)CAP_DVHC.TRUNG_UONG:
+                                    {
+                                        var data = await _bieu04TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu04TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.VUNG:
+                                    {
+                                        var data = await _bieu04TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu04TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.TINH:
+                                    {
+                                        var data = await _bieu04TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu04TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.HUYEN:
+                                    {
+                                        var data = await _bieu04TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu04TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.XA:
+                                    {
+                                        var data = await _bieu04TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu04TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    case "05/TKKK":
+                        {
+                            switch (input.CapDVHC)
+                            {
+                                case (int)CAP_DVHC.TRUNG_UONG:
+                                    {
+                                        var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu05TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.VUNG:
+                                    {
+                                        var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu05TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.TINH:
+                                    {
+                                        var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu05TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.HUYEN:
+                                    {
+                                        var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu05TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case (int)CAP_DVHC.XA:
+                                    {
+                                        var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        if (data.Count > 0)
+                                        {
+                                            var excelMemoryStream = new MemoryStream();
+                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
+                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                            //data.TableName = "data";
+                                            wd.SetDataSource("data", data);
+                                            wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                            wd.Process();
+                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                            byte[] bytesInStream = excelMemoryStream.ToArray();
+                                            excelMemoryStream.Position = 0;
+                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                            {
+                                                FileDownloadName = "Bieu05TKKK.xlsx"
+                                            };
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    case "06/TKKKQPAN":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    var data = await _bieu06TKKKQPANRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu06TKKK.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu06TKKK.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            //case (int)CAP_DVHC.VUNG:
+                            //    {
+                            //        var data = await _bieu05TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                            //        commonResponseDto.ReturnValue = data;
+                            //        break;
+                            //    }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await _bieu06TKKKQPAN_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                default:
-            //                    break;
-            //            }
-            //            break;
-            //        case "01/KKSL":
-            //            switch (input.CapDVHC)
-            //            {
-            //                case (int)CAP_DVHC.TRUNG_UONG:
-            //                    {
-            //                        var data = await _bieu01KKSLRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu06TKKK.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu06TKKK.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case "01/KKSL":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    var data = await _bieu01KKSLRepos.GetAllListAsync(x => x.Year == input.Year);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.VUNG:
-            //                    {
-            //                        var data = await _bieu01KKSL_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.VUNG:
+                                {
+                                    var data = await _bieu01KKSL_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.TINH:
-            //                    {
-            //                        var data = await _bieu01KKSL_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await _bieu01KKSL_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.HUYEN:
-            //                    {
-            //                        var data = await _bieu01KKSL_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.HUYEN:
+                                {
+                                    var data = await _bieu01KKSL_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.XA:
-            //                    {
-            //                        var data = await _bieu01KKSL_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var data = await _bieu01KKSL_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                default:
-            //                    break;
-            //            }
-            //            break;
-            //        case "02/KKSL":
-            //            switch (input.CapDVHC)
-            //            {
-            //                case (int)CAP_DVHC.TRUNG_UONG:
-            //                    {
-            //                        var data = await _bieu02KKSLRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case "02/KKSL":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    var data = await _bieu02KKSLRepos.GetAllListAsync(x => x.Year == input.Year);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.VUNG:
-            //                    {
-            //                        var data = await _bieu02KKSL_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu02KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.VUNG:
+                                {
+                                    var data = await _bieu02KKSL_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.TINH:
-            //                    {
-            //                        var data = await _bieu02KKSL_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu02KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await _bieu02KKSL_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.HUYEN:
-            //                    {
-            //                        var data = await _bieu02KKSL_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu02KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.HUYEN:
+                                {
+                                    var data = await _bieu02KKSL_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.XA:
-            //                    {
-            //                        var data = await _bieu02KKSL_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu02KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var data = await _bieu02KKSL_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                default:
-            //                    break;
-            //            }
-            //            break;
-            //        case "01a/KKNLT":
-            //            switch (input.CapDVHC)
-            //            {
-            //                case (int)CAP_DVHC.TRUNG_UONG:
-            //                    {
-            //                        var data = await _bieu01aKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu02KKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case "01a/KKNLT":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    var data = await _bieu01aKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.VUNG:
-            //                    {
-            //                        var data = await _bieu01aKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01aKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.VUNG:
+                                {
+                                    var data = await _bieu01aKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.TINH:
-            //                    {
-            //                        var data = await _bieu01aKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01aKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await _bieu01aKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.HUYEN:
-            //                    {
-            //                        var data = await _bieu01aKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.XA:
-            //                    {
-            //                        var data = await _bieu01aKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01aKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.HUYEN:
+                                {
+                                    var data = await _bieu01aKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01aKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var data = await _bieu01aKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                default:
-            //                    break;
-            //            }
-            //            break;
-            //        case "01b/KKNLT":
-            //            switch (input.CapDVHC)
-            //            {
-            //                case (int)CAP_DVHC.TRUNG_UONG:
-            //                    {
-            //                        var data = await _bieu01bKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01aKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case "01b/KKNLT":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    var data = await _bieu01bKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.VUNG:
-            //                    {
-            //                        var data = await _bieu01bKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01bKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.VUNG:
+                                {
+                                    var data = await _bieu01bKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.TINH:
-            //                    {
-            //                        var data = await _bieu01bKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01bKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await _bieu01bKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.HUYEN:
-            //                    {
-            //                        var data = await _bieu01bKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01bKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.HUYEN:
+                                {
+                                    var data = await _bieu01bKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.XA:
-            //                    {
-            //                        var data = await _bieu01bKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01bKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var data = await _bieu01bKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                default:
-            //                    break;
-            //            }
-            //            break;
-            //        case "01c/KKNLT":
-            //            switch (input.CapDVHC)
-            //            {
-            //                case (int)CAP_DVHC.TRUNG_UONG:
-            //                    {
-            //                        var data = await _bieu01cKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01bKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case "01c/KKNLT":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    var data = await _bieu01cKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.VUNG:
-            //                    {
-            //                        var data = await _bieu01cKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01cKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.VUNG:
+                                {
+                                    var data = await _bieu01cKKNLT_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.TINH:
-            //                    {
-            //                        var data = await _bieu01cKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01cKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await _bieu01cKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.HUYEN:
-            //                    {
-            //                        var data = await _bieu01cKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01cKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.HUYEN:
+                                {
+                                    var data = await _bieu01cKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                case (int)CAP_DVHC.XA:
-            //                    {
-            //                        var data = await _bieu01cKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01cKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var data = await _bieu01cKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
 
-            //                        commonResponseDto.ReturnValue = new
-            //                        {
-            //                            tenXa = _tenxa,
-            //                            tenHuyen = _tenHuyen,
-            //                            tenTinh = _tenTinh,
-            //                            data
-            //                        };
-            //                        break;
-            //                    }
-            //                default:
-            //                    break;
-            //            }
-            //            break;
-            //        case "PL.III":
-            //            switch (input.CapDVHC)
-            //            {
-            //                case (int)CAP_DVHC.XA:
-            //                    {
-            //                        var resultPL3 = new BieuPhuLucIIIOutputDto();
-            //                        var queryPL3 = (from item in _dcRepos.GetAll()
-            //                                        where item.MaXa == input.MaDVHC && item.Year == input.Year
-            //                                        select new BieuPhuLucIIIDto()
-            //                                        {
-            //                                            DienTich = item.DienTich,
-            //                                            MaLoaiDatHienTrang = item.MucDichSuDung,
-            //                                            MaLoaiDatKyTruoc = item.MucDichSuDungKyTruoc,
-            //                                            MaLoaiDatSuDungKetHop = "",
-            //                                            MaDoiTuongHienTrang = item.MaDoiTuong,
-            //                                            MaDoiTuongKyTruoc = item.MaDoiTuongKyTruoc,
-            //                                            MaKhuVucTongHop = "",
-            //                                            GhiChu = "",
-            //                                            MaXa = item.MaXa
-            //                                        });
-            //                        resultPL3.BieuPhuLucIIIDtos = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
-            //                        resultPL3.TenTinh = _tenTinh;
-            //                        resultPL3.TenHuyen = _tenHuyen;
-            //                        resultPL3.TenXa = _tenxa;
-            //                        resultPL3.Year = input.Year;
-            //                        commonResponseDto.ReturnValue = resultPL3;
-            //                        break;
-            //                    }
-            //                default:
-            //                    break;
-            //            }
-            //            break;
-            //        case "PL.IV":
-            //            switch (input.CapDVHC)
-            //            {
-            //                case (int)CAP_DVHC.XA:
-            //                    {
-            //                        var resultPL4 = new BieuPhuLucIVOutputDto();
-            //                        var queryPL4 = (from item in _dbdRepos.GetAll()
-            //                                        where item.MaXa == input.MaDVHC
-            //                                        select new BieuPhuLucIVDto()
-            //                                        {
-            //                                            SHTDTruocBD = item.SHKDTruocBienDong,
-            //                                            SHTDSauBD = item.SHKDSauBienDong,
-            //                                            TenNguoiSDDat = item.TenChuSuDung,
-            //                                            DiaChiThuaDat = item.DiaChiThuaDat,
-            //                                            DienTichBD = item.DienTichBienDong,
-            //                                            MaLoaiDatTruocBD = item.MDSDTruocBienDong,
-            //                                            MaLoaiDatSauBD = item.MDSDSauBienDong,
-            //                                            NDTD = item.NDThayDoi
-            //                                        });
-            //                        resultPL4.BieuPhuLucIVDtos = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
-            //                        resultPL4.TenTinh = _tenTinh;
-            //                        resultPL4.TenHuyen = _tenHuyen;
-            //                        resultPL4.TenXa = _tenxa;
-            //                        resultPL4.Year = input.Year;
-            //                        commonResponseDto.ReturnValue = resultPL4;
-            //                        commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
-            //                        commonResponseDto.Message = "Thành Công";
-            //                        break;
-            //                    }
-            //                default:
-            //                    break;
-            //            }
-            //            break;
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "Bieu01cKKSL.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case "PL.III":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var resultPL3 = new BieuPhuLucIIIOutputDto();
+                                    var data = await (from item in _dcRepos.GetAll()
+                                                    where item.MaXa == input.MaDVHC && item.Year == input.Year
+                                                    select new BieuPhuLucIIIDto()
+                                                    {
+                                                        DienTich = item.DienTich,
+                                                        MaLoaiDatHienTrang = item.MucDichSuDung,
+                                                        MaLoaiDatKyTruoc = item.MucDichSuDungKyTruoc,
+                                                        MaLoaiDatSuDungKetHop = "",
+                                                        MaDoiTuongHienTrang = item.MaDoiTuong,
+                                                        MaDoiTuongKyTruoc = item.MaDoiTuongKyTruoc,
+                                                        MaKhuVucTongHop = "",
+                                                        GhiChu = "",
+                                                        MaXa = item.MaXa
+                                                    }).ToListAsync();
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_PhuLuc3.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "PhuLuc3.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case "PL.IV":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.XA:
+                                {
+                                    var resultPL4 = new BieuPhuLucIVOutputDto();
+                                    var data = await (from item in _dbdRepos.GetAll()
+                                                    where item.MaXa == input.MaDVHC
+                                                    select new BieuPhuLucIVDto()
+                                                    {
+                                                        SHTDTruocBD = item.SHKDTruocBienDong,
+                                                        SHTDSauBD = item.SHKDSauBienDong,
+                                                        TenNguoiSDDat = item.TenChuSuDung,
+                                                        DiaChiThuaDat = item.DiaChiThuaDat,
+                                                        DienTichBD = item.DienTichBienDong,
+                                                        MaLoaiDatTruocBD = item.MDSDTruocBienDong,
+                                                        MaLoaiDatSauBD = item.MDSDSauBienDong,
+                                                        NDTD = item.NDThayDoi
+                                                    }).ToListAsync();
+                                    if (data.Count > 0)
+                                    {
+                                        var excelMemoryStream = new MemoryStream();
+                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_PhuLuc4.xlsx"))));
+                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
+                                        //data.TableName = "data";
+                                        wd.SetDataSource("data", data);
+                                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenxa,
+                                                year = input.Year
+                                            }});
+                                        wd.Process();
+                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                                        byte[] bytesInStream = excelMemoryStream.ToArray();
+                                        excelMemoryStream.Position = 0;
+                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                        {
+                                            FileDownloadName = "PhuLuc4.xlsx"
+                                        };
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
 
-            //        default:
-            //            break;
-            //    }
-            //    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
-            //    commonResponseDto.Message = "Thành Công";
-            //}
-            //catch (Exception ex)
-            //{
-            //    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-            //    commonResponseDto.Message = ex.Message;
-            //    Logger.Error(ex.Message);
-            //}
+                    default:
+                        break;
+                }
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
             return null;
             //var _GetFilePath = filePath;
             //var provider = new FileExtensionContentTypeProvider();
