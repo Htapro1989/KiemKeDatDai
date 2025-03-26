@@ -4,6 +4,7 @@ import HeaderBieuMau from '../components/Header'
 import ReportEmptyData from '../components/ReportEmptyData';
 import ReportLoading from '../components/ReportLoading';
 import { IBieuMauProps } from '../Bieu01TKKK';
+import utils from '../../../../utils/utils';
 
 export default function Bieu02TKKK(props: IBieuMauProps) {
     const reportData = props.reportData;
@@ -14,26 +15,26 @@ export default function Bieu02TKKK(props: IBieuMauProps) {
         }
         return reportData.data.map((data: any) => {
             return (<tr key={data.id}>
-                <td>{data.stt}</td>
-                <td>{data.loaiDat}</td>
-                <td>{data.ma}</td>
-                <td>{data.tongSo}</td>
-                <td>{data.caNhanTrongNuoc_CNV}</td>
-                <td>{data.nguoiVietNamONuocNgoai_CNN}</td>
-                <td>{data.coQuanNhaNuoc_TCN}</td>
-                <td>{data.donViSuNghiep_TSN}</td>
-                <td>{data.toChucXaHoi_TXH}</td>
-                <td>{data.toChucKinhTe_TKT}</td>
-                <td>{data.toChucKhac_TKH}</td>
-                <td>{data.toChucTonGiao_TTG}</td>
-                <td>{data.congDongDanCu_CDS}</td>
-                <td>{data.toChucNuocNgoai_TNG}</td>
-                <td>{data.nguoiVietNamONuocNgoai_CNN}</td>
-                <td>{data.toChucKinhTeVonNuocNgoai_TVN}</td>
-                <td>{data.coQuanNhaNuoc_TCQ}</td>
-                <td>{data.donViSuNghiep_TSQ}</td>
-                <td>{data.toChucKinhTe_KTQ}</td>
-                <td>{data.congDongDanCu_CDQ}</td>
+                <td>{utils.convertBieuDataViewer(data.stt)}</td>
+                <td>{utils.convertBieuDataViewer(data.loaiDat)}</td>
+                <td>{utils.convertBieuDataViewer(data.ma)}</td>
+                <td>{utils.convertBieuDataViewer(data.tongSo)}</td>
+                <td>{utils.convertBieuDataViewer(data.caNhanTrongNuoc_CNV)}</td>
+                <td>{utils.convertBieuDataViewer(data.nguoiVietNamONuocNgoai_CNN)}</td>
+                <td>{utils.convertBieuDataViewer(data.coQuanNhaNuoc_TCN)}</td>
+                <td>{utils.convertBieuDataViewer(data.donViSuNghiep_TSN)}</td>
+                <td>{utils.convertBieuDataViewer(data.toChucXaHoi_TXH)}</td>
+                <td>{utils.convertBieuDataViewer(data.toChucKinhTe_TKT)}</td>
+                <td>{utils.convertBieuDataViewer(data.toChucKhac_TKH)}</td>
+                <td>{utils.convertBieuDataViewer(data.toChucTonGiao_TTG)}</td>
+                <td>{utils.convertBieuDataViewer(data.congDongDanCu_CDS)}</td>
+                <td>{utils.convertBieuDataViewer(data.toChucNuocNgoai_TNG)}</td>
+                <td>{utils.convertBieuDataViewer(data.nguoiVietNamONuocNgoai_CNN)}</td>
+                <td>{utils.convertBieuDataViewer(data.toChucKinhTeVonNuocNgoai_TVN)}</td>
+                <td>{utils.convertBieuDataViewer(data.coQuanNhaNuoc_TCQ)}</td>
+                <td>{utils.convertBieuDataViewer(data.donViSuNghiep_TSQ)}</td>
+                <td>{utils.convertBieuDataViewer(data.toChucKinhTe_KTQ)}</td>
+                <td>{utils.convertBieuDataViewer(data.congDongDanCu_CDQ)}</td>
             </tr>)
         })
     }

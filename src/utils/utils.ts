@@ -96,6 +96,10 @@ class Utils {
 
     return abp.timing.localClockProvider;
   }
+  convertBieuDataViewer = (data: any) => {
+    if (data == null || data == 0) return '';
+    return data;
+}
 }
 
 export default new Utils();

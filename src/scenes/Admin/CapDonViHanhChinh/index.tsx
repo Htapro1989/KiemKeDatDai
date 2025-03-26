@@ -4,12 +4,13 @@ import AppComponentBase from '../../../components/AppComponentBase';
 import { inject, observer } from 'mobx-react';
 import Stores from '../../../stores/storeIdentifier';
 import DonViHanhChinhStore from '../../../stores/donViHanhChinhStore';
-import { Button, Card, Dropdown, Menu, Modal, notification, Table } from 'antd';
+import { Button, Card, Dropdown, Menu, Modal, Table } from 'antd';
 import { PlusOutlined, SettingOutlined } from '@ant-design/icons';
 import { EntityDto } from '../../../services/dto/entityDto';
 import CreateOrUpdateCapDVHCModal from './components/CreateOrUpdateCapDvhc';
 import { FormInstance } from 'antd/lib/form';
 import dvhcService from '../../../services/dvhc/dvhcService';
+import { handleCommontResponse } from '../../../services/common/handleResponse';
 
 const confirm = Modal.confirm;
 
@@ -56,13 +57,17 @@ class QuanLyCapDVHC extends AppComponentBase<IQuanLyCapDVHCProps, IQuanLyCapDVHC
             this.formRef.current?.setFieldsValue({ ...entity });
         }, 100);
     }
+    async deleteCapDVHC(id: any) {
+        await this.props.donViHanhChinhStore.deleteCapDonViHanhChinh(id);
+        this.getAll()
+    }
 
     delete(input: EntityDto) {
         const self = this;
         confirm({
             title: 'Bạn muốn xóa hàng này',
             onOk() {
-                self.props.donViHanhChinhStore.deleteCapDonViHanhChinh(input.id);
+                self.deleteCapDVHC(input.id)
             },
             onCancel() {
                 console.log('Cancel');
@@ -81,11 +86,7 @@ class QuanLyCapDVHC extends AppComponentBase<IQuanLyCapDVHCProps, IQuanLyCapDVHC
         form!.validateFields().then(async (values: any) => {
             this.setState({ loading: true })
             const response = await dvhcService.createOrUpdateCapDVHC(values)
-            if (response.code == 1) {
-                notification.success({ message: response.message })
-            } else {
-                notification.error({ message: response.message })
-            }
+            handleCommontResponse(response);
             this.setState({ modalVisible: false });
             await this.getAll();
             form!.resetFields();

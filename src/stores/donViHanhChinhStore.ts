@@ -36,7 +36,6 @@ class DonViHanhChinhStore {
 
         //load root parent child and default expand
         await this.fetchDonViHanhChinhListByParentKey(this.donViHanhChinhSelected?.id)
-        // this.onSetSideMenuExpanedKey([22]);
     }
 
     @action

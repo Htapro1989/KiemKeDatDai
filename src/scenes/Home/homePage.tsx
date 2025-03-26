@@ -8,6 +8,7 @@ import DonViHanhChinhStore from '../../stores/donViHanhChinhStore';
 import SessionStore from '../../stores/sessionStore';
 import BieuDoTab from './components/BieuDoTab';
 import TableBaoCao from '../BaoCaoSoLieu/components/TableBaoCao';
+import FileManagerComponent from './components/FileManagerComponent';
 // import TrangThaiDVHCTab from './components/TrangThaiDVHCTab';
 
 export interface IHomePageProps {
@@ -39,7 +40,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
           history={null} collapsed={false} />
 
         <div className='home-page-wrapper'>
-          <h1 className='txt-page-header'>{donViHanhChinhSelected?.title}</h1>
+          {/* <h1 className='txt-page-header'>{donViHanhChinhSelected?.title}</h1> */}
 
           <Card style={{ flex: 1 }}>
             <Tabs defaultActiveKey="1">
@@ -47,7 +48,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                 <BieuDoTab donViHanhChinhSelected={donViHanhChinhSelected} />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Tài liệu" key="2">
-                Content of Tab Pane 2
+                <FileManagerComponent donViHanhChinhSelected={donViHanhChinhSelected} />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Báo cáo" key="3">
                 <TableBaoCao

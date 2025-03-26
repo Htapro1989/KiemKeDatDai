@@ -82,9 +82,9 @@ const MenuBar = () => {
               </Link>
             </Menu.Item>
             <Menu.Item >
-              {/* <Link to={ROUTER_PATH.CAPDVHC}> */}
-              Quản lý Đơn vị hành chính
-              {/* </Link> */}
+              <Link to={ROUTER_PATH.DONVIHANHCHINH}>
+                Quản lý Đơn vị hành chính
+              </Link>
             </Menu.Item>
             <Menu.Item key={ROUTER_PATH.USERS}>
               <Link to={ROUTER_PATH.USERS}>

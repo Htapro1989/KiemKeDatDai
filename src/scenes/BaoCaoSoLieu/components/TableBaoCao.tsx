@@ -138,6 +138,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         {
             title: 'Trạng thái', dataIndex: 'trangThaiDuyet', key: 'trangThaiDuyet',
             render(value, record, index) {
+                if (record.capDVHC == 0 || record.capDVHC == 1) return null;
                 if (value == 1) return <Tag color="warning">Chờ duyệt</Tag>
                 if (value == 2) return <Tag color="success">Đã duyệt</Tag>
                 return <Tag color="error">Chưa nộp</Tag>
@@ -193,7 +194,8 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         const baoCaoResponse = await dvhcService.getBaoCaoDVHC(ma, year);
         if (!baoCaoResponse || baoCaoResponse.code != 1 || baoCaoResponse.returnValue.length <= 0) return;
         const newList = baoCaoResponse.returnValue
-            .filter(e => e.maDVHC != ma);
+            .filter(e => e.maDVHC != ma)
+            .map(e => ({ ...e, children: e.childStatus == 1 ? [] : null }));
         const newListDvhc: any = updateChild(listDvhc, parentId, newList);
         setListDvhc(newListDvhc)
     }

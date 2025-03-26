@@ -3,6 +3,7 @@ import http from '../httpService';
 import { CapDVHCRequest } from './dto/CapDVHCRequest';
 import { DMKyKiemKe } from './dto/DMKyKiemKe';
 import { DonViHanhChinh } from './dto/DonViHanhChinh';
+import { GetAllDVHCParams } from './dto/GetAllDVHCParams';
 
 class DvhcService {
 
@@ -11,16 +12,22 @@ class DvhcService {
     return result.data.result;
   }
 
-  public async getByUser(userId: String, year: String): Promise<ResponseDto<DonViHanhChinh[]>> {
-    let result = await http.get(`api/services/app/DanhMucDVHC/GetByUser?userId=${userId}&year=${year}`);
+  public async getByUser(userId: any, year: String): Promise<ResponseDto<DonViHanhChinh[]>> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetByUser?userId=${userId}&year=${year}`);
     return result.data.result;
   }
 
 
   public async getByParentId(parentId: String): Promise<ResponseDto<DonViHanhChinh[]>> {
-    let result = await http.get(`api/services/app/DanhMucDVHC/GetById?id=${parentId}`);
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetById?id=${parentId}`);
     return result.data.result;
   }
+
+  public async getAllDVHC(params: GetAllDVHCParams): Promise<ResponseDto<DonViHanhChinh[]>> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetAll`, { params });
+    return result.data.result;
+  }
+
 
   public async getBaoCaoDVHC(ma: String, year: String): Promise<ResponseDto<any[]>> {
     const body = {
@@ -82,6 +89,56 @@ class DvhcService {
   public async updateCauHinh(body: any): Promise<ResponseDto<any[]>> {
     let result = await http.post(`/api/services/app/ConfigSystem/CreateOrUpdate`, body);
     return result.data.result;
+  }
+
+  //DON VI HANH CHINH DROPDOWN
+  public async getDropDownVung(): Promise<any[]> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownVung`);
+    if (result.data.result.returnValue) {
+      return result.data.result.returnValue.map((unit: any) => {
+        return {
+          value: unit.id,
+          label: unit.name
+        }
+      })
+    }
+    return [];
+  }
+  public async getDropDownTinh(): Promise<any[]> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownTinh`);
+    if (result.data.result.returnValue) {
+      return result.data.result.returnValue.map((unit: any) => {
+        return {
+          value: unit.id,
+          label: unit.name
+        }
+      })
+    }
+    return [];
+  }
+  public async getDropDownHuyenByTinhId(tinhId: any): Promise<any[]> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownHuyenByTinhId`, { params: { tinhId } });
+    if (result.data.result.returnValue) {
+      return result.data.result.returnValue.map((unit: any) => {
+        return {
+          value: unit.id,
+          label: unit.name
+        }
+      })
+    }
+    return [];
+  }
+  public async getDropDownXaByHuyenId(huyenId: any): Promise<any[]> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownXaByHuyenId`, { params: { huyenId } });
+    if (result.data.result.returnValue) {
+      return result.data.result.returnValue.map((unit: any) => {
+        return {
+          value: unit.id,
+          label: unit.name
+        }
+      })
+    }
+    return [];
   }
 }
 

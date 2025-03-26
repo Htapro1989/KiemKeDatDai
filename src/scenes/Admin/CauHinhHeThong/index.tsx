@@ -1,10 +1,11 @@
 import React from 'react'
 import "./index.less";
 import AppComponentBase from '../../../components/AppComponentBase';
-import { Button, Card, Col, Divider, InputNumber, notification, Radio, Row } from 'antd';
+import { Button, Card, Col, Divider, InputNumber, Radio, Row } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import dvhcService from '../../../services/dvhc/dvhcService';
 import { RadioChangeEvent } from 'antd/lib/radio';
+import { handleCommontResponse } from '../../../services/common/handleResponse';
 // import CreateOrUpdateKyKiemKeModal from './components/CreateOrUpdateKyKiemKe';
 
 
@@ -61,11 +62,7 @@ class CauHinhHeThongPage extends AppComponentBase<IQuanLyKyKiemKeProps, IQuanLyK
     onSave = async () => {
         this.setState({ isLoading: true })
         const response = await dvhcService.updateCauHinh(this.state.config);
-        if (response.code == 1) {
-            notification.success({ message: response.message })
-        } else {
-            notification.error({ message: response.message })
-        }
+        handleCommontResponse(response);
         this.setState({ isLoading: false })
     }
 

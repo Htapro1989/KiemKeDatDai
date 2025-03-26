@@ -9,6 +9,7 @@ export const ROUTER_PATH = {
   CAPDVHC: "/capdvhc",
   KYKIEMKE: "/ky-thong-ke-kiem-ke",
   CAUHINH: "/cauhinh",
+  DONVIHANHCHINH: "/don-vi-hanh-chinh",
 
 }
 
@@ -85,6 +86,15 @@ export const appRouters: any = [
     icon: TagsOutlined,
     showInMenu: true,
     component: LoadableComponent(() => import('../../scenes/Admin/CapDonViHanhChinh')),
+  },
+  {
+    path: ROUTER_PATH.DONVIHANHCHINH,
+    permission: 'Pages.Roles',
+    title: 'Đơn vị hành chính',
+    name: 'dvhc',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/Admin/DonViHanhChinh')),
   },
   {
     path: ROUTER_PATH.KYKIEMKE,

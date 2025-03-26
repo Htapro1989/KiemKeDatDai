@@ -1,9 +1,12 @@
-import { Table } from 'antd'
+import { Button, notification, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import bieuMauService from '../../../services/bieuMau/bieuMauService';
 import CustomModal from './CustomModal';
 import BieuMauPage from '../../BieuMauPage/bieuMauPage';
 import ChiTietBieuMauRequest from '../../../models/BieuMau/ChiTietBieuMauRequest';
+import fileService from '../../../services/files/fileService';
+import { CloudDownloadOutlined, EyeOutlined } from '@ant-design/icons';
+var FileSaver = require('file-saver');
 
 export interface IBieuDoTabProps {
     donViHanhChinhSelected: any;
@@ -13,19 +16,57 @@ export default function BieuDoTab(props: IBieuDoTabProps) {
 
     const [listBaoCao, setListBaoCao] = useState([])
     const [isFetchBaoCao, setIsFetchBaoCao] = useState(false)
-    // const history = useHistory()
     const [reportDataInfo, setReportDataInfo] = useState<{ visible: boolean, reportDetailRequest?: ChiTietBieuMauRequest }>({
         visible: false
     })
+    const [isDowloading, setIsDowloading] = useState({
+        loading: false,
+        id: null
+    })
 
+    const onDownloadBieu = async (record: any) => {
+        try {
+            setIsDowloading({ loading: true, id: record.id })
+            const response = await fileService.donwloadBieu({
+                "maxResultCount": 1000,
+                "skipCount": 2147483647,
+                "kyHieu": record.kyHieu,
+                "capDVHC": props.donViHanhChinhSelected?.capDVHCId,
+                "year": props.donViHanhChinhSelected?.year,
+                "maDVHC": props.donViHanhChinhSelected?.ma
+            })
+
+            if (response) {
+                FileSaver.saveAs(response, `Bieu ${record.kyHieu}`);
+            } else {
+                notification.error({ message: "Thất bại. Vui lòng thử lại sau" })
+            }
+        } finally {
+            setIsDowloading({ loading: false, id: record.id })
+        }
+    }
 
     const columns: any = [
         { title: 'Ký hiệu', dataIndex: 'kyHieu', key: 'kyHieu', width: 150, render: (text: string) => <div>{text}</div> },
         { title: 'Tên', dataIndex: 'noiDung', key: 'noiDung', render: (text: string) => <div>{text}</div> },
-        { title: 'Tải báo cáo', dataIndex: 'taiBaoCao', key: 'taiBaoCao', width: 120 },
+        {
+            title: 'Tải báo cáo', dataIndex: 'taiBaoCao', key: 'taiBaoCao', width: 120,
+            align: "center",
+            render: (text: string, record: any) => <Button
+                type='primary'
+                onClick={() => onDownloadBieu(record)}
+                icon={<CloudDownloadOutlined />}
+                loading={isDowloading.loading && isDowloading.id == record.id}>
+            </Button>
+
+        },
         {
             title: 'Xem báo cáo', dataIndex: 'xemBaoCao', key: 'xemBaoCao', width: 120, align: "center",
-            render: (text: string, record: any) => <a style={{ textAlign: 'center' }} onClick={() => openReport(record)} target="_blank">Xem</a>
+            render: (text: string, record: any) =>
+                <Button
+                    onClick={() => openReport(record)}
+                    icon={<EyeOutlined />}>
+                </Button>
         },
     ]
     const openReport = (record: any) => {
