@@ -12,6 +12,7 @@ using Abp.UI;
 using KiemKeDatDai.Authorization;
 using KiemKeDatDai.Authorization.Roles;
 using KiemKeDatDai.Authorization.Users;
+using KiemKeDatDai.EntitiesDb;
 using KiemKeDatDai.Roles.Dto;
 using KiemKeDatDai.Users.Dto;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +34,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IAbpSession _abpSession;
     private readonly LogInManager _logInManager;
+    private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
 
     public UserAppService(
         IRepository<User, long> repository,
@@ -41,6 +43,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         IRepository<Role> roleRepository,
         IPasswordHasher<User> passwordHasher,
         IAbpSession abpSession,
+        IRepository<DonViHanhChinh, long> dvhcRepos,
         LogInManager logInManager)
         : base(repository)
     {
@@ -50,6 +53,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         _passwordHasher = passwordHasher;
         _abpSession = abpSession;
         _logInManager = logInManager;
+        _dvhcRepos = dvhcRepos;
     }
 
     public override async Task<UserDto> CreateAsync(CreateUserDto input)
@@ -57,6 +61,10 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CheckCreatePermission();
 
         var user = ObjectMapper.Map<User>(input);
+        if (user.DonViHanhChinhId != null)
+        {
+            user.DonViHanhChinhCode = _dvhcRepos.Single(x=>x.Id == user.DonViHanhChinhId).Ma;
+        }
 
         user.TenantId = AbpSession.TenantId;
         user.IsEmailConfirmed = true;
@@ -80,6 +88,10 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CheckUpdatePermission();
 
         var user = await _userManager.GetUserByIdAsync(input.Id);
+        if (user.DonViHanhChinhId != null)
+        {
+            user.DonViHanhChinhCode = _dvhcRepos.Single(x => x.Id == user.DonViHanhChinhId).Ma;
+        }
 
         MapToEntity(input, user);
 

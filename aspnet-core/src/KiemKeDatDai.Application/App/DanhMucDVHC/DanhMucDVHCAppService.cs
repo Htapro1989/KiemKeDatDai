@@ -42,6 +42,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
         private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
         private readonly IRepository<CapDVHC, long> _cdvhcRepos;
         private readonly IRepository<User, long> _userRepos;
+        private readonly IRepository<Bieu01TKKK_Xa, long> _bieu01TKKK_XaXaRepos;
         private readonly IObjectMapper _objectMapper;
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -55,6 +56,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             IRepository<DonViHanhChinh, long> dvhcRepos,
             IRepository<CapDVHC, long> cdvhcRepos,
             IRepository<User, long> userRepos,
+            IRepository<Bieu01TKKK_Xa, long> bieu01TKKK_XaXaRepos,
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
@@ -67,6 +69,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             _dvhcRepos = dvhcRepos;
             _cdvhcRepos = cdvhcRepos;
             _userRepos = userRepos;
+            _bieu01TKKK_XaXaRepos = bieu01TKKK_XaXaRepos;
             _objectMapper = objectMapper;
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
@@ -331,8 +334,9 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         Id = objdata.Id,
                         Ten = objdata.Name,
                         MaDVHC = objdata.Ma,
+                        CapDVHC = objdata.CapDVHCId,
                         ParentId = objdata.Parent_id,
-                        NgayCapNhat = objdata.NgayGui != null ? objdata.NgayGui : objdata.CreationTime,
+                        NgayCapNhat = objdata.NgayGui,
                         TrangThaiDuyet = objdata.TrangThaiDuyet,
                         ChildStatus = 1
                     };
@@ -349,6 +353,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                             baoCaoDVHC.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh));
                             baoCaoDVHC.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                             baoCaoDVHC.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
+                            baoCaoDVHC.TrangThaiDuyet = null;
                             break;
                         case (int)CAP_DVHC.TINH:
                             baoCaoDVHC.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == objdata.MaTinh);
@@ -365,6 +370,9 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                             baoCaoDVHC.TongDuyet = objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0;
                             baoCaoDVHC.TongNop = objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0;
                             baoCaoDVHC.ChildStatus = 0;
+                            var _bieu01TKKK = await _bieu01TKKK_XaXaRepos.FirstOrDefaultAsync(x => x.MaXa == objdata.Ma && x.Year == input.Year);
+                            if (_bieu01TKKK != null)
+                                baoCaoDVHC.NgayCapNhat = _bieu01TKKK.CreationTime;
                             break;
                         default:
                             break;
@@ -375,7 +383,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     if (baoCaoDVHC.Root == true)
                     {
                         baoCaoDVHC.IsNopBaoCao = (baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.CHO_DUYET && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET) ? true : false;
-
+                        if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG ||baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
+                            baoCaoDVHC.IsNopBaoCao = false;
                         //----------Tạm bỏ điều kiện check nộp
                         //if (baoCaoDVHC.ChildStatus == 0)
                         //{
@@ -401,8 +410,9 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                 Id = item.Id,
                                 Ten = item.Name,
                                 MaDVHC = item.Ma,
+                                CapDVHC = item.CapDVHCId,
                                 ParentId = item.Parent_id,
-                                NgayCapNhat = item.NgayGui != null ? item.NgayGui : objdata.CreationTime,
+                                NgayCapNhat = item.NgayGui,
                                 TrangThaiDuyet = item.TrangThaiDuyet,
                                 IsNopBaoCao = false
                             };
@@ -414,6 +424,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                     baoCaoDVHC_child.TongDuyet = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                                     baoCaoDVHC_child.TongNop = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
                                     baoCaoDVHC_child.ChildStatus = 1;
+                                    baoCaoDVHC_child.TrangThaiDuyet = null;
                                     break;
                                 case (int)CAP_DVHC.TINH:
                                     baoCaoDVHC_child.Tong = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == item.MaTinh);
@@ -432,6 +443,9 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                     baoCaoDVHC_child.TongDuyet = item.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0;
                                     baoCaoDVHC_child.TongNop = item.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0;
                                     baoCaoDVHC_child.ChildStatus = 0;
+                                    var _bieu01TKKK = await _bieu01TKKK_XaXaRepos.FirstOrDefaultAsync(x => x.MaXa == item.Ma && x.Year == input.Year);
+                                    if (_bieu01TKKK != null)
+                                        baoCaoDVHC.NgayCapNhat = _bieu01TKKK.CreationTime;
                                     break;
                                 default:
                                     break;
@@ -465,10 +479,37 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.VUNG
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownTinhByVungId(long vungId)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.TINH && dvhc.Parent_id == vungId
+                             select new DropDownListDVHCDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -490,10 +531,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.TINH
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -515,10 +557,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.HUYEN && dvhc.Parent_id == tinhId
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -540,10 +583,11 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.XA && dvhc.Parent_id == huyenId
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,
                                  Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;

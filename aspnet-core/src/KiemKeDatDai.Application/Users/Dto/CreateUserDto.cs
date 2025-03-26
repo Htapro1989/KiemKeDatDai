@@ -43,4 +43,5 @@ public class CreateUserDto : IShouldNormalize
             RoleNames = new string[0];
         }
     }
+    public long? DonViHanhChinhId { get; set; }
 }
