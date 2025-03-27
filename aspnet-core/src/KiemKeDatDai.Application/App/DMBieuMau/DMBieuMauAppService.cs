@@ -1281,12 +1281,13 @@ namespace KiemKeDatDai.App.DMBieuMau
         }
         public async Task<FileStreamResult> DownloadBieuMau(BieuMauDetailInputDto input)
         {
-            CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 string _tenxa = "";
                 string _tenHuyen = "";
                 string _tenTinh = "";
+                var excelMemoryStream = new MemoryStream();
+                string template = "";
                 switch ((input.CapDVHC))
                 {
                     case (int)CAP_DVHC.TINH:
@@ -1311,6 +1312,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     case "01/TKKK":
                         {
+                            template = "Template_Bieu01TKKK.xlsx";
                             switch (input.CapDVHC)
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
@@ -1318,26 +1320,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu01TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count == 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu01TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1346,26 +1329,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu01TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count == 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu01TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1374,26 +1338,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu01TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count == 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu01TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1402,26 +1347,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu01TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count == 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu01TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1430,26 +1356,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu01TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu01TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1460,6 +1367,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                     case "02/TKKK":
                         {
+                            template = "Template_Bieu02TKKK.xlsx";
                             switch (input.CapDVHC)
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
@@ -1467,26 +1375,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu02TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu02TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1495,26 +1384,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu02TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu02TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1523,26 +1393,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu02TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu02TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1551,26 +1402,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu02TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu02TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1579,26 +1411,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu02TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = "Tỉnh: " + _tenTinh,
-                                                huyen = "Huyện: " + _tenHuyen,
-                                                xa = "Xã: " + _tenxa,
-                                                year = "(Đến ngày 31/12/" + input.Year.ToString() + ")"
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu02TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1616,26 +1429,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu03TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu03TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu03TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1644,26 +1438,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu03TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu03TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu03TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1672,26 +1447,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu03TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu03TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu03TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1700,26 +1456,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu03TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu03TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu03TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1737,26 +1474,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu04TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu04TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1765,26 +1483,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu04TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu04TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1793,26 +1492,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu04TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu04TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1821,26 +1501,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu04TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu04TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1849,26 +1510,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu04TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu04TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu04TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1886,26 +1528,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu05TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1914,26 +1537,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu05TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1942,26 +1546,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu05TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1970,26 +1555,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu05TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -1998,26 +1564,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         if (data.Count > 0)
                                         {
-                                            var excelMemoryStream = new MemoryStream();
-                                            Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu05TKKK.xlsx"))));
-                                            WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                            //data.TableName = "data";
-                                            wd.SetDataSource("data", data);
-                                            wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                            wd.Process();
-                                            wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                            byte[] bytesInStream = excelMemoryStream.ToArray();
-                                            excelMemoryStream.Position = 0;
-                                            return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                            {
-                                                FileDownloadName = "Bieu05TKKK.xlsx"
-                                            };
+                                            excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
                                         break;
                                     }
@@ -2034,26 +1581,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     var data = await _bieu06TKKKQPANRepos.GetAllListAsync(x => x.Year == input.Year);
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu06TKKK.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu06TKKK.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2069,26 +1597,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu06TKKK.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu06TKKK.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2105,26 +1614,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2134,26 +1624,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2163,26 +1634,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2192,26 +1644,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2221,26 +1654,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2257,26 +1671,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu02KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2286,26 +1681,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu02KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2315,26 +1691,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu02KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2344,26 +1701,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu02KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2373,26 +1711,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu02KKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu02KKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2409,26 +1728,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01aKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2438,26 +1738,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01aKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2467,26 +1748,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01aKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2495,26 +1757,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     var data = await _bieu01aKKNLT_HuyenRepos.GetAllListAsync(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC);
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01aKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2524,26 +1767,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01aKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01aKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2560,26 +1784,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01bKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2589,26 +1794,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01bKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2618,26 +1804,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01bKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2647,26 +1814,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01bKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2676,26 +1824,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01bKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01bKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2712,26 +1841,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01cKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2741,26 +1851,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01cKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2770,26 +1861,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01cKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2799,26 +1871,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01cKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2828,26 +1881,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_Bieu01cKKSL.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "Bieu01cKKSL.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2877,26 +1911,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                     }).ToListAsync();
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_PhuLuc3.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "PhuLuc3.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2925,26 +1940,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                     }).ToListAsync();
                                     if (data.Count > 0)
                                     {
-                                        var excelMemoryStream = new MemoryStream();
-                                        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", "Template_PhuLuc4.xlsx"))));
-                                        WorkbookDesigner wd = new WorkbookDesigner(wb);
-                                        //data.TableName = "data";
-                                        wd.SetDataSource("data", data);
-                                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenxa,
-                                                year = input.Year
-                                            }});
-                                        wd.Process();
-                                        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                                        byte[] bytesInStream = excelMemoryStream.ToArray();
-                                        excelMemoryStream.Position = 0;
-                                        return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                                        {
-                                            FileDownloadName = "PhuLuc4.xlsx"
-                                        };
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                     }
                                     break;
                                 }
@@ -2956,13 +1952,13 @@ namespace KiemKeDatDai.App.DMBieuMau
                     default:
                         break;
                 }
-                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
-                commonResponseDto.Message = "Thành Công";
+                return new FileStreamResult(excelMemoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                {
+                    FileDownloadName = "Bieu" + input.KyHieu + ".xlsx"
+                };
             }
             catch (Exception ex)
             {
-                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                commonResponseDto.Message = ex.Message;
                 Logger.Error(ex.Message);
             }
             return null;
@@ -2977,6 +1973,34 @@ namespace KiemKeDatDai.App.DMBieuMau
             //    FileDownloadName = Path.GetFileName(filePath)
             //};
 
+        }
+        private MemoryStream DownloadBieuMauByCap(object data, int? capDVHC, long? year, string _ma, string _tenTinh, string _tenHuyen, string _tenXa, string template)
+        {
+            try
+            {
+                var excelMemoryStream = new MemoryStream();
+                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template))));
+                WorkbookDesigner wd = new WorkbookDesigner(wb);
+
+                wd.SetDataSource("data", data);
+                wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenXa,
+                                                year = "(Đến ngày 31/12/" + year.ToString() + ")"
+                                            }});
+                wd.Process();
+                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                byte[] bytesInStream = excelMemoryStream.ToArray();
+                excelMemoryStream.Position = 0;
+                return excelMemoryStream;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+                return null;
+            }
         }
     }
 }
