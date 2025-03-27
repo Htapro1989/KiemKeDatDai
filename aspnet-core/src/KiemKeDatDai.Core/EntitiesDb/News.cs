@@ -12,6 +12,7 @@ namespace KiemKeDatDai.EntitiesDb
     public class News : FullAuditedEntity<long>
     {
         public int? Type { get; set; }
+        public string OrderLabel { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public string Summary { get; set; }
