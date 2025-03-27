@@ -722,7 +722,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
                                     {
-                                        var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.STT).ToListAsync();
+                                        var data = await _bieu05TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -734,7 +734,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.VUNG:
                                     {
-                                        var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.STT).ToListAsync();
+                                        var data = await _bieu05TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -746,7 +746,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.TINH:
                                     {
-                                        var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.STT).ToListAsync();
+                                        var data = await _bieu05TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -758,7 +758,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.HUYEN:
                                     {
-                                        var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.STT).ToListAsync();
+                                        var data = await _bieu05TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -770,7 +770,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.XA:
                                     {
-                                        var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.STT).ToListAsync();
+                                        var data = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -1238,6 +1238,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                         DienTichBD = item.DienTichBienDong,
                                                         MaLoaiDatTruocBD = item.MDSDTruocBienDong,
                                                         MaLoaiDatSauBD = item.MDSDSauBienDong,
+                                                        MDSDTruocBienDong = item.MDSDTruocBienDong,
+                                                        MDSDSauBienDong = item.MDSDSauBienDong,
+                                                        DTTruocBienDong = item.DTTruocBienDong,
+                                                        DTSauBienDong = item.DTSauBienDong,
                                                         NDTD = item.NDThayDoi
                                                     });
                                     data.BieuPhuLucIVDtos = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
@@ -1422,6 +1426,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                     case "03/TKKK":
                         {
+                            template = "Template_Bieu03TKKK.xlsx";
                             switch (input.CapDVHC)
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
@@ -1467,6 +1472,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                     case "04/TKKK":
                         {
+                            template = "Template_Bieu04TKKK.xlsx";
                             switch (input.CapDVHC)
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
@@ -1521,6 +1527,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                     case "05/TKKK":
                         {
+                            template = "Template_Bieu05TKKK.xlsx";
                             switch (input.CapDVHC)
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
@@ -1574,6 +1581,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             break;
                         }
                     case "06/TKKKQPAN":
+                        template = "Template_Bieu06TKKK.xlsx";
                         switch (input.CapDVHC)
                         {
                             case (int)CAP_DVHC.TRUNG_UONG:
@@ -1890,6 +1898,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                         break;
                     case "PL.III":
+                        template = "Template_PL3.xlsx";
                         switch (input.CapDVHC)
                         {
                             case (int)CAP_DVHC.XA:
@@ -1920,6 +1929,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                         break;
                     case "PL.IV":
+                        template = "Template_PL4.xlsx";
                         switch (input.CapDVHC)
                         {
                             case (int)CAP_DVHC.XA:
@@ -1936,6 +1946,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                         DienTichBD = item.DienTichBienDong,
                                                         MaLoaiDatTruocBD = item.MDSDTruocBienDong,
                                                         MaLoaiDatSauBD = item.MDSDSauBienDong,
+                                                        MDSDTruocBienDong =item.MDSDTruocBienDong,
+                                                        MDSDSauBienDong = item.MDSDSauBienDong,
+                                                        DTTruocBienDong = item.DTTruocBienDong,
+                                                        DTSauBienDong = item.DTSauBienDong,
                                                         NDTD = item.NDThayDoi
                                                     }).ToListAsync();
                                     if (data.Count > 0)
@@ -1983,7 +1997,16 @@ namespace KiemKeDatDai.App.DMBieuMau
                 WorkbookDesigner wd = new WorkbookDesigner(wb);
 
                 wd.SetDataSource("data", data);
-                wd.SetDataSource("Header", new[] { new
+                if (template == "Template_PL3.xlsx" || template == "Template_PL4.xlsx")
+                    wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = "Tỉnh: " + _tenTinh + " Huyện: " + _tenTinh + " xã: " + _tenXa,
+                                                year = "(Đến ngày 31/12/" + year.ToString() + ")"
+                                            }});
+                else
+                    wd.SetDataSource("Header", new[] { new
                                             {
                                                 tinh = _tenTinh,
                                                 huyen = _tenHuyen,
