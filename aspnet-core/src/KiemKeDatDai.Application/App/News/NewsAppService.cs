@@ -135,7 +135,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                     insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
 
-                    fileEntity.Id = insertedFileID;
+                    input.FileIds = insertedFileID;
                 }
 
                 if (input.Id != 0)
@@ -143,7 +143,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var data = await _newsRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
-                        input.FileIds = insertedFileID;
+                        
                         data = _objectMapper.Map<News>(input);
                         await _newsRepos.UpdateAsync(data);
                     }

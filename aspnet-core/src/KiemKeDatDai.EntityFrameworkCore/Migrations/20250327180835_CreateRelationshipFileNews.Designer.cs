@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250327180835_CreateRelationshipFileNews")]
+    partial class CreateRelationshipFileNews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -8202,7 +8205,7 @@ namespace KiemKeDatDai.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("FileId")
+                    b.Property<long>("FileId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
@@ -8235,8 +8238,7 @@ namespace KiemKeDatDai.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FileId")
-                        .IsUnique()
-                        .HasFilter("[FileId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("News");
                 });
@@ -8640,7 +8642,9 @@ namespace KiemKeDatDai.Migrations
                 {
                     b.HasOne("KiemKeDatDai.EntitiesDb.File", "File")
                         .WithOne("News")
-                        .HasForeignKey("KiemKeDatDai.EntitiesDb.News", "FileId");
+                        .HasForeignKey("KiemKeDatDai.EntitiesDb.News", "FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("File");
                 });
