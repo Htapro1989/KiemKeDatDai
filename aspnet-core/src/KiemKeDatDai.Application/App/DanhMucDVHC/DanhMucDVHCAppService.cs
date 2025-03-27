@@ -106,14 +106,14 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                  CreationTime = obj.CreationTime,
                                  Active = obj.Active
                              })
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenVung.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenTinh.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenHuyen.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.TenXa.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()) 
+                             || x.TenVung.ToLower().Contains(input.Filter.ToLower())
+                             || x.TenTinh.ToLower().Contains(input.Filter.ToLower())
+                             || x.TenHuyen.ToLower().Contains(input.Filter.ToLower())
+                             || x.TenXa.ToLower().Contains(input.Filter.ToLower())
+                             || x.Ma.ToLower().Contains(input.Filter.ToLower()))
                              .WhereIf(!string.IsNullOrWhiteSpace(input.MaVung), x => x.Ma.ToLower() == input.MaVung.ToLower() && x.CapDVHCId == (int)CAP_DVHC.VUNG)
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.MaTinh), x => x.Ma.ToLower() == input.MaTinh.ToLower() && x.CapDVHCId == (int)CAP_DVHC.TINH)
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Ma.ToLower().Contains(input.Filter.ToLower()));
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.MaTinh), x => x.Ma.ToLower() == input.MaTinh.ToLower() && x.CapDVHCId == (int)CAP_DVHC.TINH);
                 pagedResultDto.Items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
                 pagedResultDto.TotalCount = await query.CountAsync();
                 commonResponseDto.ReturnValue = pagedResultDto;
