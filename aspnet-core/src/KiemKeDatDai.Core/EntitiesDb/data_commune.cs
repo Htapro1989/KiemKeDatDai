@@ -2,6 +2,7 @@
 using Castle.MicroKernel.SubSystems.Conversion;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,9 @@ namespace KiemKeDatDai.EntitiesDb
         public long TinhId { get; set; }
         public string MaKhoanhDat { get; set; }
         public long SoThuTuKhoanhDat { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DTKhongGian { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DienTich { get; set; }
         public string MaDoiTuong { get; set; }
         public string MaDoiTuongKyTruoc { get; set; }
@@ -31,6 +34,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string MdSDSanBay { get; set; }
         public string MdSDLuaChuyenDoi { get; set; }
         public string MucDichSuDungKyTruoc { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DienTichMucDich { get; set; }
         public long chiTieuId { get; set; }
         public bool? Status { get; set; }

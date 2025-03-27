@@ -4,6 +4,7 @@ using KiemKeDatDai.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    partial class KiemKeDatDaiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250327020352_create_table_News_27032025")]
+    partial class create_table_News_27032025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1601,10 +1604,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BoiDapVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("BoiDapVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -1637,19 +1640,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungDoiNui")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichBoiDap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSatLo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -1671,10 +1674,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BoiDapVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("BoiDapVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -1713,19 +1716,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungDoiNui")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichBoiDap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSatLo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -1747,10 +1750,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BoiDapVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("BoiDapVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -1786,22 +1789,22 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungDoiNui")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("TinhId")
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("TongDienTichBoiDap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSatLo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -1823,10 +1826,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BoiDapVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("BoiDapVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -1862,19 +1865,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungDoiNui")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichBoiDap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSatLo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -1899,10 +1902,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BoiDapVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("BoiDapVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -1938,19 +1941,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungBoSong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SatLoVungDoiNui")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichBoiDap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSatLo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("XaId")
                         .HasColumnType("bigint");
@@ -1975,19 +1978,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2002,10 +2005,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2023,43 +2026,43 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichDVHC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongDuocGiaoQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -2084,19 +2087,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2111,10 +2114,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("HuyenId")
                         .HasColumnType("bigint");
@@ -2138,43 +2141,43 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichDVHC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongDuocGiaoQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -2199,19 +2202,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2226,10 +2229,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2250,10 +2253,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
@@ -2262,34 +2265,34 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichDVHC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongDuocGiaoQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -2314,19 +2317,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2341,10 +2344,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2365,43 +2368,43 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichDVHC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongDuocGiaoQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -2429,19 +2432,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2456,10 +2459,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2480,43 +2483,43 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichDVHC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongDuocGiaoQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoTheoDoiTuongSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("XaId")
                         .HasColumnType("bigint");
@@ -2544,10 +2547,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CacLoaiDatNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CacLoaiDatPhiNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2556,40 +2559,40 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatCongCong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatMatNuocChuyenDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNghiaTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNuoiTrongThuySan")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatO")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungDacDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungPhongHo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungSanXuat")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSXKDPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayHangNamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayLauNam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongLua")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -2598,7 +2601,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTichDatChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2616,13 +2619,13 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -2644,10 +2647,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CacLoaiDatNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CacLoaiDatPhiNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2656,40 +2659,40 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatCongCong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatMatNuocChuyenDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNghiaTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNuoiTrongThuySan")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatO")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungDacDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungPhongHo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungSanXuat")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSXKDPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayHangNamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayLauNam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongLua")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -2698,7 +2701,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTichDatChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("HuyenId")
                         .HasColumnType("bigint");
@@ -2722,13 +2725,13 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -2750,10 +2753,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CacLoaiDatNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CacLoaiDatPhiNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2762,40 +2765,40 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatCongCong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatMatNuocChuyenDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNghiaTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNuoiTrongThuySan")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatO")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungDacDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungPhongHo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungSanXuat")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSXKDPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayHangNamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayLauNam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongLua")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -2804,7 +2807,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTichDatChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2828,13 +2831,13 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -2856,10 +2859,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CacLoaiDatNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CacLoaiDatPhiNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2868,40 +2871,40 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatCongCong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatMatNuocChuyenDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNghiaTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNuoiTrongThuySan")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatO")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungDacDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungPhongHo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungSanXuat")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSXKDPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayHangNamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayLauNam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongLua")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -2910,7 +2913,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTichDatChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2931,13 +2934,13 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -2962,10 +2965,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CacLoaiDatNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CacLoaiDatPhiNongNghiepKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -2974,40 +2977,40 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatCongCong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatMatNuocChuyenDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNghiaTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNuoiTrongThuySan")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatO")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungDacDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungPhongHo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatRungSanXuat")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSXKDPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayHangNamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongCayLauNam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTrongLua")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3016,7 +3019,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTichDatChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -3037,13 +3040,13 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSoDatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("XaId")
                         .HasColumnType("bigint");
@@ -3074,31 +3077,31 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatBiLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyNhungChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3122,10 +3125,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -3153,31 +3156,31 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatBiLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyNhungChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3207,10 +3210,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -3238,31 +3241,31 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatBiLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyNhungChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3292,10 +3295,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -3323,31 +3326,31 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatBiLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyNhungChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3374,10 +3377,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -3408,31 +3411,31 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatBiLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyNhungChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatPhiNongNghiep")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3459,10 +3462,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("XaId")
                         .HasColumnType("bigint");
@@ -3493,28 +3496,28 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3541,10 +3544,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TomngDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -3572,28 +3575,28 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3626,10 +3629,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TomngDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -3657,28 +3660,28 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3711,10 +3714,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("TomngDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -3742,28 +3745,28 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3793,10 +3796,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TomngDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -3827,28 +3830,28 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DatDangGiaoChoMuon")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatDangGiaoKhoanTrang")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatGiaoQuanLyChuaSuDung")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLanChiem")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatLienDoanh")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatSuDungKhongDungMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DatTranhChap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -3878,10 +3881,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TomngDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongDienTichQuanLy")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("XaId")
                         .HasColumnType("bigint");
@@ -3921,7 +3924,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -3976,7 +3979,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("HuyenId")
                         .HasColumnType("bigint");
@@ -4037,7 +4040,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4098,7 +4101,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4159,7 +4162,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4205,19 +4208,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -4232,10 +4235,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4253,37 +4256,37 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -4308,19 +4311,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -4335,10 +4338,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("HuyenId")
                         .HasColumnType("bigint");
@@ -4362,37 +4365,37 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -4417,19 +4420,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -4444,10 +4447,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4468,10 +4471,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
@@ -4480,28 +4483,28 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -4526,19 +4529,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -4553,10 +4556,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4577,37 +4580,37 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -4635,19 +4638,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -4662,10 +4665,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -4686,37 +4689,37 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("XaId")
                         .HasColumnType("bigint");
@@ -4777,7 +4780,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -4841,7 +4844,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -4905,7 +4908,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -4966,7 +4969,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -4994,34 +4997,34 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -5036,16 +5039,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -5063,67 +5066,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKhac_TKH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -5148,34 +5151,34 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -5190,16 +5193,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("HuyenId")
                         .HasColumnType("bigint");
@@ -5223,67 +5226,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKhac_TKH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -5308,34 +5311,34 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -5350,16 +5353,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -5380,16 +5383,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
@@ -5398,52 +5401,52 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKhac_TKH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -5468,34 +5471,34 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -5510,16 +5513,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -5540,67 +5543,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKhac_TKH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -5628,34 +5631,34 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CaNhanTrongNuoc_CNV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoQuanNhaNuoc_TCQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CongDongDanCu_CDS_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -5670,16 +5673,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DonViSuNghiep_TSQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -5700,67 +5703,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NguoiVietNamONuocNgoai_CNN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKhac_TKH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTeVonNuocNgoai_TVN_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_KTQ_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucKinhTe_TKT_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucNuocNgoai_TNG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucTonGiao_TTG_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ToChucXaHoi_TXH_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_CC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TongSo_DT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("XaId")
                         .HasColumnType("bigint");
@@ -5788,22 +5791,22 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CAN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CLN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CNT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CQP")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -5812,67 +5815,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DBV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DMT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DPC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DRA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DSK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DVH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DYT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -5881,19 +5884,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("GiamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("HNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("LMU")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LUA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
@@ -5905,79 +5908,79 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MNC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ma")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Nam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ODT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ONT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RPH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RSX")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TMD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TSC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -6002,22 +6005,22 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CAN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CLN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CNT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CQP")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -6026,67 +6029,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DBV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DMT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DPC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DRA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DSK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DVH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DYT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -6095,10 +6098,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("GiamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("HNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("HuyenId")
                         .HasColumnType("bigint");
@@ -6107,10 +6110,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("LMU")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LUA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
@@ -6122,10 +6125,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MNC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ma")
                         .HasColumnType("nvarchar(max)");
@@ -6134,70 +6137,70 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Nam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ODT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ONT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RPH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RSX")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TMD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TSC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("Year")
                         .HasColumnType("bigint");
@@ -6222,22 +6225,22 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CAN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CLN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CNT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CQP")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -6246,67 +6249,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DBV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DMT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DPC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DRA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DSK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DVH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DYT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -6315,19 +6318,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("GiamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("HNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("LMU")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LUA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
@@ -6339,10 +6342,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MNC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ma")
                         .HasColumnType("nvarchar(max)");
@@ -6351,70 +6354,70 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Nam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ODT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ONT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RPH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RSX")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TMD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TSC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("TinhId")
                         .HasColumnType("bigint");
@@ -6442,22 +6445,22 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CAN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CLN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CNT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CQP")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -6466,67 +6469,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DBV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DMT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DPC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DRA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DSK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DVH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DYT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -6535,19 +6538,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("GiamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("HNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("LMU")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LUA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
@@ -6559,10 +6562,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MNC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ma")
                         .HasColumnType("nvarchar(max)");
@@ -6571,70 +6574,70 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Nam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ODT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ONT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RPH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RSX")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TMD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TSC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("VungId")
                         .HasColumnType("bigint");
@@ -6662,22 +6665,22 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("BCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CAN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CLN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CNT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CQP")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -6686,67 +6689,67 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DBV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DGT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DKV")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DMT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNG")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DNL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DPC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DRA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DSK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTL")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DTT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DVH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DXH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DYT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -6755,19 +6758,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("GiamKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("HNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("LMU")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("LUA")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
@@ -6779,10 +6782,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MNC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ma")
                         .HasColumnType("nvarchar(max)");
@@ -6791,70 +6794,70 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NKH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("NTS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Nam")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ODT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ONT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PNK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RDD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RPH")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("RSX")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SCT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKK")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SKS")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("STT")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TMD")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TON")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TSC")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("XaId")
                         .HasColumnType("bigint");
@@ -6897,16 +6900,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichDaCapGCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichDaDoDac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichDatQuocPhong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichKetHopKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DonVi")
                         .HasColumnType("nvarchar(max)");
@@ -6924,7 +6927,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("LoaiDatKetHopKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("MaTinh")
                         .HasColumnType("nvarchar(max)");
@@ -6933,7 +6936,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SoGCNDaCap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("TinhId")
                         .HasColumnType("bigint");
@@ -6973,16 +6976,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichDaCapGCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichDaDoDac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichDatQuocPhong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichKetHopKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DonVi")
                         .HasColumnType("nvarchar(max)");
@@ -7000,7 +7003,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("LoaiDatKetHopKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("MaTinh")
                         .HasColumnType("nvarchar(max)");
@@ -7009,7 +7012,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SoGCNDaCap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("TinhId")
                         .HasColumnType("bigint");
@@ -7049,16 +7052,16 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichDaCapGCN")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichDaDoDac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichDatQuocPhong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichKetHopKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DonVi")
                         .HasColumnType("nvarchar(max)");
@@ -7076,7 +7079,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("LoaiDatKetHopKhac")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("MaTinh")
                         .HasColumnType("nvarchar(max)");
@@ -7088,7 +7091,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SoGCNDaCap")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("TinhId")
                         .HasColumnType("bigint");
@@ -7204,7 +7207,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichCoBienDong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -7534,7 +7537,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichBienDong")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -7592,7 +7595,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DTKhongGian")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -7601,10 +7604,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichMucDich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<byte[]>("Geo")
                         .HasColumnType("varbinary(max)");
@@ -7704,7 +7707,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DTKhongGian")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -7713,7 +7716,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -7789,7 +7792,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DTKhongGian")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -7798,7 +7801,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -7877,7 +7880,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -8081,7 +8084,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("DTKhongGian")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("DeleterUserId")
                         .HasColumnType("bigint");
@@ -8090,10 +8093,10 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DienTichKT")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<byte[]>("Geo")
                         .HasColumnType("varbinary(max)");
@@ -8255,7 +8258,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("DienTich")
-                        .HasColumnType("decimal(18, 4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

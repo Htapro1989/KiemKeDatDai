@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string ThuaSauBienDong { get; set; }
         public string TenChuSuDung { get; set; }
         public string DiaChiThuaDat { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DienTichBienDong { get; set; }
         public string MDSDTruocBienDong { get; set; }
         public string MDSDSauBienDong { get; set; }

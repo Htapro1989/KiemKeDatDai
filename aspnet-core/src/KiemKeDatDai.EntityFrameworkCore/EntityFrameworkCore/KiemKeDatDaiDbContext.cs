@@ -87,6 +87,7 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<SoLieuKyTruoc> SoLieuKyTruoc { get; set; }
         public virtual DbSet<Data_BienDong> Data_BienDong { get; set; }
         public virtual DbSet<YKien> YKien { get; set; }
+        public virtual DbSet<News> News { get; set; }
 
         public KiemKeDatDaiDbContext(DbContextOptions<KiemKeDatDaiDbContext> options)
             : base(options)

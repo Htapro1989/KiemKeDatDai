@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string STT { get; set; }
         public string LoaiDat { get; set; }
         public string Ma { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal TongDienTich { get; set; }
         public string DienTichTheoDVHC { get; set; }
         public long Year { get; set; }

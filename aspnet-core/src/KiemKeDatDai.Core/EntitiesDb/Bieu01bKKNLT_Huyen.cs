@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -13,17 +14,28 @@ namespace KiemKeDatDai.EntitiesDb
     {
         public string STT { get; set; }
         public string TenDVSDD { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal TongDienTichSuDung { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DatNongNghiep { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DatPhiNongNghiep { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DatSuDungKhongDungMucDich { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal TongDienTich { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DatDangGiaoKhoanTrang { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DatDangGiaoChoMuon { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DatDangLienDoanh { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DatBiLanChiem { get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
         public decimal DatTranhChap { get; set; }
-        public decimal DatGiaoQuanLyNhungChuaSuDung{ get; set; }
+        [Column(TypeName = "decimal(18, 4)")]
+        public decimal DatGiaoQuanLyNhungChuaSuDung { get; set; }
         public string MaHuyen { get; set; }
 
         public long? HuyenId { get; set; }
