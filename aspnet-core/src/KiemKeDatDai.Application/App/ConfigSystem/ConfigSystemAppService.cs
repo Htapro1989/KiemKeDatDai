@@ -29,6 +29,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
+using Microsoft.Extensions.Configuration;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -43,6 +44,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
         //private readonly ILogAppService _iLogAppService;
+        private readonly IConfigurationRoot _appConfiguration;
 
         private readonly ICache mainCache;
 
@@ -122,6 +124,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var data = await _configSystemRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
+                        //var section = _appConfiguration.GetSection("App");
+                        //section["ExpiredTimeToken"] = data.expired_auth.ToString();
+                        //_appConfiguration.Reload();
                         data.expired_auth = input.expired_auth;
                         data.server_file_upload = input.server_file_upload;
                         data.Active = input.Active;
