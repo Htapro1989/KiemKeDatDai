@@ -33,7 +33,7 @@ namespace KiemKeDatDai.Dto
         public string Title { get; set; }
         public string Content { get; set; }
         public string Summary { get; set; }
-        public string FileIds { get; set; }
+        public long? FileId { get; set; }
         public int? Status { get; set; }
         public long? Year { get; set; }
         public bool? Active { get; set; }

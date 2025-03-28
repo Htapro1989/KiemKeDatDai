@@ -107,7 +107,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 long insertedFileID = 0;
-                if (input.File != null || input.File.Length > 0)
+                if (input.File != null && input.File.Length > 0)
                 {
 
                     // Save the file to a directory
@@ -135,7 +135,7 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                     insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
 
-                    input.FileIds = insertedFileID;
+                    input.FileId = insertedFileID;
                 }
 
                 if (input.Id != 0)
@@ -160,7 +160,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
-                Logger.Error(ex.Message);
+                Logger.Error(ex.ToString());
             }
             return commonResponseDto;
         }
