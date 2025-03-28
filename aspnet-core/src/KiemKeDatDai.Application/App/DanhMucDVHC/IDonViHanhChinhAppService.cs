@@ -19,8 +19,11 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> BaoCaoDVHC(BaoCaoInPutDto input);
         Task<CommonResponseDto> GetDropDownVung();
         Task<CommonResponseDto> GetDropDownTinhByVungId(long vungId);
+        Task<CommonResponseDto> GetDropDownTinhByMaVung(string ma);
         Task<CommonResponseDto> GetDropDownTinh();
         Task<CommonResponseDto> GetDropDownHuyenByTinhId(long tinhId);
+        Task<CommonResponseDto> GetDropDownHuyenByMaTinh(string ma);
         Task<CommonResponseDto> GetDropDownXaByHuyenId(long huyenId);
+        Task<CommonResponseDto> GetDropDownXaByMaHuyen(string ma);
     }
 }
