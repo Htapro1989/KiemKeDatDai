@@ -17,6 +17,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using NuGet.Packaging.Licenses;
 
 namespace KiemKeDatDai.Web.Host.Startup
 {
@@ -39,6 +40,7 @@ namespace KiemKeDatDai.Web.Host.Startup
         {
             string xmlData = _appConfiguration["Aspose:License"];
             Aspose.Cells.License license = new Aspose.Cells.License();
+            //license.SetLicense(xmlData);
             //MVC
             services.AddControllersWithViews(options =>
             {

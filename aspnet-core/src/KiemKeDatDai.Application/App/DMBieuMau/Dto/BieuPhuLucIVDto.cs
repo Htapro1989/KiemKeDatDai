@@ -23,6 +23,10 @@ namespace KiemKeDatDai.Dto
         public decimal DienTichBD { get; set; }
         public string MaLoaiDatTruocBD { get; set; }
         public string MaLoaiDatSauBD { get; set; }
+        public string MDSDTruocBienDong { get; set; }
+        public string MDSDSauBienDong { get; set; }
+        public string DTTruocBienDong { get; set; }
+        public string DTSauBienDong { get; set; }
         public string NDTD { get; set; }
     }
     public class BieuPhuLucIVOutputDto

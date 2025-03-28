@@ -524,6 +524,32 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             return commonResponseDto;
         }
         [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownTinhByMaVung(string ma)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.TINH && dvhc.Parent_Code == ma
+                             select new DropDownListDVHCDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
         public async Task<CommonResponseDto> GetDropDownTinh()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -583,6 +609,58 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             {
                 var query = (from dvhc in _dvhcRepos.GetAll() 
                              where dvhc.CapDVHCId == (int)CAP_DVHC.XA && dvhc.Parent_id == huyenId
+                             select new DropDownListDVHCDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownHuyenByMaTinh(string ma)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.HUYEN && dvhc.Parent_Code == ma
+                             select new DropDownListDVHCDto
+                             {
+                                 Id = dvhc.Id,
+                                 Name = dvhc.Name,
+                                 Ma = dvhc.Ma,
+                             });
+                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetDropDownXaByMaHuyen(string ma)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll() 
+                             where dvhc.CapDVHCId == (int)CAP_DVHC.XA && dvhc.Parent_Code == ma
                              select new DropDownListDVHCDto
                              {
                                  Id = dvhc.Id,

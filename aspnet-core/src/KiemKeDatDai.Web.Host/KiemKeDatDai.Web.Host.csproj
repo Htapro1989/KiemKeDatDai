@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="wwwroot\license\" />
     <Folder Include="wwwroot\Templates\" />
   </ItemGroup>
 </Project>
