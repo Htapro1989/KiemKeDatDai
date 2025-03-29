@@ -97,7 +97,10 @@ namespace KiemKeDatDai.EntityFrameworkCore
         {
 
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<News>()
+            .HasOne(u => u.File)
+            .WithOne(up => up.News)
+            .HasForeignKey<News>(up => up.FileId);
         }
     }
 }
