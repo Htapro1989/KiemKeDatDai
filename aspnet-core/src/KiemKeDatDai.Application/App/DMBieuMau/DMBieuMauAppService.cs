@@ -1434,7 +1434,58 @@ namespace KiemKeDatDai.App.DMBieuMau
                             {
                                 case (int)CAP_DVHC.TRUNG_UONG:
                                     {
-                                        var data = await _bieu03TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        var data = new List<Bieu03TKKKDto>();
+                                        var datadvhc = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == input.MaDVHC).OrderBy(x => x.Id).ToListAsync();
+                                        var databieu03 = await _bieu03TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        for (int i = 0; i < databieu03.Count; i++)
+                                        {
+                                            var dataxa = JsonConvert.DeserializeObject<List<DVHCBieu03TKKKDto>>(databieu03[i].DienTichTheoDVHC);
+                                            var dto = new Bieu03TKKKDto()
+                                            {
+                                                STT = databieu03[i].STT,
+                                                LoaiDat = databieu03[i].LoaiDat,
+                                                Ma = databieu03[i].Ma,
+                                                sequence = databieu03[i].sequence
+                                            };
+                                            for (int j = 0; j < dataxa.Count; j++)
+                                            {
+                                                switch (datadvhc.FindIndex(x => x.Ma == dataxa[j].MaDVHC))
+                                                {
+                                                    case 0: dto.DienTichDVHC1 = dataxa[j].DienTich; break;
+                                                    case 1: dto.DienTichDVHC2 = dataxa[j].DienTich; break;
+                                                    case 2: dto.DienTichDVHC3 = dataxa[j].DienTich; break;
+                                                    case 3: dto.DienTichDVHC4 = dataxa[j].DienTich; break;
+                                                    case 4: dto.DienTichDVHC5 = dataxa[j].DienTich; break;
+                                                    case 5: dto.DienTichDVHC6 = dataxa[j].DienTich; break;
+                                                    case 6: dto.DienTichDVHC7 = dataxa[j].DienTich; break;
+                                                    case 7: dto.DienTichDVHC8 = dataxa[j].DienTich; break;
+                                                    case 8: dto.DienTichDVHC9 = dataxa[j].DienTich; break;
+                                                    case 9: dto.DienTichDVHC10 = dataxa[j].DienTich; break;
+                                                    case 10: dto.DienTichDVHC11 = dataxa[j].DienTich; break;
+                                                    case 11: dto.DienTichDVHC12 = dataxa[j].DienTich; break;
+                                                    case 12: dto.DienTichDVHC13 = dataxa[j].DienTich; break;
+                                                    case 13: dto.DienTichDVHC14 = dataxa[j].DienTich; break;
+                                                    case 14: dto.DienTichDVHC15 = dataxa[j].DienTich; break;
+                                                    case 15: dto.DienTichDVHC16 = dataxa[j].DienTich; break;
+                                                    case 16: dto.DienTichDVHC17 = dataxa[j].DienTich; break;
+                                                    case 17: dto.DienTichDVHC18 = dataxa[j].DienTich; break;
+                                                    case 18: dto.DienTichDVHC19 = dataxa[j].DienTich; break;
+                                                    case 19: dto.DienTichDVHC20 = dataxa[j].DienTich; break;
+                                                    case 20: dto.DienTichDVHC21 = dataxa[j].DienTich; break;
+                                                    case 21: dto.DienTichDVHC22 = dataxa[j].DienTich; break;
+                                                    case 22: dto.DienTichDVHC23 = dataxa[j].DienTich; break;
+                                                    case 23: dto.DienTichDVHC24 = dataxa[j].DienTich; break;
+                                                    case 24: dto.DienTichDVHC25 = dataxa[j].DienTich; break;
+                                                    case 25: dto.DienTichDVHC26 = dataxa[j].DienTich; break;
+                                                    case 26: dto.DienTichDVHC27 = dataxa[j].DienTich; break;
+                                                    case 27: dto.DienTichDVHC28 = dataxa[j].DienTich; break;
+                                                    case 28: dto.DienTichDVHC29 = dataxa[j].DienTich; break;
+                                                    case 29: dto.DienTichDVHC30 = dataxa[j].DienTich; break;
+                                                }
+
+                                            }
+                                            data.Add(dto);
+                                        }
                                         if (data.Count > 0)
                                         {
                                             excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
@@ -1443,7 +1494,58 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.VUNG:
                                     {
-                                        var data = await _bieu03TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        var data = new List<Bieu03TKKKDto>();
+                                        var datadvhc = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == input.MaDVHC).OrderBy(x => x.Id).ToListAsync();
+                                        var databieu03 = await _bieu03TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        for (int i = 0; i < databieu03.Count; i++)
+                                        {
+                                            var dataxa = JsonConvert.DeserializeObject<List<DVHCBieu03TKKKDto>>(databieu03[i].DienTichTheoDVHC);
+                                            var dto = new Bieu03TKKKDto()
+                                            {
+                                                STT = databieu03[i].STT,
+                                                LoaiDat = databieu03[i].LoaiDat,
+                                                Ma = databieu03[i].Ma,
+                                                sequence = databieu03[i].sequence
+                                            };
+                                            for (int j = 0; j < dataxa.Count; j++)
+                                            {
+                                                switch (datadvhc.FindIndex(x => x.Ma == dataxa[j].MaDVHC))
+                                                {
+                                                    case 0: dto.DienTichDVHC1 = dataxa[j].DienTich; break;
+                                                    case 1: dto.DienTichDVHC2 = dataxa[j].DienTich; break;
+                                                    case 2: dto.DienTichDVHC3 = dataxa[j].DienTich; break;
+                                                    case 3: dto.DienTichDVHC4 = dataxa[j].DienTich; break;
+                                                    case 4: dto.DienTichDVHC5 = dataxa[j].DienTich; break;
+                                                    case 5: dto.DienTichDVHC6 = dataxa[j].DienTich; break;
+                                                    case 6: dto.DienTichDVHC7 = dataxa[j].DienTich; break;
+                                                    case 7: dto.DienTichDVHC8 = dataxa[j].DienTich; break;
+                                                    case 8: dto.DienTichDVHC9 = dataxa[j].DienTich; break;
+                                                    case 9: dto.DienTichDVHC10 = dataxa[j].DienTich; break;
+                                                    case 10: dto.DienTichDVHC11 = dataxa[j].DienTich; break;
+                                                    case 11: dto.DienTichDVHC12 = dataxa[j].DienTich; break;
+                                                    case 12: dto.DienTichDVHC13 = dataxa[j].DienTich; break;
+                                                    case 13: dto.DienTichDVHC14 = dataxa[j].DienTich; break;
+                                                    case 14: dto.DienTichDVHC15 = dataxa[j].DienTich; break;
+                                                    case 15: dto.DienTichDVHC16 = dataxa[j].DienTich; break;
+                                                    case 16: dto.DienTichDVHC17 = dataxa[j].DienTich; break;
+                                                    case 17: dto.DienTichDVHC18 = dataxa[j].DienTich; break;
+                                                    case 18: dto.DienTichDVHC19 = dataxa[j].DienTich; break;
+                                                    case 19: dto.DienTichDVHC20 = dataxa[j].DienTich; break;
+                                                    case 20: dto.DienTichDVHC21 = dataxa[j].DienTich; break;
+                                                    case 21: dto.DienTichDVHC22 = dataxa[j].DienTich; break;
+                                                    case 22: dto.DienTichDVHC23 = dataxa[j].DienTich; break;
+                                                    case 23: dto.DienTichDVHC24 = dataxa[j].DienTich; break;
+                                                    case 24: dto.DienTichDVHC25 = dataxa[j].DienTich; break;
+                                                    case 25: dto.DienTichDVHC26 = dataxa[j].DienTich; break;
+                                                    case 26: dto.DienTichDVHC27 = dataxa[j].DienTich; break;
+                                                    case 27: dto.DienTichDVHC28 = dataxa[j].DienTich; break;
+                                                    case 28: dto.DienTichDVHC29 = dataxa[j].DienTich; break;
+                                                    case 29: dto.DienTichDVHC30 = dataxa[j].DienTich; break;
+                                                }
+
+                                            }
+                                            data.Add(dto);
+                                        }
                                         if (data.Count > 0)
                                         {
                                             excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
@@ -1452,7 +1554,58 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     }
                                 case (int)CAP_DVHC.TINH:
                                     {
-                                        var data = await _bieu03TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        var data = new List<Bieu03TKKKDto>();
+                                        var datadvhc = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == input.MaDVHC).OrderBy(x => x.Id).ToListAsync();
+                                        var databieu03 = await _bieu03TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        for (int i = 0; i < databieu03.Count; i++)
+                                        {
+                                            var dataxa = JsonConvert.DeserializeObject<List<DVHCBieu03TKKKDto>>(databieu03[i].DienTichTheoDVHC);
+                                            var dto = new Bieu03TKKKDto()
+                                            {
+                                                STT = databieu03[i].STT,
+                                                LoaiDat = databieu03[i].LoaiDat,
+                                                Ma = databieu03[i].Ma,
+                                                sequence = databieu03[i].sequence
+                                            };
+                                            for (int j = 0; j < dataxa.Count; j++)
+                                            {
+                                                switch (datadvhc.FindIndex(x => x.Ma == dataxa[j].MaDVHC))
+                                                {
+                                                    case 0: dto.DienTichDVHC1 = dataxa[j].DienTich; break;
+                                                    case 1: dto.DienTichDVHC2 = dataxa[j].DienTich; break;
+                                                    case 2: dto.DienTichDVHC3 = dataxa[j].DienTich; break;
+                                                    case 3: dto.DienTichDVHC4 = dataxa[j].DienTich; break;
+                                                    case 4: dto.DienTichDVHC5 = dataxa[j].DienTich; break;
+                                                    case 5: dto.DienTichDVHC6 = dataxa[j].DienTich; break;
+                                                    case 6: dto.DienTichDVHC7 = dataxa[j].DienTich; break;
+                                                    case 7: dto.DienTichDVHC8 = dataxa[j].DienTich; break;
+                                                    case 8: dto.DienTichDVHC9 = dataxa[j].DienTich; break;
+                                                    case 9: dto.DienTichDVHC10 = dataxa[j].DienTich; break;
+                                                    case 10: dto.DienTichDVHC11 = dataxa[j].DienTich; break;
+                                                    case 11: dto.DienTichDVHC12 = dataxa[j].DienTich; break;
+                                                    case 12: dto.DienTichDVHC13 = dataxa[j].DienTich; break;
+                                                    case 13: dto.DienTichDVHC14 = dataxa[j].DienTich; break;
+                                                    case 14: dto.DienTichDVHC15 = dataxa[j].DienTich; break;
+                                                    case 15: dto.DienTichDVHC16 = dataxa[j].DienTich; break;
+                                                    case 16: dto.DienTichDVHC17 = dataxa[j].DienTich; break;
+                                                    case 17: dto.DienTichDVHC18 = dataxa[j].DienTich; break;
+                                                    case 18: dto.DienTichDVHC19 = dataxa[j].DienTich; break;
+                                                    case 19: dto.DienTichDVHC20 = dataxa[j].DienTich; break;
+                                                    case 20: dto.DienTichDVHC21 = dataxa[j].DienTich; break;
+                                                    case 21: dto.DienTichDVHC22 = dataxa[j].DienTich; break;
+                                                    case 22: dto.DienTichDVHC23 = dataxa[j].DienTich; break;
+                                                    case 23: dto.DienTichDVHC24 = dataxa[j].DienTich; break;
+                                                    case 24: dto.DienTichDVHC25 = dataxa[j].DienTich; break;
+                                                    case 25: dto.DienTichDVHC26 = dataxa[j].DienTich; break;
+                                                    case 26: dto.DienTichDVHC27 = dataxa[j].DienTich; break;
+                                                    case 27: dto.DienTichDVHC28 = dataxa[j].DienTich; break;
+                                                    case 28: dto.DienTichDVHC29 = dataxa[j].DienTich; break;
+                                                    case 29: dto.DienTichDVHC30 = dataxa[j].DienTich; break;
+                                                }
+
+                                            }
+                                            data.Add(dto);
+                                        }
                                         if (data.Count > 0)
                                         {
                                             excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
