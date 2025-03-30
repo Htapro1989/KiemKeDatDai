@@ -36,7 +36,6 @@ namespace KiemKeDatDai
         {
             _env = env;
             _appConfiguration = env.GetAppConfiguration();
-            //_configSystemRepos = configSystemRepos;
         }
 
         public override void PreInitialize()
@@ -65,8 +64,8 @@ namespace KiemKeDatDai
             tokenAuthConfig.Issuer = _appConfiguration["Authentication:JwtBearer:Issuer"];
             tokenAuthConfig.Audience = _appConfiguration["Authentication:JwtBearer:Audience"];
             tokenAuthConfig.SigningCredentials = new SigningCredentials(tokenAuthConfig.SecurityKey, SecurityAlgorithms.HmacSha256);
-            //tokenAuthConfig.Expiration = _expired_token != null ? TimeSpan.FromMinutes(long.Parse(_expired_token.ToString())) : TimeSpan.FromMinutes(30);
-            tokenAuthConfig.Expiration = TimeSpan.FromMinutes(30);
+            var _expiration = _appConfiguration["ConfigSystemTime:ExpiredTimeToken"];
+            tokenAuthConfig.Expiration = !string.IsNullOrWhiteSpace(_expiration) ? TimeSpan.FromMinutes(int.Parse(_expiration)) : TimeSpan.FromMinutes(30);
         }
 
         public override void Initialize()

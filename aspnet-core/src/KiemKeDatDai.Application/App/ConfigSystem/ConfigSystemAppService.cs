@@ -30,6 +30,8 @@ using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using Microsoft.Extensions.Configuration;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Hosting;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -44,7 +46,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
         //private readonly ILogAppService _iLogAppService;
-        private readonly IConfigurationRoot _appConfiguration;
+        private readonly IWritableOptions<ConfigSystemTime> _options;
 
         private readonly ICache mainCache;
 
@@ -55,8 +57,9 @@ namespace KiemKeDatDai.App.DMBieuMau
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
             //ILogAppService iLogAppService
+            IWritableOptions<ConfigSystemTime> options
             )
         {
             _configSystemRepos = configSystemRepos;
@@ -64,6 +67,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
+            _options = options;
             //_iLogAppService = iLogAppService;
         }
         [AbpAuthorize]
@@ -124,9 +128,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var data = await _configSystemRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
-                        //var section = _appConfiguration.GetSection("App");
-                        //section["ExpiredTimeToken"] = data.expired_auth.ToString();
-                        //_appConfiguration.Reload();
+                        _options.Update(opt => {
+                            opt.ExpiredTimeToken = data.expired_auth.ToString();
+                        });
                         data.expired_auth = input.expired_auth;
                         data.server_file_upload = input.server_file_upload;
                         data.Active = input.Active;
@@ -136,6 +140,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 else
                 {
                     var objdata = input.MapTo<ConfigSystem>();
+                    _options.Update(opt => {
+                        opt.ExpiredTimeToken = input.expired_auth.ToString();
+                    });
                     await _configSystemRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;

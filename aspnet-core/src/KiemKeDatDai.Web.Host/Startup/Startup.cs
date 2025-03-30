@@ -19,6 +19,8 @@ using System.Linq;
 using System.Reflection;
 using NuGet.Packaging.Licenses;
 using System.Text;
+using KiemKeDatDai.App.DMBieuMau;
+using KiemKeDatDai.Dto;
 
 namespace KiemKeDatDai.Web.Host.Startup
 {
@@ -108,6 +110,7 @@ namespace KiemKeDatDai.Web.Host.Startup
                 )
             );
             services.AddSingleton<RabbitMQService>();
+            services.ConfigureWritable<ConfigSystemTime>(_appConfiguration.GetSection("ConfigSystemTime"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
