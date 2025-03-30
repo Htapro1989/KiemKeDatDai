@@ -11,6 +11,8 @@ namespace KiemKeDatDai
     {
         public const string FILE_ATTACHMENT = "FILE_ATTACHMENT";
         public const string FILE_KYTHONGKE = "FILE_KYTHONGKE";
+        public const string FILE_NEWS = "FILE_NEWS";
+
         public enum RESPONSE_CODE
         {
             SUCCESS = 200,

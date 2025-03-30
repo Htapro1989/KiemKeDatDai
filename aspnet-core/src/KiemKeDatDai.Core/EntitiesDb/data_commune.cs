@@ -35,7 +35,7 @@ namespace KiemKeDatDai.EntitiesDb
         public string MdSDLuaChuyenDoi { get; set; }
         public string MucDichSuDungKyTruoc { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
-        public decimal DienTichMucDich { get; set; }
+        public decimal? DienTichMucDich { get; set; }
         public long chiTieuId { get; set; }
         public bool? Status { get; set; }
         public long Year { get; set; }

@@ -16,7 +16,10 @@ namespace KiemKeDatDai.EntitiesDb
         public string Title { get; set; }
         public string Content { get; set; }
         public string Summary { get; set; }
-        public string FileIds { get; set; }
+        [ForeignKey("File")]
+        public long? FileId { get; set; }
+        public virtual File? File { get; set; }
+        
         public int? Status { get; set; }
         public long? Year { get; set; }
         public bool? Active { get; set; }
