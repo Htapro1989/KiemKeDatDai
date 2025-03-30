@@ -128,9 +128,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                     var data = await _configSystemRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
-                        _options.Update(opt => {
-                            opt.ExpiredTimeToken = data.expired_auth.ToString();
-                        });
+                        //_options.Update(opt => {
+                        //    opt.ExpiredTimeToken = data.expired_auth.ToString();
+                        //});
                         data.expired_auth = input.expired_auth;
                         data.server_file_upload = input.server_file_upload;
                         data.Active = input.Active;
@@ -140,9 +140,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 else
                 {
                     var objdata = input.MapTo<ConfigSystem>();
-                    _options.Update(opt => {
-                        opt.ExpiredTimeToken = input.expired_auth.ToString();
-                    });
+                    //_options.Update(opt => {
+                    //    opt.ExpiredTimeToken = input.expired_auth.ToString();
+                    //});
                     await _configSystemRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
