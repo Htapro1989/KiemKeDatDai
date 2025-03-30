@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using NuGet.Packaging.Licenses;
+using System.Text;
 
 namespace KiemKeDatDai.Web.Host.Startup
 {
@@ -39,8 +40,13 @@ namespace KiemKeDatDai.Web.Host.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             string xmlData = _appConfiguration["Aspose:License"];
+            //var key = Encoding.UTF8.GetBytes(xmlData);
             Aspose.Cells.License license = new Aspose.Cells.License();
-            //license.SetLicense(xmlData);
+            //license.SetLicense(new MemoryStream(Encoding.UTF8.GetBytes(xmlData)));
+            //new Aspose.Words.License().SetLicense(new MemoryStream(key));
+            //new Aspose.Pdf.License().SetLicense(new MemoryStream(key));
+            //return builder;
+
             //MVC
             services.AddControllersWithViews(options =>
             {
