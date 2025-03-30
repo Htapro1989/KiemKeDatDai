@@ -40,13 +40,29 @@ namespace KiemKeDatDai.Web.Host.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             string xmlData = _appConfiguration["Aspose:License"];
+            try
+            {
+                Aspose.Cells.License license = new Aspose.Cells.License();
+                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(xmlData)))
+                {
+                    license.SetLicense(stream); // Cấp phép từ XML string
+                }
+                Console.WriteLine("✅ License Aspose.Cells đã được áp dụng thành công!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Lỗi khi áp dụng license: " + ex.Message);
+            }
             //var key = Encoding.UTF8.GetBytes(xmlData);
-            Aspose.Cells.License license = new Aspose.Cells.License();
-            //license.SetLicense(new MemoryStream(Encoding.UTF8.GetBytes(xmlData)));
+            //Aspose.Cells.License license = new Aspose.Cells.License();
+
             //new Aspose.Words.License().SetLicense(new MemoryStream(key));
             //new Aspose.Pdf.License().SetLicense(new MemoryStream(key));
             //return builder;
-
+            //using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(xmlData)))
+            //{
+            //    license.SetLicense(stream); // Cấp phép từ XML string
+            //}
             //MVC
             services.AddControllersWithViews(options =>
             {

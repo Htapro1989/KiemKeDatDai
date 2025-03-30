@@ -18,7 +18,7 @@
     <Folder Include="App\Log\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Aspose.Cells" Version="25.3.0" />
+    <PackageReference Include="Aspose.Cells" Version="23.8.0" />
     <PackageReference Include="EPPlus" Version="8.0.0-beta" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.1" />
   </ItemGroup>
