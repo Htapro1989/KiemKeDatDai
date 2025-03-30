@@ -19,4 +19,7 @@ public class UserLoginInfoDto : EntityDto<long>
     public bool IsAdmin { get; set; }
     public string Role { get; set; }
     public string RoleDescription { get; set; }
+    public string Message_Info { get; set; }
+    public long? DonViHanhChinhId { get; set; }
+    public string DonViHanhChinhCode { get; set; }
 }
