@@ -249,11 +249,9 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     var data = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
                     if (data != null)
                     {
-                        data.TenTinh = input.TenTinh;
+                        data.MaVung = input.MaVung;
                         data.MaTinh = input.MaTinh;
-                        data.TenHuyen = input.TenHuyen;
                         data.MaHuyen = input.MaHuyen;
-                        data.TenXa = input.TenXa;
                         data.MaXa = input.MaXa;
                         data.Name = input.Name;
                         data.Parent_id = input.Parent_id;
@@ -261,6 +259,29 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         data.Active = input.Active;
                         data.Year = input.Year;
                         data.TrangThaiDuyet = input.TrangThaiDuyet;
+                        switch (data.CapDVHCId)
+                        {
+                            case (int)CAP_DVHC.XA:
+                                data.TenXa = data.Name;
+                                data.TenHuyen = _dvhcRepos.Single(x => x.Ma == data.MaHuyen).Name;
+                                data.TenTinh = _dvhcRepos.Single(x => x.Ma == data.MaTinh).Name;
+                                data.TenVung = _dvhcRepos.Single(x => x.Ma == data.MaVung).Name;
+                                break;
+                            case (int)CAP_DVHC.HUYEN:
+                                data.TenHuyen = data.Name;
+                                data.TenTinh = _dvhcRepos.Single(x => x.Ma == data.MaTinh).Name;
+                                data.TenVung = _dvhcRepos.Single(x => x.Ma == data.MaVung).Name;
+                                break;
+                            case (int)CAP_DVHC.TINH:
+                                data.TenTinh = data.Name;
+                                data.TenVung = _dvhcRepos.Single(x => x.Ma == data.MaVung).Name;
+                                break;
+                            case (int)CAP_DVHC.VUNG:
+                                data.TenVung = data.Name;
+                                break;
+                            default:
+                                break;
+                        }
                         await _dvhcRepos.UpdateAsync(data);
                     }
                     else
@@ -273,6 +294,23 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 else
                 {
                     var dvhc = input.MapTo<DVHCInputDto>();
+                    switch (dvhc.CapDVHCId)
+                    {
+                        case (int)CAP_DVHC.XA:
+                            dvhc.TenHuyen = _dvhcRepos.Single(x => x.Ma == dvhc.MaHuyen).Name;
+                            dvhc.TenTinh = _dvhcRepos.Single(x => x.Ma == dvhc.MaTinh).Name;
+                            dvhc.TenVung = _dvhcRepos.Single(x => x.Ma == dvhc.MaVung).Name;
+                            break;
+                        case (int)CAP_DVHC.HUYEN:
+                            dvhc.TenTinh = _dvhcRepos.Single(x => x.Ma == dvhc.MaTinh).Name;
+                            dvhc.TenVung = _dvhcRepos.Single(x => x.Ma == dvhc.MaVung).Name;
+                            break;
+                        case (int)CAP_DVHC.TINH:
+                            dvhc.TenVung = _dvhcRepos.Single(x => x.Ma == dvhc.MaVung).Name;
+                            break;
+                        default:
+                            break;
+                    }
                     await _dvhcRepos.InsertAsync(dvhc);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
