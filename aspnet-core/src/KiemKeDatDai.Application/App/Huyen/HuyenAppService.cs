@@ -707,6 +707,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             DienTich = xa.TongDienTichDVHC,
                         };
                         objhuyen.TongDienTich += xa.TongDienTichDVHC;
+                        objhuyen.sequence = xa.sequence;
                         dientichtheoDVHC.Add(bieu03Tkkk_xa);
                         objhuyen.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
                     }
