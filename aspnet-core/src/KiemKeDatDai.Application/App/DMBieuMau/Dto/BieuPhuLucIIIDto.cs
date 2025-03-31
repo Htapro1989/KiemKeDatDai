@@ -15,7 +15,7 @@ namespace KiemKeDatDai.Dto
     }
     public class BieuPhuLucIIIDto
     {
-        //public long STT { get; set; }
+        public long? STT { get; set; }
         public decimal DienTich { get; set; }
         public string MaLoaiDatHienTrang { get; set; }
         public string MaLoaiDatKyTruoc { get; set; }
