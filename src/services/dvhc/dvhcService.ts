@@ -97,43 +97,55 @@ class DvhcService {
     if (result.data.result.returnValue) {
       return result.data.result.returnValue.map((unit: any) => {
         return {
-          value: unit.id,
+          value: unit.ma,
           label: unit.name
         }
       })
     }
     return [];
   }
-  public async getDropDownTinh(): Promise<any[]> {
-    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownTinh`);
+  public async getDropDownTinh(maVung: string): Promise<any[]> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownTinhByMaVung`, { params: { ma: maVung } });
     if (result.data.result.returnValue) {
       return result.data.result.returnValue.map((unit: any) => {
         return {
-          value: unit.id,
+          value: unit.ma,
           label: unit.name
         }
       })
     }
     return [];
   }
-  public async getDropDownHuyenByTinhId(tinhId: any): Promise<any[]> {
-    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownHuyenByTinhId`, { params: { tinhId } });
+  public async getDropDownHuyen(maTinh: any): Promise<any[]> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownHuyenByMaTinh`, { params: { ma:maTinh } });
     if (result.data.result.returnValue) {
       return result.data.result.returnValue.map((unit: any) => {
         return {
-          value: unit.id,
+          value: unit.ma,
           label: unit.name
         }
       })
     }
     return [];
   }
-  public async getDropDownXaByHuyenId(huyenId: any): Promise<any[]> {
-    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownXaByHuyenId`, { params: { huyenId } });
+  public async getDropDownXa(maHuyen: any): Promise<any[]> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownXaByMaHuyen`, { params: { ma:maHuyen } });
     if (result.data.result.returnValue) {
       return result.data.result.returnValue.map((unit: any) => {
         return {
-          value: unit.id,
+          value: unit.ma,
+          label: unit.name
+        }
+      })
+    }
+    return [];
+  }
+  public async getDropDownCapDVHC(): Promise<any> {
+    let result = await http.get(`/api/services/app/CapDonViHanhChinh/GetAll`);
+    if (result.data.result.returnValue) {
+      return result.data.result.returnValue.map((unit: any) => {
+        return {
+          value: unit.maCapDVHC,
           label: unit.name
         }
       })

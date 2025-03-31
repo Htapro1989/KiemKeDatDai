@@ -3,6 +3,8 @@ import dvhcService from '../../../../services/dvhc/dvhcService'
 import { Button, Card, Col, Dropdown, Input, Menu, Row, Select, Table } from 'antd'
 // import SelectItem from '../../../../components/Select/SelectItem'
 import { PlusOutlined, SettingOutlined } from '@ant-design/icons'
+import CreateOrUpdateDVHC from './CreateOrUpdateDVHC'
+import { FormInstance } from 'antd/lib/form'
 
 interface DonViHanhChinhTableProps {
     userId: any
@@ -27,6 +29,16 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
     const [dataDvhc, setDataDvhc] = useState<any>()
     const [kyKiemKeOptions, setKyKiemKeOptions] = useState([])
     const [selectedValue, setSelectedValue] = useState<any>(0);
+
+    // const [editingEntity, setEditingEntity] = useState()
+    // const [modalVisible, setModalVisible] = useState(false)
+
+    const [editingModalData, setEditingModalData] = useState<any>({
+        editingEntity: null,
+        modalVisible: false
+    })
+    const formRef = React.createRef<FormInstance>();
+
 
 
     const getAll = async (params?: DVHCState) => {
@@ -62,9 +74,15 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
     const onSearch = (value: string) => {
         const newFilter = { filter: value }
         const newState = { ...state, ...newFilter, skipCount: 0 }
-        console.log("NEW STAT", newState)
         setstate(newState)
         getAll(newState)
+    }
+
+    const createOrUpdateModalOpen = async (entity?: any) => {
+        setEditingModalData({
+            editingEntity: entity,
+            modalVisible: true
+        })
     }
 
     useEffect(() => {
@@ -86,7 +104,7 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
                         trigger={['click']}
                         overlay={
                             <Menu>
-                                <Menu.Item onClick={() => { }}>Chỉnh sửa</Menu.Item>
+                                <Menu.Item onClick={() => { createOrUpdateModalOpen(item) }}>Chỉnh sửa</Menu.Item>
                                 <Menu.Item onClick={() => { }}>Xóa</Menu.Item>
                             </Menu>
                         }
@@ -129,7 +147,10 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
                     </Row>
                 </div>
             }
-                extra={<Button type="primary" icon={<PlusOutlined />}>
+                extra={<Button
+                    onClick={createOrUpdateModalOpen}
+                    type="primary"
+                    icon={<PlusOutlined />}>
                     Tạo mới
                 </Button>}>
                 <Table
@@ -144,6 +165,21 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
                     loading={false}
                     dataSource={dataDvhc === undefined ? [] : dataDvhc?.items}
                     onChange={handleTableChange}
+                />
+                <CreateOrUpdateDVHC
+                    title='Cấp đơn vị hành chính'
+                    formRef={formRef}
+                    visible={editingModalData.modalVisible}
+                    confirmLoading={false}
+                    entity={editingModalData.editingEntity}
+                    onCancel={() => {
+                        setEditingModalData({
+                            modalVisible: false
+                        })
+                    }}
+                    onCreate={() => {
+                        console.log("XXX", formRef.current?.getFieldsValue())
+                    }}
                 />
             </Card>
         </div>

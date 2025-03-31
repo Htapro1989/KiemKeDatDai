@@ -7,7 +7,7 @@ export const DonViHanhChinhMapper = {
             key: String(dvhc.id),
             title: dvhc.name,
             isLeaf: dvhc.childStatus !== 1,
-            // className: `tree-menu-item-${dvhc.trangThaiDuyet}`,
+            className: `tree-menu-item-${dvhc.trangThaiDuyet}`,
             ...dvhc
         };
     }

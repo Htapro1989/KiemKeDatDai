@@ -97,7 +97,7 @@ class QuanLyDonViHanhChinh extends AppComponentBase<IQuanLyDVHCProps, IQuanLyDVH
 
 
     public render() {
-        const { id } = this.props.sessionStore.currentLogin.user
+        const id = this.props.sessionStore?.currentLogin?.user?.id
         return (
             <div className='capdvhc-page-wrapper'>
                 <h1 className='txt-page-header'>Đơn vị hành chính</h1>

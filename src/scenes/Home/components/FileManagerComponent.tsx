@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import AttactFileTable from './AttactFileTable'
 import UploadFileButton from '../../../components/Upload'
 import fileService from '../../../services/files/fileService'
+import SyncFileTable from './SyncFileTable'
 
 export default function FileManagerComponent(props: any) {
     const donViHanhChinhSelected = props.donViHanhChinhSelected
@@ -24,7 +25,7 @@ export default function FileManagerComponent(props: any) {
     }
     return (
         <div>
-            <Card title="Quản lý dữ liệu đính kèm" size='small'
+            <Card title="Quản lý dữ liệu tệp đính kèm" size='small'
                 extra={
                     <UploadFileButton
                         title='Tải lên' type='primary' ghost
@@ -36,6 +37,17 @@ export default function FileManagerComponent(props: any) {
                     isRefresh={isRefresh}
                     donViHanhChinhSelected={donViHanhChinhSelected} />
             </Card>
+
+            <Card
+            style={{ marginTop: 24 }}
+            title="Quản lý dữ liệu đồng bộ" size='small'>
+                <SyncFileTable
+                    isLoading={isLoading}
+                    isRefresh={isRefresh}
+                    donViHanhChinhSelected={donViHanhChinhSelected} />
+            </Card>
+
+
         </div>
     )
 }

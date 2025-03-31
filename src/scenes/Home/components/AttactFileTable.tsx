@@ -1,4 +1,4 @@
-import { Button, notification, Popconfirm, Table } from 'antd';
+import { Button, Empty, notification, Popconfirm, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import fileService from '../../../services/files/fileService';
 import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -55,7 +55,7 @@ export default function AttactFileTable(props: any) {
 
     const columns: any = [
         {
-            title: 'Tên File',
+            title: 'Tên tệp',
             dataIndex: 'fileName',
         },
         {
@@ -103,6 +103,11 @@ export default function AttactFileTable(props: any) {
                 loading={isLoading}
                 columns={columns}
                 scroll={{ y: 200 }}
+                locale={{
+                    emptyText: (
+                        <Empty description="Không có dữ liệu"> </Empty>
+                    ),
+                }}
                 dataSource={files} onChange={() => { }} />
         </div>
     )

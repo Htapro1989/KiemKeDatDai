@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Button, Card, Col, Dropdown, Input, Menu, Modal, Row, Table, Tag } from 'antd';
+import { Button, Card, Col, Dropdown, Empty, Input, Menu, Modal, Row, Table, Tag } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { inject, observer } from 'mobx-react';
 
@@ -86,7 +86,7 @@ class Tenant extends AppComponentBase<ITenantProps, ITenantState> {
       onOk() {
         self.props.tenantStore.delete(input);
       },
-      onCancel() {},
+      onCancel() { },
     });
   }
 
@@ -190,6 +190,11 @@ class Tenant extends AppComponentBase<ITenantProps, ITenantState> {
               loading={tenants === undefined ? true : false}
               dataSource={tenants === undefined ? [] : tenants.items}
               onChange={this.handleTableChange}
+              locale={{
+                emptyText: (
+                  <Empty description="Không có dữ liệu"> </Empty>
+                ),
+              }}
             />
           </Col>
         </Row>

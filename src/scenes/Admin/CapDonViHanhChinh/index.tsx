@@ -4,7 +4,7 @@ import AppComponentBase from '../../../components/AppComponentBase';
 import { inject, observer } from 'mobx-react';
 import Stores from '../../../stores/storeIdentifier';
 import DonViHanhChinhStore from '../../../stores/donViHanhChinhStore';
-import { Button, Card, Dropdown, Menu, Modal, Table } from 'antd';
+import { Button, Card, Dropdown, Empty, Menu, Modal, Table } from 'antd';
 import { PlusOutlined, SettingOutlined } from '@ant-design/icons';
 import { EntityDto } from '../../../services/dto/entityDto';
 import CreateOrUpdateCapDVHCModal from './components/CreateOrUpdateCapDvhc';
@@ -143,6 +143,11 @@ class QuanLyCapDVHC extends AppComponentBase<IQuanLyCapDVHCProps, IQuanLyCapDVHC
                         pagination={false}
                         loading={this.state.isLoading}
                         dataSource={this.state.listCapDvhc}
+                        locale={{
+                            emptyText: (
+                                <Empty description="Không có dữ liệu"> </Empty>
+                            ),
+                        }}
                     />
                 </Card>
                 <CreateOrUpdateCapDVHCModal

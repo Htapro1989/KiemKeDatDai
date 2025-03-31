@@ -8,6 +8,11 @@ class FileManagerService {
         return result.data.result;
     }
 
+    public async getDanhSachDongBo(parmas: GetAttactFileParams): Promise<ResponseDto<any[]>> {
+        let result = await http.get(`/api/services/app/FileKiemKe/GetFileKyThongKeByDVHC`, { params: parmas });
+        return result.data.result;
+    }
+
     public async fileSpecificationsUpload(file: any, DVHCId: any, year: any): Promise<ResponseDto<any[]>> {
         const formData = new FormData();
         formData.append('file', file);

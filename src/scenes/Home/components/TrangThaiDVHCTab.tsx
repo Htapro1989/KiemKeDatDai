@@ -1,4 +1,4 @@
-import { Table, Tag } from 'antd';
+import { Empty, Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import React, { useEffect, useState } from 'react'
 import dvhcService from '../../../services/dvhc/dvhcService';
@@ -80,6 +80,11 @@ export default function TrangThaiDVHCTab(props: ITrangThaiDVHCTabProps) {
             if (record.children.length > 0) return
             getChildDVHC(record.id);
           },
+        }}
+        locale={{
+          emptyText: (
+            <Empty description="Không có dữ liệu"> </Empty>
+          ),
         }}
         dataSource={listDvhc}
         pagination={false}

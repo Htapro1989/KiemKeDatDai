@@ -31,7 +31,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
   render(): React.ReactNode {
     const { donViHanhChinhSelected } = this.props.donViHanhChinhStore!
-    console.log(donViHanhChinhSelected)
+    const message_Info = this.props.sessionStore?.currentLogin?.user?.message_Info;
     return (
       <Layout>
 
@@ -40,9 +40,17 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
           history={null} collapsed={false} />
 
         <div className='home-page-wrapper'>
-          {/* <h1 className='txt-page-header'>{donViHanhChinhSelected?.title}</h1> */}
+          {message_Info && (
+            <div className='layout-notification'>
+              <div className="marquee-container">
+                <div className="marquee">
+                  📌 {message_Info}
+                </div>
+              </div>
+            </div>
+          )}
 
-          <Card style={{ flex: 1 }}>
+          <Card style={{ flex: 1, marginTop: 24 }}>
             <Tabs defaultActiveKey="1">
               <Tabs.TabPane tab="Biểu tổng hợp" key="1">
                 <BieuDoTab donViHanhChinhSelected={donViHanhChinhSelected} />

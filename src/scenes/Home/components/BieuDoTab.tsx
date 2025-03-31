@@ -28,8 +28,6 @@ export default function BieuDoTab(props: IBieuDoTabProps) {
         try {
             setIsDowloading({ loading: true, id: record.id })
             const response = await fileService.donwloadBieu({
-                "maxResultCount": 1000,
-                "skipCount": 2147483647,
                 "kyHieu": record.kyHieu,
                 "capDVHC": props.donViHanhChinhSelected?.capDVHCId,
                 "year": props.donViHanhChinhSelected?.year,
