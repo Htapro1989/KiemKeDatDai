@@ -12,5 +12,6 @@ namespace KiemKeDatDai.RisApplication
     public interface IBaoCaoAppService : IApplicationService
     {
         Task<CommonResponseDto> NopBaoCao(long year);
+        Task<CommonResponseDto> ThongKeSoLieu();
     }
 }

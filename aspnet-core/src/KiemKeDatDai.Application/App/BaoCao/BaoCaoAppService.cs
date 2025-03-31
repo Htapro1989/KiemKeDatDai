@@ -122,7 +122,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
         [AbpAllowAnonymous]
-        public async Task<CommonResponseDto> ThongKeSoLieu(long year)
+        public async Task<CommonResponseDto> ThongKeSoLieu()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -131,6 +131,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 try
                 {
                     var _thongke = new ThongKeSoLieuOutputDto();
+                    var year = 2024;
                     _thongke.TongSoTinh = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.Year == year);
                     _thongke.TongSoTinhHoanThanh = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                     _thongke.TongSoHuyen = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.HUYEN && x.Year == year);
