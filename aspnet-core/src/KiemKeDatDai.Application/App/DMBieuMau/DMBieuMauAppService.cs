@@ -38,6 +38,7 @@ using Aspose.Cells;
 using System.Dynamic;
 using KiemKeDatDai.App.DMBieuMau.Dto;
 using System.Reflection.PortableExecutable;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -1184,12 +1185,15 @@ namespace KiemKeDatDai.App.DMBieuMau
                         {
                             case (int)CAP_DVHC.XA:
                                 {
-                                    var data = new BieuPhuLucIIIOutputDto();
+                                    PagedResultDto<BieuPhuLucIIIDto> pagedResult = new PagedResultDto<BieuPhuLucIIIDto>();
+                                    var lstPL3 = new List<BieuPhuLucIIIDto>();
                                     //var dvhcPL3 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                                     var queryPL3 = (from item in _dcRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC && item.Year == input.Year
+                                                    orderby item.SoThuTuKhoanhDat
                                                     select new BieuPhuLucIIIDto()
                                                     {
+                                                        STT = item.SoThuTuKhoanhDat,
                                                         DienTich = item.DienTich,
                                                         MaLoaiDatHienTrang = item.MucDichSuDung,
                                                         MaLoaiDatKyTruoc = item.MucDichSuDungKyTruoc,
@@ -1200,14 +1204,17 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                         GhiChu = "",
                                                         MaXa = item.MaXa
                                                     });
-                                    data.BieuPhuLucIIIDtos = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    lstPL3 = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    pagedResult.TotalCount = lstPL3.Count();
+                                    pagedResult.Items = lstPL3;
                                     //result.BieuPhuLucIIIs = await query.ToListAsync();
                                     commonResponseDto.ReturnValue = new
                                     {
+                                        
                                         tenXa = _tenxa,
                                         tenHuyen = _tenHuyen,
                                         tenTinh = _tenTinh,
-                                        data
+                                        pagedResult
                                     };
                                     //var dataPLIII = await _bieuPhuLucIIIRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
                                     //commonResponseDto.ReturnValue = new
@@ -1228,7 +1235,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                         {
                             case (int)CAP_DVHC.XA:
                                 {
-                                    var data = new BieuPhuLucIVOutputDto();
+                                    PagedResultDto<BieuPhuLucIVDto> pagedResult = new PagedResultDto<BieuPhuLucIVDto>();
+                                    var lstPL4 = new List<BieuPhuLucIVDto>();
                                     //var dvhcPL4 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                                     var queryPL4 = (from item in _dbdRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC
@@ -1247,14 +1255,15 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                         DTSauBienDong = item.DTSauBienDong,
                                                         NDTD = item.NDThayDoi
                                                     });
-                                    data.BieuPhuLucIVDtos = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
-                                    //result.BieuPhuLucIIIs = await query.ToListAsync();
+                                    lstPL4 = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    pagedResult.TotalCount = lstPL4.Count();
+                                    pagedResult.Items = lstPL4;
                                     commonResponseDto.ReturnValue = new
                                     {
                                         tenXa = _tenxa,
                                         tenHuyen = _tenHuyen,
                                         tenTinh = _tenTinh,
-                                        data
+                                        pagedResult
                                     };
                                     //var dataPLIV = await _bieuPhuLucIVRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
 
@@ -2114,8 +2123,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     var resultPL3 = new BieuPhuLucIIIOutputDto();
                                     var data = await (from item in _dcRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC && item.Year == input.Year
+                                                    orderby item.SoThuTuKhoanhDat
                                                     select new BieuPhuLucIIIDto()
                                                     {
+                                                        STT = item.SoThuTuKhoanhDat,
                                                         DienTich = item.DienTich,
                                                         MaLoaiDatHienTrang = item.MucDichSuDung,
                                                         MaLoaiDatKyTruoc = item.MucDichSuDungKyTruoc,
@@ -2145,6 +2156,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     var resultPL4 = new BieuPhuLucIVOutputDto();
                                     var data = await (from item in _dbdRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC
+                                                    orderby item.Id
                                                     select new BieuPhuLucIVDto()
                                                     {
                                                         SHTDTruocBD = item.SHKDTruocBienDong,
