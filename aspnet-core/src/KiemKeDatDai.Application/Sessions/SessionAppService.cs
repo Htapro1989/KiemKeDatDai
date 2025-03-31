@@ -63,16 +63,20 @@ public class SessionAppService : KiemKeDatDaiAppServiceBase, ISessionAppService
                 }
             }
             var _dvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == output.User.DonViHanhChinhCode);
-            if (_dvhc != null && _dvhc.CapDVHCId == (int)CAP_DVHC.XA)
+            if (_dvhc != null)
             {
-                var _bieu01TKKK_Xa = await _bieu01TKKK_XaRepos.FirstOrDefaultAsync(x => x.MaXa == output.User.DonViHanhChinhCode);
-                if (_bieu01TKKK_Xa != null)
+                output.User.DonViHanhChinh = _dvhc.Name;
+                if (_dvhc.CapDVHCId == (int)CAP_DVHC.XA)
                 {
-                    output.User.Message_Info = "Đã tiếp nhận dữ liệu " + _dvhc.TenXa + " ngày " + _bieu01TKKK_Xa.CreationTime.ToString("dd/MM/yyyy:hh:mm:ss");
-                }
-                else
-                {
-                    output.User.Message_Info = "Chưa tiếp nhận dữ liệu " + _dvhc.TenXa;
+                    var _bieu01TKKK_Xa = await _bieu01TKKK_XaRepos.FirstOrDefaultAsync(x => x.MaXa == output.User.DonViHanhChinhCode);
+                    if (_bieu01TKKK_Xa != null)
+                    {
+                        output.User.Message_Info = "Đã tiếp nhận dữ liệu " + _dvhc.TenXa + " ngày " + _bieu01TKKK_Xa.CreationTime.ToString("dd/MM/yyyy:hh:mm:ss");
+                    }
+                    else
+                    {
+                        output.User.Message_Info = "Chưa tiếp nhận dữ liệu " + _dvhc.TenXa;
+                    }
                 }
             }
         }
