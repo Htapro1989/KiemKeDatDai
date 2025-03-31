@@ -45,6 +45,15 @@ namespace KiemKeDatDai
             HUYEN = 3,
             XA = 4
         }
+        public enum VUNG_MIEN
+        {
+            VUNG_MIEN_NUI_PHIA_BAC = 1,
+            VUNG_DONG_BANG_SONG_HONG = 2,
+            VUNG_DUYEN_HAI_MIEN_TRUNG = 3,
+            VUNG_TAY_NGUYEN = 4,
+            VUNG_DONG_NAM_BO = 5,
+            VUNG_DONG_BANG_SONG_CUU_LONG = 6
+        }
 
         public enum HAM_DUYET
         {
