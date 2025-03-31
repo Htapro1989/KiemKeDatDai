@@ -68,11 +68,11 @@ public class SessionAppService : KiemKeDatDaiAppServiceBase, ISessionAppService
                 var _bieu01TKKK_Xa = await _bieu01TKKK_XaRepos.FirstOrDefaultAsync(x => x.MaXa == output.User.DonViHanhChinhCode);
                 if (_bieu01TKKK_Xa != null)
                 {
-                    output.User.Message_Info = "Đã tiếp nhận dữ liệu xã " + _dvhc.TenXa + "ngày " + _bieu01TKKK_Xa.CreationTime.ToString("dd/MM/yyyy:hh:mm:ss");
+                    output.User.Message_Info = "Đã tiếp nhận dữ liệu " + _dvhc.TenXa + " ngày " + _bieu01TKKK_Xa.CreationTime.ToString("dd/MM/yyyy:hh:mm:ss");
                 }
                 else
                 {
-                    output.User.Message_Info = "Chưa tiếp nhận dữ liệu xã " + _dvhc.TenXa;
+                    output.User.Message_Info = "Chưa tiếp nhận dữ liệu " + _dvhc.TenXa;
                 }
             }
         }
