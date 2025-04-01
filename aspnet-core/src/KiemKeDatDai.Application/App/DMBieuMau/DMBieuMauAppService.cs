@@ -39,6 +39,7 @@ using System.Dynamic;
 using KiemKeDatDai.App.DMBieuMau.Dto;
 using System.Reflection.PortableExecutable;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.CodeAnalysis;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -1186,7 +1187,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             case (int)CAP_DVHC.XA:
                                 {
                                     //PagedResultDto<BieuPhuLucIIIDto> pagedResult = new PagedResultDto<BieuPhuLucIIIDto>();
-                                    var lstPL3 = new List<BieuPhuLucIIIDto>();
+                                    var data = new List<BieuPhuLucIIIDto>();
                                     //var dvhcPL3 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                                     var queryPL3 = (from item in _dcRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC && item.Year == input.Year
@@ -1204,7 +1205,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                         GhiChu = "",
                                                         MaXa = item.MaXa
                                                     });
-                                    lstPL3 = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    data = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
                                     //pagedResult.TotalCount = lstPL3.Count();
                                     //pagedResult.Items = lstPL3;
                                     //result.BieuPhuLucIIIs = await query.ToListAsync();
@@ -1214,8 +1215,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         tenXa = _tenxa,
                                         tenHuyen = _tenHuyen,
                                         tenTinh = _tenTinh,
-                                        lstPL3,
-                                        totalCount = lstPL3.Count()
+                                        data,
+                                        totalCount = data.Count()
                                     };
                                     //var dataPLIII = await _bieuPhuLucIIIRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
                                     //commonResponseDto.ReturnValue = new
@@ -1237,7 +1238,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             case (int)CAP_DVHC.XA:
                                 {
                                     //PagedResultDto<BieuPhuLucIVDto> pagedResult = new PagedResultDto<BieuPhuLucIVDto>();
-                                    var lstPL4 = new List<BieuPhuLucIVDto>();
+                                    var data = new List<BieuPhuLucIVDto>();
                                     //var dvhcPL4 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                                     var queryPL4 = (from item in _dbdRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC
@@ -1256,7 +1257,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                                         DTSauBienDong = item.DTSauBienDong,
                                                         NDTD = item.NDThayDoi
                                                     });
-                                    lstPL4 = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                                    data = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
                                     //pagedResult.TotalCount = lstPL4.Count();
                                     //.Items = lstPL4;
                                     commonResponseDto.ReturnValue = new
@@ -1264,8 +1265,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                                         tenXa = _tenxa,
                                         tenHuyen = _tenHuyen,
                                         tenTinh = _tenTinh,
-                                        lstPL4,
-                                        totalCount = lstPL4.Count()
+                                        data,
+                                        totalCount = data.Count()
                                     };
                                     //var dataPLIV = await _bieuPhuLucIVRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
 
