@@ -537,6 +537,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     TinhId = tinhId,
                     MaTinh = maTinh,
                     Year = huyen.Year,
+                    sequence = huyen.sequence,
                     Active = true,
                 };
                 await _bieu01TKKK_TinhRepos.InsertAsync(objtinh);
@@ -550,7 +551,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             try
             {
-                var objtinh = await _bieu01TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year);
+                var objtinh = await _bieu01TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year && x.Ma == huyen.Ma);
                 if (objtinh.Id > 0)
                 {
                     //update duyệt huyện
@@ -575,6 +576,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objtinh.DonViSuNghiep_TSQ += huyen.DonViSuNghiep_TSQ;
                         objtinh.ToChucKinhTe_KTQ += huyen.ToChucKinhTe_KTQ;
                         objtinh.CongDongDanCu_CDQ += huyen.CongDongDanCu_CDQ;
+                        objtinh.STT = huyen.STT;
+                        objtinh.LoaiDat = huyen.LoaiDat;
+                        objtinh.Year = huyen.Year;
+                        objtinh.sequence = huyen.sequence;
                     }
                     //update huỷ duyệt huyện
                     else
@@ -664,6 +669,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     TinhId = tinhId,
                     MaTinh = maTinh,
                     Year = huyen.Year,
+                    sequence = huyen.sequence,
                     Active = true,
                 };
                 await _bieu02TKKK_TinhRepos.InsertAsync(objtinh);
@@ -677,7 +683,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             try
             {
-                var objtinh = await _bieu02TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year);
+                var objtinh = await _bieu02TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year && x.Ma == huyen.Ma);
                 if (objtinh.Id > 0)
                 {
                     //update duyệt huyện
@@ -700,6 +706,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objtinh.DonViSuNghiep_TSQ += huyen.DonViSuNghiep_TSQ;
                         objtinh.ToChucKinhTe_KTQ += huyen.ToChucKinhTe_KTQ;
                         objtinh.CongDongDanCu_CDQ += huyen.CongDongDanCu_CDQ;
+                        objtinh.STT = huyen.STT;
+                        objtinh.LoaiDat = huyen.LoaiDat;
+                        objtinh.Year = huyen.Year;
+                        objtinh.sequence = huyen.sequence;
                     }
                     //update huỷ duyệt huyện
                     else
@@ -782,6 +792,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     TinhId = tinhId,
                     MaTinh = maTinh,
                     Year = huyen.Year,
+                    sequence = huyen.sequence,
                     Active = true,
                 };
                 await _bieu03TKKK_TinhRepos.InsertAsync(objtinh);
@@ -795,7 +806,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             try
             {
-                var objtinh = await _bieu03TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year);
+                var objtinh = await _bieu03TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year && x.Ma == huyen.Ma);
                 if (objtinh.Id > 0)
                 {
                     var dientichtheoDVHC = objtinh.DienTichTheoDVHC.FromJson<List<DVHCBieu03TKKKDto>>();
@@ -812,6 +823,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         };
                         objtinh.TongDienTich += huyen.TongDienTich;
                         dientichtheoDVHC.Add(bieu03Tkkk_huyen);
+                        objtinh.STT = huyen.STT;
+                        objtinh.LoaiDat = huyen.LoaiDat;
+                        objtinh.Year = huyen.Year;
+                        objtinh.sequence = huyen.sequence;
                         objtinh.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
                     }
                     //update huỷ duyệt huyện
@@ -904,6 +919,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     TinhId = tinhId,
                     MaTinh = maTinh,
                     Year = huyen.Year,
+                    sequence = huyen.sequence,
                     Active = true,
                 };
                 await _bieu04TKKK_TinhRepos.InsertAsync(objtinh);
@@ -917,7 +933,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             try
             {
-                var objtinh = await _bieu04TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year);
+                var objtinh = await _bieu04TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year && x.Ma == huyen.Ma);
                 if (objtinh.Id > 0)
                 {
                     //update duyệt huyện
@@ -957,6 +973,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objtinh.ToChucKinhTe_KTQ_CC += huyen.ToChucKinhTe_KTQ_CC;
                         objtinh.CongDongDanCu_CDQ_DT += huyen.CongDongDanCu_CDQ_DT;
                         objtinh.CongDongDanCu_CDQ_CC += huyen.CongDongDanCu_CDQ_CC;
+                        objtinh.STT = huyen.STT;
+                        objtinh.LoaiDat = huyen.LoaiDat;
+                        objtinh.Year = huyen.Year;
+                        objtinh.sequence = huyen.sequence;
                     }
                     //update huỷ duyệt huyện
                     else
@@ -1098,6 +1118,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     TinhId = tinhId,
                     MaTinh = maTinh,
                     Year = huyen.Year,
+                    sequence = huyen.sequence,
                     Active = true,
                 };
                 await _bieu05TKKK_TinhRepos.InsertAsync(objtinh);
@@ -1111,7 +1132,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         {
             try
             {
-                var objtinh = await _bieu05TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year);
+                var objtinh = await _bieu05TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year && x.Ma == huyen.Ma);
                 if (objtinh.Id > 0)
                 {
                     //update duyệt huyện
@@ -1171,6 +1192,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objtinh.NCS += huyen.NCS;
                         objtinh.MCS += huyen.MCS;
                         objtinh.GiamKhac += huyen.GiamKhac;
+                        objtinh.STT = huyen.STT;
+                        objtinh.LoaiDat = huyen.LoaiDat;
+                        objtinh.Year = huyen.Year;
+                        objtinh.sequence = huyen.sequence;
                     }
                     //update huỷ duyệt huyện
                     else
@@ -1243,6 +1268,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
         }
         #endregion
+
         #region Write file into server
         private async Task<string> WriteFile(IFormFile file, string maDVHC)
         {

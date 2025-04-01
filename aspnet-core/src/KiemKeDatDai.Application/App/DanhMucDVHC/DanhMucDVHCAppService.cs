@@ -243,6 +243,18 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                if (CheckMaDVHC(input.Ma))
+                {
+                    commonResponseDto.Message = "Mã đơn vị hành chính này đã tồn tại";
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    return commonResponseDto;
+                }
+                if (string.IsNullOrWhiteSpace(input.Ma))
+                {
+                    commonResponseDto.Message = "Mã đơn vị hành chính không được để trống";
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    return commonResponseDto;
+                }
                 var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
@@ -254,6 +266,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         data.MaHuyen = input.MaHuyen;
                         data.MaXa = input.MaXa;
                         data.Name = input.Name;
+                        data.Ma = input.Ma;
                         data.Parent_id = input.Parent_id;
                         data.CapDVHCId = input.CapDVHCId;
                         data.Active = input.Active;
@@ -323,6 +336,14 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 throw;
             }
             return commonResponseDto;
+        }
+
+        private bool CheckMaDVHC(string ma)
+        {
+            var objDVHC = _dvhcRepos.FirstOrDefault(x => x.Ma == ma);
+            if (objDVHC != null)
+                return true;
+            return false;
         }
 
         [AbpAuthorize]

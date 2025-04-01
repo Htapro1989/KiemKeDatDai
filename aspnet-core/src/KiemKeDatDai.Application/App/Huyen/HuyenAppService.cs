@@ -432,6 +432,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     CongDongDanCu_CDQ = xa.CongDongDanCu_CDQ,
                     HuyenId = huyenId,
                     MaHuyen = maHuyen,
+                    sequence = xa.sequence,
                     Year = xa.Year,
                     Active = true,
                 };
@@ -471,6 +472,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objhuyen.DonViSuNghiep_TSQ += xa.DonViSuNghiep_TSQ;
                         objhuyen.ToChucKinhTe_KTQ += xa.ToChucKinhTe_KTQ;
                         objhuyen.CongDongDanCu_CDQ += xa.CongDongDanCu_CDQ;
+                        objhuyen.STT = xa.STT;
+                        objhuyen.LoaiDat = xa.LoaiDat;
+                        objhuyen.Year = xa.Year;
+                        objhuyen.sequence = xa.sequence;
                     }
                     //update huỷ duyệt xã
                     else
@@ -560,6 +565,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     HuyenId = huyenId,
                     MaHuyen = maHuyen,
                     Year = xa.Year,
+                    sequence = xa.sequence,
                     Active = true,
                 };
                 await _bieu02TKKK_HuyenRepos.InsertAsync(objhuyen);
@@ -596,6 +602,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objhuyen.DonViSuNghiep_TSQ += xa.DonViSuNghiep_TSQ;
                         objhuyen.ToChucKinhTe_KTQ += xa.ToChucKinhTe_KTQ;
                         objhuyen.CongDongDanCu_CDQ += xa.CongDongDanCu_CDQ;
+                        objhuyen.STT = xa.STT;
+                        objhuyen.LoaiDat = xa.LoaiDat;
+                        objhuyen.Year = xa.Year;
+                        objhuyen.sequence = xa.sequence;
                     }
                     //update huỷ duyệt xã
                     else
@@ -678,6 +688,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     HuyenId = huyenId,
                     MaHuyen = maHuyen,
                     Year = xa.Year,
+                    sequence = xa.sequence,
                     Active = true,
                 };
                 await _bieu03TKKK_HuyenRepos.InsertAsync(objhuyen);
@@ -707,6 +718,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                             DienTich = xa.TongDienTichDVHC,
                         };
                         objhuyen.TongDienTich += xa.TongDienTichDVHC;
+                        objhuyen.STT = xa.STT;
+                        objhuyen.LoaiDat = xa.LoaiDat;
+                        objhuyen.Year = xa.Year;
                         objhuyen.sequence = xa.sequence;
                         dientichtheoDVHC.Add(bieu03Tkkk_xa);
                         objhuyen.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
@@ -801,6 +815,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     HuyenId = huyenId,
                     MaHuyen = maHuyen,
                     Year = xa.Year,
+                    sequence = xa.sequence,
                     Active = true,
                 };
                 await _bieu04TKKK_HuyenRepos.InsertAsync(objhuyen);
@@ -854,6 +869,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objhuyen.ToChucKinhTe_KTQ_CC += xa.ToChucKinhTe_KTQ_CC;
                         objhuyen.CongDongDanCu_CDQ_DT += xa.CongDongDanCu_CDQ_DT;
                         objhuyen.CongDongDanCu_CDQ_CC += xa.CongDongDanCu_CDQ_CC;
+                        objhuyen.STT = xa.STT;
+                        objhuyen.LoaiDat = xa.LoaiDat;
+                        objhuyen.Year = xa.Year;
+                        objhuyen.sequence = xa.sequence;
                     }
                     //update huỷ duyệt xã
                     else
@@ -995,6 +1014,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     HuyenId = huyenId,
                     MaHuyen = maHuyen,
                     Year = xa.Year,
+                    sequence = xa.sequence,
                     Active = true,
                 };
                 await _bieu05TKKK_HuyenRepos.InsertAsync(objhuyen);
@@ -1068,6 +1088,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objhuyen.NCS += xa.NCS;
                         objhuyen.MCS += xa.MCS;
                         objhuyen.GiamKhac += xa.GiamKhac;
+                        objhuyen.STT = xa.STT;
+                        objhuyen.LoaiDat = xa.LoaiDat;
+                        objhuyen.Year = xa.Year;
+                        objhuyen.sequence = xa.sequence;
                     }
                     //update huỷ duyệt xã
                     else

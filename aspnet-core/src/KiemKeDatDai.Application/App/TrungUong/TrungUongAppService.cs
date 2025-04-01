@@ -487,6 +487,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     ToChucKinhTe_KTQ = tinh.ToChucKinhTe_KTQ,
                     CongDongDanCu_CDQ = tinh.CongDongDanCu_CDQ,
                     Year = tinh.Year,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu01TKKKRepos.InsertAsync(objTW);
@@ -518,6 +519,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Year = tinh.Year,
                     VungId = vungId,
                     MaVung = maVung,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu01TKKK_VungRepos.InsertAsync(objVung);
@@ -557,6 +559,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objTW.DonViSuNghiep_TSQ += tinh.DonViSuNghiep_TSQ;
                         objTW.ToChucKinhTe_KTQ += tinh.ToChucKinhTe_KTQ;
                         objTW.CongDongDanCu_CDQ += tinh.CongDongDanCu_CDQ;
+                        objTW.STT = tinh.STT;
+                        objTW.LoaiDat = tinh.LoaiDat;
+                        objTW.Year = tinh.Year;
+                        objTW.sequence = tinh.sequence;
 
                         objVung.TongDienTichDVHC += tinh.TongDienTichDVHC;
                         objVung.TongSoTheoDoiTuongSuDung += tinh.TongSoTheoDoiTuongSuDung;
@@ -577,6 +583,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objVung.DonViSuNghiep_TSQ += tinh.DonViSuNghiep_TSQ;
                         objVung.ToChucKinhTe_KTQ += tinh.ToChucKinhTe_KTQ;
                         objVung.CongDongDanCu_CDQ += tinh.CongDongDanCu_CDQ;
+                        objVung.STT = tinh.STT;
+                        objVung.LoaiDat = tinh.LoaiDat;
+                        objVung.Year = tinh.Year;
+                        objVung.sequence = tinh.sequence;
                     }
                     //update huỷ duyệt tỉnh
                     else
@@ -686,6 +696,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     ToChucKinhTe_KTQ = tinh.ToChucKinhTe_KTQ,
                     CongDongDanCu_CDQ = tinh.CongDongDanCu_CDQ,
                     Year = tinh.Year,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu02TKKKRepos.InsertAsync(objTW);
@@ -715,6 +726,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Year = tinh.Year,
                     VungId = vungId,
                     MaVung = maVung,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu02TKKK_VungRepos.InsertAsync(objVung);
@@ -752,6 +764,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objTW.DonViSuNghiep_TSQ += tinh.DonViSuNghiep_TSQ;
                         objTW.ToChucKinhTe_KTQ += tinh.ToChucKinhTe_KTQ;
                         objTW.CongDongDanCu_CDQ += tinh.CongDongDanCu_CDQ;
+                        objTW.STT = tinh.STT;
+                        objTW.LoaiDat = tinh.LoaiDat;
+                        objTW.Year = tinh.Year;
+                        objTW.sequence = tinh.sequence;
 
                         objVung.TongSo += tinh.TongSo;
                         objVung.CaNhanTrongNuoc_CNV += tinh.CaNhanTrongNuoc_CNV;
@@ -770,6 +786,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objVung.DonViSuNghiep_TSQ += tinh.DonViSuNghiep_TSQ;
                         objVung.ToChucKinhTe_KTQ += tinh.ToChucKinhTe_KTQ;
                         objVung.CongDongDanCu_CDQ += tinh.CongDongDanCu_CDQ;
+                        objVung.STT = tinh.STT;
+                        objVung.LoaiDat = tinh.LoaiDat;
+                        objVung.Year = tinh.Year;
+                        objVung.sequence = tinh.sequence;
                     }
                     //update huỷ duyệt tỉnh
                     else
@@ -870,6 +890,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     TongDienTich = tinh.TongDienTich,
                     DienTichTheoDVHC = lstBieu03Tkkk_tinh.ToJson(),
                     Year = tinh.Year,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu03TKKKRepos.InsertAsync(objTW);
@@ -884,6 +905,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Year = tinh.Year,
                     VungId = vungId,
                     MaVung = maVung,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu03TKKK_VungRepos.InsertAsync(objVung);
@@ -916,10 +938,18 @@ namespace KiemKeDatDai.App.DMBieuMau
                         };
 
                         objTW.TongDienTich += tinh.TongDienTich;
+                        objTW.STT = tinh.STT;
+                        objTW.LoaiDat = tinh.LoaiDat;
+                        objTW.Year = tinh.Year;
+                        objTW.sequence = tinh.sequence;
                         dientichtheoDVHC_TW.Add(bieu03Tkkk_tinh);
                         objTW.DienTichTheoDVHC = dientichtheoDVHC_TW.ToJson();
 
                         objVung.TongDienTich += tinh.TongDienTich;
+                        objVung.STT = tinh.STT;
+                        objVung.LoaiDat = tinh.LoaiDat;
+                        objVung.Year = tinh.Year;
+                        objVung.sequence = tinh.sequence;
                         dientichtheoDVHC_Vung.Add(bieu03Tkkk_tinh);
                         objVung.DienTichTheoDVHC = dientichtheoDVHC_Vung.ToJson();
                     }
@@ -1018,6 +1048,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     CongDongDanCu_CDQ_DT = tinh.CongDongDanCu_CDQ_DT,
                     CongDongDanCu_CDQ_CC = tinh.CongDongDanCu_CDQ_CC,
                     Year = tinh.Year,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu04TKKKRepos.InsertAsync(objTW);
@@ -1064,6 +1095,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Year = tinh.Year,
                     VungId = vungId,
                     MaVung = maVung,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu04TKKK_VungRepos.InsertAsync(objVung);
@@ -1118,6 +1150,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objTW.ToChucKinhTe_KTQ_CC += tinh.ToChucKinhTe_KTQ_CC;
                         objTW.CongDongDanCu_CDQ_DT += tinh.CongDongDanCu_CDQ_DT;
                         objTW.CongDongDanCu_CDQ_CC += tinh.CongDongDanCu_CDQ_CC;
+                        objTW.STT = tinh.STT;
+                        objTW.LoaiDat = tinh.LoaiDat;
+                        objTW.Year = tinh.Year;
+                        objTW.sequence = tinh.sequence;
 
                         objVung.TongSo_DT += tinh.TongSo_DT;
                         objVung.TongSo_CC += tinh.TongSo_CC;
@@ -1153,6 +1189,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objVung.ToChucKinhTe_KTQ_CC += tinh.ToChucKinhTe_KTQ_CC;
                         objVung.CongDongDanCu_CDQ_DT += tinh.CongDongDanCu_CDQ_DT;
                         objVung.CongDongDanCu_CDQ_CC += tinh.CongDongDanCu_CDQ_CC;
+                        objVung.STT = tinh.STT;
+                        objVung.LoaiDat = tinh.LoaiDat;
+                        objVung.Year = tinh.Year;
+                        objVung.sequence = tinh.sequence;
                     }
                     //update huỷ duyệt tỉnh
                     else
@@ -1329,6 +1369,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     MCS = tinh.MCS,
                     GiamKhac = tinh.GiamKhac,
                     Year = tinh.Year,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu05TKKKRepos.InsertAsync(objTW);
@@ -1395,6 +1436,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     Year = tinh.Year,
                     VungId = vungId,
                     MaVung = maVung,
+                    sequence = tinh.sequence,
                     Active = true,
                 };
                 await _bieu05TKKK_VungRepos.InsertAsync(objVung);
@@ -1469,6 +1511,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objTW.NCS += tinh.NCS;
                         objTW.MCS += tinh.MCS;
                         objTW.GiamKhac += tinh.GiamKhac;
+                        objTW.STT = tinh.STT;
+                        objTW.LoaiDat = tinh.LoaiDat;
+                        objTW.Year = tinh.Year;
+                        objTW.sequence = tinh.sequence;
 
                         objVung.Nam += tinh.Nam;
                         objVung.LUA += tinh.LUA;
@@ -1524,6 +1570,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         objVung.NCS += tinh.NCS;
                         objVung.MCS += tinh.MCS;
                         objVung.GiamKhac += tinh.GiamKhac;
+                        objVung.STT = tinh.STT;
+                        objVung.LoaiDat = tinh.LoaiDat;
+                        objVung.Year = tinh.Year;
+                        objVung.sequence = tinh.sequence;
                     }
                     //update huỷ duyệt tỉnh
                     else
