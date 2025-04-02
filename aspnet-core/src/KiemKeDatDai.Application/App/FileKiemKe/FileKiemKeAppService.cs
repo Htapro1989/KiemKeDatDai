@@ -113,7 +113,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         lstMaXa = lstAllDVHC.Where(x => !string.IsNullOrEmpty(x.MaXa))
                         .Select(x => x.MaXa)
                         .ToList();
-                    break;
+                        break;
                     case long v when v > 0 && v < 3:
                         lstMaXa = lstAllDVHC.Join(lstAllDVHC, c => c.MaTinh, p => p.MaTinh,
                         (c, p) => new DonViHanhChinhXaDto
@@ -143,15 +143,15 @@ namespace KiemKeDatDai.App.DMBieuMau
 
                 var results = await _fileRepos.GetAll()
                 .Where(x => lstMaXa.Contains(x.MaDVHC) && x.FileType == CommonEnum.FILE_KYTHONGKE)
-                .WhereIf(!string.IsNullOrEmpty(input.Filter),x=>x.FileName.Contains(input.Filter.Trim()))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter), x => x.FileName.Contains(input.Filter.Trim()))
                 .Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime)
                 .ToListAsync();
                 var fileDto = _objectMapper.Map<List<FileKiemKeOuputDto>>(results);
-               
-                fileDto.ForEach( x =>
+
+                fileDto.ForEach(x =>
                 {
                     //Console.WriteLine(x.CreatorUserId);
-                    var userNames=  _userRepos.FirstOrDefault(x.CreatorUserId).Name;
+                    var userNames = _userRepos.FirstOrDefault(x.CreatorUserId).Name;
                     //Console.WriteLine(userNames.Count);
                     x.createName = userNames;
                 });
@@ -176,13 +176,18 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var objDVHC = await _donViHanhChinhRepos.FirstOrDefaultAsync(input.id) ?? new DonViHanhChinh();
-                
+
                 var results = await _fileRepos.GetAll()
                 .Where(x => x.MaDVHC.Equals(objDVHC.Ma) && x.FileType == CommonEnum.FILE_ATTACHMENT)
-                .WhereIf(!string.IsNullOrEmpty(input.Filter),x=>x.FileName.Contains(input.Filter.Trim()))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter), x => x.FileName.Contains(input.Filter.Trim()))
                 .Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime)
                 .ToListAsync();
                 var fileDto = _objectMapper.Map<List<FileKiemKeOuputDto>>(results);
+                fileDto.ForEach(x =>
+                {
+                    var userNames = _userRepos.FirstOrDefault(x.CreatorUserId).Name;
+                    x.createName = userNames;
+                });
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
                 commonResponseDto.ReturnValue = fileDto;
@@ -225,8 +230,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             {
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
                 {
-                    var count = await _fileRepos.CountAsync(x => x.MaDVHC == MaDVHC && x.Year == Year);
-                    var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == MaDVHC && x.Year == Year).OrderByDescending(x => x.CreationTime).FirstOrDefault();
+                    var count = await _fileRepos.CountAsync(x => x.MaDVHC == MaDVHC && x.Year == Year && x.FileType == CommonEnum.FILE_KYTHONGKE);
+                    var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == MaDVHC && x.Year == Year && x.FileType == CommonEnum.FILE_KYTHONGKE).OrderByDescending(x => x.CreationTime).FirstOrDefault();
                     if (lastUploaded != null)
                     {
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
@@ -298,6 +303,20 @@ namespace KiemKeDatDai.App.DMBieuMau
                     commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
 
                     return commonResponseDto;
+                }
+                var maxAllowedSize = _configuration["FileUpload:FileUploadLimit"];
+                int _intMaxAllowedSize = 5;
+                int.TryParse(maxAllowedSize, out _intMaxAllowedSize);
+                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var count = await _fileRepos.CountAsync(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && x.FileType == CommonEnum.FILE_KYTHONGKE);
+                    if (count > _intMaxAllowedSize)
+                    {
+                        commonResponseDto.Message = "Đã vượt quá số lượng file cho phép";
+                        commonResponseDto.ErrorCode = "VUOTQUASOLUONGFILE";
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.CanhBao;
+                        return commonResponseDto;
+                    }
                 }
                 // Save the file to a directory
                 var uploadsFolder = _configuration["FileUpload:FilePath"];
@@ -381,7 +400,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
                 string[] fileExtensions = { ".zip", ".zar", ".pdf", ".docx", ".doc", ".xls", ".xlsx" };
 
-                if (!fileExtensions.Contains(fileExtension) )
+                if (!fileExtensions.Contains(fileExtension))
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "Chỉ chấp nhận những định dạng sau: Word, Excel, zip, rar, PDF.";
