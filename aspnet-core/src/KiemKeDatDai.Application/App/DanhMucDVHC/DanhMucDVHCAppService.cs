@@ -268,16 +268,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                 return commonResponseDto;
                             }
                         }
-                        data.MaVung = input.MaVung;
-                        data.MaTinh = input.MaTinh;
-                        data.MaHuyen = input.MaHuyen;
-                        data.MaXa = input.MaXa;
-                        data.Name = input.Name;
-                        data.Ma = input.Ma;
-                        data.Parent_id = input.Parent_id;
-                        data.CapDVHCId = input.CapDVHCId;
-                        data.Active = input.Active;
-                        data.Year = input.Year;
+                        data = input.MapTo(data);
                         data.TrangThaiDuyet = input.TrangThaiDuyet;
                         switch (data.CapDVHCId)
                         {
