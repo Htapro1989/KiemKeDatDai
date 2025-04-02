@@ -16,12 +16,14 @@ namespace KiemKeDatDai
         public enum RESPONSE_CODE
         {
             SUCCESS = 200,
-            ERROR = 500
+            ERROR = 500,
+            TOO_REQUEST = 429,
         }
 
         #region  Khai báo Enum 
         public enum ResponseCodeStatus
         {
+            CanhBao = 2,
             ThanhCong = 1,
             ThatBai = 0,
         }
