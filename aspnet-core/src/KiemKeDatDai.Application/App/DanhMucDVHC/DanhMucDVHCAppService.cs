@@ -283,18 +283,15 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                         {
                             case (int)CAP_DVHC.XA:
                                 data.TenXa = data.Name;
-                                data.TenHuyen = _dvhcRepos.Single(x => x.Ma == data.MaHuyen).Name;
-                                data.TenTinh = _dvhcRepos.Single(x => x.Ma == data.MaTinh).Name;
-                                data.TenVung = _dvhcRepos.Single(x => x.Ma == data.MaVung).Name;
+                                data.TenHuyen = _dvhcRepos.Single(x => x.Ma == data.Parent_Code).Name;
                                 break;
                             case (int)CAP_DVHC.HUYEN:
                                 data.TenHuyen = data.Name;
-                                data.TenTinh = _dvhcRepos.Single(x => x.Ma == data.MaTinh).Name;
-                                data.TenVung = _dvhcRepos.Single(x => x.Ma == data.MaVung).Name;
+                                data.TenTinh = _dvhcRepos.Single(x => x.Ma == data.Parent_Code).Name;
                                 break;
                             case (int)CAP_DVHC.TINH:
                                 data.TenTinh = data.Name;
-                                data.TenVung = _dvhcRepos.Single(x => x.Ma == data.MaVung).Name;
+                                data.TenVung = _dvhcRepos.Single(x => x.Ma == data.Parent_Code).Name;
                                 break;
                             case (int)CAP_DVHC.VUNG:
                                 data.TenVung = data.Name;
@@ -323,16 +320,13 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     switch (dvhc.CapDVHCId)
                     {
                         case (int)CAP_DVHC.XA:
-                            dvhc.TenHuyen = _dvhcRepos.Single(x => x.Ma == dvhc.MaHuyen).Name;
-                            dvhc.TenTinh = _dvhcRepos.Single(x => x.Ma == dvhc.MaTinh).Name;
-                            dvhc.TenVung = _dvhcRepos.Single(x => x.Ma == dvhc.MaVung).Name;
+                            dvhc.TenHuyen = _dvhcRepos.Single(x => x.Ma == dvhc.Parent_Code).Name;
                             break;
                         case (int)CAP_DVHC.HUYEN:
-                            dvhc.TenTinh = _dvhcRepos.Single(x => x.Ma == dvhc.MaTinh).Name;
-                            dvhc.TenVung = _dvhcRepos.Single(x => x.Ma == dvhc.MaVung).Name;
+                            dvhc.TenTinh = _dvhcRepos.Single(x => x.Ma == dvhc.Parent_Code).Name;
                             break;
                         case (int)CAP_DVHC.TINH:
-                            dvhc.TenVung = _dvhcRepos.Single(x => x.Ma == dvhc.MaVung).Name;
+                            dvhc.TenVung = _dvhcRepos.Single(x => x.Ma == dvhc.Parent_Code).Name;
                             break;
                         default:
                             break;
