@@ -88,9 +88,9 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CheckUpdatePermission();
 
         var user = await _userManager.GetUserByIdAsync(input.Id);
-        if (user.DonViHanhChinhId != null)
+        if (input.DonViHanhChinhId != null)
         {
-            user.DonViHanhChinhCode = _dvhcRepos.Single(x => x.Id == user.DonViHanhChinhId).Ma;
+            user.DonViHanhChinhCode = _dvhcRepos.Single(x => x.Id == input.DonViHanhChinhId).Ma;
         }
 
         MapToEntity(input, user);
