@@ -201,6 +201,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
+                                 TenVung = dvhc.TenVung,
+                                 MaVung = dvhc.MaVung,
                                  TenTinh = dvhc.TenTinh,
                                  MaTinh = dvhc.MaTinh,
                                  TenHuyen = dvhc.TenHuyen,
@@ -210,6 +212,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                  Ma = dvhc.Ma,
                                  Name = dvhc.Name,
                                  Parent_id = dvhc.Parent_id,
+                                 Parent_Code = dvhc.Parent_Code,
                                  CapDVHCId = dvhc.CapDVHCId,
                                  Active = dvhc.Active,
                                  Year = dvhc.Year,
