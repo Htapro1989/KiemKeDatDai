@@ -243,12 +243,6 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                if (CheckMaDVHC(input.Ma))
-                {
-                    commonResponseDto.Message = "Mã đơn vị hành chính này đã tồn tại";
-                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                    return commonResponseDto;
-                }
                 if (string.IsNullOrWhiteSpace(input.Ma))
                 {
                     commonResponseDto.Message = "Mã đơn vị hành chính không được để trống";
@@ -261,6 +255,16 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     var data = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
                     if (data != null)
                     {
+                        if (input.Ma != data.Ma)
+                        {
+
+                            if (CheckMaDVHC(input.Ma))
+                            {
+                                commonResponseDto.Message = "Mã đơn vị hành chính này đã tồn tại";
+                                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                                return commonResponseDto;
+                            }
+                        }
                         data.MaVung = input.MaVung;
                         data.MaTinh = input.MaTinh;
                         data.MaHuyen = input.MaHuyen;
@@ -306,6 +310,12 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 }
                 else
                 {
+                    if (CheckMaDVHC(input.Ma))
+                    {
+                        commonResponseDto.Message = "Mã đơn vị hành chính này đã tồn tại";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
                     var dvhc = input.MapTo<DVHCInputDto>();
                     switch (dvhc.CapDVHCId)
                     {
