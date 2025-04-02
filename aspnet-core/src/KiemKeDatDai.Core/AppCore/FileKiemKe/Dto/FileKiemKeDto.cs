@@ -43,5 +43,7 @@ namespace KiemKeDatDai.ApplicationDto
         public long Id { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreationTime { get; set; }
+        public long CreatorUserId { get; set; }
+        public string createName { get; set; } = "";
     }
 }
