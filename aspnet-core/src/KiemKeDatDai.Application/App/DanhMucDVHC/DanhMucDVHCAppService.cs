@@ -196,8 +196,61 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 var lstDVHC = new List<DVHCOutputDto>();
                 PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
                 var query = (from dvhc in _dvhcRepos.GetAll()
-                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.Id
+                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
                              where dvhc.Parent_id == id
+                             select new DVHCOutputDto
+                             {
+                                 Id = dvhc.Id,
+                                 TenVung = dvhc.TenVung,
+                                 MaVung = dvhc.MaVung,
+                                 TenTinh = dvhc.TenTinh,
+                                 MaTinh = dvhc.MaTinh,
+                                 TenHuyen = dvhc.TenHuyen,
+                                 MaHuyen = dvhc.MaHuyen,
+                                 TenXa = dvhc.TenXa,
+                                 MaXa = dvhc.MaXa,
+                                 Ma = dvhc.Ma,
+                                 Name = dvhc.Name,
+                                 Parent_id = dvhc.Parent_id,
+                                 Parent_Code = dvhc.Parent_Code,
+                                 CapDVHCId = dvhc.CapDVHCId,
+                                 Active = dvhc.Active,
+                                 Year = dvhc.Year,
+                                 TrangThaiDuyet = dvhc.TrangThaiDuyet,
+                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                             });
+                if (query != null)
+                {
+                    lstDVHC = await query.ToListAsync();
+                    commonResponseDto.ReturnValue = lstDVHC;
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Thành Công";
+                }
+                else
+                {
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Không có dữ liệu cấp dưới!";
+                }
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                throw;
+            }
+            return commonResponseDto;
+        }
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> GetId(long id)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var lstDVHC = new List<DVHCOutputDto>();
+                PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
+                var query = (from dvhc in _dvhcRepos.GetAll()
+                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
+                             where dvhc.Id == id
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
