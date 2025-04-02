@@ -9,7 +9,7 @@ public class FileMapProfile : Profile
 {
     public FileMapProfile()
     {
-        CreateMap<FileKiemKeOuputDto, EntitiesDb.File>().ReverseMap();
+        CreateMap<EntitiesDb.File,FileKiemKeOuputDto>();
         
     }
 }

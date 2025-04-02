@@ -95,6 +95,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             _rabbitMQService = rabbitMQService;
             _configuration = configuration;
             //_iLogAppService = iLogAppService;
+            _userRepos = userRepos;
         }
         [AbpAuthorize]
         public async Task<CommonResponseDto> GetFileKyThongKeByDVHC(FileKiemKeFilterDto input)
@@ -146,6 +147,14 @@ namespace KiemKeDatDai.App.DMBieuMau
                 .Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime)
                 .ToListAsync();
                 var fileDto = _objectMapper.Map<List<FileKiemKeOuputDto>>(results);
+               
+                fileDto.ForEach( x =>
+                {
+                    //Console.WriteLine(x.CreatorUserId);
+                    var userNames=  _userRepos.FirstOrDefault(x.CreatorUserId).Name;
+                    //Console.WriteLine(userNames.Count);
+                    x.createName = userNames;
+                });
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
                 commonResponseDto.ReturnValue = fileDto;
