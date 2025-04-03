@@ -9,9 +9,11 @@ using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.UI;
+using KiemKeDatDai.ApplicationDto;
 using KiemKeDatDai.Authorization;
 using KiemKeDatDai.Authorization.Roles;
 using KiemKeDatDai.Authorization.Users;
+using KiemKeDatDai.Dto;
 using KiemKeDatDai.EntitiesDb;
 using KiemKeDatDai.Roles.Dto;
 using KiemKeDatDai.Users.Dto;
@@ -22,10 +24,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using static KiemKeDatDai.CommonEnum;
 
 namespace KiemKeDatDai.Users;
 
-[AbpAuthorize(PermissionNames.Pages_Users)]
+[AbpAuthorize]
 public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
 {
     private readonly UserManager _userManager;
@@ -35,6 +38,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
     private readonly IAbpSession _abpSession;
     private readonly LogInManager _logInManager;
     private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
+    private readonly IRepository<User, long> _userRepos;
 
     public UserAppService(
         IRepository<User, long> repository,
@@ -44,6 +48,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         IPasswordHasher<User> passwordHasher,
         IAbpSession abpSession,
         IRepository<DonViHanhChinh, long> dvhcRepos,
+        IRepository<User, long> userRepos,
         LogInManager logInManager)
         : base(repository)
     {
@@ -54,6 +59,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         _abpSession = abpSession;
         _logInManager = logInManager;
         _dvhcRepos = dvhcRepos;
+        _userRepos = userRepos;
     }
 
     public override async Task<UserDto> CreateAsync(CreateUserDto input)
@@ -88,9 +94,9 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CheckUpdatePermission();
 
         var user = await _userManager.GetUserByIdAsync(input.Id);
-        if (user.DonViHanhChinhId != null)
+        if (input.DonViHanhChinhId != null)
         {
-            user.DonViHanhChinhCode = _dvhcRepos.Single(x => x.Id == user.DonViHanhChinhId).Ma;
+            user.DonViHanhChinhCode = _dvhcRepos.Single(x => x.Id == input.DonViHanhChinhId).Ma;
         }
 
         MapToEntity(input, user);
@@ -211,6 +217,8 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         if (await _userManager.CheckPasswordAsync(user, input.CurrentPassword))
         {
             CheckErrors(await _userManager.ChangePasswordAsync(user, input.NewPassword));
+            user.IsChangePass = true;
+            CheckErrors(await _userManager.UpdateAsync(user));
         }
         else
         {
@@ -256,6 +264,94 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         }
 
         return true;
+    }
+    [AbpAuthorize]
+    public async Task<CommonResponseDto> GetAllUser(PagedUserResultRequestDto input)
+    {
+        CommonResponseDto commonResponseDto = new CommonResponseDto();
+        try
+        {
+            PagedResultDto<UserDto> pagedResultDto = new PagedResultDto<UserDto>();
+            var query = (from obj in _userRepos.GetAll()
+                         select new UserDto
+                         {
+                             Id = obj.Id,
+                             UserName = obj.UserName,
+                             Name = obj.Name,
+                             Surname = obj.Surname,
+                             FullName = obj.FullName,
+                             EmailAddress = obj.EmailAddress,
+                             IsActive = obj.IsActive,
+                             CreationTime = obj.CreationTime,
+                             DonViHanhChinhId = obj.DonViHanhChinhId,
+                             DonViHanhChinhCode = obj.DonViHanhChinhCode
+                         })
+                         .WhereIf(!string.IsNullOrWhiteSpace(input.Keyword), x => x.Name.ToLower().Contains(input.Keyword.ToLower())
+                         || x.FullName.ToLower().Contains(input.Keyword.ToLower())
+                         || x.UserName.ToLower().Contains(input.Keyword.ToLower())
+                         || x.Name.ToLower().Contains(input.Keyword.ToLower())
+                         || x.EmailAddress.ToLower().Contains(input.Keyword.ToLower()))
+                         .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
+            var _lstuser = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
+            if (_lstuser.Count > 0)
+            {
+                foreach (var item in _lstuser)
+                {
+                    item.DonViHanhChinh = _dvhcRepos.Single(x => x.Ma == item.DonViHanhChinhCode).Name;
+                }
+            }
+            pagedResultDto.Items = _lstuser;
+            pagedResultDto.TotalCount = await query.CountAsync();
+            commonResponseDto.ReturnValue = pagedResultDto;
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
+        }
+        catch (Exception ex)
+        {
+            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+            commonResponseDto.Message = ex.Message;
+            Logger.Error(ex.Message);
+        }
+        return commonResponseDto;
+    }
+    [AbpAuthorize]
+    public async Task<CommonResponseDto> GetUserByMaDVHC(string ma)
+    {
+        CommonResponseDto commonResponseDto = new CommonResponseDto();
+        try
+        {
+            PagedResultDto<UserDto> pagedResultDto = new PagedResultDto<UserDto>();
+            var query = (from obj in _userRepos.GetAll()
+                         join dvhc in _dvhcRepos.GetAll() on obj.DonViHanhChinhCode equals dvhc.Ma
+                         where obj.DonViHanhChinhCode == ma
+                         select new UserDto
+                         {
+                             Id = obj.Id,
+                             UserName = obj.UserName,
+                             Name = obj.Name,
+                             Surname = obj.Surname,
+                             FullName = obj.FullName,
+                             EmailAddress = obj.EmailAddress,
+                             IsActive = obj.IsActive,
+                             CreationTime = obj.CreationTime,
+                             DonViHanhChinhId = obj.DonViHanhChinhId,
+                             DonViHanhChinhCode = obj.DonViHanhChinhCode,
+                             DonViHanhChinh = dvhc.Name
+                         });
+            var _lstuser = await query.OrderBy(x => x.CreationTime).ToListAsync();
+            pagedResultDto.Items = _lstuser;
+            pagedResultDto.TotalCount = await query.CountAsync();
+            commonResponseDto.ReturnValue = pagedResultDto;
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
+        }
+        catch (Exception ex)
+        {
+            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+            commonResponseDto.Message = ex.Message;
+            Logger.Error(ex.Message);
+        }
+        return commonResponseDto;
     }
 }
 

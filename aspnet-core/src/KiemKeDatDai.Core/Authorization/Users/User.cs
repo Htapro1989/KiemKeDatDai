@@ -32,4 +32,5 @@ public class User : AbpUser<User>
     }
     public long? DonViHanhChinhId { get; set; }
     public string DonViHanhChinhCode { get; set; }
+    public bool? IsChangePass { get; set; }
 }
