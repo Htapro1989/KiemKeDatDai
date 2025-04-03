@@ -81,7 +81,7 @@ const MenuBar = () => {
                 Quản lý kỳ thống kê, kiểm kê
               </Link>
             </Menu.Item>
-            <Menu.Item >
+            <Menu.Item key={ROUTER_PATH.DONVIHANHCHINH}>
               <Link to={ROUTER_PATH.DONVIHANHCHINH}>
                 Quản lý Đơn vị hành chính
               </Link>

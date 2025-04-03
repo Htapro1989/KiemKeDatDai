@@ -7,4 +7,5 @@ export interface CreateOrUpdateUserInput {
   roleNames: string[];
   password: string;
   id: number;
+  donViHanhChinhId?: number
 }

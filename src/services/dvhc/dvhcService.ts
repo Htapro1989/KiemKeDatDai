@@ -1,6 +1,7 @@
 import { ResponseDto } from '../dto/ResponseDto';
 import http from '../httpService';
 import { CapDVHCRequest } from './dto/CapDVHCRequest';
+import { CreateDVHCBody } from './dto/CreateDVHC';
 import { DMKyKiemKe } from './dto/DMKyKiemKe';
 import { DonViHanhChinh } from './dto/DonViHanhChinh';
 import { GetAllDVHCParams } from './dto/GetAllDVHCParams';
@@ -22,11 +23,27 @@ class DvhcService {
     let result = await http.get(`/api/services/app/DanhMucDVHC/GetById?id=${parentId}`);
     return result.data.result;
   }
+  public async getById(parentId: String): Promise<ResponseDto<DonViHanhChinh[]>> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetId?id=${parentId}`);
+    return result.data.result;
+  }
 
-  public async getAllDVHC(params: GetAllDVHCParams): Promise<ResponseDto<DonViHanhChinh[]>> {
+  public async getAllDVHC(params: GetAllDVHCParams): Promise<ResponseDto<any>> {
     let result = await http.get(`/api/services/app/DanhMucDVHC/GetAll`, { params });
     return result.data.result;
   }
+
+  public async createOrUpdateDVHC(body: CreateDVHCBody): Promise<ResponseDto<any[]>> {
+    let result = await http.post(`/api/services/app/DanhMucDVHC/CreateOrUpdate`, body);
+    return result.data.result;
+  }
+
+
+  public async deleteDVHC(id: any): Promise<ResponseDto<any[]>> {
+    let result = await http.delete(`/api/services/app/DanhMucDVHC/Delete`, { params: { id } });
+    return result.data.result;
+  }
+
 
 
   public async getBaoCaoDVHC(ma: String, year: String): Promise<ResponseDto<any[]>> {
@@ -98,43 +115,65 @@ class DvhcService {
       return result.data.result.returnValue.map((unit: any) => {
         return {
           value: unit.ma,
-          label: unit.name
+          label: unit.name,
+          id: unit.id
         }
       })
     }
     return [];
   }
+
+
+
   public async getDropDownTinh(maVung: string): Promise<any[]> {
     let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownTinhByMaVung`, { params: { ma: maVung } });
     if (result.data.result.returnValue) {
       return result.data.result.returnValue.map((unit: any) => {
         return {
           value: unit.ma,
-          label: unit.name
+          label: unit.name,
+          id: unit.id
         }
       })
     }
     return [];
   }
+
+  public async getDropDownTinhByNone(): Promise<any[]> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownTinh`);
+    if (result?.data?.result?.returnValue) {
+      return result?.data?.result?.returnValue?.map((unit: any) => {
+        return {
+          value: unit.ma,
+          label: unit.name,
+          id: unit.id
+        }
+      })
+    }
+    return [];
+  }
+
   public async getDropDownHuyen(maTinh: any): Promise<any[]> {
-    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownHuyenByMaTinh`, { params: { ma:maTinh } });
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownHuyenByMaTinh`, { params: { ma: maTinh } });
     if (result.data.result.returnValue) {
       return result.data.result.returnValue.map((unit: any) => {
         return {
           value: unit.ma,
-          label: unit.name
+          label: unit.name,
+          id: unit.id
         }
       })
     }
     return [];
   }
   public async getDropDownXa(maHuyen: any): Promise<any[]> {
-    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownXaByMaHuyen`, { params: { ma:maHuyen } });
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetDropDownXaByMaHuyen`, { params: { ma: maHuyen } });
     if (result.data.result.returnValue) {
       return result.data.result.returnValue.map((unit: any) => {
         return {
           value: unit.ma,
-          label: unit.name
+          label: unit.name,
+          id: unit.id
         }
       })
     }

@@ -1,24 +1,21 @@
-import { Button, Empty, notification, Popconfirm, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import fileService from '../../../services/files/fileService';
-import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Empty, notification, Table } from 'antd';
+import { CloudDownloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { handleCommontResponse } from '../../../services/common/handleResponse';
-
 var FileSaver = require('file-saver');
 
-export default function AttactFileTable(props: any) {
+export default function SyncFileTable(props: any) {
     const donViHanhChinhSelected = props.donViHanhChinhSelected;
     const isLoading = props.isLoading;
     const [files, setFiles] = useState<any[]>([])
-    const [isRefresh, setIsRefresh] = useState(props.isRefresh)
     const [isDowloading, setIsDowloading] = useState({
         loading: false,
         id: null
     })
 
     const getListDanhSachTepDinhKem = async () => {
-        const response = await fileService.getDanhSachTepDinhKem({
+        const response = await fileService.getDanhSachDongBo({
             id: donViHanhChinhSelected?.id,
             year: donViHanhChinhSelected?.year,
             maxResultCount: 100,
@@ -32,13 +29,7 @@ export default function AttactFileTable(props: any) {
         if (donViHanhChinhSelected?.id) {
             getListDanhSachTepDinhKem()
         }
-    }, [donViHanhChinhSelected?.id, props.isRefresh, isRefresh])
-
-    const onDeleteFile = async (id: any) => {
-        const response = await fileService.deleteFileAttact(id);
-        handleCommontResponse(response);
-        setIsRefresh(Date.now())
-    }
+    }, [donViHanhChinhSelected?.id, props.isRefresh])
 
     const onDownloadFile = async (record: any) => {
         setIsDowloading({ loading: true, id: record.id })
@@ -76,22 +67,7 @@ export default function AttactFileTable(props: any) {
                 }} type='primary' icon={<CloudDownloadOutlined />} />
 
 
-        },
-        {
-            title: 'Xóa', dataIndex: 'delete', key: 'delete', width: 120, align: "center",
-            render: (text: string, record: any) => <Popconfirm
-                title="Bạn muốn xóa tệp này?"
-                onConfirm={() => { onDeleteFile(record.id) }}
-                onCancel={() => { }}
-                okText="Xóa"
-                cancelText="Hủy bỏ"
-            >
-                <Button type='ghost' icon={<DeleteOutlined />} />
-            </Popconfirm>
-
-
-        },
-
+        }
     ];
 
     return (
@@ -102,12 +78,12 @@ export default function AttactFileTable(props: any) {
                 pagination={false}
                 loading={isLoading}
                 columns={columns}
-                scroll={{ y: 200 }}
                 locale={{
                     emptyText: (
                         <Empty description="Không có dữ liệu"> </Empty>
                     ),
                 }}
+                scroll={{ y: 200 }}
                 dataSource={files} onChange={() => { }} />
         </div>
     )

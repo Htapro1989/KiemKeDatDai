@@ -1,16 +1,17 @@
 import * as React from 'react';
 
-import { Button, Card, Dropdown, Input, Menu, Modal, Table, Tag } from 'antd';
+import { Button, Card, Input, Modal, Table, Tag } from 'antd';
 import { inject, observer } from 'mobx-react';
 
 import AppComponentBase from '../../../components/AppComponentBase';
-import CreateOrUpdateUser from './components/createOrUpdateUser';
 import { EntityDto } from '../../../services/dto/entityDto';
 import Stores from '../../../stores/storeIdentifier';
 import UserStore from '../../../stores/userStore';
 import { FormInstance } from 'antd/lib/form';
-import { PlusOutlined, SettingOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import './index.less'
+import CreateOrUpdateUserDrawer from './components/createOrUpdateUserDrawer';
+
 export interface IUserProps {
   userStore: UserStore;
 }
@@ -21,6 +22,7 @@ export interface IUserState {
   skipCount: number;
   userId: number;
   filter: string;
+  entitySelected?: any
 }
 
 const confirm = Modal.confirm;
@@ -37,6 +39,7 @@ class User extends AppComponentBase<IUserProps, IUserState> {
     skipCount: 0,
     userId: 0,
     filter: '',
+    entitySelected: null
   };
 
   async componentDidMount() {
@@ -66,7 +69,11 @@ class User extends AppComponentBase<IUserProps, IUserState> {
       await this.props.userStore.getRoles();
     }
 
-    this.setState({ userId: entityDto.id });
+    this.setState({
+      userId: entityDto.id,
+      entitySelected: { ...this.props.userStore.editUser }
+
+    });
     this.Modal();
 
     setTimeout(() => {
@@ -87,14 +94,21 @@ class User extends AppComponentBase<IUserProps, IUserState> {
     });
   }
 
-  handleCreate = () => {
+  handleCreate = (dvhcId: any) => {
     const form = this.formRef.current;
 
     form!.validateFields().then(async (values: any) => {
       if (this.state.userId === 0) {
-        await this.props.userStore.create(values);
+        await this.props.userStore.create({
+          ...values,
+          donViHanhChinhId: dvhcId,
+        });
       } else {
-        await this.props.userStore.update({ ...values, id: this.state.userId });
+        await this.props.userStore.update({
+          ...values,
+          donViHanhChinhId: dvhcId,
+          id: this.state.userId
+        });
       }
 
       await this.getAll();
@@ -120,26 +134,26 @@ class User extends AppComponentBase<IUserProps, IUserState> {
         width: 150,
         render: (text: boolean) => (text === true ? <Tag color="#2db7f5">Hoạt động</Tag> : <Tag color="red">Không hoạt động</Tag>),
       },
-      {
-        title: 'Hành động',
-        width: 90,
-        render: (text: string, item: any) => (
-          <div>
-            <Dropdown
-              trigger={['click']}
-              overlay={
-                <Menu>
-                  <Menu.Item onClick={() => this.createOrUpdateModalOpen({ id: item.id })}>Chỉnh sửa</Menu.Item>
-                  <Menu.Item onClick={() => this.delete({ id: item.id })}>Xóa</Menu.Item>
-                </Menu>
-              }
-              placement="bottomLeft"
-            >
-              <Button type="primary" icon={<SettingOutlined />} />
-            </Dropdown>
-          </div>
-        ),
-      },
+      // {
+      //   title: 'Hành động',
+      //   width: 90,
+      //   render: (text: string, item: any) => (
+      //     <div>
+      //       <Dropdown
+      //         trigger={['click']}
+      //         overlay={
+      //           <Menu>
+      //             <Menu.Item onClick={() => this.createOrUpdateModalOpen({ id: item.id })}>Chỉnh sửa</Menu.Item>
+      //             <Menu.Item onClick={() => this.delete({ id: item.id })}>Xóa</Menu.Item>
+      //           </Menu>
+      //         }
+      //         placement="bottomLeft"
+      //       >
+      //         <Button type="primary" icon={<SettingOutlined />} />
+      //       </Dropdown>
+      //     </div>
+      //   ),
+      // },
     ];
 
     return (
@@ -167,8 +181,13 @@ class User extends AppComponentBase<IUserProps, IUserState> {
             loading={users === undefined ? true : false}
             dataSource={users === undefined ? [] : users.items}
             onChange={this.handleTableChange}
+            onRow={(record) => ({
+              onClick: () => {
+                this.createOrUpdateModalOpen({ id: record.id })
+              },
+            })}
           />
-          <CreateOrUpdateUser
+          {/* <CreateOrUpdateUser
             formRef={this.formRef}
             visible={this.state.modalVisible}
             onCancel={() => {
@@ -180,9 +199,24 @@ class User extends AppComponentBase<IUserProps, IUserState> {
             modalType={this.state.userId === 0 ? 'edit' : 'create'}
             onCreate={this.handleCreate}
             roles={this.props.userStore.roles}
-          />
+          /> */}
         </Card>
-
+        <CreateOrUpdateUserDrawer
+          visible={this.state.modalVisible}
+          onClose={() => { this.setState({ modalVisible: false }) }}
+          formRef={this.formRef}
+          onCancel={() => {
+            this.setState({
+              modalVisible: false,
+            });
+            this.formRef.current?.resetFields();
+          }}
+          modalType={this.state.userId === 0 ? 'edit' : 'create'}
+          onCreate={this.handleCreate}
+          roles={this.props.userStore.roles}
+          onDelete={(id: any) => this.delete({ id })}
+          entitySelected={this.state.entitySelected}
+        />
       </div>
 
     );

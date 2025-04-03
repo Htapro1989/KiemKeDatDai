@@ -6,13 +6,12 @@ import ReportEmptyData from '../components/ReportEmptyData';
 import ReportLoading from '../components/ReportLoading';
 import utils from '../../../../utils/utils';
 
-
 export default function PhuLucIII(props: IBieuMauProps) {
     const reportData = props.reportData;
     const isFetchingData = props.isFetching
 
     const reportDataComponent = () => {
-        const tableData = reportData?.data?.bieuPhuLucIIIDtos
+        const tableData = reportData?.data
         if (!tableData) {
             return null;
         }
@@ -69,7 +68,7 @@ export default function PhuLucIII(props: IBieuMauProps) {
                     {reportDataComponent()}
                 </tbody>
             </table>
-            <ReportEmptyData isEmpty={(!reportData || reportData?.data?.bieuPhuLucIIIDtos?.length <= 0) && !isFetchingData} />
+            <ReportEmptyData isEmpty={(!reportData || reportData?.data?.length <= 0) && !isFetchingData} />
             <ReportLoading isLoading={isFetchingData} />
         </div>
     )

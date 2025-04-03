@@ -39,8 +39,8 @@ class UserService {
   }
 
     public async getAll(pagedFilterAndSortedRequest: PagedUserResultRequestDto): Promise<PagedResultDto<GetAllUserOutput>> {
-    let result = await http.get('api/services/app/User/GetAll', { params: pagedFilterAndSortedRequest });
-    return result.data.result;
+    let result = await http.get('/api/services/app/User/GetAllUser', { params: pagedFilterAndSortedRequest });
+    return result.data.result.returnValue;
   }
 }
 

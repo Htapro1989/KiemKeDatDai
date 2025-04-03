@@ -25,7 +25,7 @@ export default function CustomModal(props: ICustomModal) {
                 top: 10,
                 right: 10,
                 background: '#FFF',
-                zIndex: 1000
+                zIndex: 100
             }}>
                 <Button type='primary' ghost onClick={props.onClose}>Đóng</Button>
             </div>

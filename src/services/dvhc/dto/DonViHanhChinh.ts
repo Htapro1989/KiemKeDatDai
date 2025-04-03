@@ -6,6 +6,7 @@ export interface DonViHanhChinh {
     maHuyen?: string | null;
     tenXa?: string | null;
     maXa?: string | null;
+    maVung?: string | null;
     name: string;
     parent_id?: number;
     parent_Code?: string | null;

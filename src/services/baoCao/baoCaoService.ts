@@ -32,8 +32,6 @@ class BaoCaoService {
         return undefined;
     }
 
-
-
     public async huyenDuyetBaoCaoXa(ma: string, year: String): Promise<ResponseDto<any[]>> {
         let result = await http.post(`/api/services/app/Huyen/DuyetBaoCaoXa?ma=${ma}&year=${year}`);
         return result.data.result;
@@ -65,6 +63,10 @@ class BaoCaoService {
         return result.data.result;
     }
 
+    public async baoCaoSoLieu(): Promise<ResponseDto<any[]>> {
+        let result = await http.post(`/api/services/app/BaoCao/ThongKeSoLieu`);
+        return result.data.result;
+    }
 
 }
 

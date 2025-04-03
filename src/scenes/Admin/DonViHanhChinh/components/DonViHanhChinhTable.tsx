@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import dvhcService from '../../../../services/dvhc/dvhcService'
-import { Button, Card, Col, Dropdown, Input, Menu, Row, Select, Table } from 'antd'
+import { Button, Card, Col, Dropdown, Input, Menu, Modal, notification, Row, Select, Table } from 'antd'
 // import SelectItem from '../../../../components/Select/SelectItem'
 import { PlusOutlined, SettingOutlined } from '@ant-design/icons'
 import CreateOrUpdateDVHC from './CreateOrUpdateDVHC'
 import { FormInstance } from 'antd/lib/form'
-
+const confirm = Modal.confirm;
 interface DonViHanhChinhTableProps {
     userId: any
 }
@@ -84,6 +84,27 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
             modalVisible: true
         })
     }
+    const onDelete = async (id: any) => {
+        const response = await dvhcService.deleteDVHC(id);
+        if (response.code == 1) {
+            notification.success({ message: response.message })
+            getAll(state)
+        } else {
+            notification.error({ message: response.message })
+        }
+    }
+
+    const onConfirmDelete = (id: any) => {
+        confirm({
+            title: 'Bạn muốn xóa hàng này',
+            onOk() {
+                onDelete(id)
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    }
 
     useEffect(() => {
         fetchData()
@@ -105,7 +126,7 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
                         overlay={
                             <Menu>
                                 <Menu.Item onClick={() => { createOrUpdateModalOpen(item) }}>Chỉnh sửa</Menu.Item>
-                                <Menu.Item onClick={() => { }}>Xóa</Menu.Item>
+                                <Menu.Item onClick={() => { onConfirmDelete(item.id) }}>Xóa</Menu.Item>
                             </Menu>
                         }
                         placement="bottomLeft"
@@ -118,6 +139,23 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
         }
     ];
 
+    const onCreateOrUpdateDvhc = async () => {
+        const form = formRef.current;
+        form!.validateFields().then(async (values: any) => {
+            const response = await dvhcService.createOrUpdateDVHC(formRef.current?.getFieldsValue());
+            if (response.code == 1) {
+                notification.success({ message: response.message })
+                getAll(state)
+            } else {
+                notification.error({ message: response.message })
+            }
+            form!.resetFields();
+            setEditingModalData({
+                modalVisible: false
+            })
+        });
+
+    }
 
     return (
         <div>
@@ -177,9 +215,7 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
                             modalVisible: false
                         })
                     }}
-                    onCreate={() => {
-                        console.log("XXX", formRef.current?.getFieldsValue())
-                    }}
+                    onCreate={onCreateOrUpdateDvhc}
                 />
             </Card>
         </div>

@@ -60,7 +60,7 @@ class CreateOrUpdateUser extends React.Component<ICreateOrUpdateUserProps> {
         onCancel={onCancel} onOk={onCreate} title={'Người dùng'} destroyOnClose={true}>
         <Form ref={this.props.formRef} layout='vertical'>
           <Tabs defaultActiveKey={'userInfo'} size={'small'} tabBarGutter={64}>
-            <TabPane tab={'User'} key={'userInfo'}>
+            <TabPane tab={'Thông tin người dùng'} key={'userInfo'}>
               <Row gutter={8}>
                 <Col span={12}>
                   <Form.Item label={'Tên'} name={'name'} rules={rules.name}>

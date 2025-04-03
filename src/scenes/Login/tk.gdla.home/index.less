@@ -26,13 +26,13 @@
             flex-direction: column;
             justify-content: center;
             margin-left: 20px;
-            flex: 2;
+            flex: 3;
         }
 
         .header_text_top {
             text-align: left;
             color: #952a14;
-            font-family: 'Noto Serif', serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 19px;
             margin-bottom: 0;
         }
@@ -40,7 +40,7 @@
         .header_text_bottom {
             text-align: left;
             color: #952a14;
-            font-family: 'Noto Serif', serif;
+            font-family: 'Roboto', sans-serif;
             font-size: 29px;
             margin-bottom: 0;
         }
@@ -48,9 +48,9 @@
         .header_text_right {
             flex: 1;
             top: 25px;
-            font-size: 36px;
+            font-size: 28px;
             color: #da1313;
-            font-family: 'Noto Serif', serif;
+            font-family: 'Roboto', sans-serif;
             padding: 0 15px 0 15px;
         }
 
@@ -62,17 +62,19 @@
         display: flex;
         flex-direction: row;
         flex: 1;
-        background-color: #FFF;
+
     }
 
     .body-header {
-        background-color: #4d9235;
+        background-color: #ffffff;
         border-color: #ddd;
-        font-family: 'Noto Serif', serif;
+        font-family: Roboto, sans-serif;
         text-align: center;
-        color: #FFF;
+        color: #1976d2;
         font-size: 18px;
-        padding: 10px;
+        padding: 14px 0;
+        font-weight: 600;
+        border-bottom: 1px solid #ddd;
     }
 
     .body-content {
@@ -83,57 +85,74 @@
         overflow: scroll;
         overflow-x: hidden;
         overflow-y: auto;
+        padding: 14px;
     }
 
-    .body-bottom{
+    .body-bottom {
         display: flex;
         flex-direction: row;
         justify-content: center;
         padding: 21px;
         padding: 10px 15px;
-        background-color: #FFFF;
-        border: 1px solid #ddd;
-        .body-button{
-            background-color: #4d9235;
-            color: #FFF;
-            height: 48px;
+        // background-color: #FFFF;
+        border-top: 1px solid #ddd;
+        text-decoration: underline;
+
+        .body-button {
+            // background-color: #4d9235;
+            // color: #FFF;
+            // height: 48px;
+           
+            font-weight: bold;
+            font-size: 14px;
+            color: #F4600C;
         }
-        .button-center{
-            background-color: #952a14;
-            font-size: 20px;
+
+        .button-center {
+            // background-color: #952a14;
+            font-weight: bold;
+            font-size: 14px;
+            color: #F4600C;
         }
     }
+
     .body-text-content {
-        line-height: 1.8;
+        line-height: 2.2;
         color: #161515;
         padding-left: 5px;
-        font-family: 'Noto Serif', serif;
+        font-family: Roboto, sans-serif;
         text-align: left;
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .gdla-home-page__body__left {
         flex: 1;
         display: flex;
         flex-direction: column;
-        margin: 3px 3px 3px 3px;
+        margin: 0 12px 3px 0;
         border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
     }
 
     .gdla-home-page__body__right {
         flex: 1;
         display: flex;
         flex-direction: column;
-        margin: 3px 3px 3px 0;
+        margin: 0 0 0 12px;
         border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
     }
 
     .gdla-home-page__body__center {
         flex: 1;
         display: flex;
         flex-direction: column;
-        margin: 3px 3px 3px 0px;
+        margin: 0 3px 3px 0px;
         border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
     }
 
 }

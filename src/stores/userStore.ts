@@ -65,6 +65,7 @@ class UserStore {
   @action
   async getAll(pagedFilterAndSortedRequest: PagedUserResultRequestDto) {
     let result = await userService.getAll(pagedFilterAndSortedRequest);
+    console.log("RESULT ",result)
     this.users = result;
   }
 
