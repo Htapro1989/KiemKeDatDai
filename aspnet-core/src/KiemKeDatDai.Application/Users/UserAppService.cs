@@ -312,5 +312,44 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         }
         return commonResponseDto;
     }
+    [AbpAuthorize]
+    public async Task<CommonResponseDto> GetUserByMaDVHC(string ma)
+    {
+        CommonResponseDto commonResponseDto = new CommonResponseDto();
+        try
+        {
+            PagedResultDto<UserDto> pagedResultDto = new PagedResultDto<UserDto>();
+            var query = (from obj in _userRepos.GetAll()
+                         join dvhc in _dvhcRepos.GetAll() on obj.DonViHanhChinhCode equals dvhc.Ma
+                         where obj.DonViHanhChinhCode == ma
+                         select new UserDto
+                         {
+                             Id = obj.Id,
+                             UserName = obj.UserName,
+                             Name = obj.Name,
+                             Surname = obj.Surname,
+                             FullName = obj.FullName,
+                             EmailAddress = obj.EmailAddress,
+                             IsActive = obj.IsActive,
+                             CreationTime = obj.CreationTime,
+                             DonViHanhChinhId = obj.DonViHanhChinhId,
+                             DonViHanhChinhCode = obj.DonViHanhChinhCode,
+                             DonViHanhChinh = dvhc.Name
+                         });
+            var _lstuser = await query.OrderBy(x => x.CreationTime).ToListAsync();
+            pagedResultDto.Items = _lstuser;
+            pagedResultDto.TotalCount = await query.CountAsync();
+            commonResponseDto.ReturnValue = pagedResultDto;
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
+        }
+        catch (Exception ex)
+        {
+            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+            commonResponseDto.Message = ex.Message;
+            Logger.Error(ex.Message);
+        }
+        return commonResponseDto;
+    }
 }
 
