@@ -31,5 +31,6 @@ namespace KiemKeDatDai.EntitiesDb
         public DateTime? NgayDuyet { get; set; }
         public int? SoDVHCCon { get; set; }
         public int? SoDVHCDaDuyet { get; set; }
+        public int? MaxFileUpload { get; set; } = 5;
     }
 }

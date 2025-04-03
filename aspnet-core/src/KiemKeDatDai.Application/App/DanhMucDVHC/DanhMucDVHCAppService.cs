@@ -21,7 +21,6 @@ using KiemKeDatDai.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +30,9 @@ using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using System.Transactions;
 using KiemKeDatDai.AppCore.Utility;
+using System.Text.Json;
+using System.IO;
+using System.Text.Encodings.Web;
 
 namespace KiemKeDatDai.App.DanhMucDVHC
 {
@@ -76,6 +78,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
         }
+
         [AbpAuthorize]
         public async Task<CommonResponseDto> GetAll(DVHCDto input)
         {
@@ -106,7 +109,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                                  CreationTime = obj.CreationTime,
                                  Active = obj.Active
                              })
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()) 
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower())
                              || x.TenVung.ToLower().Contains(input.Filter.ToLower())
                              || x.TenTinh.ToLower().Contains(input.Filter.ToLower())
                              || x.TenHuyen.ToLower().Contains(input.Filter.ToLower())
@@ -127,6 +130,62 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                 Logger.Error(ex.Message);
             }
             return commonResponseDto;
+        }
+        [AbpAuthorize]
+        [HttpGet]
+        public async Task<IActionResult> GetAllDVHCByYear(int year)
+        {
+            try
+            {
+                List<DVHCOutputDto> pagedResultDto = new List<DVHCOutputDto>();
+                var query = (from obj in _dvhcRepos.GetAll()
+                             where obj.Year == year
+                             select new DVHCOutputDto
+                             {
+                                 Id = obj.Id,
+                                 Name = obj.Name,
+                                 TenVung = obj.TenVung,
+                                 MaVung = obj.MaVung,
+                                 TenTinh = obj.TenTinh,
+                                 MaTinh = obj.MaTinh,
+                                 TenHuyen = obj.TenHuyen,
+                                 MaHuyen = obj.MaHuyen,
+                                 TenXa = obj.TenXa,
+                                 MaXa = obj.MaXa,
+                                 Ma = obj.Ma,
+                                 Parent_id = obj.Parent_id,
+                                 Parent_Code = obj.Parent_Code,
+                                 CapDVHCId = obj.CapDVHCId,
+                                 TrangThaiDuyet = obj.TrangThaiDuyet,
+                                 Year = obj.Year,
+                                 CreationTime = obj.CreationTime,
+                                 Active = obj.Active
+                             })
+                             .Where(x => x.Active == true && x.Year == year)
+                             .OrderBy(x => x.MaTinh)
+                             .ThenBy(x => x.CapDVHCId);
+
+                pagedResultDto = await query.ToListAsync();
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // 👈 Fix lỗi Unicode
+                };
+                string json = JsonSerializer.Serialize(pagedResultDto, options);
+                byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(json);
+
+                var stream = new MemoryStream(fileBytes);
+
+                return new FileStreamResult(stream, "application/json")
+                {
+                    FileDownloadName = "dataDVHC.json"
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
+            return null;
         }
         [AbpAuthorize]
         public async Task<CommonResponseDto> GetByUser(DVHCInput input)
@@ -493,7 +552,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     if (baoCaoDVHC.Root == true)
                     {
                         baoCaoDVHC.IsNopBaoCao = (baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.CHO_DUYET && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET) ? true : false;
-                        if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG ||baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
+                        if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG || baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
                             baoCaoDVHC.IsNopBaoCao = false;
                         //----------Tạm bỏ điều kiện check nộp
                         //if (baoCaoDVHC.ChildStatus == 0)
@@ -587,7 +646,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll() 
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.VUNG
                              select new DropDownListDVHCDto
                              {
@@ -613,7 +672,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll() 
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.TINH && dvhc.Parent_id == vungId
                              select new DropDownListDVHCDto
                              {
@@ -639,7 +698,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll() 
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.TINH && dvhc.Parent_Code == ma
                              select new DropDownListDVHCDto
                              {
@@ -665,7 +724,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll() 
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.TINH
                              select new DropDownListDVHCDto
                              {
@@ -691,7 +750,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll() 
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.HUYEN && dvhc.Parent_id == tinhId
                              select new DropDownListDVHCDto
                              {
@@ -717,7 +776,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll() 
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.XA && dvhc.Parent_id == huyenId
                              select new DropDownListDVHCDto
                              {
@@ -743,7 +802,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll() 
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.HUYEN && dvhc.Parent_Code == ma
                              select new DropDownListDVHCDto
                              {
@@ -769,7 +828,7 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll() 
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.XA && dvhc.Parent_Code == ma
                              select new DropDownListDVHCDto
                              {

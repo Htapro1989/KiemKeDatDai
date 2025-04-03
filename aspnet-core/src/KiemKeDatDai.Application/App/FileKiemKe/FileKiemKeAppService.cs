@@ -306,7 +306,9 @@ namespace KiemKeDatDai.App.DMBieuMau
                 }
                 var maxAllowedSize = _configuration["FileUpload:FileUploadLimit"];
                 int _intMaxAllowedSize = 5;
+                
                 int.TryParse(maxAllowedSize, out _intMaxAllowedSize);
+                _intMaxAllowedSize = objDVHC.MaxFileUpload ?? _intMaxAllowedSize;
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
                 {
                     var count = await _fileRepos.CountAsync(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && x.FileType == CommonEnum.FILE_KYTHONGKE);
