@@ -1,5 +1,6 @@
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using KiemKeDatDai.ApplicationDto;
 using KiemKeDatDai.Roles.Dto;
 using KiemKeDatDai.Users.Dto;
 using System.Threading.Tasks;
@@ -14,4 +15,5 @@ public interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedUser
     Task ChangeLanguage(ChangeUserLanguageDto input);
 
     Task<bool> ChangePassword(ChangePasswordDto input);
+    Task<CommonResponseDto> GetAllUser(PagedUserResultRequestDto input);
 }

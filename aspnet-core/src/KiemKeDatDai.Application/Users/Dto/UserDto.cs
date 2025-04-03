@@ -38,4 +38,5 @@ public class UserDto : EntityDto<long>
     public string[] RoleNames { get; set; }
     public long? DonViHanhChinhId { get; set; }
     public string DonViHanhChinhCode { get; set; }
+    public string DonViHanhChinh { get; set; }
 }
