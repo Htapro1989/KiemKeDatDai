@@ -23,4 +23,5 @@ public class UserLoginInfoDto : EntityDto<long>
     public long? DonViHanhChinhId { get; set; }
     public string DonViHanhChinhCode { get; set; }
     public string DonViHanhChinh { get; set; }
+    public bool? IsChangePass { get; set; }
 }
