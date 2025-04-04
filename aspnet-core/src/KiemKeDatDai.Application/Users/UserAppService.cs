@@ -19,6 +19,7 @@ using KiemKeDatDai.Roles.Dto;
 using KiemKeDatDai.Users.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,10 +68,6 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CheckCreatePermission();
 
         var user = ObjectMapper.Map<User>(input);
-        if (user.DonViHanhChinhId != null)
-        {
-            user.DonViHanhChinhCode = _dvhcRepos.Single(x=>x.Id == user.DonViHanhChinhId).Ma;
-        }
 
         user.TenantId = AbpSession.TenantId;
         user.IsEmailConfirmed = true;
@@ -94,10 +91,6 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CheckUpdatePermission();
 
         var user = await _userManager.GetUserByIdAsync(input.Id);
-        if (input.DonViHanhChinhId != null)
-        {
-            user.DonViHanhChinhCode = _dvhcRepos.Single(x => x.Id == input.DonViHanhChinhId).Ma;
-        }
 
         MapToEntity(input, user);
 
@@ -315,15 +308,22 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         return commonResponseDto;
     }
     [AbpAuthorize]
-    public async Task<CommonResponseDto> GetUserByMaDVHC(string ma)
+    public async Task<CommonResponseDto> GetUserByMaDVHC(PagedUserResultRequestDto input)
     {
         CommonResponseDto commonResponseDto = new CommonResponseDto();
         try
         {
             PagedResultDto<UserDto> pagedResultDto = new PagedResultDto<UserDto>();
+            var lstMa = new List<string>();
+            //var lstdvhc = GetChildren(await _dvhcRepos.GetAllListAsync(), input.Ma);
+            //if (lstdvhc.Count > 0)
+            //{
+            //    lstMa = lstdvhc.Select(x => x.Ma).ToList();
+            //}
+            lstMa.AddRange(input.Ma);
             var query = (from obj in _userRepos.GetAll()
                          join dvhc in _dvhcRepos.GetAll() on obj.DonViHanhChinhCode equals dvhc.Ma
-                         where obj.DonViHanhChinhCode == ma
+                         where lstMa.Contains(dvhc.Ma)
                          select new UserDto
                          {
                              Id = obj.Id,
@@ -338,7 +338,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                              DonViHanhChinhCode = obj.DonViHanhChinhCode,
                              DonViHanhChinh = dvhc.Name
                          });
-            var _lstuser = await query.OrderBy(x => x.CreationTime).ToListAsync();
+            var _lstuser = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
             pagedResultDto.Items = _lstuser;
             pagedResultDto.TotalCount = await query.CountAsync();
             commonResponseDto.ReturnValue = pagedResultDto;
@@ -352,6 +352,19 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
             Logger.Error(ex.Message);
         }
         return commonResponseDto;
+    }
+
+    private List<DonViHanhChinh> GetChildren(List<DonViHanhChinh> _lstdvhc, string ma)
+    {
+        List<DonViHanhChinh> lstdvhc = new List<DonViHanhChinh>();
+
+        foreach (var dvhc in _lstdvhc.Where(c => c.Parent_Code == ma))
+        {
+            lstdvhc.Add(dvhc);
+            lstdvhc.AddRange(GetChildren(_lstdvhc, ma)); // Đệ quy
+        }
+
+        return lstdvhc;
     }
 }
 

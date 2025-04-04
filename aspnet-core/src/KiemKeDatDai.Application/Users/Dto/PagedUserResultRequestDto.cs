@@ -20,4 +20,5 @@ public class PagedUserResultRequestDto : PagedResultRequestDto, IShouldNormalize
 
         Keyword = Keyword?.Trim();
     }
+    public string Ma { get; set; }
 }

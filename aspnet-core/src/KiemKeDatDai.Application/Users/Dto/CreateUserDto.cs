@@ -44,4 +44,5 @@ public class CreateUserDto : IShouldNormalize
         }
     }
     public long? DonViHanhChinhId { get; set; }
+    public string DonViHanhChinhCode { get; set; }
 }

@@ -16,5 +16,5 @@ public interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedUser
 
     Task<bool> ChangePassword(ChangePasswordDto input);
     Task<CommonResponseDto> GetAllUser(PagedUserResultRequestDto input);
-    Task<CommonResponseDto> GetUserByMaDVHC(string ma);
+    Task<CommonResponseDto> GetUserByMaDVHC(PagedUserResultRequestDto input);
 }
