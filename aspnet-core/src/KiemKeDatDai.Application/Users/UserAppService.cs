@@ -390,7 +390,11 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                 break;
             case (int)CAP_DVHC.TINH:
                 lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == ma).Select(x => x.Ma).ToListAsync());
-
+                break;
+            case (int)CAP_DVHC.HUYEN:
+                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaHuyen == ma).Select(x => x.Ma).ToListAsync());
+                break;
+            case (int)CAP_DVHC.XA:
                 break;
         }
 
