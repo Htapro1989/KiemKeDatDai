@@ -14,6 +14,7 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> GetAll(DVHCDto input);
         Task<CommonResponseDto> GetByUser(DVHCInput input);
         Task<CommonResponseDto> GetById(long id);
+        Task<CommonResponseDto> GetByYear(long year, int capDVHC);
         Task<CommonResponseDto> GetId(long id);
         Task<CommonResponseDto> CreateOrUpdate(DVHCInputDto input);
         Task<CommonResponseDto> Delete(long id);
