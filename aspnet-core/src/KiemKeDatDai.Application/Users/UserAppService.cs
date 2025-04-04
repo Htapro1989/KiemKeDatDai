@@ -361,38 +361,38 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         {
             case (int)CAP_DVHC.TRUNG_UONG:
                 {
-                    lstmavung = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == ma).Select(x => x.Ma).ToListAsync();
+                    lstmavung = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == ma && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync();
                     if (lstmavung.Count > 0)
                     {
                         foreach (var mavung in lstmavung)
                         {
-                            lstmatinh.AddRange(await _dvhcRepos.GetAll().Where(x => x.Parent_Code == mavung).Select(x => x.Ma).ToListAsync());
+                            lstmatinh.AddRange(await _dvhcRepos.GetAll().Where(x => x.Parent_Code == mavung && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
                         }
                         if (lstmatinh.Count > 0)
                         {
                             foreach (var item in lstmatinh)
                             {
-                                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == item).Select(x => x.Ma).ToListAsync());
+                                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == item && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
                             }
                         }
                     }
                     break;
                 }
             case (int)CAP_DVHC.VUNG:
-                lstmatinh = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == ma).Select(x => x.Ma).ToListAsync();
+                lstmatinh = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == ma && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync();
                 if (lstmatinh.Count > 0)
                 {
                     foreach (var item in lstmatinh)
                     {
-                        lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == item).Select(x => x.Ma).ToListAsync());
+                        lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == item && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
                     }
                 }
                 break;
             case (int)CAP_DVHC.TINH:
-                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == ma).Select(x => x.Ma).ToListAsync());
+                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == ma && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
                 break;
             case (int)CAP_DVHC.HUYEN:
-                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaHuyen == ma).Select(x => x.Ma).ToListAsync());
+                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaHuyen == ma && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
                 break;
             case (int)CAP_DVHC.XA:
                 break;
