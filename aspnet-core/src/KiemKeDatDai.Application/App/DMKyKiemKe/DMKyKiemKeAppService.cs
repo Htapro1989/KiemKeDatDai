@@ -83,7 +83,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Ma.ToLower().Contains(filter.ToLower()))
                              .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Name.ToLower().Contains(filter.ToLower()));
-                commonResponseDto.ReturnValue = await query.ToListAsync();
+                commonResponseDto.ReturnValue = await query.OrderBy(x => x.Year).ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }

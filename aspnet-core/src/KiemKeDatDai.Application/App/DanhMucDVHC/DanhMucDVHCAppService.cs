@@ -387,6 +387,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                             case (int)CAP_DVHC.XA:
                                 data.TenXa = data.Name;
                                 data.TenHuyen = _dvhcRepos.Single(x => x.Ma == data.Parent_Code).Name;
+                                data.MaTinh = _dvhcRepos.Single(x => x.Ma == data.MaHuyen).MaTinh;
+                                data.TenTinh = _dvhcRepos.Single(x => x.Ma == data.MaTinh).Name;
                                 break;
                             case (int)CAP_DVHC.HUYEN:
                                 data.TenHuyen = data.Name;
@@ -424,6 +426,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
                     {
                         case (int)CAP_DVHC.XA:
                             dvhc.TenHuyen = _dvhcRepos.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                            dvhc.MaTinh = _dvhcRepos.Single(x => x.Ma == dvhc.MaHuyen).MaTinh;
+                            dvhc.TenTinh = _dvhcRepos.Single(x => x.Ma == dvhc.MaTinh).Name;
                             break;
                         case (int)CAP_DVHC.HUYEN:
                             dvhc.TenTinh = _dvhcRepos.Single(x => x.Ma == dvhc.Parent_Code).Name;
