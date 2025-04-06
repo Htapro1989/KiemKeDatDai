@@ -25,6 +25,10 @@ namespace KiemKeDatDai.Dto
         public int? Status { get; set; }
         public long? Year { get; set; }
         public bool? Active { get; set; }
+        public string FileName { get; set; } = "";
+        public string CreateName { get; set; } = "";
+        public long? CreatorUserId { get; set; }
+        public DateTime LastModificationTime { get; set; }
     }
     [AutoMap(typeof(News))]
     public class NewsUploadDto

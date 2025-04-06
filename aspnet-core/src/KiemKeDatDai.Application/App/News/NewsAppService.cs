@@ -43,6 +43,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
         private readonly IRepository<EntitiesDb.File, long> _fileRepos;
+        private readonly IRepository<User, long> _userRepos;
 
         private readonly ICache mainCache;
 
@@ -51,7 +52,9 @@ namespace KiemKeDatDai.App.DMBieuMau
             IObjectMapper objectMapper,
             IHttpContextAccessor httpContextAccessor,
             IConfiguration configuration,
-            IRepository<EntitiesDb.File, long> fileRepos
+            IRepository<EntitiesDb.File, long> fileRepos,
+            IRepository<User, long> userRepos
+
             )
         {
             _objectMapper = objectMapper;
@@ -59,6 +62,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             _newsRepos = newsRepos;
             _configuration = configuration;
             _fileRepos = fileRepos;
+            _userRepos = userRepos;
         }
 
         public async Task<CommonResponseDto> GetAll(int type)
@@ -67,8 +71,15 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var lstBM = new List<NewsDto>();
-                var query = await _newsRepos.GetAll().Where(x => x.Type == type).OrderBy(x => x.OrderLabel).ToListAsync();
+                var query = await _newsRepos.GetAll().Include(x => x.File).Where(x => x.Type == type).OrderBy(x => x.OrderLabel).ToListAsync();
                 var lstNewsDto = _objectMapper.Map<List<NewsDto>>(query);
+                lstNewsDto.ForEach(x =>
+                {
+                    //Console.WriteLine(x.CreatorUserId);
+                    var userNames = _userRepos.FirstOrDefault(x.CreatorUserId ?? 0).Name;
+                    //Console.WriteLine(userNames.Count);
+                    x.CreateName = userNames;
+                });
                 commonResponseDto.ReturnValue = lstNewsDto;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -81,14 +92,18 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-    
+
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var obj = await _newsRepos.FirstOrDefaultAsync(id);
+                var obj = await _newsRepos.GetAll().Where(x => x.Id == id)
+                .Include(x => x.File)  // Include File entity
+                .FirstOrDefaultAsync();
                 var objDto = _objectMapper.Map<NewsDto>(obj);
+                var userNames = _userRepos.FirstOrDefault(objDto.CreatorUserId ?? 0).Name;
+                objDto.CreateName = userNames;
                 commonResponseDto.ReturnValue = objDto;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -106,11 +121,20 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var query = _newsRepos.GetAll().WhereIf(!input.Filter.IsNullOrEmpty(), x => x.Title.Contains(input.Filter) || x.Content.Contains(input.Filter) || x.Summary.Contains(input.Filter));
+                var query = _newsRepos.GetAll().Include(x => x.File).WhereIf(!input.Filter.IsNullOrEmpty(), x => x.Title.Contains(input.Filter) || x.Content.Contains(input.Filter) || x.Summary.Contains(input.Filter));
                 var totalCount = await query.CountAsync();
                 var lstBM = new List<NewsDto>();
                 var queryResult = await query.OrderBy(x => x.OrderLabel).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
                 var lstNewsDto = _objectMapper.Map<List<NewsDto>>(queryResult);
+
+                lstNewsDto.ForEach(x =>
+                {
+                    //Console.WriteLine(x.CreatorUserId);
+                    var userNames = _userRepos.FirstOrDefault(x.CreatorUserId ?? 0).Name;
+                    //Console.WriteLine(userNames.Count);
+                    x.CreateName = userNames;
+                });
+
                 commonResponseDto.ReturnValue = new PagedResultDto<NewsDto>(totalCount, lstNewsDto);
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
