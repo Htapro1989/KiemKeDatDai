@@ -31,6 +31,7 @@ using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using KiemKeDatDai.AppCore.Dto;
 namespace KiemKeDatDai.App.DMBieuMau
 {
     public class NewsAppService : KiemKeDatDaiAppServiceBase, INewsAppService
@@ -80,7 +81,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
+    
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -100,58 +101,139 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+        public async Task<CommonResponseDto> GetAllPaging(PagedAndFilteredInputDto input)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var query = _newsRepos.GetAll().WhereIf(!input.Filter.IsNullOrEmpty(), x => x.Title.Contains(input.Filter) || x.Content.Contains(input.Filter) || x.Summary.Contains(input.Filter));
+                var totalCount = await query.CountAsync();
+                var lstBM = new List<NewsDto>();
+                var queryResult = await query.OrderBy(x => x.OrderLabel).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+                var lstNewsDto = _objectMapper.Map<List<NewsDto>>(queryResult);
+                commonResponseDto.ReturnValue = new PagedResultDto<NewsDto>(totalCount, lstNewsDto);
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
         [AbpAuthorize]
         public async Task<CommonResponseDto> CreateOrUpdate([FromForm] NewsUploadDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                long insertedFileID = 0;
-                if (input.File != null && input.File.Length > 0)
-                {
-
-                    // Save the file to a directory
-                    var uploadsFolder = _configuration["FileUpload:FilePath"];
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-                    var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(input.File.FileName)}";
-
-                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await input.File.CopyToAsync(stream);
-                    }
-
-                    var fileEntity = new EntitiesDb.File
-                    {
-                        FileName = input.File.FileName,
-                        FilePath = filePath,
-                        MaDVHC = "",
-                        Year = 0,
-                        FileType = CommonEnum.FILE_NEWS
-                    };
-
-                    insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
-
-                    input.FileId = insertedFileID;
-                }
-
                 if (input.Id != 0)
                 {
                     var data = await _newsRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
-                        
-                        data = _objectMapper.Map<News>(input);
+
+                        long insertedFileID = 0;
+                        if (input.File != null && input.File.Length > 0)
+                        {
+                            //delete old file
+                            if (data.File != null)
+                            {
+                                var oldFile = await _fileRepos.FirstOrDefaultAsync(data.File.Id);
+                                if (oldFile != null)
+                                {
+                                    System.IO.File.Delete(oldFile.FilePath);
+                                    await _fileRepos.DeleteAsync(oldFile);
+                                }
+                            }
+
+                            // Save the file to a directory
+                            var uploadsFolder = _configuration["FileUpload:FilePath"];
+                            if (!Directory.Exists(uploadsFolder))
+                            {
+                                Directory.CreateDirectory(uploadsFolder);
+                            }
+                            var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(input.File.FileName)}";
+
+                            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await input.File.CopyToAsync(stream);
+                            }
+
+                            var fileEntity = new EntitiesDb.File
+                            {
+                                FileName = input.File.FileName,
+                                FilePath = filePath,
+                                MaDVHC = "",
+                                Year = input.Year ?? 0,
+                                FileType = CommonEnum.FILE_NEWS,
+
+                            };
+
+                            insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
+
+                            //input.FileId = insertedFileID;
+                        }
+                        //data.File = fileEntity;
+                        if (insertedFileID != 0)
+                        {
+                            data.FileId = insertedFileID;
+                        }
+                        // data.FileId = insertedFileID;
+                        // data = _objectMapper.Map<News>(input);
+                        data.Type = input.Type;
+                        data.OrderLabel = input.OrderLabel;
+                        data.Title = input.Title;
+                        data.Content = input.Content;
+                        data.Summary = input.Summary;
+                        data.Status = input.Status;
+                        data.Year = input.Year;
+                        data.Active = input.Active;
                         await _newsRepos.UpdateAsync(data);
                     }
+
                 }
                 else
                 {
                     var objdata = _objectMapper.Map<News>(input);
-                    await _newsRepos.InsertAsync(objdata);
+
+
+                    long insertedFileID = 0;
+                    if (input.File != null && input.File.Length > 0)
+                    {
+
+                        // Save the file to a directory
+                        var uploadsFolder = _configuration["FileUpload:FilePath"];
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+                        var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(input.File.FileName)}";
+
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await input.File.CopyToAsync(stream);
+                        }
+
+                        var fileEntity = new EntitiesDb.File
+                        {
+                            FileName = input.File.FileName,
+                            FilePath = filePath,
+                            MaDVHC = "",
+                            Year = input.Year ?? 0,
+                            FileType = CommonEnum.FILE_NEWS,
+                        };
+
+                        insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
+                        objdata.File = fileEntity;
+                        objdata.FileId = insertedFileID;
+                    }
+
+                    var insertedNewsId = await _newsRepos.InsertAndGetIdAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -172,17 +254,26 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _newsRepos.FirstOrDefaultAsync(id);
                 if (objdata != null)
                 {
                     await _newsRepos.DeleteAsync(objdata);
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                    //xóa file nếu có
+                    if (objdata.FileId != null && objdata.FileId != 0)
+                    {
+                        var oldFile = await _fileRepos.FirstOrDefaultAsync(objdata.FileId ?? 0);
+                        if (oldFile != null)
+                        {
+                            System.IO.File.Delete(oldFile.FilePath);
+                            await _fileRepos.DeleteAsync(oldFile);
+                        }
+                    }
                     commonResponseDto.Message = "Thành Công";
                 }
                 else
                 {
-                    commonResponseDto.Message = "Kỳ thống kê kiểm kê này không tồn tại";
+                    commonResponseDto.Message = "Tin tức này không tồn tại";
                     commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 }
             }

@@ -19,6 +19,6 @@ namespace KiemKeDatDai.EntitiesDb
         public long Year { get; set; }
         public string MaDVHC { get; set; }
         public long? DVHCId { get; set; }
-        public News News { get; set; }
+        public News? News { get; set; }
     }
 }

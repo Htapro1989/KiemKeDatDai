@@ -100,7 +100,8 @@ namespace KiemKeDatDai.EntityFrameworkCore
             modelBuilder.Entity<News>()
             .HasOne(u => u.File)
             .WithOne(up => up.News)
-            .HasForeignKey<News>(up => up.FileId);
+            .HasForeignKey<News>(up => up.FileId)
+            .IsRequired(false);
         }
     }
 }
