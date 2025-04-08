@@ -371,19 +371,54 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
     private async Task<List<string>> GetChildrenMa(string ma)
     {
         var lstMa = new List<string>();
-        var allDvhc = await GetAllDVHCWithCacheAsync();
-        void Traverse(string parentMa)
+        var dvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
+        var allDvhc = await _dvhcRepos.GetAll()
+                                      .Where(x => !string.IsNullOrWhiteSpace(x.Ma))
+                                      .ToListAsync();
+        var lstMaVung = new List<string>();
+        var lstMaTinh = new List<string>();
+
+        switch (dvhc.CapDVHCId)
         {
-            var children = allDvhc.Where(x => x.Parent_Code == parentMa).Select(x => x.Ma).ToList();
-            lstMa.AddRange(children);
-
-            foreach (var child in children)
-            {
-                Traverse(child); // Đệ quy tiếp
-            }
+            case (int)CAP_DVHC.TRUNG_UONG:
+                {
+                    lstMaVung = allDvhc.Where(x => x.Parent_Code == ma).Select(x => x.Ma).ToList();
+                    if (lstMaVung.Count > 0)
+                    {
+                        lstMa.AddRange(lstMaVung);
+                        foreach (var maVung in lstMaVung)
+                        {
+                            lstMaTinh.AddRange(allDvhc.Where(x => x.Parent_Code == maVung).Select(x => x.Ma).ToList());
+                        }
+                        if (lstMaTinh.Count > 0)
+                        {
+                            foreach (var maTinh in lstMaTinh)
+                            {
+                                lstMa.AddRange(allDvhc.Where(x => x.Parent_Code == maTinh).Select(x => x.Ma).ToList());
+                            }
+                        }
+                    }
+                    break;
+                }
+            case (int)CAP_DVHC.VUNG:
+                lstMaTinh = allDvhc.Where(x => x.Parent_Code == ma).Select(x => x.Ma).ToList();
+                if (lstMaTinh.Count > 0)
+                {
+                    foreach (var maTinh in lstMaTinh)
+                    {
+                        lstMa.AddRange(allDvhc.Where(x => x.MaTinh == maTinh).Select(x => x.Ma).ToList());
+                    }
+                }
+                break;
+            case (int)CAP_DVHC.TINH:
+                lstMa.AddRange(allDvhc.Where(x => x.MaTinh == ma).Select(x => x.Ma).ToList());
+                break;
+            case (int)CAP_DVHC.HUYEN:
+                lstMa.AddRange(allDvhc.Where(x => x.MaHuyen == ma).Select(x => x.Ma).ToList());
+                break;
+            case (int)CAP_DVHC.XA:
+                break;
         }
-
-        Traverse(ma);
 
         return lstMa;
     }
