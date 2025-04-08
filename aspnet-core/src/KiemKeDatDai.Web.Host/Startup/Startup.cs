@@ -23,6 +23,7 @@ using KiemKeDatDai.App.DMBieuMau;
 using KiemKeDatDai.Dto;
 using Aspose.Cells.Charts;
 using Abp.Modules;
+using KiemKeDatDai.RisApplication;
 
 namespace KiemKeDatDai.Web.Host.Startup
 {
