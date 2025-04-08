@@ -38,6 +38,7 @@ namespace KiemKeDatDai.RisApplication
     /// <summary>
     /// service file kiểm kê
     /// </summary>
+    [AbpAuthorize]
     public class FileKiemKeAppService : KiemKeDatDaiAppServiceBase, IFileKiemKeAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -97,7 +98,6 @@ namespace KiemKeDatDai.RisApplication
             //_iLogAppService = iLogAppService;
             _userRepos = userRepos;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetFileKyThongKeByDVHC(FileKiemKeFilterDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -169,7 +169,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetFileAttachByDVHC(FileKiemKeFilterDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -202,7 +201,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> DeleteAttachFile(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -222,7 +220,6 @@ namespace KiemKeDatDai.RisApplication
                 throw;
             }
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> CountRequestByCommune(string MaDVHC, int Year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -262,7 +259,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
         {
@@ -374,7 +370,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadAttachFile([FromForm] FileAttachUploadInputDto input)
         {
@@ -447,7 +442,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         [HttpGet]
         public async Task<IActionResult> DownloadFile(long year, string maDVHC)
         {
@@ -476,7 +470,6 @@ namespace KiemKeDatDai.RisApplication
                 FileDownloadName = fileEntity.FileName
             };
         }
-        [AbpAuthorize]
         [HttpGet]
         public async Task<IActionResult> DownloadFileByID(int FileId)
         {

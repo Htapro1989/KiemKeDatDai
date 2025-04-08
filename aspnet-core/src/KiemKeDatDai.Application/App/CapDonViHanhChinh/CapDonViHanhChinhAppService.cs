@@ -33,6 +33,7 @@ using static KiemKeDatDai.CommonEnum;
 
 namespace KiemKeDatDai.RisApplication
 {
+    [AbpAuthorize]
     public class CapDonViHanhChinhAppService : KiemKeDatDaiAppServiceBase, ICapDonViHanhChinhAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -65,7 +66,7 @@ namespace KiemKeDatDai.RisApplication
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
         }
-        [AbpAuthorize]
+        
         public async Task<CommonResponseDto> GetAll(CapDVHCDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -96,7 +97,6 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -115,7 +115,6 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> CreateOrUpdate(CapDVHCInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -152,7 +151,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -180,16 +178,16 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetCapDVHC()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 var query = (from cap in _capDVHCRepos.GetAll()
-                             select new DropDownListDto
+                             select new DropDownListDVHCDto
                              {
                                  Id = cap.Id,
+                                 Ma = cap.MaCapDVHC.ToString(),
                                  Name = cap.Name,
                              });
                 commonResponseDto.ReturnValue = await query.ToListAsync();

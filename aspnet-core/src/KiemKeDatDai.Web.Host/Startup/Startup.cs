@@ -106,10 +106,10 @@ namespace KiemKeDatDai.Web.Host.Startup
             services.ConfigureWritable<ConfigSystemTime>(_appConfiguration.GetSection("ConfigSystemTime"));
 
             //setup redis 
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = _appConfiguration["Redis:Configuration"];
-            });
+            //services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = _appConfiguration["Redis:Configuration"];
+            //});
             services.AddMemoryCache();
         }
 
