@@ -34,7 +34,7 @@ using System.Transactions;
 using KiemKeDatDai.App.Huyen.Dto;
 using NuGet.Protocol;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public class HuyenAppService : KiemKeDatDaiAppServiceBase, IHuyenAppService
     {

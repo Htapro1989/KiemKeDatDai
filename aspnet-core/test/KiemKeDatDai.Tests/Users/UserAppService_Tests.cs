@@ -1,4 +1,5 @@
-﻿using KiemKeDatDai.Users;
+﻿using KiemKeDatDai.RisApplication;
+using KiemKeDatDai.Users;
 using KiemKeDatDai.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;

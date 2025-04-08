@@ -41,7 +41,7 @@ using System.Reflection.PortableExecutable;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.CodeAnalysis;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public class DMBieuMauAppService : KiemKeDatDaiAppServiceBase, IDMBieuMauAppService
     {

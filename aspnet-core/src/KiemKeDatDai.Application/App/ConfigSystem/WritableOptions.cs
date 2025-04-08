@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using KiemKeDatDai.Configuration;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public interface IWritableOptions<out T> : IOptionsSnapshot<T> where T : class, new()
     {

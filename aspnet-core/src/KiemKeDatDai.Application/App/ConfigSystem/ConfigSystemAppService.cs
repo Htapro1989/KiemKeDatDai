@@ -33,7 +33,7 @@ using Microsoft.Extensions.Configuration;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Hosting;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public class ConfigSystemAppService : KiemKeDatDaiAppServiceBase, IConfigSystemAppService
     {

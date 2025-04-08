@@ -33,7 +33,7 @@ using Microsoft.AspNetCore.Hosting;
 
 using Microsoft.Extensions.Configuration;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     /// <summary>
     /// service file kiểm kê

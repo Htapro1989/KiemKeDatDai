@@ -30,7 +30,7 @@ using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public class DMKyKiemKeAppService : KiemKeDatDaiAppServiceBase, IDMKyKiemKeAppService
     {

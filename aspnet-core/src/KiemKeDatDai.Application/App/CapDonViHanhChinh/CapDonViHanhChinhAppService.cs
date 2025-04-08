@@ -31,7 +31,7 @@ using KiemKeDatDai.RisApplication;
 using KiemKeDatDai.AppCore.Utility;
 using static KiemKeDatDai.CommonEnum;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public class CapDonViHanhChinhAppService : KiemKeDatDaiAppServiceBase, ICapDonViHanhChinhAppService
     {

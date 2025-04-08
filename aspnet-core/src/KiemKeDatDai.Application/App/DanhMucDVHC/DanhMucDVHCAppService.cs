@@ -33,8 +33,11 @@ using KiemKeDatDai.AppCore.Utility;
 using System.Text.Json;
 using System.IO;
 using System.Text.Encodings.Web;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using Abp.Application.Services;
 
-namespace KiemKeDatDai.App.DanhMucDVHC
+namespace KiemKeDatDai.RisApplication
 {
     [AbpAuthorize]
     public class DanhMucDVHCAppService : KiemKeDatDaiAppServiceBase, IDonViHanhChinhAppService
@@ -49,6 +52,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
+        private readonly IDistributedCache _distributedCache;
+        private readonly IMemoryCache _cache;
         //private readonly ILogAppService _iLogAppService;
 
         private readonly ICache mainCache;
@@ -62,7 +67,9 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IDistributedCache distributedCache,
+            IMemoryCache cache
             //ILogAppService iLogAppService
             )
         {
@@ -76,6 +83,8 @@ namespace KiemKeDatDai.App.DanhMucDVHC
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
+            _distributedCache = distributedCache;
+            _cache = cache;
             //_iLogAppService = iLogAppService;
         }
 

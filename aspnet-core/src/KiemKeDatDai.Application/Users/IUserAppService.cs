@@ -5,7 +5,7 @@ using KiemKeDatDai.Roles.Dto;
 using KiemKeDatDai.Users.Dto;
 using System.Threading.Tasks;
 
-namespace KiemKeDatDai.Users;
+namespace KiemKeDatDai.RisApplication;
 
 public interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>
 {
