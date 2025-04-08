@@ -40,9 +40,11 @@ using KiemKeDatDai.App.DMBieuMau.Dto;
 using System.Reflection.PortableExecutable;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.CodeAnalysis;
+using KiemKeDatDai.Users.Dto;
 
 namespace KiemKeDatDai.RisApplication
 {
+    [AbpAuthorize]
     public class DMBieuMauAppService : KiemKeDatDaiAppServiceBase, IDMBieuMauAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -291,7 +293,6 @@ namespace KiemKeDatDai.RisApplication
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetAll(DMBieuMauDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -309,9 +310,16 @@ namespace KiemKeDatDai.RisApplication
                                  //Active = bm.Active
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
-                pagedResultDto.Items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
-                pagedResultDto.TotalCount = await query.CountAsync();
-                commonResponseDto.ReturnValue = pagedResultDto;
+                var totalCount = await query.CountAsync();
+                var lstData = await query.OrderBy(x => x.CreationTime)
+                                    .Skip(input.SkipCount)
+                                    .Take(input.MaxResultCount)
+                                    .ToListAsync();
+                commonResponseDto.ReturnValue = new PagedResultDto<DMBieuMauOuputDto>()
+                {
+                    Items = lstData,
+                    TotalCount = totalCount
+                };
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -323,13 +331,11 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetByDVHC(long dvhcId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var lstBM = new List<DMBieuMauOuputDto>();
                 var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(dvhcId);
                 var dvhcLevel = dvhcObj != null ? dvhcObj.CapDVHCId : 0;
                 var query = (from bm in _dmbmRepos.GetAll()
@@ -342,8 +348,7 @@ namespace KiemKeDatDai.RisApplication
                                  NoiDung = bm.NoiDung,
                                  CapDVHC = bm.CapDVHC,
                              });
-                lstBM = await query.ToListAsync();
-                commonResponseDto.ReturnValue = lstBM;
+                commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -355,7 +360,6 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> CreateOrUpdate(DMBieuMauInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -397,7 +401,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -426,7 +429,6 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetDetailBieuByKyHieu(BieuMauDetailInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -435,22 +437,23 @@ namespace KiemKeDatDai.RisApplication
                 string _tenxa = "";
                 string _tenHuyen = "";
                 string _tenTinh = "";
-                switch ((input.CapDVHC))
+                var allDvhc = await _dvhcRepos.GetAll().ToListAsync();
+                switch (input.CapDVHC)
                 {
                     case (int)CAP_DVHC.TINH:
-                        _tenTinh = _dvhcRepos.Single(x => x.Ma == input.MaDVHC && x.Year == input.Year).Name;
+                        _tenTinh = allDvhc.Single(x => x.Ma == input.MaDVHC && x.Year == input.Year).Name;
                         break;
                     case (int)CAP_DVHC.HUYEN:
-                        var _huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+                        var _huyen = allDvhc.FirstOrDefault(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                         _tenHuyen = _huyen != null ? _huyen.Name : "";
-                        _tenTinh = _huyen != null ? _dvhcRepos.Single(x => x.Ma == _huyen.MaTinh && x.Year == input.Year).Name : "";
+                        _tenTinh = _huyen != null ? allDvhc.Single(x => x.Ma == _huyen.MaTinh && x.Year == input.Year).Name : "";
                         break;
                     case (int)CAP_DVHC.XA:
-                        var _xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+                        var _xa = allDvhc.FirstOrDefault(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                         _tenxa = _xa != null ? _xa.Name : "";
-                        var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == _xa.MaHuyen && x.Year == input.Year);
+                        var huyen = allDvhc.FirstOrDefault(x => x.Ma == _xa.MaHuyen && x.Year == input.Year);
                         _tenHuyen = huyen != null ? huyen.Name : "";
-                        _tenTinh = huyen != null ? _dvhcRepos.Single(x => x.Ma == huyen.MaTinh && x.Year == input.Year).Name : "";
+                        _tenTinh = huyen != null ? allDvhc.Single(x => x.Ma == huyen.MaTinh && x.Year == input.Year).Name : "";
                         break;
                     default:
                         break;
@@ -1307,22 +1310,23 @@ namespace KiemKeDatDai.RisApplication
                 string _tenTinh = "";
                 var excelMemoryStream = new MemoryStream();
                 string template = "";
-                switch ((input.CapDVHC))
+                var allDvhc = await _dvhcRepos.GetAll().ToListAsync();
+                switch (input.CapDVHC)
                 {
                     case (int)CAP_DVHC.TINH:
-                        _tenTinh = _dvhcRepos.Single(x => x.Ma == input.MaDVHC && x.Year == input.Year).Name;
+                        _tenTinh = allDvhc.Single(x => x.Ma == input.MaDVHC && x.Year == input.Year).Name;
                         break;
                     case (int)CAP_DVHC.HUYEN:
-                        var _huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+                        var _huyen = allDvhc.FirstOrDefault(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                         _tenHuyen = _huyen != null ? _huyen.Name : "";
-                        _tenTinh = _huyen != null ? _dvhcRepos.Single(x => x.Ma == _huyen.MaTinh && x.Year == input.Year).Name : "";
+                        _tenTinh = _huyen != null ? allDvhc.Single(x => x.Ma == _huyen.MaTinh && x.Year == input.Year).Name : "";
                         break;
                     case (int)CAP_DVHC.XA:
-                        var _xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+                        var _xa = allDvhc.FirstOrDefault(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                         _tenxa = _xa != null ? _xa.Name : "";
-                        var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == _xa.MaHuyen && x.Year == input.Year);
+                        var huyen = allDvhc.FirstOrDefault(x => x.Ma == _xa.MaHuyen && x.Year == input.Year);
                         _tenHuyen = huyen != null ? huyen.Name : "";
-                        _tenTinh = huyen != null ? _dvhcRepos.Single(x => x.Ma == huyen.MaTinh && x.Year == input.Year).Name : "";
+                        _tenTinh = huyen != null ? allDvhc.Single(x => x.Ma == huyen.MaTinh && x.Year == input.Year).Name : "";
                         break;
                     default:
                         break;

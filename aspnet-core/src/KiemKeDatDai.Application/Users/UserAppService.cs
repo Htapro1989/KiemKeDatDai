@@ -26,7 +26,6 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using static KiemKeDatDai.CommonEnum;
-using StackExchange.Redis;
 using Microsoft.Extensions.Caching.Memory;
 using KiemKeDatDai.Sessions;
 
@@ -270,7 +269,6 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CommonResponseDto commonResponseDto = new CommonResponseDto();
         try
         {
-            PagedResultDto<UserDto> pagedResultDto = new PagedResultDto<UserDto>();
             var query = (from obj in _userRepos.GetAll()
                          select new UserDto
                          {
@@ -291,17 +289,25 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                          || x.Name.ToLower().Contains(input.Keyword.ToLower())
                          || x.EmailAddress.ToLower().Contains(input.Keyword.ToLower()))
                          .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
-            var _lstuser = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
-            if (_lstuser.Count > 0)
+
+            var totalCount = await query.CountAsync();
+            var lstUser = await query.OrderBy(x => x.CreationTime)
+                                .Skip(input.SkipCount)
+                                .Take(input.MaxResultCount)
+                                .ToListAsync();
+
+            if (lstUser.Count > 0)
             {
-                foreach (var item in _lstuser)
+                foreach (var item in lstUser)
                 {
                     item.DonViHanhChinh = _dvhcRepos.Single(x => x.Ma == item.DonViHanhChinhCode).Name;
                 }
             }
-            pagedResultDto.Items = _lstuser;
-            pagedResultDto.TotalCount = await query.CountAsync();
-            commonResponseDto.ReturnValue = pagedResultDto;
+            commonResponseDto.ReturnValue = new PagedResultDto<UserDto>()
+            {
+                Items = lstUser,
+                TotalCount = totalCount
+            };
             commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
         }
@@ -345,16 +351,16 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                              DonViHanhChinhCode = obj.DonViHanhChinhCode,
                              DonViHanhChinh = dvhc.Name
                          });
-            var _totalCount = await query.CountAsync();
-            var _lstUser = await query.OrderBy(x => x.CreationTime)
+            var totalCount = await query.CountAsync();
+            var lstUser = await query.OrderBy(x => x.CreationTime)
                                 .Skip(input.SkipCount)
                                 .Take(input.MaxResultCount)
                                 .ToListAsync();
 
             commonResponseDto.ReturnValue = new PagedResultDto<UserDto>()
             {
-                Items = _lstUser,
-                TotalCount = _totalCount
+                Items = lstUser,
+                TotalCount = totalCount
             };
             commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
