@@ -1,4 +1,4 @@
-import { Button, Col, Empty, Form, Input, Modal, Row } from 'antd'
+import { Button, Col, Empty, Form, Input, Modal, notification, Row } from 'antd'
 import React, { useEffect, useState } from 'react'
 import SelectItem from '../../../../components/Select/SelectItem'
 import dvhcService from '../../../../services/dvhc/dvhcService'
@@ -38,11 +38,24 @@ export default function CreateOrUpdateDvhcForm(props: any) {
         if (formState.action == CREATE) {
             const response = await dvhcService.createOrUpdateDVHC({
                 ...formRef.current?.getFieldsValue(),
-                year: entity?.year,
+                year: props.year,
                 parent_id: entity?.id,
                 parent_Code: entity?.ma,
             });
-            handleCommontResponse(response, () => { window.location.reload() });
+
+            if (response.code == 1) {
+                notification.success({ message: response.message })
+                setFormState({
+                    action: UPDATE,
+                    createCapDVHC: ''
+                })
+                props.onCreateDvhc()
+
+            } else {
+                notification.error({
+                    message: response?.message ? response?.message : "Thất bại. Vui lòng thử lại"
+                })
+            }
         }
         if (formState.action == UPDATE) {
             const response = await dvhcService.createOrUpdateDVHC({
@@ -59,14 +72,26 @@ export default function CreateOrUpdateDvhcForm(props: any) {
 
     const onCreate = () => {
         formRef.current?.resetFields(["ma", "name", "id"]);
-        formRef.current?.setFieldsValue({
-            capDVHCId: entity?.capDVHCId + 1
-        })
-        setFormState({
-            action: CREATE,
-            createCapDVHC: getDvhcNameByLevel(entity?.capDVHCId + 1)
-        })
 
+        if (props.donViHanhChinhList?.length == 0) {
+
+            formRef.current?.setFieldsValue({
+                capDVHCId: 0
+            })
+            setFormState({
+                action: CREATE,
+                createCapDVHC: getDvhcNameByLevel(0)
+            })
+
+        } else {
+            formRef.current?.setFieldsValue({
+                capDVHCId: entity?.capDVHCId + 1
+            })
+            setFormState({
+                action: CREATE,
+                createCapDVHC: getDvhcNameByLevel(entity?.capDVHCId + 1)
+            })
+        }
     }
 
     const genCreateBtn = () => {
@@ -110,11 +135,13 @@ export default function CreateOrUpdateDvhcForm(props: any) {
         formRef.current?.setFieldsValue(entity);
     }
 
-    if (!entity) {
+    if (!entity && props.donViHanhChinhList?.length != 0) {
         return <div className='right-component-empty'>
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Vui lòng chọn đơn vị hành chính" />
         </div>
     }
+
+
     return (
         <div className='right-component-wrapper'>
             <Row justify='space-between'>

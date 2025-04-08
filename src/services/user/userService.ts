@@ -38,8 +38,14 @@ class UserService {
     return result.data.result;
   }
 
-    public async getAll(pagedFilterAndSortedRequest: PagedUserResultRequestDto): Promise<PagedResultDto<GetAllUserOutput>> {
-    let result = await http.get('/api/services/app/User/GetAllUser', { params: pagedFilterAndSortedRequest });
+  public async getAll(pagedFilterAndSortedRequest: PagedUserResultRequestDto): Promise<PagedResultDto<GetAllUserOutput>> {
+    let result = await http.get('api/services/app/User/GetUserByMaDVHC', { params: pagedFilterAndSortedRequest });
+    if (!result.data.result.returnValue) {
+      return {
+        items: [],
+        totalCount: 0,
+      };
+    }
     return result.data.result.returnValue;
   }
 }

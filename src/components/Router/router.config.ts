@@ -10,6 +10,7 @@ export const ROUTER_PATH = {
   KYKIEMKE: "/ky-thong-ke-kiem-ke",
   CAUHINH: "/cauhinh",
   DONVIHANHCHINH: "/don-vi-hanh-chinh",
+  NEWS: "/tin-tuc",
 
 }
 
@@ -113,6 +114,15 @@ export const appRouters: any = [
     icon: TagsOutlined,
     showInMenu: true,
     component: LoadableComponent(() => import('../../scenes/Admin/CauHinhHeThong')),
+  },
+  {
+    path: ROUTER_PATH.NEWS,
+    permission: 'Pages.Roles',
+    title: 'Cấu hình tin tức',
+    name: 'cauhinh',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/Admin/News')),
   },
   {
     path: '/tenants',

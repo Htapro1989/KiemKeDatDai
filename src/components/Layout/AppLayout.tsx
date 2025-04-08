@@ -10,6 +10,7 @@ import { appRouters, ROUTER_PATH } from '../Router/router.config';
 import utils from '../../utils/utils';
 import NotFoundRoute from '../Router/NotFoundRoute';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import Footer from '../Footer';
 
 const { Content } = Layout;
 
@@ -53,6 +54,7 @@ class AppLayout extends React.Component<any> {
             </Switch>
           </Content>
         </Layout>
+        <Footer/>
       </Layout>
     );
 

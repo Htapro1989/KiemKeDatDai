@@ -1,4 +1,4 @@
-import { Button, notification, Table } from 'antd'
+import { Button, Empty, notification, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import bieuMauService from '../../../services/bieuMau/bieuMauService';
 import CustomModal from './CustomModal';
@@ -100,7 +100,7 @@ export default function BieuDoTab(props: IBieuDoTabProps) {
         getBieuMau();
     }, [props.donViHanhChinhSelected?.key])
 
-    if (!props.donViHanhChinhSelected) return <div />;
+    if (!props.donViHanhChinhSelected) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />;
     return (
         <div>
             <Table

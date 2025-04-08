@@ -18,6 +18,11 @@ class DvhcService {
     return result.data.result;
   }
 
+  public async getDvhcByYear(year: any, capDVHC: String): Promise<ResponseDto<DonViHanhChinh[]>> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetByYear?year=${year}&capDVHC=${capDVHC}`);
+    return result.data.result;
+  }
+
 
   public async getByParentId(parentId: String): Promise<ResponseDto<DonViHanhChinh[]>> {
     let result = await http.get(`/api/services/app/DanhMucDVHC/GetById?id=${parentId}`);

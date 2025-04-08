@@ -15,17 +15,27 @@ class DonViHanhChinhStore {
     @observable sideMenuExpanedKeys: any;
 
     @action
-    async fetchDonViHanhChinhList(userId: any) {
+    async fetchDonViHanhChinhList(userId: any, year?: any) {
 
         this.isFetchingDonViHanhChinh = true;
 
         const dmKyKiemKeResponse = await dvhcService.getDMKyKiemKe()
-        if (!dmKyKiemKeResponse || dmKyKiemKeResponse.code != 1 || dmKyKiemKeResponse.returnValue.length <= 0) return;
+        if (!dmKyKiemKeResponse || dmKyKiemKeResponse.code != 1 || dmKyKiemKeResponse.returnValue.length <= 0) {
+            this.isFetchingDonViHanhChinh = false;
+            return
+        };
         this.dmKyKiemKe = dmKyKiemKeResponse.returnValue.map(DmKyKiemKeMapper.toDmKyKiemKeDto);
-        this.dmKyKiemKeSelected = this.dmKyKiemKe[0].value;
+
+        this.dmKyKiemKeSelected = this.dmKyKiemKe.find((item) => item.value == year)?.value || this.dmKyKiemKe[0].value;
 
         const dvhcByUserResponse = await dvhcService.getByUser(userId, this.dmKyKiemKeSelected)
-        if (!dvhcByUserResponse || dvhcByUserResponse.code != 1 || dvhcByUserResponse.returnValue.length <= 0) return;
+        if (!dvhcByUserResponse || dvhcByUserResponse.code != 1 || dvhcByUserResponse.returnValue.length <= 0) {
+            this.isFetchingDonViHanhChinh = false;
+            this.donViHanhChinhList = [];
+            this.donViHanhChinhSelected = null;
+            this.donViHanhChinhOfUser = null;
+            return
+        };
 
         this.donViHanhChinhList = dvhcByUserResponse.returnValue
             .map(DonViHanhChinhMapper.toDonViHanhChinhMenu);

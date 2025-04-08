@@ -65,12 +65,15 @@ class UserStore {
   @action
   async getAll(pagedFilterAndSortedRequest: PagedUserResultRequestDto) {
     let result = await userService.getAll(pagedFilterAndSortedRequest);
-    console.log("RESULT ",result)
     this.users = result;
   }
 
   async changeLanguage(languageName: string) {
     await userService.changeLanguage({ languageName: languageName });
+  }
+  @action
+  async setUsers(users: any) {
+    this.users = users;
   }
 }
 

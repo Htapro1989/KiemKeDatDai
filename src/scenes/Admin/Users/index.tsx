@@ -2,18 +2,20 @@ import * as React from 'react';
 
 import { Button, Card, Input, Modal, Table, Tag } from 'antd';
 import { inject, observer } from 'mobx-react';
-
 import AppComponentBase from '../../../components/AppComponentBase';
 import { EntityDto } from '../../../services/dto/entityDto';
 import Stores from '../../../stores/storeIdentifier';
 import UserStore from '../../../stores/userStore';
 import { FormInstance } from 'antd/lib/form';
-import { PlusOutlined } from '@ant-design/icons';
 import './index.less'
 import CreateOrUpdateUserDrawer from './components/createOrUpdateUserDrawer';
+import DvhcTree from './components/DvhcTree';
+import SessionStore from '../../../stores/sessionStore';
+import { PlusOutlined } from '@ant-design/icons';
 
 export interface IUserProps {
   userStore: UserStore;
+  sessionStore: SessionStore;
 }
 
 export interface IUserState {
@@ -22,13 +24,17 @@ export interface IUserState {
   skipCount: number;
   userId: number;
   filter: string;
-  entitySelected?: any
+  entitySelected?: any;
+  maDvhcSelected?: {
+    ma?: any,
+    id?: any
+  }
 }
 
 const confirm = Modal.confirm;
 const Search = Input.Search;
 
-@inject(Stores.UserStore)
+@inject(Stores.UserStore, Stores.SessionStore)
 @observer
 class User extends AppComponentBase<IUserProps, IUserState> {
   formRef = React.createRef<FormInstance>();
@@ -39,15 +45,26 @@ class User extends AppComponentBase<IUserProps, IUserState> {
     skipCount: 0,
     userId: 0,
     filter: '',
-    entitySelected: null
+    entitySelected: null,
+    maDvhcSelected: {
+      ma: null,
+      id: null
+    }
   };
 
   async componentDidMount() {
     await this.getAll();
   }
 
-  async getAll() {
-    await this.props.userStore.getAll({ maxResultCount: this.state.maxResultCount, skipCount: this.state.skipCount, keyword: this.state.filter });
+  async getAll(dvhcIdSelected?: any) {
+    const ma = dvhcIdSelected ? dvhcIdSelected : this.state.maDvhcSelected?.ma
+    if (!ma) {return};
+    await this.props.userStore.getAll({
+      maxResultCount: this.state.maxResultCount,
+      skipCount: this.state.skipCount,
+      keyword: this.state.filter,
+      ma
+    });
   }
 
   handleTableChange = (pagination: any) => {
@@ -101,12 +118,12 @@ class User extends AppComponentBase<IUserProps, IUserState> {
       if (this.state.userId === 0) {
         await this.props.userStore.create({
           ...values,
-          donViHanhChinhId: dvhcId,
+          donViHanhChinhId: this.state.maDvhcSelected.id,
         });
       } else {
         await this.props.userStore.update({
           ...values,
-          donViHanhChinhId: dvhcId,
+          donViHanhChinhId: this.state.maDvhcSelected.id,
           id: this.state.userId
         });
       }
@@ -123,6 +140,7 @@ class User extends AppComponentBase<IUserProps, IUserState> {
 
   public render() {
     const { users } = this.props.userStore;
+    const userId = this.props.sessionStore?.currentLogin?.user?.id
     const columns = [
       { title: 'Tên đăng nhập', dataIndex: 'userName', key: 'userName', width: 150, render: (text: string) => <div>{text}</div> },
       { title: 'Tên hiển thị', dataIndex: 'name', key: 'name', width: 150, render: (text: string) => <div>{text}</div> },
@@ -134,72 +152,61 @@ class User extends AppComponentBase<IUserProps, IUserState> {
         width: 150,
         render: (text: boolean) => (text === true ? <Tag color="#2db7f5">Hoạt động</Tag> : <Tag color="red">Không hoạt động</Tag>),
       },
-      // {
-      //   title: 'Hành động',
-      //   width: 90,
-      //   render: (text: string, item: any) => (
-      //     <div>
-      //       <Dropdown
-      //         trigger={['click']}
-      //         overlay={
-      //           <Menu>
-      //             <Menu.Item onClick={() => this.createOrUpdateModalOpen({ id: item.id })}>Chỉnh sửa</Menu.Item>
-      //             <Menu.Item onClick={() => this.delete({ id: item.id })}>Xóa</Menu.Item>
-      //           </Menu>
-      //         }
-      //         placement="bottomLeft"
-      //       >
-      //         <Button type="primary" icon={<SettingOutlined />} />
-      //       </Dropdown>
-      //     </div>
-      //   ),
-      // },
     ];
 
     return (
       <div className='user-page-wrapper'>
         <h1 className='txt-page-header'>Quản lý người dùng</h1>
-
-        <Card title={
-          <div className='table-header-layout'>
-            <div style={{ flex: 1 }}>
-              <span style={{ marginRight: 24 }}> Tìm kiếm: </span>
-              <Search placeholder={'Tìm kiếm người dùng...'} onSearch={this.handleSearch} />
+        <Card>
+          <div className='user-page-content'>
+            <div className='user-page-content-left'>
+              <DvhcTree
+                onSelect={(dvhc: any) => {
+                  this.getAll(dvhc.ma || -1)
+                  this.setState({
+                    maDvhcSelected: {
+                      id: dvhc.id,
+                      ma: dvhc.ma
+                    }
+                  })
+                }}
+                userId={userId} />
             </div>
-            <div className='table-header-layout-right'>
-              <Button type="primary" icon={<PlusOutlined />} onClick={() => this.createOrUpdateModalOpen({ id: 0 })}>
-                Tạo mới
-              </Button>
+            <div className='user-page-content-right'>
+              <Table
+                style={{ flex: 1 }}
+                rowKey={(record) => record.id.toString()}
+                bordered={true}
+                columns={columns}
+                pagination={{ pageSize: 10, total: users === undefined ? 0 : users.totalCount, defaultCurrent: 1 }}
+                loading={users === undefined ? true : false}
+                dataSource={users === undefined ? [] : users.items}
+                onChange={this.handleTableChange}
+                title={
+                  () => {
+                    return (
+                      <div className='table-header-layout'>
+                        <div className='table-search-header'>
+                          <Search placeholder={'Tìm kiếm người dùng...'} onSearch={this.handleSearch} />
+                        </div>
+                        <div className='table-header-layout-right'>
+                          <Button
+                            type="primary"
+                            icon={<PlusOutlined />} onClick={() => this.createOrUpdateModalOpen({ id: 0 })}>
+                          </Button>
+                        </div>
+                      </div>
+                    )
+                  }
+                }
+                onRow={(record) => ({
+                  onClick: () => {
+                    this.createOrUpdateModalOpen({ id: record.id })
+                  },
+                })}
+              />
             </div>
           </div>
-        }>
-          <Table
-            rowKey={(record) => record.id.toString()}
-            bordered={true}
-            columns={columns}
-            pagination={{ pageSize: 10, total: users === undefined ? 0 : users.totalCount, defaultCurrent: 1 }}
-            loading={users === undefined ? true : false}
-            dataSource={users === undefined ? [] : users.items}
-            onChange={this.handleTableChange}
-            onRow={(record) => ({
-              onClick: () => {
-                this.createOrUpdateModalOpen({ id: record.id })
-              },
-            })}
-          />
-          {/* <CreateOrUpdateUser
-            formRef={this.formRef}
-            visible={this.state.modalVisible}
-            onCancel={() => {
-              this.setState({
-                modalVisible: false,
-              });
-              this.formRef.current?.resetFields();
-            }}
-            modalType={this.state.userId === 0 ? 'edit' : 'create'}
-            onCreate={this.handleCreate}
-            roles={this.props.userStore.roles}
-          /> */}
         </Card>
         <CreateOrUpdateUserDrawer
           visible={this.state.modalVisible}

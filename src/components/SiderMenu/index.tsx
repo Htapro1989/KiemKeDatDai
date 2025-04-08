@@ -37,7 +37,8 @@ export class SiderMenu extends React.Component<ISideMenuProps, ISideMenuState> {
 
 
   public handleChange = (value: string) => {
-    console.log(`selected ${value}`);
+    const userId = this.props.sessionStore?.currentLogin?.user?.id
+    this.props.donViHanhChinhStore?.fetchDonViHanhChinhList(userId, value);
   };
 
   onLoadData = async ({ key, children }: any) => {

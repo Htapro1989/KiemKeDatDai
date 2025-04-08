@@ -38,19 +38,21 @@ export default function DonViHanhChinhV2(props: any) {
         formRef?.current?.setFieldsValue(newEditFormState)
     }
 
-    const fetchKyKiemKe = async () => {
-        const ky = await dvhcService.getKyKiemKeAsOption();
-        const kyKiemKeSelected = ky[0]?.value;
-        const dvhcByUserResponse = await dvhcService.getByUser(props.userId, kyKiemKeSelected)
-        if (!dvhcByUserResponse || dvhcByUserResponse.code != 1 || dvhcByUserResponse.returnValue.length <= 0) return;
+    const fetchKyKiemKe = async (year?: any) => {
+        const kyOptions = await dvhcService.getKyKiemKeAsOption();
+        const kyKiemKeSelected = kyOptions.find((item: any) => item.value == year)?.value || kyOptions[0]?.value;
+
+        const dvhcByUserResponse = await dvhcService.getDvhcByYear(kyKiemKeSelected, '0');
+        if (!dvhcByUserResponse || dvhcByUserResponse.code != 1) return;
+
         const donViHanhChinhList = dvhcByUserResponse.returnValue
             .map(DonViHanhChinhMapper.toDonViHanhChinhMenu);
 
-        const donViHanhChinhSelected = donViHanhChinhList?.[0];
-        updateEditFormState(donViHanhChinhSelected)
-        const newlist = await fetchDonViHanhChinhListByParentKey(donViHanhChinhSelected?.id, donViHanhChinhList)
+        const donViHanhChinhSelected = donViHanhChinhList?.[0] || null;
+        setEditFormState(donViHanhChinhSelected)
+        const newlist = await fetchDonViHanhChinhListByParentKey(donViHanhChinhSelected?.id, donViHanhChinhList) || []
         updateState({
-            kyKiemKeOptions: ky,
+            kyKiemKeOptions: kyOptions,
             dmKyKiemKeSelected: kyKiemKeSelected,
             donViHanhChinhList: newlist,
             donViHanhChinhSelected,
@@ -61,7 +63,7 @@ export default function DonViHanhChinhV2(props: any) {
     const fetchDonViHanhChinhListByParentKey = async (parentId: any, list: any[]) => {
         if (!parentId) return;
         const dvhcByParentIdResponse = await dvhcService.getByParentId(parentId)
-        if (!dvhcByParentIdResponse || dvhcByParentIdResponse.code != 1 || dvhcByParentIdResponse.returnValue.length <= 0) return;
+        if (!dvhcByParentIdResponse || dvhcByParentIdResponse.code != 1) return;
         const children = dvhcByParentIdResponse.returnValue.map(DonViHanhChinhMapper.toDonViHanhChinhMenu);
         const updateTreeData = (list: any[], key: string, children: any[]): any[] =>
             list.map(node => {
@@ -79,6 +81,7 @@ export default function DonViHanhChinhV2(props: any) {
                 }
                 return node;
             });
+
         const newList = updateTreeData(list, parentId, children);
         return newList;
     }
@@ -94,9 +97,8 @@ export default function DonViHanhChinhV2(props: any) {
         })
     }
 
-    const onHandleChangeKyKiemKe = () => {
-
-
+    const onHandleChangeKyKiemKe = (value: any) => {
+        fetchKyKiemKe(value)
     }
 
     const onDeleteDvhc = (id: any) => {
@@ -143,6 +145,10 @@ export default function DonViHanhChinhV2(props: any) {
         })
     }
 
+    const onCreateDvhc = () => {
+        fetchKyKiemKe(dvhcState?.dmKyKiemKeSelected)
+    }
+
     useEffect(() => {
         if (props.userId)
             fetchKyKiemKe();
@@ -181,8 +187,12 @@ export default function DonViHanhChinhV2(props: any) {
                         />
                     </div>
                 </div>
-                <CreateOrUpdateDvhcForm entity={editFormState}
+                <CreateOrUpdateDvhcForm
+                    donViHanhChinhList={dvhcState?.donViHanhChinhList}
+                    year={dvhcState?.dmKyKiemKeSelected}
+                    entity={editFormState}
                     onUpdateDvhc={onUpdateDvhc}
+                    onCreateDvhc={onCreateDvhc}
                     onDeleteDvhc={onDeleteDvhc} />
             </div>
         </Card>

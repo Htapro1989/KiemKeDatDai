@@ -1,16 +1,13 @@
-import { Button, Checkbox, Col, Divider, Drawer, Form, Input, Row, Tabs } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Button, Checkbox, Col, Drawer, Form, Input, Row, Tabs } from 'antd'
+import React, { useState } from 'react'
 import rules from './createOrUpdateUser.validation'
 import { GetRoles } from '../../../../services/user/dto/getRolesOuput';
-import dvhcService from '../../../../services/dvhc/dvhcService';
-import SelectItem from '../../../../components/Select/SelectItem';
 const TabPane = Tabs.TabPane;
 
 export default function CreateOrUpdateUserDrawer(props: any) {
     const [confirmDirty, setconfirmDirty] = useState(false)
-    const [formState, setFormState] = useState<any>();
+    // const [formState, setFormState] = useState<any>();
 
-    const updateState = (newState: any) => { setFormState({ ...formState, ...newState }) }
 
     const { roles } = props;
 
@@ -47,35 +44,33 @@ export default function CreateOrUpdateUserDrawer(props: any) {
         props.onClose()
     }
 
-    const fetchDvhc = async (dvchId: any) => {
-        if (!dvchId) return;
-        const response = await dvhcService.getById(dvchId)
-        if (response?.code != 1 || response?.returnValue?.length <= 0) return;
+    // const fetchDvhc = async (dvchId: any) => {
+    //     if (!dvchId) return;
+    //     const response = await dvhcService.getById(dvchId)
+    //     if (response?.code != 1 || response?.returnValue?.length <= 0) return;
 
-        const dvhc = response?.returnValue[0];
-        console.log("DVHC selected ", dvhc)
-        if (dvhc) {
-            updateState({
-                maHuyen: dvhc.maHuyen,
-                maTinh: dvhc.maTinh,
-                maVung: dvhc.maVung,
-                maXa: dvhc.maXa,
-            })
-        }
+    //     const dvhc = response?.returnValue[0];
+    //     console.log("DVHC selected ", dvhc)
+    //     if (dvhc) {
+    //         updateState({
+    //             maHuyen: dvhc.maHuyen,
+    //             maTinh: dvhc.maTinh,
+    //             maVung: dvhc.maVung,
+    //             maXa: dvhc.maXa,
+    //         })
+    //     }
+    // }
 
-    }
+    // useEffect(() => {
+    //     if (props.visible)
+    //         fetchDvhc(props.entitySelected?.donViHanhChinhId)
 
-    useEffect(() => {
-        if (props.visible)
-            fetchDvhc(props.entitySelected?.donViHanhChinhId)
-
-    }, [props.visible])
+    // }, [props.visible])
 
     const onCreateUser = () => {
-        let oldDvhcId = props.entitySelected?.donViHanhChinhId;
-
-        const dvhcId = formState?.idXa || formState?.idHuyen || formState?.idTinh || formState?.idVung || oldDvhcId
-        props.onCreate(dvhcId)
+        // let oldDvhcId = props.entitySelected?.donViHanhChinhId;
+        // const dvhcId = formState?.idXa || formState?.idHuyen || formState?.idTinh || formState?.idVung || oldDvhcId
+        props.onCreate(null)
     }
 
 
@@ -182,131 +177,6 @@ export default function CreateOrUpdateUserDrawer(props: any) {
                             <Form.Item label={'Trạng thái'} name={'isActive'} valuePropName={'checked'}>
                                 <Checkbox>Hoạt động</Checkbox>
                             </Form.Item>
-                            <Divider />
-                            <h3 style={{ marginBottom: 16 }}>Thông tin đơn vị hành chính gắn với người dùng</h3>
-                            <Row gutter={8}>
-                                <SelectItem
-                                    formItemProps={{ label: "Kỳ kiểm kê" }}
-                                    remoteSource={dvhcService.getKyKiemKeAsOption.bind(null)}
-                                    refresing={true}
-                                    selectProps={{
-                                        defaultValue: 2024
-                                    }}
-                                    className='mb-0'
-                                    span={12}
-                                />
-                                <SelectItem
-                                    formItemProps={{ label: "Chọn Vùng" }}
-                                    remoteSource={dvhcService.getDropDownVung.bind(null)}
-                                    refresing={true}
-                                    className='mb-0'
-                                    span={12}
-                                    selectProps={{
-                                        value: formState?.maVung,
-                                        allowClear: true,
-                                        onClear: () => {
-                                            updateState({
-                                                maVung: null,
-                                                maTinh: null,
-                                                maHuyen: null,
-                                                maXa: null,
-                                                idVung: null,
-                                                idTinh: null,
-                                                idHuyen: null,
-                                                idXa: null,
-                                            });
-                                        },
-                                        onChange: (value: any, option: any) => {
-                                            updateState({
-                                                maVung: value,
-                                                maTinh: null,
-                                                maXa: null,
-                                                maHuyen: null,
-                                                idVung: option.id
-                                            });
-                                        },
-                                    }}
-                                />
-                            </Row>
-                            <Row gutter={8}>
-                                <SelectItem
-                                    formItemProps={{
-                                        label: "Chọn Tỉnh/Thành phố"
-                                    }}
-                                    remoteSource={
-                                        formState?.maVung ? dvhcService.getDropDownTinh.bind(null, formState?.maVung) :
-                                            dvhcService.getDropDownTinhByNone.bind(null)}
-                                    refresing={formState?.maVung || true}
-                                    className='mb-0'
-                                    span={12}
-                                    selectProps={{
-                                        value: formState?.maTinh,
-                                        allowClear: true,
-                                        onClear: () => {
-                                            updateState({
-                                                maTinh: null,
-                                                maHuyen: null,
-                                                maXa: null,
-                                                idTinh: null,
-                                                idHuyen: null,
-                                                idXa: null,
-                                            });
-                                        },
-                                        onChange: (value: any, option: any) => {
-                                            updateState({
-                                                maTinh: value,
-                                                maXa: null,
-                                                maHuyen: null,
-                                                idTinh: option.id
-                                            });
-                                        },
-                                    }}
-                                />
-                                <SelectItem
-                                    formItemProps={{ label: "Chọn Quận/Huyện" }}
-                                    remoteSource={dvhcService.getDropDownHuyen.bind(null, formState?.maTinh)}
-                                    refresing={formState?.maTinh}
-                                    className='mb-0'
-                                    span={12}
-                                    selectProps={{
-                                        value: formState?.maHuyen,
-                                        allowClear: true,
-                                        onClear: () => {
-                                            updateState({
-                                                maHuyen: null,
-                                                maXa: null,
-                                                idHuyen: null,
-                                                idXa: null,
-                                            });
-                                        },
-                                        onChange: (value: any, option: any) => {
-                                            updateState({
-                                                maHuyen: value,
-                                                maXa: null,
-                                                idHuyen: option.id
-                                            });
-                                        },
-                                    }}
-                                />
-                            </Row>
-                            <SelectItem
-                                formItemProps={{ label: "Chọn Xã/Phường" }}
-                                remoteSource={dvhcService.getDropDownXa.bind(null, formState?.maHuyen)}
-                                refresing={formState?.maHuyen}
-                                className='mb-0'
-                                span={12}
-                                selectProps={{
-                                    allowClear: true,
-                                    onClear: () => {
-                                        updateState({ maXa: null, idXa: null, });
-                                    },
-                                    value: formState?.maXa,
-                                    onChange: (value: any, option: any) => {
-                                        updateState({ maXa: value, idXa: option.id });
-                                    },
-                                }}
-                            />
-
                         </TabPane>
                         <TabPane tab={'Quyền'} key={'rol'} forceRender={true}>
                             <Form.Item name={'roleNames'}>

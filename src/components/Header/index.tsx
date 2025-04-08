@@ -101,6 +101,11 @@ const MenuBar = () => {
                 Cấu hình hệ thống
               </Link>
             </Menu.Item>
+            <Menu.Item key={ROUTER_PATH.NEWS}>
+              <Link to={ROUTER_PATH.NEWS}>
+                Cấu hình tin tức
+              </Link>
+            </Menu.Item>
             <Menu.Item key="yKienNguoiDung">
               Ý kiến người dùng
             </Menu.Item>
