@@ -116,6 +116,36 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadFileNewsByID(int FileId)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Id == FileId && x.FileType == CommonEnum.FILE_NEWS);
+            if (fileEntity == null)
+            {
+                return new NotFoundObjectResult(new { Message = "File not found on server" });
+            }
+
+            var filePath = fileEntity.FilePath;
+            if (!System.IO.File.Exists(filePath))
+            {
+                return new NotFoundObjectResult(new { Message = "File not found on server" });
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return new FileStreamResult(memory, GetContentType(filePath))
+            {
+                FileDownloadName = fileEntity.FileName
+            };
+        }
+
         public async Task<CommonResponseDto> GetAllPaging(PagedAndFilteredInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -308,6 +338,31 @@ namespace KiemKeDatDai.App.DMBieuMau
                 Logger.Error(ex.Message);
             }
             return commonResponseDto;
+        }
+
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types.ContainsKey(ext) ? types[ext] : "application/octet-stream";
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                { ".txt", "text/plain" },
+                { ".pdf", "application/pdf" },
+                { ".doc", "application/vnd.ms-word" },
+                { ".docx", "application/vnd.ms-word" },
+                { ".xls", "application/vnd.ms-excel" },
+                { ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+                { ".png", "image/png" },
+                { ".jpg", "image/jpeg" },
+                { ".jpeg", "image/jpeg" },
+                { ".gif", "image/gif" },
+                { ".csv", "text/csv" }
+            };
         }
     }
 }
