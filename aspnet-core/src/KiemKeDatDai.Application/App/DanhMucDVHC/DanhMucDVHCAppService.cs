@@ -607,7 +607,7 @@ namespace KiemKeDatDai.RisApplication
                             break;
                     }
                     //lấy danh sách con
-                    var lstChild = allDvhc.Where(x => x.Parent_Code == input.Ma && x.Year == input.Year);
+                    var lstChild = allDvhc.Where(x => x.Parent_Code == input.Ma && x.Year == input.Year).ToList();
                     //Xác định  trạng thái button nộp báo cáo
                     if (baoCaoDVHC.Root == true)
                     {
