@@ -395,12 +395,12 @@ namespace KiemKeDatDai.RisApplication
                 }
                 // Check if the file is a ZIP file
                 var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
-                string[] fileExtensions = { ".zip", ".zar", ".pdf", ".docx", ".doc", ".xls", ".xlsx" };
+                string[] fileExtensions = { ".zip", ".zar", ".pdf", ".docx", ".doc", ".xls", ".xlsx",".dgn" };
 
                 if (!fileExtensions.Contains(fileExtension))
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Chỉ chấp nhận những định dạng sau: Word, Excel, zip, rar, PDF.";
+                    commonResponseDto.Message = "Chỉ chấp nhận những định dạng sau: Word, Excel, zip, rar, PDF, DGN.";
                     commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
 
                     return commonResponseDto;
@@ -519,7 +519,8 @@ namespace KiemKeDatDai.RisApplication
                 { ".jpg", "image/jpeg" },
                 { ".jpeg", "image/jpeg" },
                 { ".gif", "image/gif" },
-                { ".csv", "text/csv" }
+                { ".csv", "text/csv" },
+                { ".dgn", "application/octet-stream" }
             };
         }
     }
