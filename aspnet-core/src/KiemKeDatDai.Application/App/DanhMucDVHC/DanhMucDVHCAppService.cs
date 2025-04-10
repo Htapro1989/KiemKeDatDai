@@ -614,19 +614,18 @@ namespace KiemKeDatDai.RisApplication
                         baoCaoDVHC.IsNopBaoCao = (baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.CHO_DUYET && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET) ? true : false;
                         if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG || baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
                             baoCaoDVHC.IsNopBaoCao = false;
-                        //----------Tạm bỏ điều kiện check nộp
-                        //if (baoCaoDVHC.ChildStatus == 0)
-                        //{
-                        //    baoCaoDVHC.IsNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
-                        //}
-                        //else
-                        //{
-                        //    var soDaDuyet = allDvhc.Count(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                        //    if (soDaDuyet == lstChild.Count && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET)
-                        //        baoCaoDVHC.IsNopBaoCao = true;
-                        //    else
-                        //        baoCaoDVHC.IsNopBaoCao = false;
-                        //}
+                        if (baoCaoDVHC.ChildStatus == 0)
+                        {
+                            baoCaoDVHC.IsNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
+                        }
+                        else
+                        {
+                            var soDaDuyet = allDvhc.Count(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                            if (soDaDuyet == lstChild.Count && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET)
+                                baoCaoDVHC.IsNopBaoCao = true;
+                            else
+                                baoCaoDVHC.IsNopBaoCao = false;
+                        }
                     }
                     lstBaoCao.Add(baoCaoDVHC);
                     if (lstChild != null)
