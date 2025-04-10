@@ -76,6 +76,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
 
         user.TenantId = AbpSession.TenantId;
         user.IsEmailConfirmed = true;
+        user.IsChangePass = true;
 
         await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
