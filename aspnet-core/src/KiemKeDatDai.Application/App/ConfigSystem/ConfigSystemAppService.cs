@@ -32,6 +32,7 @@ using static KiemKeDatDai.CommonEnum;
 using Microsoft.Extensions.Configuration;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Hosting;
+using NuGet.Protocol;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -81,7 +82,7 @@ namespace KiemKeDatDai.RisApplication
                              {
                                  Id = con.Id,
                                  expired_auth = con.expired_auth,
-                                 server_file_upload = con.server_file_upload,
+                                 JsonConfigSystem = con.JsonConfigSystem,
                                  Active = con.Active,
                                  CreationTime = con.CreationTime
                              });
@@ -103,8 +104,7 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var objdata = await _configSystemRepos.FirstOrDefaultAsync(id);
-                commonResponseDto.ReturnValue = objdata;
+                commonResponseDto.ReturnValue = await _configSystemRepos.FirstOrDefaultAsync(id);
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -117,7 +117,7 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> CreateOrUpdate(ConfigSystem input)
+        public async Task<CommonResponseDto> CreateOrUpdate(ConfigSytemInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
@@ -132,7 +132,9 @@ namespace KiemKeDatDai.RisApplication
                         //    opt.ExpiredTimeToken = data.expired_auth.ToString();
                         //});
                         data.expired_auth = input.expired_auth;
-                        data.server_file_upload = input.server_file_upload;
+                        var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(data.JsonConfigSystem);
+                        jsonConfigSystem.IsRequiredFileDGN = input.IsRequiredFileDGN;
+                        data.JsonConfigSystem = jsonConfigSystem.ToJson();
                         data.Active = input.Active;
                         await _configSystemRepos.UpdateAsync(data);
                     }
@@ -140,9 +142,6 @@ namespace KiemKeDatDai.RisApplication
                 else
                 {
                     var objdata = input.MapTo<ConfigSystem>();
-                    //_options.Update(opt => {
-                    //    opt.ExpiredTimeToken = input.expired_auth.ToString();
-                    //});
                     await _configSystemRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;

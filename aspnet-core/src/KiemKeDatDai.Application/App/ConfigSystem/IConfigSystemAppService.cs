@@ -14,7 +14,7 @@ namespace KiemKeDatDai.RisApplication
     {
         Task<CommonResponseDto> GetAll(string filter);
         Task<CommonResponseDto> GetById(long dvhcId);
-        Task<CommonResponseDto> CreateOrUpdate(ConfigSystem input);
+        Task<CommonResponseDto> CreateOrUpdate(ConfigSytemInputDto input);
         Task<CommonResponseDto> Delete(long id);
         Task<int> GetByActive();
     }
