@@ -1213,7 +1213,7 @@ namespace KiemKeDatDai.RisApplication
                         string[] fileExtension = fileName.ToString().Split('.');
                         if (fileExtension.Length > 1 && fileExtension[1] == "dgn")
                         {
-                            if (nameXa == fileExtension[0])
+                            if (nameXa.ToLower() == fileExtension[0].ToLower())
                             {
                                 checkFileDgnReponse.IsCheck = true;
                                 return checkFileDgnReponse;
