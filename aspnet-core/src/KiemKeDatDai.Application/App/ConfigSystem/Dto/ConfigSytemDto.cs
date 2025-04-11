@@ -18,4 +18,12 @@ namespace KiemKeDatDai.Dto
     {
         public bool? IsRequiredFileDGN { get; set; }
     }
+    public class ConfigSystemTime
+    {
+        public ConfigSystemTime()
+        {
+            ExpiredTimeToken = "30";
+        }
+        public string ExpiredTimeToken { get; set; }
+    }
 }

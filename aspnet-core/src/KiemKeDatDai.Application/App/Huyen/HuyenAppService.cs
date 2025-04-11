@@ -33,6 +33,7 @@ using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Transactions;
 using KiemKeDatDai.App.Huyen.Dto;
 using NuGet.Protocol;
+using Aspose.Cells;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -80,6 +81,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
         private readonly IRepository<File, long> _fileRepos;
+        private readonly IRepository<ConfigSystem, long> _configSystemRepos;
         //private readonly ILogAppService _iLogAppService;
 
         private readonly ICache mainCache;
@@ -125,7 +127,8 @@ namespace KiemKeDatDai.RisApplication
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
             IRepository<File, long> fileRepos,
-            IHttpContextAccessor httpContextAccessor
+            IRepository<ConfigSystem, long> configSystemRepos,
+        IHttpContextAccessor httpContextAccessor
             //ILogAppService iLogAppService
             )
         {
@@ -169,6 +172,8 @@ namespace KiemKeDatDai.RisApplication
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
             _fileRepos = fileRepos;
+            _configSystemRepos = configSystemRepos;
+            _userRepos = userRepos;
             //_iLogAppService = iLogAppService;
         }
 
@@ -197,12 +202,22 @@ namespace KiemKeDatDai.RisApplication
                             var xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                             if (xa != null)
                             {
-                                var checkFileDgn = await CheckFileDgn(ma);
-                                if (!checkFileDgn)
+                                //Kiểm tra hệ thống có config yêu cầu file dgn k?
+                                var currentConfigSystem = await _configSystemRepos.FirstOrDefaultAsync(x => x.Active == true);
+                                if (currentConfigSystem != null)
                                 {
-                                    commonResponseDto.Message = xa.Name + " chưa nộp file .dng. Yêu cầu nộp bổ sung";
-                                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                                    return commonResponseDto;
+                                    var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(currentConfigSystem.JsonConfigSystem);
+                                    if (jsonConfigSystem.IsRequiredFileDGN == true)
+                                    {
+                                        var checkFileDgnReponse = await CheckFileDgn(ma);
+                                        if (checkFileDgnReponse.IsCheck == false)
+                                        {
+                                            commonResponseDto.Message = xa.Name + checkFileDgnReponse.Message;
+                                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                                            return commonResponseDto;
+                                        }
+
+                                    }
                                 }
                                 //gọi hàm update biểu huyện
                                 commonResponseDto = await CreateOrUpdateBieuHuyen(currentDvhc, ma, year, (int)HAM_DUYET.DUYET);
@@ -1175,21 +1190,40 @@ namespace KiemKeDatDai.RisApplication
         }
         #endregion
 
-        private async Task<bool> CheckFileDgn(string ma)
+        private async Task<CheckFileDgnReponse> CheckFileDgn(string ma)
         {
-            var lstFileName = await _fileRepos.GetAll().Where(x => x.MaDVHC == ma).Select(x => x.FileName).ToListAsync();
-            if (lstFileName.Count > 0)
+            var checkFileDgnReponse = new CheckFileDgnReponse
             {
-                foreach (var fileName in lstFileName)
+                IsCheck = false,
+                Message = ""
+            };
+            var lstFileName = await _fileRepos.GetAll().Where(x => x.MaDVHC == ma).Select(x => x.FileName).ToListAsync();
+            var userXa = await _userRepos.FirstOrDefaultAsync(x => x.DonViHanhChinhCode == ma);
+            //kiểm tra tên file có giống định dạng BDHT_TenXa.dgn
+            if (userXa != null)
+            {
+                string[] nameDvhc = userXa.UserName.Split("_");
+                string nameXa = "";
+                if (nameDvhc.Length > 0)
+                    nameXa = "BDHT_" + nameDvhc[nameDvhc.Length - 1];
+                if (lstFileName.Count > 0)
                 {
-                    string[] fileExtension = fileName.ToString().Split('.');
-                    if (fileExtension.Length > 1 && fileExtension[1] == "dgn")
+                    foreach (var fileName in lstFileName)
                     {
-                        return true;
+                        string[] fileExtension = fileName.ToString().Split('.');
+                        if (fileExtension.Length > 1 && fileExtension[1] == "dgn")
+                        {
+                            if (nameXa == fileExtension[0])
+                            {
+                                checkFileDgnReponse.IsCheck = true;
+                                return checkFileDgnReponse;
+                            }
+                        }
                     }
                 }
+                checkFileDgnReponse.Message =" chưa nộp file dgn theo đúng định dạng " + nameXa + ".dgn";
             }
-            return false;
+            return checkFileDgnReponse;
         }
     }
 }

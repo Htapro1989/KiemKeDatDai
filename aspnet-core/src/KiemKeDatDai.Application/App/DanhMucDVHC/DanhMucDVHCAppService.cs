@@ -442,17 +442,23 @@ namespace KiemKeDatDai.RisApplication
                         {
                             case (int)CAP_DVHC.XA:
                                 data.TenXa = data.Name;
+                                data.MaXa = input.Ma;
                                 data.TenHuyen = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
+                                data.MaHuyen = input.Parent_Code;
                                 data.MaTinh = allDvhc.Single(x => x.Ma == data.MaHuyen).MaTinh;
                                 data.TenTinh = allDvhc.Single(x => x.Ma == data.MaTinh).Name;
                                 break;
                             case (int)CAP_DVHC.HUYEN:
+                                data.MaHuyen = input.Ma;
                                 data.TenHuyen = data.Name;
                                 data.TenTinh = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
+                                data.MaTinh = input.Parent_Code;
                                 break;
                             case (int)CAP_DVHC.TINH:
                                 data.TenTinh = data.Name;
+                                data.MaTinh = input.Ma;
                                 data.TenVung = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
+                                data.MaVung = input.Parent_Code;
                                 break;
                             case (int)CAP_DVHC.VUNG:
                                 data.TenVung = data.Name;
@@ -481,15 +487,24 @@ namespace KiemKeDatDai.RisApplication
                     switch (dvhc.CapDVHCId)
                     {
                         case (int)CAP_DVHC.XA:
+                            dvhc.TenXa = input.Name;
+                            dvhc.MaXa = input.Ma;
                             dvhc.TenHuyen = allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                            dvhc.MaHuyen = input.Parent_Code;
                             dvhc.MaTinh = allDvhc.Single(x => x.Ma == dvhc.MaHuyen).MaTinh;
                             dvhc.TenTinh = allDvhc.Single(x => x.Ma == dvhc.MaTinh).Name;
                             break;
                         case (int)CAP_DVHC.HUYEN:
+                            dvhc.TenHuyen = input.Name;
+                            dvhc.MaHuyen = input.Ma;
                             dvhc.TenTinh = allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                            dvhc.MaTinh = input.Parent_Code;
                             break;
                         case (int)CAP_DVHC.TINH:
+                            dvhc.TenTinh = input.Name;
+                            dvhc.MaTinh = input.Ma;
                             dvhc.TenVung = allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                            dvhc.MaVung = input.Parent_Code;
                             break;
                         default:
                             break;

@@ -45,12 +45,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Aspose.Cells">
-      <HintPath>..\..\..\..\..\..\DLL\Aspose\aspose23.8\aspose23.8\Aspose.Cells.23.8.0\lib\net7.0\Aspose.Cells.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="wwwroot\license\" />
     <Folder Include="wwwroot\Templates\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Aspose.Cells">
+      <HintPath>..\..\..\..\..\Aspose.Cells.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
