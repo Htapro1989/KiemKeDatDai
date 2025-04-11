@@ -34,6 +34,7 @@ using System.Transactions;
 using KiemKeDatDai.App.Huyen.Dto;
 using NuGet.Protocol;
 using Aspose.Cells;
+using KiemKeDatDai.AppCore.Utility;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -1202,26 +1203,19 @@ namespace KiemKeDatDai.RisApplication
             //kiểm tra tên file có giống định dạng BDHT_TenXa.dgn
             if (userXa != null)
             {
-                string[] nameDvhc = userXa.UserName.Split("_");
-                string nameXa = "";
-                if (nameDvhc.Length > 0)
-                    nameXa = "BDHT_" + nameDvhc[nameDvhc.Length - 1];
+                string nameXa = "BDHT_" + (Utility.convertToUnSign3(userXa.Name)).Replace(" ", "") + ".dgn";
                 if (lstFileName.Count > 0)
                 {
                     foreach (var fileName in lstFileName)
                     {
-                        string[] fileExtension = fileName.ToString().Split('.');
-                        if (fileExtension.Length > 1 && fileExtension[1] == "dgn")
+                        if (nameXa.ToLower() == fileName.ToLower())
                         {
-                            if (nameXa.ToLower() == fileExtension[0].ToLower())
-                            {
-                                checkFileDgnReponse.IsCheck = true;
-                                return checkFileDgnReponse;
-                            }
+                            checkFileDgnReponse.IsCheck = true;
+                            return checkFileDgnReponse;
                         }
                     }
                 }
-                checkFileDgnReponse.Message =" chưa nộp file dgn theo đúng định dạng " + nameXa + ".dgn";
+                checkFileDgnReponse.Message = " chưa nộp file dgn theo đúng định dạng " + nameXa + ".dgn";
             }
             return checkFileDgnReponse;
         }
