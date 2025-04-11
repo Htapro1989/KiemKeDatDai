@@ -1215,7 +1215,7 @@ namespace KiemKeDatDai.RisApplication
                         }
                     }
                 }
-                checkFileDgnReponse.Message = " chưa nộp file dgn theo đúng định dạng " + nameXa + ".dgn";
+                checkFileDgnReponse.Message = " chưa nộp file dgn theo đúng định dạng " + nameXa;
             }
             return checkFileDgnReponse;
         }
