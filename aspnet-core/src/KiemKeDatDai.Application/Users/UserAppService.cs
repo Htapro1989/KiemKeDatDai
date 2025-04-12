@@ -238,11 +238,11 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         }
 
         var currentUser = await _userManager.GetUserByIdAsync(_abpSession.GetUserId());
-        var loginAsync = await _logInManager.LoginAsync(currentUser.UserName, input.AdminPassword, shouldLockout: false);
-        if (loginAsync.Result != AbpLoginResultType.Success)
-        {
-            throw new UserFriendlyException("Your 'Admin Password' did not match the one on record.  Please try again.");
-        }
+        //var loginAsync = await _logInManager.LoginAsync(currentUser.UserName, input.AdminPassword, shouldLockout: false);
+        //if (loginAsync.Result != AbpLoginResultType.Success)
+        //{
+        //    throw new UserFriendlyException("Your 'Admin Password' did not match the one on record.  Please try again.");
+        //}
 
         if (currentUser.IsDeleted || !currentUser.IsActive)
         {
