@@ -12,3 +12,12 @@ export const CAP_DVHC_ENUM = {
     HUYEN: '3',
     XA: '4',
 }
+
+admin/Letinh$202512368
+
+
+Xử lý lỗi refresh trang 404 - ISS:
+
+URL REWRITE
+![alt text](image-1.png)
+![alt text](image-2.png)

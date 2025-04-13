@@ -36,11 +36,20 @@ export default function CreateOrUpdateDvhcForm(props: any) {
 
     const onCreateOrUpdateDVHC = async () => {
         if (formState.action == CREATE) {
+            const fieldValues = formRef.current?.getFieldsValue();
             const response = await dvhcService.createOrUpdateDVHC({
-                ...formRef.current?.getFieldsValue(),
+                ...fieldValues,
+                maXa: fieldValues?.maXa || '',
+                maHuyen: fieldValues?.maHuyen || '',
+                maTinh: fieldValues?.maTinh || '',
+                maVung: fieldValues?.maVung || '',
+                tenXa: fieldValues?.tenXa || '',
+                tenHuyen: fieldValues?.tenHuyen || '',
+                tenTinh: fieldValues?.tenTinh || '',
+                tenVung: fieldValues?.tenVung || '',
                 year: props.year,
                 parent_id: entity?.id,
-                parent_Code: entity?.ma,
+                parent_Code: entity?.ma || '',
             });
 
             if (response.code == 1) {
@@ -58,8 +67,17 @@ export default function CreateOrUpdateDvhcForm(props: any) {
             }
         }
         if (formState.action == UPDATE) {
+            const fieldValues = formRef.current?.getFieldsValue();
             const response = await dvhcService.createOrUpdateDVHC({
-                ...formRef.current?.getFieldsValue(),
+                ...fieldValues,
+                maXa: fieldValues?.maXa || '',
+                maHuyen: fieldValues?.maHuyen || '',
+                maTinh: fieldValues?.maTinh || '',
+                maVung: fieldValues?.maVung || '',
+                tenXa: fieldValues?.tenXa || '',
+                tenHuyen: fieldValues?.tenHuyen || '',
+                tenTinh: fieldValues?.tenTinh || '',
+                tenVung: fieldValues?.tenVung || '',
                 parent_Code: entity?.parent_Code,
                 parent_id: entity?.parent_id,
             });
@@ -154,7 +172,7 @@ export default function CreateOrUpdateDvhcForm(props: any) {
             <Form layout='vertical' ref={formRef} style={{ minHeight: 300 }} >
                 <Row gutter={12}>
                     <Col span={12}>
-                        <Form.Item label="Mã đơn vị hành chính" name="ma" rules={[{ required: true }]}>
+                        <Form.Item label="Mã đơn vị hành chính" name="ma" rules={rules.required}>
                             <Input />
                         </Form.Item>
                     </Col>
@@ -169,29 +187,38 @@ export default function CreateOrUpdateDvhcForm(props: any) {
                 </Row>
                 {
                     entity?.capDVHCId > CAP_DVHC_ENUM.VUNG && (
-                        <Form.Item label="Tên Vùng" name="tenVung" rules={[{ required: true }]}>
+                        <Form.Item label="Tên Vùng" name="tenVung" rules={rules.required}>
                             <Input disabled={true} />
                         </Form.Item>
                     )
                 }
                 {
                     entity?.capDVHCId > CAP_DVHC_ENUM.TINH && (
-                        <Form.Item label="Tên Tỉnh/Thành phố" name="tenTinh" rules={[{ required: true }]}>
+                        <Form.Item label="Tên Tỉnh/Thành phố" name="tenTinh" rules={rules.required}>
                             <Input disabled={true} />
                         </Form.Item>
                     )
                 }
                 {
                     entity?.capDVHCId > CAP_DVHC_ENUM.HUYEN && (
-                        <Form.Item label="Tên Quận/Huyện" name="tenHuyen" rules={[{ required: true }]}>
+                        <Form.Item label="Tên Quận/Huyện" name="tenHuyen" rules={rules.required}>
                             <Input disabled={true} />
                         </Form.Item>
                     )
                 }
 
-                <Form.Item label={formState.action == UPDATE ? "Tên đơn vị hành chính" : `Tên đơn vị hành chính cấp ${formState.createCapDVHC}`} name="name" rules={[{ required: true }]}>
+                <Form.Item label={formState.action == UPDATE ? "Tên đơn vị hành chính" : `Tên đơn vị hành chính cấp ${formState.createCapDVHC}`} name="name" rules={rules.required}>
                     <Input />
                 </Form.Item>
+
+                {
+                    (entity?.capDVHCId == CAP_DVHC_ENUM.XA || (formState.action == CREATE && entity?.capDVHCId == CAP_DVHC_ENUM.HUYEN)) && (
+                        <Form.Item label="Số lượng tệp tải lên tối đa" name="maxFileUpload" rules={rules.required}>
+                            <Input />
+                        </Form.Item>
+                    )
+                }
+
                 <Form.Item hidden name={'id'} />
             </Form>
             <div className='button-wrapper'>

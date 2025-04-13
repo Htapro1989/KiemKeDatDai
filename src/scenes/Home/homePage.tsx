@@ -9,6 +9,7 @@ import SessionStore from '../../stores/sessionStore';
 import BieuDoTab from './components/BieuDoTab';
 import TableBaoCao from '../BaoCaoSoLieu/components/TableBaoCao';
 import FileManagerComponent from './components/FileManagerComponent';
+import { ROUTER_PATH } from '../../components/Router/router.config';
 // import TrangThaiDVHCTab from './components/TrangThaiDVHCTab';
 
 export interface IHomePageProps {
@@ -30,11 +31,16 @@ export interface IHomePageState {
 export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
   render(): React.ReactNode {
-    const { donViHanhChinhSelected } = this.props.donViHanhChinhStore!
+    const { donViHanhChinhSelected, donViHanhChinhOfUser } = this.props.donViHanhChinhStore!
     const message_Info = this.props.sessionStore?.currentLogin?.user?.message_Info;
+    const isChangePass = this.props.sessionStore?.currentLogin?.user?.isChangePass;
+
+    if (isChangePass === true) {
+      this.props.history.replace(ROUTER_PATH.CHANGEPASSWORD + `?firstLogin=true`);
+    }
+
     return (
       <Layout>
-
         <SiderMenu path={""}
           onCollapse={() => { }}
           history={null} collapsed={false} />
@@ -60,7 +66,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
               </Tabs.TabPane>
               <Tabs.TabPane tab="Báo cáo" key="3">
                 <TableBaoCao
-                  capDVHCID={donViHanhChinhSelected?.capDVHCId}
+                  capDVHCID={donViHanhChinhOfUser?.capDVHCId}
                   maDVHC={donViHanhChinhSelected?.ma}
                   year={donViHanhChinhSelected?.year} />
                 {/* <TrangThaiDVHCTab dvhcRoot={donViHanhChinhSelected} /> */}

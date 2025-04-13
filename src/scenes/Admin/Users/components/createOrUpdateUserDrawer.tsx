@@ -2,11 +2,12 @@ import { Button, Checkbox, Col, Drawer, Form, Input, Row, Tabs } from 'antd'
 import React, { useState } from 'react'
 import rules from './createOrUpdateUser.validation'
 import { GetRoles } from '../../../../services/user/dto/getRolesOuput';
+import accountService from '../../../../services/account/accountService';
 const TabPane = Tabs.TabPane;
 
 export default function CreateOrUpdateUserDrawer(props: any) {
     const [confirmDirty, setconfirmDirty] = useState(false)
-    // const [formState, setFormState] = useState<any>();
+    const [isChangePass, setIsChangePass] = useState(false)
 
 
     const { roles } = props;
@@ -44,32 +45,24 @@ export default function CreateOrUpdateUserDrawer(props: any) {
         props.onClose()
     }
 
-    // const fetchDvhc = async (dvchId: any) => {
-    //     if (!dvchId) return;
-    //     const response = await dvhcService.getById(dvchId)
-    //     if (response?.code != 1 || response?.returnValue?.length <= 0) return;
+    const onResetPassword = async () => {
+        if (props.modalType == 'create' && isChangePass) {
+            const form = props.formRef.current;
 
-    //     const dvhc = response?.returnValue[0];
-    //     console.log("DVHC selected ", dvhc)
-    //     if (dvhc) {
-    //         updateState({
-    //             maHuyen: dvhc.maHuyen,
-    //             maTinh: dvhc.maTinh,
-    //             maVung: dvhc.maVung,
-    //             maXa: dvhc.maXa,
-    //         })
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if (props.visible)
-    //         fetchDvhc(props.entitySelected?.donViHanhChinhId)
-
-    // }, [props.visible])
+            const values = await form!.validateFields()
+            if (values) {
+                const id = form!.getFieldValue('id')
+                const password = form!.getFieldValue('changepassword')
+                await accountService.resetPassword({
+                    "userId": id,
+                    "newPassword": password
+                })
+            }
+        }
+    }
 
     const onCreateUser = () => {
-        // let oldDvhcId = props.entitySelected?.donViHanhChinhId;
-        // const dvhcId = formState?.idXa || formState?.idHuyen || formState?.idTinh || formState?.idVung || oldDvhcId
+        onResetPassword()
         props.onCreate(null)
     }
 
@@ -177,6 +170,39 @@ export default function CreateOrUpdateUserDrawer(props: any) {
                             <Form.Item label={'Trạng thái'} name={'isActive'} valuePropName={'checked'}>
                                 <Checkbox>Hoạt động</Checkbox>
                             </Form.Item>
+
+                            {props.modalType === 'create' && (
+                                <Checkbox
+                                    checked={isChangePass}
+                                    onChange={(e) => {
+                                        setIsChangePass(e.target.checked)
+                                    }
+                                    }
+                                    style={{ marginBottom: 16 }}>Đặt lại mật khẩu</Checkbox>
+
+                            )}
+
+                            <Row gutter={8}>
+                                <Col span={12}>
+                                    {isChangePass ? (
+                                        <Form.Item
+                                            label={'Mật khẩu mới'}
+
+                                            name={'changepassword'}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Vui lòng điền đầy đủ thông tin',
+                                                }
+                                            ]}
+                                        >
+                                            <Input type="password" />
+                                        </Form.Item>
+                                    ) : null}
+                                </Col>
+                            </Row>
+
+
                         </TabPane>
                         <TabPane tab={'Quyền'} key={'rol'} forceRender={true}>
                             <Form.Item name={'roleNames'}>

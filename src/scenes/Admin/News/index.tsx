@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './index.less'
-import { Button, Card, Dropdown, Menu, Modal, notification, Table } from 'antd'
+import { Button, Card, Dropdown, Empty, Menu, Modal, notification, Table, Tag } from 'antd'
 import { PlusOutlined, SettingOutlined } from '@ant-design/icons'
 import newsService from '../../../services/news/newsService'
 import CreateOrUpdateNewsModal from './components/CreateOrUpdateKyKiemKe'
@@ -13,6 +13,7 @@ export default function NewsPage() {
         visible: false,
         entity: null
     })
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const getNews = async () => {
@@ -49,7 +50,12 @@ export default function NewsPage() {
     const handleCreate = async () => {
         const form = formRef.current;
         form!.validateFields().then(async (values: any) => {
-            const response = await newsService.createOrUpdateNews(values)
+            setIsLoading(true)
+
+            const response = await newsService.createOrUpdateNews({
+                ...values,
+                fileData: values.fileData
+            })
             if (response.code == 1) {
                 notification.success({ message: response.message })
                 await getNews();
@@ -58,6 +64,7 @@ export default function NewsPage() {
             } else {
                 notification.error({ message: response.message })
             }
+            setIsLoading(false)
         });
     }
     const createOrUpdateModalOpen = (item?: any) => {
@@ -67,12 +74,17 @@ export default function NewsPage() {
         })
     }
 
-    const columns = [
+    const columns: any = [
         {
             title: 'Cột', dataIndex: 'type', key: 'type',
-            width: 350,
             render: (text: string) => {
-                return <span>{text == '1' ? 'VĂN BẢN CHỈ ĐẠO' : text == '2' ? 'HỆ THỐNG THỐNG KÊ KIỂM KÊ ĐẤT ĐAI' : text == '3' ? 'TRAO ĐỔI, THẢO LUẬN' : ''}</span>
+                return <span>
+                    {
+                        text == '1' ? 'VĂN BẢN CHỈ ĐẠO' : text == '2'
+                            ? 'HỆ THỐNG THỐNG KÊ KIỂM KÊ ĐẤT ĐAI' : text == '3'
+                                ? 'TRAO ĐỔI, THẢO LUẬN' : ''
+                    }
+                </span>
             },
             filters: [
                 {
@@ -91,14 +103,28 @@ export default function NewsPage() {
             onFilter: (value: any, record: any) => record.type == value,
         },
         { title: 'Tiêu đề tin tức', dataIndex: 'title', key: 'title' },
+        { title: 'Nội dung', dataIndex: 'content', key: 'content' },
+        { title: 'Tên tệp', dataIndex: 'fileName', key: 'fileName' },
         {
             title: 'Thứ tự',
-            width: 250,
-            dataIndex: 'orderLabel', key: 'orderLabel'
+            dataIndex: 'orderLabel', key: 'orderLabel',
+            width: 100
+        },
+        {
+            title: 'Trạng thái', dataIndex: 'status', key: 'status',
+            width: 100,
+            align: "center",
+            render: (text: string, item: any) => (
+                <div>
+                    {
+                        text == '1' ? <Tag color="success">Hiển thị</Tag> : <Tag color="error">Ẩn</Tag>
+                    }
+                </div>
+            )
         },
         {
             title: 'Hành động',
-            width: 120,
+            width: 70,
             render: (text: string, item: any) => (
                 <div>
                     <Dropdown
@@ -140,11 +166,17 @@ export default function NewsPage() {
                     rowKey={"id"}
                     bordered={true}
                     columns={columns}
+                    size='small'
                     scroll={{ y: 600 }}
                     // pagination={{ pageSize: 10, total: news === undefined ? 0 : news.totalCount, defaultCurrent: 1 }}
                     pagination={false}
                     loading={false}
                     dataSource={news === undefined ? [] : news.items}
+                    locale={{
+                        emptyText: (
+                            <Empty description="Không có dữ liệu"> </Empty>
+                        ),
+                    }}
                 />
             </Card>
 
@@ -153,7 +185,7 @@ export default function NewsPage() {
                 formRef={formRef}
                 visible={isOpenDrawer.visible}
                 entity={isOpenDrawer.entity}
-                confirmLoading={false}
+                confirmLoading={isLoading}
                 onCancel={() => {
                     setIsOpenDrawer({ visible: false, entity: null })
                 }}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import dvhcService from '../../../../services/dvhc/dvhcService'
-import { Button, Card, Col, Dropdown, Input, Menu, Modal, notification, Row, Select, Table } from 'antd'
+import { Button, Card, Col, Dropdown, Empty, Input, Menu, Modal, notification, Row, Select, Table } from 'antd'
 // import SelectItem from '../../../../components/Select/SelectItem'
 import { PlusOutlined, SettingOutlined } from '@ant-design/icons'
 import CreateOrUpdateDVHC from './CreateOrUpdateDVHC'
@@ -203,6 +203,11 @@ export default function DonViHanhChinhTable(props: DonViHanhChinhTableProps) {
                     loading={false}
                     dataSource={dataDvhc === undefined ? [] : dataDvhc?.items}
                     onChange={handleTableChange}
+                    locale={{
+                        emptyText: (
+                            <Empty description="Không có dữ liệu"> </Empty>
+                        ),
+                    }}
                 />
                 <CreateOrUpdateDVHC
                     title='Cấp đơn vị hành chính'

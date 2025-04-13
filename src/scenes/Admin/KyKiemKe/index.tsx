@@ -1,7 +1,7 @@
 import React from 'react'
 import "./index.less";
 import AppComponentBase from '../../../components/AppComponentBase';
-import { Button, Card, Dropdown, Menu, Modal, notification, Table } from 'antd';
+import { Button, Card, Dropdown, Empty, Menu, Modal, notification, Table } from 'antd';
 import { PlusOutlined, SettingOutlined } from '@ant-design/icons';
 import { EntityDto } from '../../../services/dto/entityDto';
 import { FormInstance } from 'antd/lib/form';
@@ -137,6 +137,11 @@ class QuanLyKyKiemKePage extends AppComponentBase<IQuanLyKyKiemKeProps, IQuanLyK
                         pagination={false}
                         loading={this.state.isLoading}
                         dataSource={this.state.listKyKiemKe}
+                        locale={{
+                            emptyText: (
+                                <Empty description="Không có dữ liệu"> </Empty>
+                            ),
+                        }}
                     />
                 </Card>
                 <CreateOrUpdateKyKiemKeModal

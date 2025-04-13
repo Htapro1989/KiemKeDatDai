@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Button, Card, Input, Modal, Table, Tag } from 'antd';
+import { Button, Card, Empty, Input, Modal, Table, Tag } from 'antd';
 import { inject, observer } from 'mobx-react';
 import AppComponentBase from '../../../components/AppComponentBase';
 import { EntityDto } from '../../../services/dto/entityDto';
@@ -58,7 +58,7 @@ class User extends AppComponentBase<IUserProps, IUserState> {
 
   async getAll(dvhcIdSelected?: any) {
     const ma = dvhcIdSelected ? dvhcIdSelected : this.state.maDvhcSelected?.ma
-    if (!ma) {return};
+    if (!ma) { return };
     await this.props.userStore.getAll({
       maxResultCount: this.state.maxResultCount,
       skipCount: this.state.skipCount,
@@ -119,11 +119,13 @@ class User extends AppComponentBase<IUserProps, IUserState> {
         await this.props.userStore.create({
           ...values,
           donViHanhChinhId: this.state.maDvhcSelected.id,
+          donViHanhChinhCode: this.state.maDvhcSelected.ma,
         });
       } else {
         await this.props.userStore.update({
           ...values,
           donViHanhChinhId: this.state.maDvhcSelected.id,
+          donViHanhChinhCode: this.state.maDvhcSelected.ma,
           id: this.state.userId
         });
       }
@@ -135,6 +137,7 @@ class User extends AppComponentBase<IUserProps, IUserState> {
   };
 
   handleSearch = (value: string) => {
+    console.log("SEARCH", value);
     this.setState({ filter: value }, async () => await this.getAll());
   };
 
@@ -182,6 +185,11 @@ class User extends AppComponentBase<IUserProps, IUserState> {
                 loading={users === undefined ? true : false}
                 dataSource={users === undefined ? [] : users.items}
                 onChange={this.handleTableChange}
+                locale={{
+                  emptyText: (
+                    <Empty description="Không có dữ liệu"> </Empty>
+                  ),
+                }}
                 title={
                   () => {
                     return (

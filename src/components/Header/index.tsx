@@ -5,7 +5,7 @@ import * as React from 'react';
 
 // import profilePicture from '../../images/user.png';
 import profileDefault from '../../images/avatar-default.png';
-import { LogoutOutlined } from '@ant-design/icons';
+import { KeyOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 
 import DownIcon from '../../images/icons/down.svg';
@@ -24,12 +24,19 @@ export interface IHeaderProps {
 
 const userDropdownMenu = (
   <Menu>
+    <Menu.Item key="1">
+      <Link to={ROUTER_PATH.CHANGEPASSWORD}>
+        <KeyOutlined />
+        <span> Đổi mật khẩu</span>
+      </Link>
+    </Menu.Item>
     <Menu.Item key="2">
       <Link to="/logout">
         <LogoutOutlined />
         <span> Đăng xuất</span>
       </Link>
     </Menu.Item>
+
   </Menu>
 );
 const UserAvatar = (props: any) => {
@@ -106,8 +113,10 @@ const MenuBar = () => {
                 Cấu hình tin tức
               </Link>
             </Menu.Item>
-            <Menu.Item key="yKienNguoiDung">
-              Ý kiến người dùng
+            <Menu.Item key={ROUTER_PATH.YKIEN}>
+              <Link to={ROUTER_PATH.YKIEN}>
+                Ý kiến người dùng
+              </Link>
             </Menu.Item>
           </Menu.SubMenu>
         )

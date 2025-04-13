@@ -11,6 +11,8 @@ export const ROUTER_PATH = {
   CAUHINH: "/cauhinh",
   DONVIHANHCHINH: "/don-vi-hanh-chinh",
   NEWS: "/tin-tuc",
+  CHANGEPASSWORD: "/change-password",
+  YKIEN: "/y-kien",
 
 }
 
@@ -123,6 +125,23 @@ export const appRouters: any = [
     icon: TagsOutlined,
     showInMenu: true,
     component: LoadableComponent(() => import('../../scenes/Admin/News')),
+  },
+  {
+    path: ROUTER_PATH.YKIEN,
+    permission: 'Pages.Roles',
+    title: 'Ý kiến người dùng',
+    name: 'ykien',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/Admin/YKienNguoiDung')),
+  },
+  {
+    path: ROUTER_PATH.CHANGEPASSWORD,
+    title: 'Đổi mật khẩu',
+    name: 'changePassword',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/ChangePassword')),
   },
   {
     path: '/tenants',

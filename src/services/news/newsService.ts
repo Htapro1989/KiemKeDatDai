@@ -21,12 +21,24 @@ class NewsService {
         formData.append('Summary', data?.summary || '1');
         formData.append('Content', data?.content || '1');
         formData.append('Type', data?.type);
+        formData.append('Status', data?.status);
+        if (data?.fileData) {
+            formData.append('File', data?.fileData);
+        }
         if (data?.id) {
             formData.append('id', data?.id);
         }
 
         let result = await http.post(`/api/services/app/News/CreateOrUpdate`, formData);
         return result.data.result;
+    }
+
+    public async downloadNewsFileById(fileId: any): Promise<ResponseDto<any[]>> {
+        let result = await http.get(`/api/services/app/News/DownloadFileNewsByID`, {
+            params: { fileId: fileId },
+            responseType: 'blob'
+        });
+        return result.data;
     }
 }
 

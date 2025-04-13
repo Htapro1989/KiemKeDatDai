@@ -21,7 +21,7 @@ class BaoCaoService {
         return undefined;
     }
     public async duyetBaoCao(capDVHCId: string, ma: string, year: String): Promise<ResponseDto<any> | undefined> {
-
+        console.log("CAP DVHC ID", capDVHCId);
         if (capDVHCId == CAP_DVHC_ENUM.HUYEN) {
             return await this.huyenDuyetBaoCaoXa(ma, year);
         } else if (capDVHCId == CAP_DVHC_ENUM.TINH) {

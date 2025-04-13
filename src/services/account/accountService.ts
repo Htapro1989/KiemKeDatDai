@@ -14,6 +14,14 @@ class AccountService {
     let result = await http.post('api/services/app/Account/Register', registerInput);
     return result.data.result;
   }
+  public async changePassword(body: any): Promise<any> {
+    let result = await http.post('/api/services/app/User/ChangePassword', body);
+    return result.data.result;
+  }
+  public async resetPassword(body: any): Promise<any> {
+    let result = await http.post('/api/services/app/User/ResetPassword', body);
+    return result.data.result;
+  }
 }
 
 export default new AccountService();
