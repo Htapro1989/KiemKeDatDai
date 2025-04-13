@@ -12,11 +12,13 @@ namespace KiemKeDatDai.Dto
     [AutoMap(typeof(ConfigSystem))]
     public class ConfigSytemInputDto : ConfigSystem
     {
-        public bool? IsRequiredFileDGN { get; set; }     
+        public bool? IsRequiredFileDGN { get; set; }
+        public int? TimeUpload { get; set; }
     }
     public class JsonConfigSytem
     {
         public bool? IsRequiredFileDGN { get; set; }
+        public int? TimeUpload { get; set; }
     }
     public class ConfigSystemTime
     {

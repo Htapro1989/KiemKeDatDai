@@ -126,7 +126,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> CreateOrUpdate(YKienInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
