@@ -134,9 +134,16 @@ namespace KiemKeDatDai.RisApplication
                         data.expired_auth = input.expired_auth;
                         var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(data.JsonConfigSystem);
                         if (jsonConfigSystem != null)
+                        {
                             jsonConfigSystem.IsRequiredFileDGN = input.IsRequiredFileDGN;
-                        else 
-                            jsonConfigSystem = new JsonConfigSytem { IsRequiredFileDGN = input.IsRequiredFileDGN};
+                            jsonConfigSystem.TimeUpload = input.TimeUpload != null ? input.TimeUpload : 1;
+                        }
+                        else
+                            jsonConfigSystem = new JsonConfigSytem
+                            {
+                                IsRequiredFileDGN = input.IsRequiredFileDGN,
+                                TimeUpload = input.TimeUpload != null ? input.TimeUpload : 1
+                            };
                         data.JsonConfigSystem = jsonConfigSystem.ToJson();
                         data.Active = input.Active;
                         await _configSystemRepos.UpdateAsync(data);
@@ -145,7 +152,10 @@ namespace KiemKeDatDai.RisApplication
                 else
                 {
                     var objdata = input.MapTo<ConfigSystem>();
-                    objdata.JsonConfigSystem = (new JsonConfigSytem { IsRequiredFileDGN = input.IsRequiredFileDGN}).ToJson();
+                    objdata.JsonConfigSystem = (new JsonConfigSytem { 
+                        IsRequiredFileDGN = input.IsRequiredFileDGN,
+                        TimeUpload = input.TimeUpload != null ? input.TimeUpload : 1
+                    }).ToJson();
                     await _configSystemRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;

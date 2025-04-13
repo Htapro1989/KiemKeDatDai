@@ -14,7 +14,6 @@ namespace KiemKeDatDai.RisApplication
     {
         Task<CommonResponseDto> DuyetBaoCaoHuyen(string ma, long year);
         Task<CommonResponseDto> HuyDuyetBaoCaoHuyen(string ma, long year);
-        Task<CommonResponseDto> UploadBieuExcel(IFormFile fileUplaod, long bieuId, string matinh, long year);
         Task<CommonResponseDto> UpdateBieuTinh(string matinh, long year);
     }
 }
