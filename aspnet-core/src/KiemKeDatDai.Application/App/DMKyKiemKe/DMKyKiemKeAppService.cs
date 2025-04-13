@@ -30,8 +30,9 @@ using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
+    [AbpAuthorize]
     public class DMKyKiemKeAppService : KiemKeDatDaiAppServiceBase, IDMKyKiemKeAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -64,7 +65,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetAll(string filter)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -95,14 +95,12 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var objKyKiemKe = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
-                commonResponseDto.ReturnValue = objKyKiemKe;
+                commonResponseDto.ReturnValue = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -114,7 +112,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> CreateOrUpdate(DMKyKiemKeInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -150,7 +147,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         [HttpDelete]
         public async Task<CommonResponseDto> Delete(long id)
         {

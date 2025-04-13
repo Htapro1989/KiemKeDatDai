@@ -32,7 +32,7 @@ using static KiemKeDatDai.CommonEnum;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Transactions;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public class BaoCaoAppService : KiemKeDatDaiAppServiceBase, IBaoCaoAppService
     {

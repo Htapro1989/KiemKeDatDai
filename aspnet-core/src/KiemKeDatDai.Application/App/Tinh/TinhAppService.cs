@@ -39,7 +39,7 @@ using OfficeOpenXml;
 using Newtonsoft.Json.Linq;
 using KiemKeDatDai.App.DMBieuMau.Dto;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public class TinhAppService : KiemKeDatDaiAppServiceBase, ITinhAppService
     {

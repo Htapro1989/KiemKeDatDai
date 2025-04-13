@@ -26,30 +26,34 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using static KiemKeDatDai.CommonEnum;
+using Microsoft.Extensions.Caching.Memory;
+using KiemKeDatDai.Sessions;
 
-namespace KiemKeDatDai.Users;
+namespace KiemKeDatDai.RisApplication;
 
 [AbpAuthorize]
 public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
 {
     private readonly UserManager _userManager;
     private readonly RoleManager _roleManager;
-    private readonly IRepository<Role> _roleRepository;
+    private readonly IRepository<Authorization.Roles.Role> _roleRepository;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IAbpSession _abpSession;
     private readonly LogInManager _logInManager;
     private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
     private readonly IRepository<User, long> _userRepos;
+    private readonly IMemoryCache _cache;
 
     public UserAppService(
         IRepository<User, long> repository,
         UserManager userManager,
         RoleManager roleManager,
-        IRepository<Role> roleRepository,
+        IRepository<Authorization.Roles.Role> roleRepository,
         IPasswordHasher<User> passwordHasher,
         IAbpSession abpSession,
         IRepository<DonViHanhChinh, long> dvhcRepos,
         IRepository<User, long> userRepos,
+        IMemoryCache cache,
         LogInManager logInManager)
         : base(repository)
     {
@@ -61,6 +65,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         _logInManager = logInManager;
         _dvhcRepos = dvhcRepos;
         _userRepos = userRepos;
+        _cache = cache;
     }
 
     public override async Task<UserDto> CreateAsync(CreateUserDto input)
@@ -71,6 +76,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
 
         user.TenantId = AbpSession.TenantId;
         user.IsEmailConfirmed = true;
+        user.IsChangePass = true;
 
         await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
@@ -232,11 +238,11 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         }
 
         var currentUser = await _userManager.GetUserByIdAsync(_abpSession.GetUserId());
-        var loginAsync = await _logInManager.LoginAsync(currentUser.UserName, input.AdminPassword, shouldLockout: false);
-        if (loginAsync.Result != AbpLoginResultType.Success)
-        {
-            throw new UserFriendlyException("Your 'Admin Password' did not match the one on record.  Please try again.");
-        }
+        //var loginAsync = await _logInManager.LoginAsync(currentUser.UserName, input.AdminPassword, shouldLockout: false);
+        //if (loginAsync.Result != AbpLoginResultType.Success)
+        //{
+        //    throw new UserFriendlyException("Your 'Admin Password' did not match the one on record.  Please try again.");
+        //}
 
         if (currentUser.IsDeleted || !currentUser.IsActive)
         {
@@ -264,7 +270,6 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CommonResponseDto commonResponseDto = new CommonResponseDto();
         try
         {
-            PagedResultDto<UserDto> pagedResultDto = new PagedResultDto<UserDto>();
             var query = (from obj in _userRepos.GetAll()
                          select new UserDto
                          {
@@ -285,17 +290,25 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                          || x.Name.ToLower().Contains(input.Keyword.ToLower())
                          || x.EmailAddress.ToLower().Contains(input.Keyword.ToLower()))
                          .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
-            var _lstuser = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
-            if (_lstuser.Count > 0)
+
+            var totalCount = await query.CountAsync();
+            var lstUser = await query.OrderBy(x => x.CreationTime)
+                                .Skip(input.SkipCount)
+                                .Take(input.MaxResultCount)
+                                .ToListAsync();
+
+            if (lstUser.Count > 0)
             {
-                foreach (var item in _lstuser)
+                foreach (var item in lstUser)
                 {
                     item.DonViHanhChinh = _dvhcRepos.Single(x => x.Ma == item.DonViHanhChinhCode).Name;
                 }
             }
-            pagedResultDto.Items = _lstuser;
-            pagedResultDto.TotalCount = await query.CountAsync();
-            commonResponseDto.ReturnValue = pagedResultDto;
+            commonResponseDto.ReturnValue = new PagedResultDto<UserDto>()
+            {
+                Items = lstUser,
+                TotalCount = totalCount
+            };
             commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
         }
@@ -313,10 +326,15 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         CommonResponseDto commonResponseDto = new CommonResponseDto();
         try
         {
-            PagedResultDto<UserDto> pagedResultDto = new PagedResultDto<UserDto>();
-            var lstMa = new List<string>();
-            lstMa = await GetChildrenMa(input.Ma);
-            lstMa.AddRange(input.Ma);
+            if (string.IsNullOrEmpty(input.Ma))
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = "Mã đơn vị hành chính không được để trống.";
+                return commonResponseDto;
+            }
+            var lstMa = await GetChildrenMa(input.Ma);
+            lstMa.Add(input.Ma);
+
             var query = (from obj in _userRepos.GetAll()
                          join dvhc in _dvhcRepos.GetAll() on obj.DonViHanhChinhCode equals dvhc.Ma
                          where lstMa.Contains(dvhc.Ma)
@@ -334,10 +352,17 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                              DonViHanhChinhCode = obj.DonViHanhChinhCode,
                              DonViHanhChinh = dvhc.Name
                          });
-            var _lstuser = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
-            pagedResultDto.Items = _lstuser;
-            pagedResultDto.TotalCount = await query.CountAsync();
-            commonResponseDto.ReturnValue = pagedResultDto;
+            var totalCount = await query.CountAsync();
+            var lstUser = await query.OrderBy(x => x.CreationTime)
+                                .Skip(input.SkipCount)
+                                .Take(input.MaxResultCount)
+                                .ToListAsync();
+
+            commonResponseDto.ReturnValue = new PagedResultDto<UserDto>()
+            {
+                Items = lstUser,
+                TotalCount = totalCount
+            };
             commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
             commonResponseDto.Message = "Thành Công";
         }
@@ -352,53 +377,87 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
 
     private async Task<List<string>> GetChildrenMa(string ma)
     {
-        var lstma = new List<string>();
-        var _dvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
-        var lstmavung = new List<string>();
-        var lstmatinh = new List<string>();
+        var lstMa = new List<string>();
+        var dvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
+        var allDvhc = await _dvhcRepos.GetAll()
+                                      .Where(x => !string.IsNullOrWhiteSpace(x.Ma))
+                                      .ToListAsync();
+        var lstMaVung = new List<string>();
+        var lstMaTinh = new List<string>();
 
-        switch (_dvhc.CapDVHCId)
+        switch (dvhc.CapDVHCId)
         {
             case (int)CAP_DVHC.TRUNG_UONG:
                 {
-                    lstmavung = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == ma && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync();
-                    if (lstmavung.Count > 0)
+                    lstMaVung = allDvhc.Where(x => x.Parent_Code == ma).Select(x => x.Ma).ToList();
+                    if (lstMaVung.Count > 0)
                     {
-                        foreach (var mavung in lstmavung)
+                        lstMa.AddRange(lstMaVung);
+                        foreach (var maVung in lstMaVung)
                         {
-                            lstmatinh.AddRange(await _dvhcRepos.GetAll().Where(x => x.Parent_Code == mavung && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
+                            lstMaTinh.AddRange(allDvhc.Where(x => x.Parent_Code == maVung).Select(x => x.Ma).ToList());
                         }
-                        if (lstmatinh.Count > 0)
+                        if (lstMaTinh.Count > 0)
                         {
-                            foreach (var item in lstmatinh)
+                            foreach (var maTinh in lstMaTinh)
                             {
-                                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == item && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
+                                lstMa.AddRange(allDvhc.Where(x => x.Parent_Code == maTinh).Select(x => x.Ma).ToList());
                             }
                         }
                     }
                     break;
                 }
             case (int)CAP_DVHC.VUNG:
-                lstmatinh = await _dvhcRepos.GetAll().Where(x => x.Parent_Code == ma && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync();
-                if (lstmatinh.Count > 0)
+                lstMaTinh = allDvhc.Where(x => x.Parent_Code == ma).Select(x => x.Ma).ToList();
+                if (lstMaTinh.Count > 0)
                 {
-                    foreach (var item in lstmatinh)
+                    foreach (var maTinh in lstMaTinh)
                     {
-                        lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == item && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
+                        lstMa.AddRange(allDvhc.Where(x => x.MaTinh == maTinh).Select(x => x.Ma).ToList());
                     }
                 }
                 break;
             case (int)CAP_DVHC.TINH:
-                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaTinh == ma && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
+                lstMa.AddRange(allDvhc.Where(x => x.MaTinh == ma).Select(x => x.Ma).ToList());
                 break;
             case (int)CAP_DVHC.HUYEN:
-                lstma.AddRange(await _dvhcRepos.GetAll().Where(x => x.MaHuyen == ma && x.Ma != "" && x.Ma != null).Select(x => x.Ma).ToListAsync());
+                lstMa.AddRange(allDvhc.Where(x => x.MaHuyen == ma).Select(x => x.Ma).ToList());
                 break;
             case (int)CAP_DVHC.XA:
                 break;
         }
 
-        return lstma;
+        return lstMa;
+    }
+    private async Task<List<DonViHanhChinh>> GetAllDVHCWithCacheAsync()
+    {
+        return await _cache.GetOrCreateAsync("AllDVHCs", async entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(6); 
+            return await _dvhcRepos.GetAll()
+                .Select(x => new DonViHanhChinh
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    TenVung = x.TenVung,
+                    MaVung = x.MaVung,
+                    TenTinh = x.TenTinh,
+                    MaTinh = x.MaTinh,
+                    TenHuyen = x.TenHuyen,
+                    MaHuyen = x.MaHuyen,
+                    TenXa = x.TenXa,
+                    MaXa = x.MaXa,
+                    Ma = x.Ma,
+                    Parent_id = x.Parent_id,
+                    Parent_Code = x.Parent_Code,
+                    CapDVHCId = x.CapDVHCId,
+                    TrangThaiDuyet = x.TrangThaiDuyet,
+                    Year = x.Year,
+                    CreationTime = x.CreationTime,
+                    Active = x.Active
+                })
+                .ToListAsync();
+        });
     }
 }
 

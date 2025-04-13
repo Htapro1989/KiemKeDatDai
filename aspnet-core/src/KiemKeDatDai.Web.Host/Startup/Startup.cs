@@ -21,6 +21,9 @@ using NuGet.Packaging.Licenses;
 using System.Text;
 using KiemKeDatDai.App.DMBieuMau;
 using KiemKeDatDai.Dto;
+using Aspose.Cells.Charts;
+using Abp.Modules;
+using KiemKeDatDai.RisApplication;
 
 namespace KiemKeDatDai.Web.Host.Startup
 {
@@ -38,7 +41,6 @@ namespace KiemKeDatDai.Web.Host.Startup
             _hostingEnvironment = env;
             _appConfiguration = env.GetAppConfiguration();
         }
-
         public void ConfigureServices(IServiceCollection services)
         {
             string xmlData = _appConfiguration["Aspose:License"];
@@ -55,16 +57,7 @@ namespace KiemKeDatDai.Web.Host.Startup
             {
                 Console.WriteLine("❌ Lỗi khi áp dụng license: " + ex.Message);
             }
-            //var key = Encoding.UTF8.GetBytes(xmlData);
-            //Aspose.Cells.License license = new Aspose.Cells.License();
 
-            //new Aspose.Words.License().SetLicense(new MemoryStream(key));
-            //new Aspose.Pdf.License().SetLicense(new MemoryStream(key));
-            //return builder;
-            //using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(xmlData)))
-            //{
-            //    license.SetLicense(stream); // Cấp phép từ XML string
-            //}
             //MVC
             services.AddControllersWithViews(options =>
             {
@@ -111,6 +104,13 @@ namespace KiemKeDatDai.Web.Host.Startup
             );
             services.AddSingleton<RabbitMQService>();
             services.ConfigureWritable<ConfigSystemTime>(_appConfiguration.GetSection("ConfigSystemTime"));
+
+            //setup redis 
+            //services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = _appConfiguration["Redis:Configuration"];
+            //});
+            services.AddMemoryCache();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

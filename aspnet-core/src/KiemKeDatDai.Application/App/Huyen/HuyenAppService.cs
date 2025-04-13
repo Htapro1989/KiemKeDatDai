@@ -33,8 +33,10 @@ using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Transactions;
 using KiemKeDatDai.App.Huyen.Dto;
 using NuGet.Protocol;
+using Aspose.Cells;
+using KiemKeDatDai.AppCore.Utility;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     public class HuyenAppService : KiemKeDatDaiAppServiceBase, IHuyenAppService
     {
@@ -79,6 +81,8 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
+        private readonly IRepository<File, long> _fileRepos;
+        private readonly IRepository<ConfigSystem, long> _configSystemRepos;
         //private readonly ILogAppService _iLogAppService;
 
         private readonly ICache mainCache;
@@ -123,7 +127,9 @@ namespace KiemKeDatDai.App.DMBieuMau
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
-            IHttpContextAccessor httpContextAccessor
+            IRepository<File, long> fileRepos,
+            IRepository<ConfigSystem, long> configSystemRepos,
+        IHttpContextAccessor httpContextAccessor
             //ILogAppService iLogAppService
             )
         {
@@ -166,6 +172,9 @@ namespace KiemKeDatDai.App.DMBieuMau
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
+            _fileRepos = fileRepos;
+            _configSystemRepos = configSystemRepos;
+            _userRepos = userRepos;
             //_iLogAppService = iLogAppService;
         }
 
@@ -180,10 +189,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
-                    if (objdata != null)
+                    var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+                    if (currentDvhc != null)
                     {
-                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                        if (currentDvhc.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
                         {
                             commonResponseDto.Message = "Huyện đã được duyệt, không thể duyệt xã";
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;
@@ -191,11 +200,28 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                         else
                         {
-                            var xa = await _dvhcRepos.FirstOrDefaultAsync(x=>x.Ma == ma);
+                            var xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                             if (xa != null)
                             {
+                                //Kiểm tra hệ thống có config yêu cầu file dgn k?
+                                var currentConfigSystem = await _configSystemRepos.FirstOrDefaultAsync(x => x.Active == true);
+                                if (currentConfigSystem != null)
+                                {
+                                    var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(currentConfigSystem.JsonConfigSystem);
+                                    if (jsonConfigSystem.IsRequiredFileDGN == true)
+                                    {
+                                        var checkFileDgnReponse = await CheckFileDgn(ma);
+                                        if (checkFileDgnReponse.IsCheck == false)
+                                        {
+                                            commonResponseDto.Message = xa.Name + checkFileDgnReponse.Message;
+                                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                                            return commonResponseDto;
+                                        }
+
+                                    }
+                                }
                                 //gọi hàm update biểu huyện
-                                commonResponseDto = await CreateOrUpdateBieuHuyen(objdata, ma, year, (int)HAM_DUYET.DUYET);
+                                commonResponseDto = await CreateOrUpdateBieuHuyen(currentDvhc, ma, year, (int)HAM_DUYET.DUYET);
 
                                 #region cập nhật DVHC xã sau khi duyệt xã
                                 xa.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
@@ -211,19 +237,19 @@ namespace KiemKeDatDai.App.DMBieuMau
                             }
 
                             #region cập nhật DVHC huyện sau khi duyệt xã
-                            if (objdata.SoDVHCDaDuyet == null)
+                            if (currentDvhc.SoDVHCDaDuyet == null)
                             {
-                                objdata.SoDVHCDaDuyet = 1;
+                                currentDvhc.SoDVHCDaDuyet = 1;
                             }
                             else
                             {
-                                objdata.SoDVHCDaDuyet++;
+                                currentDvhc.SoDVHCDaDuyet++;
                             }
-                            if (objdata.SoDVHCCon == null)
+                            if (currentDvhc.SoDVHCCon == null)
                             {
-                                objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_id == currentUser.DonViHanhChinhId.Value);
+                                currentDvhc.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_id == currentUser.DonViHanhChinhId.Value);
                             }
-                            await _dvhcRepos.UpdateAsync(objdata);
+                            await _dvhcRepos.UpdateAsync(currentDvhc);
                             #endregion
                         }
                     }
@@ -268,7 +294,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         }
                         else
                         {
-                            var xa = await _dvhcRepos.FirstOrDefaultAsync(x=>x.Ma==ma);
+                            var xa = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                             if (xa != null)
                             {
                                 //gọi hàm update biểu huyện(trường hợp xã đã duyệt)
@@ -729,7 +755,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                     else
                     {
                         objhuyen.TongDienTich -= xa.TongDienTichDVHC;
-                        if (dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma) != null) 
+                        if (dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma) != null)
                             dientichtheoDVHC.Remove(dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma));
                         objhuyen.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
                     }
@@ -1164,5 +1190,34 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
         }
         #endregion
+
+        private async Task<CheckFileDgnReponse> CheckFileDgn(string ma)
+        {
+            var checkFileDgnReponse = new CheckFileDgnReponse
+            {
+                IsCheck = false,
+                Message = ""
+            };
+            var lstFileName = await _fileRepos.GetAll().Where(x => x.MaDVHC == ma).Select(x => x.FileName).ToListAsync();
+            var userXa = await _userRepos.FirstOrDefaultAsync(x => x.DonViHanhChinhCode == ma);
+            //kiểm tra tên file có giống định dạng BDHT_TenXa.dgn
+            if (userXa != null)
+            {
+                string nameXa = "BDHT_" + (Utility.convertToUnSign3(userXa.Name)).Replace(" ", "") + ".dgn";
+                if (lstFileName.Count > 0)
+                {
+                    foreach (var fileName in lstFileName)
+                    {
+                        if (nameXa.ToLower() == fileName.ToLower())
+                        {
+                            checkFileDgnReponse.IsCheck = true;
+                            return checkFileDgnReponse;
+                        }
+                    }
+                }
+                checkFileDgnReponse.Message = " chưa nộp file " + nameXa + " theo quy định.";
+            }
+            return checkFileDgnReponse;
+        }
     }
 }

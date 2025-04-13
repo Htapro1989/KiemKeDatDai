@@ -18,4 +18,9 @@ namespace KiemKeDatDai.App.Huyen.Dto
         public long? Year { get; set; }
         public decimal DienTich { get; set; }
     }
+    public class CheckFileDgnReponse
+    {
+        public bool? IsCheck { get; set; }
+        public string Message { get; set; }
+    }
 }

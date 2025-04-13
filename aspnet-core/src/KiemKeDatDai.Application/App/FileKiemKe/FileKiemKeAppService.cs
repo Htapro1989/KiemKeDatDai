@@ -33,11 +33,12 @@ using Microsoft.AspNetCore.Hosting;
 
 using Microsoft.Extensions.Configuration;
 
-namespace KiemKeDatDai.App.DMBieuMau
+namespace KiemKeDatDai.RisApplication
 {
     /// <summary>
     /// service file kiểm kê
     /// </summary>
+    [AbpAuthorize]
     public class FileKiemKeAppService : KiemKeDatDaiAppServiceBase, IFileKiemKeAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -97,7 +98,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             //_iLogAppService = iLogAppService;
             _userRepos = userRepos;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetFileKyThongKeByDVHC(FileKiemKeFilterDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -169,7 +169,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetFileAttachByDVHC(FileKiemKeFilterDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -202,7 +201,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> DeleteAttachFile(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -222,7 +220,6 @@ namespace KiemKeDatDai.App.DMBieuMau
                 throw;
             }
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> CountRequestByCommune(string MaDVHC, int Year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -262,7 +259,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
         {
@@ -374,7 +370,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         [HttpPost]
         public async Task<CommonResponseDto> UploadAttachFile([FromForm] FileAttachUploadInputDto input)
         {
@@ -400,12 +395,12 @@ namespace KiemKeDatDai.App.DMBieuMau
                 }
                 // Check if the file is a ZIP file
                 var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
-                string[] fileExtensions = { ".zip", ".zar", ".pdf", ".docx", ".doc", ".xls", ".xlsx" };
+                string[] fileExtensions = { ".zip", ".zar", ".pdf", ".docx", ".doc", ".xls", ".xlsx",".dgn" };
 
                 if (!fileExtensions.Contains(fileExtension))
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Chỉ chấp nhận những định dạng sau: Word, Excel, zip, rar, PDF.";
+                    commonResponseDto.Message = "Chỉ chấp nhận những định dạng sau: Word, Excel, zip, rar, PDF, DGN.";
                     commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
 
                     return commonResponseDto;
@@ -447,7 +442,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         [HttpGet]
         public async Task<IActionResult> DownloadFile(long year, string maDVHC)
         {
@@ -476,7 +470,6 @@ namespace KiemKeDatDai.App.DMBieuMau
                 FileDownloadName = fileEntity.FileName
             };
         }
-        [AbpAuthorize]
         [HttpGet]
         public async Task<IActionResult> DownloadFileByID(int FileId)
         {
@@ -526,7 +519,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                 { ".jpg", "image/jpeg" },
                 { ".jpeg", "image/jpeg" },
                 { ".gif", "image/gif" },
-                { ".csv", "text/csv" }
+                { ".csv", "text/csv" },
+                { ".dgn", "application/octet-stream" }
             };
         }
     }
