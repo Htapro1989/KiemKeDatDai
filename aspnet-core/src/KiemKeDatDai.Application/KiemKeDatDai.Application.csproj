@@ -25,8 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Aspose.Cells">
-      <HintPath>bin\Release\net9.0\Aspose.Cells.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\DLL\Aspose.Cells.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
