@@ -13,7 +13,7 @@ namespace KiemKeDatDai.RisApplication
     public interface IBieuMau02aKKNLTAppService : IApplicationService
     {
         Task<CommonResponseDto> GetByDVHC(long dvhcId, long year);
-        Task<CommonResponseDto> CreateOrUpdate(Bieu02aKKNLT_TinhDto input);
+        Task<CommonResponseDto> CreateOrUpdate(Bieu02aKKNLT_TinhInputDto input);
         Task<CommonResponseDto> Delete(long id);
     }
 }

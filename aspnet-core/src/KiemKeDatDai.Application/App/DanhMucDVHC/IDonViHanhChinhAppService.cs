@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KiemKeDatDai.EntitiesDb;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -28,7 +30,7 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> GetDropDownHuyenByMaTinh(string ma);
         Task<CommonResponseDto> GetDropDownXaByHuyenId(long huyenId);
         Task<CommonResponseDto> GetDropDownXaByMaHuyen(string ma);
-        Task<CommonResponseDto> UploadFileDVHC(long year);
-        Task<CommonResponseDto> DownloadTemplateDVHC(long year);
+        Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUplaod, long year);
+        Task<FileStreamResult> DownloadTemplateDVHC();
     }
 }

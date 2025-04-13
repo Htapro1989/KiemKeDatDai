@@ -33,6 +33,10 @@ using KiemKeDatDai.AppCore.Utility;
 using System.Text.Json;
 using System.IO;
 using System.Text.Encodings.Web;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using OfficeOpenXml;
+using Newtonsoft.Json.Linq;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -911,13 +915,13 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
         [AbpAuthorize]
-        public async Task<CommonResponseDto> UploadBieuExcel(IFormFile fileUplaod, string mabieu, string matinh, long year)
+        public async Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUpload, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 //var results = new List<List<DamInfoJsonOutput>>();
-                var urlFile = await WriteFile(fileUplaod, matinh);
+                var urlFile = await WriteFile(fileUpload);
 
                 var dt = new System.Data.DataTable();
                 var fi = new FileInfo(urlFile);
@@ -927,7 +931,8 @@ namespace KiemKeDatDai.RisApplication
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "File " + urlFile + " không tồn tại";
                 }
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
 
                 var worksheets = excel.Workbook.Worksheets;
@@ -943,10 +948,10 @@ namespace KiemKeDatDai.RisApplication
                         var table = sheet.Tables.FirstOrDefault();
                         if (table != null)
                         {
-                            if (sheet.Index == 0)
-                            {
-                                await _dvhcRepos.DeleteAsync(x => x.Year == year);
-                            }
+                            //if (sheet.Index == 0)
+                            //{
+                            //    await _dvhcRepos.DeleteAsync(x => x.Year == year);
+                            //}
                             var tableData = table.ToDataTable();
                             var jArray = JArray.FromObject(tableData);
                             foreach (var item in jArray)
@@ -968,14 +973,14 @@ namespace KiemKeDatDai.RisApplication
                                         Parent_id = item.Value<long>("Parent_id"),
                                         Parent_Code = item.Value<string>("Parent_Code"),
                                         CapDVHCId = item.Value<long>("CapDVHCId"),
-                                        Active = item.Value<bool>("Active"),
-                                        Year = item.Value<long>("Year"),
-                                        TrangThaiDuyet = item.Value<int>("TrangThaiDuyet"),
-                                        NgayGui = item.Value<DateTime>("NgayGui"),
-                                        NgayDuyet = item.Value<DateTime>("NgayDuyet"),
+                                        Active = true,
+                                        Year = year,
+                                        TrangThaiDuyet = null,
+                                        NgayGui = null,
+                                        NgayDuyet = null,
                                         SoDVHCCon = item.Value<int>("SoDVHCCon"),
-                                        SoDVHCDaDuyet = item.Value<int>("SoDVHCDaDuyet"),
-                                        MaxFileUpload = item.Value<int>("MaxFileUpload")
+                                        SoDVHCDaDuyet = null,
+                                        MaxFileUpload = null
                                     };
                                     await _dvhcRepos.InsertAsync(data);
                                 }
@@ -1009,8 +1014,7 @@ namespace KiemKeDatDai.RisApplication
                 throw;
             }
         }
-        #region Write file into server
-        private async Task<string> WriteFile(IFormFile file, string maDVHC)
+        private async Task<string> WriteFile(IFormFile file)
         {
             string fileName = "";
             string exactPathDirectory = "";
@@ -1018,13 +1022,13 @@ namespace KiemKeDatDai.RisApplication
             {
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks.ToString() + extension;
-                var filePath = "wwwroot\\Uploads\\Files\\" + maDVHC;
+                var filePath = "wwwroot\\Uploads\\Files\\DVHC";
                 if (!Directory.Exists(filePath))
                 {
                     Directory.CreateDirectory(filePath);
                 }
-                exactPathDirectory = "wwwroot\\Uploads\\Files\\" + maDVHC + "\\" + fileName;
-                var exactPath = "wwwroot\\Uploads\\Files\\" + maDVHC + "\\" + fileName;
+                exactPathDirectory = "wwwroot\\Uploads\\Files\\DVHC" + "\\" + fileName;
+                var exactPath = "wwwroot\\Uploads\\Files\\DVHC" + "\\" + fileName;
                 using (var stream = new FileStream(exactPath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
