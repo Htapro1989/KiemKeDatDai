@@ -37,7 +37,7 @@ using System.IO;
 using System.ComponentModel;
 using OfficeOpenXml;
 using Newtonsoft.Json.Linq;
-using KiemKeDatDai.App.Tinh.Dto;
+using KiemKeDatDai.App.DMBieuMau.Dto;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -78,6 +78,10 @@ namespace KiemKeDatDai.App.DMBieuMau
 
         private readonly IRepository<Bieu01cKKNLT_Huyen, long> _bieu01cKKNLT_HuyenRepos;
         private readonly IRepository<Bieu01cKKNLT_Tinh, long> _bieu01cKKNLT_TinhRepos;
+
+        private readonly IRepository<Bieu02aKKNLT, long> _bieu02aKKNLTRepos;
+        private readonly IRepository<Bieu02aKKNLT_Vung, long> _bieu02aKKNLT_VungRepos;
+        private readonly IRepository<Bieu02aKKNLT_Tinh, long> _bieu02aKKNLT_TinhRepos;
 
         IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<User, long> _userRepos;
@@ -125,6 +129,10 @@ namespace KiemKeDatDai.App.DMBieuMau
             IRepository<Bieu01bKKNLT_Tinh, long> bieu01bKKNLT_TinhRepos,
             IRepository<Bieu01bKKNLT_Huyen, long> bieu01bKKNLT_HuyenRepos,
 
+            IRepository<Bieu02aKKNLT, long> bieu02aKKNLTRepos,
+            IRepository<Bieu02aKKNLT_Vung, long> bieu02aKKNLT_VungRepos,
+            IRepository<Bieu02aKKNLT_Tinh, long> bieu02aKKNLT_TinhRepos,
+
             IRepository<BieuPhuLucIII, long> bieuPhuLucIIIRepos,
             IRepository<BieuPhuLucIV, long> bieuPhuLucIVRepos,
             IUnitOfWorkManager unitOfWorkManager,
@@ -169,6 +177,10 @@ namespace KiemKeDatDai.App.DMBieuMau
 
             _bieu01bKKNLT_TinhRepos = bieu01bKKNLT_TinhRepos;
             _bieu01bKKNLT_HuyenRepos = bieu01bKKNLT_HuyenRepos;
+
+            _bieu02aKKNLTRepos = bieu02aKKNLTRepos;
+            _bieu02aKKNLT_VungRepos = bieu02aKKNLT_VungRepos;
+            _bieu02aKKNLT_TinhRepos = bieu02aKKNLT_TinhRepos;
 
             _unitOfWorkManager = unitOfWorkManager;
             _objectMapper = objectMapper;
@@ -326,78 +338,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        public async Task<CommonResponseDto> UploadBieuExcel(IFormFile fileUplaod, long bieuId, string matinh, long year)
-        {
-            CommonResponseDto commonResponseDto = new CommonResponseDto();
-            try
-            {
-                //var results = new List<List<DamInfoJsonOutput>>();
-                var urlFile = await WriteFile(fileUplaod, matinh);
-
-                var dt = new System.Data.DataTable();
-                var fi = new FileInfo(urlFile);
-                // Check if the file exists
-                if (!fi.Exists)
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "File " + urlFile + " không tồn tại";
-                }
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-                var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
-
-                var worksheets = excel.Workbook.Worksheets;
-                if (worksheets == null)
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Không đọc được file";
-                }
-                else
-                {
-                    foreach (var sheet in worksheets)
-                    {
-                        var table = sheet.Tables.FirstOrDefault();
-                        if (table != null)
-                        {
-                            if (sheet.Index == 0)
-                            {
-                                await _bieu06TKKKQPAN_TinhRepos.DeleteAsync(x => x.MaTinh == matinh && x.Year == year);
-                            }
-                            var tableData = table.ToDataTable();
-                            var jArray = JArray.FromObject(tableData);
-                            foreach (var item in jArray)
-                            {
-                                if (item != null)
-                                {
-                                    var data = JObject.FromObject(new Bieu06TKKKQPAN_TinhInputDto()
-                                    {
-                                        STT = item.Value<string>("STT"),
-                                        DonVi = item.Value<string>("DonVi"),
-                                        DiaChi = item.Value<string>("DiaChi"),
-                                        DienTichDatQuocPhong = item.Value<decimal>("DienTichDatQuocPhong"),
-                                        DienTichKetHopKhac = item.Value<decimal>("DienTichKetHopKhac"),
-                                        LoaiDatKetHopKhac = item.Value<decimal>("LoaiDatKetHopKhac"),
-                                        DienTichDaDoDac = item.Value<decimal>("DienTichDaDoDac"),
-                                        SoGCNDaCap = item.Value<decimal>("SoGCNDaCap"),
-                                        DienTichDaCapGCN = item.Value<decimal>("DienTichDaCapGCN"),
-                                        GhiChu = item.Value<string>("GhiChu"),
-                                        TinhId = item.Value<long>("TinhId"),
-                                        Year = item.Value<long>("Year"),
-                                        Active = item.Value<bool>("Active")
-                                    });
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return null;
-        }
+        
 
         public async Task<CommonResponseDto> UpdateBieuTinh(string matinh, long year)
         {
@@ -1269,34 +1210,6 @@ namespace KiemKeDatDai.App.DMBieuMau
         }
         #endregion
 
-        #region Write file into server
-        private async Task<string> WriteFile(IFormFile file, string maDVHC)
-        {
-            string fileName = "";
-            string exactPathDirectory = "";
-            try
-            {
-                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                fileName = DateTime.Now.Ticks.ToString() + extension;
-                var filePath = "wwwroot\\Uploads\\Files\\" + maDVHC;
-                if (!Directory.Exists(filePath))
-                {
-                    Directory.CreateDirectory(filePath);
-                }
-                exactPathDirectory = "wwwroot\\Uploads\\Files\\" + maDVHC + "\\" + fileName;
-                var exactPath = "wwwroot\\Uploads\\Files\\" + maDVHC + "\\" + fileName;
-                using (var stream = new FileStream(exactPath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return exactPathDirectory;
-        }
-        #endregion
+        
     }
 }

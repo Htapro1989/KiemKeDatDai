@@ -58,6 +58,10 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Bieu02TKKK_Huyen> Bieu02TKKK_Huyen { get; set; }
         public virtual DbSet<Bieu02TKKK_Xa> Bieu02TKKK_Xa { get; set; }
 
+        public virtual DbSet<Bieu02aKKNLT> Bieu02aKKNLT { get; set; }
+        public virtual DbSet<Bieu02aKKNLT_Vung> Bieu02aKKNLT_Vung { get; set; }
+        public virtual DbSet<Bieu02aKKNLT_Tinh> Bieu02aKKNLT_Tinh { get; set; }
+
         public virtual DbSet<Bieu03TKKK> Bieu03TKKK { get; set; }
         public virtual DbSet<Bieu03TKKK_Vung> Bieu03TKKK_Vung { get; set; }
         public virtual DbSet<Bieu03TKKK_Tinh> Bieu03TKKK_Tinh { get; set; }
@@ -86,6 +90,7 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<KhoanhDat_KyTruoc> KhoanhDat_KyTruoc { get; set; }
         public virtual DbSet<SoLieuKyTruoc> SoLieuKyTruoc { get; set; }
         public virtual DbSet<Data_BienDong> Data_BienDong { get; set; }
+        public virtual DbSet<Data_TangGiamKhac> Data_TangGiamKhac { get; set; }
         public virtual DbSet<YKien> YKien { get; set; }
         public virtual DbSet<News> News { get; set; }
 

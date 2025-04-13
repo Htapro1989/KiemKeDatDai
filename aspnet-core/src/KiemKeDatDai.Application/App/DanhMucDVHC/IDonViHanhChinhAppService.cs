@@ -27,5 +27,7 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> GetDropDownHuyenByMaTinh(string ma);
         Task<CommonResponseDto> GetDropDownXaByHuyenId(long huyenId);
         Task<CommonResponseDto> GetDropDownXaByMaHuyen(string ma);
+        Task<CommonResponseDto> UploadFileDVHC(long year);
+        Task<CommonResponseDto> DownloadTemplateDVHC(long year);
     }
 }

@@ -40,6 +40,8 @@ using KiemKeDatDai.App.DMBieuMau.Dto;
 using System.Reflection.PortableExecutable;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json.Linq;
+using OfficeOpenXml;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -113,10 +115,15 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IRepository<Bieu01cKKNLT_Tinh, long> _bieu01cKKNLT_TinhRepos;
         private readonly IRepository<Bieu01cKKNLT_Vung, long> _bieu01cKKNLT_VungRepos;
 
+        private readonly IRepository<Bieu02aKKNLT, long> _bieu02aKKNLTRepos;
+        private readonly IRepository<Bieu02aKKNLT_Vung, long> _bieu02aKKNLT_VungRepos;
+        private readonly IRepository<Bieu02aKKNLT_Tinh, long> _bieu02aKKNLT_TinhRepos;
+
         private readonly IRepository<Bieu06TKKKQPAN, long> _bieu06TKKKQPANRepos;
+        private readonly IRepository<Bieu06TKKKQPAN_Vung, long> _bieu06TKKKQPAN_VungRepos;
         private readonly IRepository<Bieu06TKKKQPAN_Tinh, long> _bieu06TKKKQPAN_TinhRepos;
-        private readonly IRepository<BieuPhuLucIII, long> _bieuPhuLucIIIRepos;
-        private readonly IRepository<BieuPhuLucIV, long> _bieuPhuLucIVRepos;
+
+
         #endregion
 
         private readonly IRepository<User, long> _userRepos;
@@ -196,7 +203,12 @@ namespace KiemKeDatDai.App.DMBieuMau
             IRepository<Bieu01bKKNLT_Tinh, long> bieu01bKKNLT_TinhRepos,
             IRepository<Bieu01bKKNLT_Vung, long> bieu01bKKNLT_VungRepos,
 
+            IRepository<Bieu02aKKNLT, long> bieu02aKKNLTRepos,
+            IRepository<Bieu02aKKNLT_Vung, long> bieu02aKKNLT_VungRepos,
+            IRepository<Bieu02aKKNLT_Tinh, long> bieu02aKKNLT_TinhRepos,
+
             IRepository<Bieu06TKKKQPAN, long> bieu06TKKKQPANRepos,
+            IRepository<Bieu06TKKKQPAN_Vung, long> bieu06TKKKQPAN_VungRepos,
             IRepository<Bieu06TKKKQPAN_Tinh, long> bieu06TKKKQPAN_TinhRepos,
 
             IRepository<BieuPhuLucIII, long> bieuPhuLucIIIRepos,
@@ -279,10 +291,14 @@ namespace KiemKeDatDai.App.DMBieuMau
             _bieu01bKKNLT_TinhRepos = bieu01bKKNLT_TinhRepos;
             _bieu01bKKNLT_VungRepos = bieu01bKKNLT_VungRepos;
 
+            _bieu02aKKNLTRepos = bieu02aKKNLTRepos;
+            _bieu02aKKNLT_VungRepos = bieu02aKKNLT_VungRepos;
+            _bieu02aKKNLT_TinhRepos = bieu02aKKNLT_TinhRepos;
+
             _bieu06TKKKQPANRepos = bieu06TKKKQPANRepos;
+            _bieu06TKKKQPAN_VungRepos = bieu06TKKKQPAN_VungRepos;
             _bieu06TKKKQPAN_TinhRepos = bieu06TKKKQPAN_TinhRepos;
-            _bieuPhuLucIIIRepos = bieuPhuLucIIIRepos;
-            _bieuPhuLucIVRepos = bieuPhuLucIVRepos;
+            
             #endregion
 
             _objectMapper = objectMapper;
@@ -396,7 +412,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-
         [AbpAuthorize]
         public async Task<CommonResponseDto> Delete(long id)
         {
@@ -2121,6 +2136,106 @@ namespace KiemKeDatDai.App.DMBieuMau
                                 break;
                         }
                         break;
+                    case "02a/KKNLT":
+                        template = "Template_Bieu02aNLT.xlsx";
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    //var data = await _bieu02aKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    var data = await (from bieu02a in _bieu02aKKNLTRepos.GetAll()
+                                                      where bieu02a.Year == input.Year && bieu02a.MaTinh == input.MaDVHC
+                                                      select new Bieu02aKKNLTDto()
+                                                      {
+                                                          STT = bieu02a.STT,
+                                                          TenDonVi = bieu02a.TenDonVi,
+                                                          DienTichTheoQDGiaoThue = bieu02a.DienTichTheoQDGiaoThue,
+                                                          TongDienTichDangQL = bieu02a.DienTichGiaoDat + bieu02a.DienTichChoThueDat + bieu02a.DienTichChuaXacDinhGiaoThue,
+                                                          DienTichGiaoDat = bieu02a.DienTichGiaoDat,
+                                                          DienTichChoThueDat = bieu02a.DienTichChoThueDat,
+                                                          DienTichChuaXacDinhGiaoThue = bieu02a.DienTichChuaXacDinhGiaoThue,
+                                                          TongDienTich = bieu02a.DienTichDoDacTL1000 + bieu02a.DienTichDoDacTL2000 + bieu02a.DienTichDoDacTL5000 + bieu02a.DienTichDoDacTL10000,
+                                                          DienTichDoDacTL1000 = bieu02a.DienTichDoDacTL1000,
+                                                          DienTichDoDacTL2000 = bieu02a.DienTichDoDacTL2000,
+                                                          DienTichDoDacTL5000 = bieu02a.DienTichDoDacTL5000,
+                                                          DienTichDoDacTL10000 = bieu02a.DienTichDoDacTL10000,
+                                                          SoGCNDaCap = bieu02a.SoGCNDaCap,
+                                                          DienTichGCNDaCap = bieu02a.DienTichGCNDaCap,
+                                                          DienTichDaBanGiao = bieu02a.DienTichDaBanGiao,
+                                                          GhiChu = bieu02a.GhiChu
+                                                      }).ToListAsync();
+                                    if (data.Count > 0)
+                                    {
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.VUNG:
+                                {
+                                    var data = await (from bieu02a in _bieu02aKKNLT_VungRepos.GetAll()
+                                                      where bieu02a.Year == input.Year && bieu02a.MaVung == input.MaDVHC
+                                                      select new Bieu02aKKNLT_VungDto()
+                                                      {
+                                                          STT = bieu02a.STT,
+                                                          TenDonVi = bieu02a.TenDonVi,
+                                                          DienTichTheoQDGiaoThue = bieu02a.DienTichTheoQDGiaoThue,
+                                                          TongDienTichDangQL = bieu02a.DienTichGiaoDat + bieu02a.DienTichChoThueDat + bieu02a.DienTichChuaXacDinhGiaoThue,
+                                                          DienTichGiaoDat = bieu02a.DienTichGiaoDat,
+                                                          DienTichChoThueDat = bieu02a.DienTichChoThueDat,
+                                                          DienTichChuaXacDinhGiaoThue = bieu02a.DienTichChuaXacDinhGiaoThue,
+                                                          TongDienTich = bieu02a.DienTichDoDacTL1000 + bieu02a.DienTichDoDacTL2000 + bieu02a.DienTichDoDacTL5000 + bieu02a.DienTichDoDacTL10000,
+                                                          DienTichDoDacTL1000 = bieu02a.DienTichDoDacTL1000,
+                                                          DienTichDoDacTL2000 = bieu02a.DienTichDoDacTL2000,
+                                                          DienTichDoDacTL5000 = bieu02a.DienTichDoDacTL5000,
+                                                          DienTichDoDacTL10000 = bieu02a.DienTichDoDacTL10000,
+                                                          SoGCNDaCap = bieu02a.SoGCNDaCap,
+                                                          DienTichGCNDaCap = bieu02a.DienTichGCNDaCap,
+                                                          DienTichDaBanGiao = bieu02a.DienTichDaBanGiao,
+                                                          GhiChu = bieu02a.GhiChu,
+                                                          MaTinh = bieu02a.MaTinh,
+                                                          MaVung = bieu02a.MaVung
+                                                      }).ToListAsync();
+                                    if (data.Count > 0)
+                                    {
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
+                                    }
+                                    break;
+                                }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await (from bieu02a in _bieu02aKKNLT_TinhRepos.GetAll()
+                                                      where bieu02a.Year == input.Year && bieu02a.MaTinh == input.MaDVHC
+                                                      select new Bieu02aKKNLT_TinhDto()
+                                                      {
+                                                          STT = bieu02a.STT,
+                                                          TenDonVi = bieu02a.TenDonVi,
+                                                          DienTichTheoQDGiaoThue = bieu02a.DienTichTheoQDGiaoThue,
+                                                          TongDienTichDangQL = bieu02a.DienTichGiaoDat + bieu02a.DienTichChoThueDat + bieu02a.DienTichChuaXacDinhGiaoThue,
+                                                          DienTichGiaoDat = bieu02a.DienTichGiaoDat,
+                                                          DienTichChoThueDat = bieu02a.DienTichChoThueDat,
+                                                          DienTichChuaXacDinhGiaoThue = bieu02a.DienTichChuaXacDinhGiaoThue,
+                                                          TongDienTich = bieu02a.DienTichDoDacTL1000 + bieu02a.DienTichDoDacTL2000 + bieu02a.DienTichDoDacTL5000 + bieu02a.DienTichDoDacTL10000,
+                                                          DienTichDoDacTL1000 = bieu02a.DienTichDoDacTL1000,
+                                                          DienTichDoDacTL2000 = bieu02a.DienTichDoDacTL2000,
+                                                          DienTichDoDacTL5000 = bieu02a.DienTichDoDacTL5000,
+                                                          DienTichDoDacTL10000 = bieu02a.DienTichDoDacTL10000,
+                                                          SoGCNDaCap = bieu02a.SoGCNDaCap,
+                                                          DienTichGCNDaCap = bieu02a.DienTichGCNDaCap,
+                                                          DienTichDaBanGiao = bieu02a.DienTichDaBanGiao,
+                                                          GhiChu = bieu02a.GhiChu,
+                                                          MaTinh = bieu02a.MaTinh
+                                                      }).ToListAsync();
+
+                                    if (data.Count > 0)
+                                    {
+                                        excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
                     case "PL.III":
                         template = "Template_PL3.xlsx";
                         switch (input.CapDVHC)
@@ -2215,89 +2330,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             //};
 
         }
-        private MemoryStream DownloadBieuMauByCap(object data, int? capDVHC, long? year, string _ma, string _tenTinh, string _tenHuyen, string _tenXa, string template)
-        {
-            try
-            {
-                var excelMemoryStream = new MemoryStream();
-                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template))));
-                WorkbookDesigner wd = new WorkbookDesigner(wb);
-
-                wd.SetDataSource("data", data);
-                if (template == "Template_PL3.xlsx" || template == "Template_PL4.xlsx")
-                    wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = "Tỉnh: " + _tenTinh + " Huyện: " + _tenTinh + " xã: " + _tenXa,
-                                                year = "(Đến ngày 31/12/" + year.ToString() + ")"
-                                            }});
-                else if (template == "Template_Bieu05TKKK.xlsx")
-                {
-                    if (year != null)
-                    {
-                        var namKyTruoc = year%10 == 4 || year % 10 == 9 ? year - 4 : year - 1;
-                        wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenXa,
-                                                namkytruoc = "Năm " + namKyTruoc.ToString(),
-                                                year = "(Đến ngày 31/12/" + year.ToString() + ")"
-                                            }});
-                    }
-                    
-                }
-                else if (template == "Template_Bieu03TKKK.xlsx")
-                {
-                    var lstDVHC = _dvhcRepos.GetAllListAsync(x => x.Parent_Code == _ma).Result;
-                    if (lstDVHC != null && lstDVHC.Count > 0)
-                    {
-                        Worksheet worksheet = wb.Worksheets[0];
-                        int start = 34 - lstDVHC.Count;
-                        while (start > 3)
-                        {
-                            worksheet.Cells.DeleteColumn(start);
-                            start = start - 1;
-                        }
-                        var dsHeader = new Dictionary<string, object>();
-                        dsHeader["tinh"] = _tenTinh;
-                        dsHeader["huyen"] = _tenHuyen;
-                        dsHeader["year"] = "(Đến ngày 31/12/" + year.ToString() + ")";
-
-                        // Convert sang Dictionary để thêm các giá trị động
-                        //var dictHeader = (IDictionary<string, object>)dsHeader;
-                        for (int i = 0; i < lstDVHC.Count; i++)
-                        {
-                            string dvhc = "dvhc" + (i+1).ToString();
-                            string colnum = "colnum" + (i + 1).ToString();
-                            dsHeader[dvhc] = lstDVHC[i].Name;
-                            dsHeader[colnum] = -(5 + lstDVHC.Count - i);
-                        }
-                        wd.SetDataSource("Header", new[] { dsHeader });
-                        
-                    }
-                }
-                else
-                    wd.SetDataSource("Header", new[] { new
-                                            {
-                                                tinh = _tenTinh,
-                                                huyen = _tenHuyen,
-                                                xa = _tenXa,
-                                                year = "(Đến ngày 31/12/" + year.ToString() + ")"
-                                            }});
-                wd.Process();
-                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-                byte[] bytesInStream = excelMemoryStream.ToArray();
-                excelMemoryStream.Position = 0;
-                return excelMemoryStream;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message);
-                return null;
-            }
-        }
+        
         //private MemoryStream DownloadBieuMauByCap(object data, int? capDVHC, long? year, string _ma, string _tenTinh, string _tenHuyen, string _tenXa, string maDVHC, string template)
         //{
         //    try
@@ -2334,7 +2367,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         //                    start++;
         //                }
         //            }
-                   
+
         //            wd.SetDataSource("Header", new[] { new
         //                                    {
         //                                        tinh = _tenTinh,
@@ -2364,5 +2397,254 @@ namespace KiemKeDatDai.App.DMBieuMau
         //        return null;
         //    }
         //}
+        public async Task<CommonResponseDto> UploadBieuExcel(IFormFile fileUplaod, string mabieu, string matinh, long year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                //var results = new List<List<DamInfoJsonOutput>>();
+                var urlFile = await WriteFile(fileUplaod, matinh);
+
+                var dt = new System.Data.DataTable();
+                var fi = new FileInfo(urlFile);
+                // Check if the file exists
+                if (!fi.Exists)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "File " + urlFile + " không tồn tại";
+                }
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
+
+                var worksheets = excel.Workbook.Worksheets;
+                if (worksheets == null)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Không đọc được file";
+                }
+                else
+                {
+                    foreach (var sheet in worksheets)
+                    {
+                        var table = sheet.Tables.FirstOrDefault();
+                        if (table != null)
+                        {
+                            switch (mabieu)
+                            {
+                                case "06/TKKKQPAN":
+                                    {
+                                        if (sheet.Index == 0)
+                                        {
+                                            await _bieu06TKKKQPAN_TinhRepos.DeleteAsync(x => x.MaTinh == matinh && x.Year == year);
+                                        }
+                                        var tableData = table.ToDataTable();
+                                        var jArray = JArray.FromObject(tableData);
+                                        foreach (var item in jArray)
+                                        {
+                                            if (item != null)
+                                            {
+                                                var data = new Bieu06TKKKQPAN_Tinh()
+                                                {
+                                                    STT = item.Value<string>("STT"),
+                                                    DonVi = item.Value<string>("DonVi"),
+                                                    DiaChi = item.Value<string>("DiaChi"),
+                                                    DienTichDatQuocPhong = item.Value<decimal>("DienTichDatQuocPhong"),
+                                                    DienTichKetHopKhac = item.Value<decimal>("DienTichKetHopKhac"),
+                                                    LoaiDatKetHopKhac = item.Value<decimal>("LoaiDatKetHopKhac"),
+                                                    DienTichDaDoDac = item.Value<decimal>("DienTichDaDoDac"),
+                                                    SoGCNDaCap = item.Value<decimal>("SoGCNDaCap"),
+                                                    DienTichDaCapGCN = item.Value<decimal>("DienTichDaCapGCN"),
+                                                    GhiChu = item.Value<string>("GhiChu"),
+                                                    TinhId = item.Value<long>("TinhId"),
+                                                    Year = item.Value<long>("Year"),
+                                                    Active = item.Value<bool>("Active")
+                                                };
+                                                await _bieu06TKKKQPAN_TinhRepos.InsertAsync(data);
+                                            }
+                                        }
+                                        break;
+                                    }
+                                case "02a/KKNLT":
+                                    {
+                                        if (sheet.Index == 0)
+                                        {
+                                            await _bieu02aKKNLT_TinhRepos.DeleteAsync(x => x.MaTinh == matinh && x.Year == year);
+                                        }
+                                        var tableData = table.ToDataTable();
+                                        var jArray = JArray.FromObject(tableData);
+                                        foreach (var item in jArray)
+                                        {
+                                            if (item != null)
+                                            {
+                                                var data = new Bieu02aKKNLT_Tinh()
+                                                {
+                                                    STT = item.Value<string>("STT"),
+                                                    TenDonVi = item.Value<string>("TenDonVi"),
+                                                    DienTichTheoQDGiaoThue = item.Value<decimal>("DienTichTheoQDGiaoThue"),
+                                                    DienTichGiaoDat = item.Value<decimal>("DienTichGiaoDat"),
+                                                    DienTichChoThueDat = item.Value<decimal>("DienTichChoThueDat"),
+                                                    DienTichChuaXacDinhGiaoThue = item.Value<decimal>("DienTichChuaXacDinhGiaoThue"),
+                                                    DienTichDoDacTL1000 = item.Value<decimal>("DienTichDoDacTL1000"),
+                                                    DienTichDoDacTL2000 = item.Value<decimal>("DienTichDoDacTL2000"),
+                                                    DienTichDoDacTL5000 = item.Value<decimal>("DienTichDoDacTL5000"),
+                                                    DienTichDoDacTL10000 = item.Value<decimal>("DienTichDoDacTL10000"),
+                                                    SoGCNDaCap = item.Value<long>("SoGCNDaCap"),
+                                                    DienTichGCNDaCap = item.Value<decimal>("DienTichGCNDaCap"),
+                                                    DienTichDaBanGiao = item.Value<decimal>("DienTichDaBanGiao"),
+                                                    GhiChu = item.Value<string>("GhiChu"),
+                                                    MaTinh = item.Value<string>("MaTinh"),
+                                                    TinhId = item.Value<long>("TinhId"),
+                                                    Year = item.Value<long>("Year"),
+                                                    Active = true
+                                                };
+                                            }
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return null;
+        }
+        public async Task<FileStreamResult> DownloadTemplate(string mabieu)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            try
+            {
+                var template = "Template_" + mabieu + ".xlsx";
+                MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template)));
+                return new FileStreamResult(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                {
+                    FileDownloadName = "Template_" + mabieu + ".xlsx"
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #region Write file into server
+        private async Task<string> WriteFile(IFormFile file, string maDVHC)
+        {
+            string fileName = "";
+            string exactPathDirectory = "";
+            try
+            {
+                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+                fileName = DateTime.Now.Ticks.ToString() + extension;
+                var filePath = "wwwroot\\Uploads\\Files\\" + maDVHC;
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+                exactPathDirectory = "wwwroot\\Uploads\\Files\\" + maDVHC + "\\" + fileName;
+                var exactPath = "wwwroot\\Uploads\\Files\\" + maDVHC + "\\" + fileName;
+                using (var stream = new FileStream(exactPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return exactPathDirectory;
+        }
+        #endregion        
+        private MemoryStream DownloadBieuMauByCap(object data, int? capDVHC, long? year, string _ma, string _tenTinh, string _tenHuyen, string _tenXa, string template)
+        {
+            try
+            {
+                var excelMemoryStream = new MemoryStream();
+                Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template))));
+                WorkbookDesigner wd = new WorkbookDesigner(wb);
+
+                wd.SetDataSource("data", data);
+                if (template == "Template_PL3.xlsx" || template == "Template_PL4.xlsx")
+                    wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = "Tỉnh: " + _tenTinh + " Huyện: " + _tenTinh + " xã: " + _tenXa,
+                                                year = "(Đến ngày 31/12/" + year.ToString() + ")"
+                                            }});
+                else if (template == "Template_Bieu05TKKK.xlsx")
+                {
+                    if (year != null)
+                    {
+                        var namKyTruoc = year % 10 == 4 || year % 10 == 9 ? year - 4 : year - 1;
+                        wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenXa,
+                                                namkytruoc = "Năm " + namKyTruoc.ToString(),
+                                                year = "(Đến ngày 31/12/" + year.ToString() + ")"
+                                            }});
+                    }
+
+                }
+                else if (template == "Template_Bieu03TKKK.xlsx")
+                {
+                    var lstDVHC = _dvhcRepos.GetAllListAsync(x => x.Parent_Code == _ma).Result;
+                    if (lstDVHC != null && lstDVHC.Count > 0)
+                    {
+                        Worksheet worksheet = wb.Worksheets[0];
+                        int start = 34 - lstDVHC.Count;
+                        while (start > 3)
+                        {
+                            worksheet.Cells.DeleteColumn(start);
+                            start = start - 1;
+                        }
+                        var dsHeader = new Dictionary<string, object>();
+                        dsHeader["tinh"] = _tenTinh;
+                        dsHeader["huyen"] = _tenHuyen;
+                        dsHeader["year"] = "(Đến ngày 31/12/" + year.ToString() + ")";
+
+                        // Convert sang Dictionary để thêm các giá trị động
+                        //var dictHeader = (IDictionary<string, object>)dsHeader;
+                        for (int i = 0; i < lstDVHC.Count; i++)
+                        {
+                            string dvhc = "dvhc" + (i + 1).ToString();
+                            string colnum = "colnum" + (i + 1).ToString();
+                            dsHeader[dvhc] = lstDVHC[i].Name;
+                            dsHeader[colnum] = -(5 + lstDVHC.Count - i);
+                        }
+                        wd.SetDataSource("Header", new[] { dsHeader });
+
+                    }
+                }
+                else
+                    wd.SetDataSource("Header", new[] { new
+                                            {
+                                                tinh = _tenTinh,
+                                                huyen = _tenHuyen,
+                                                xa = _tenXa,
+                                                year = "(Đến ngày 31/12/" + year.ToString() + ")"
+                                            }});
+                wd.Process();
+                wb.Save(excelMemoryStream, SaveFormat.Xlsx);
+                byte[] bytesInStream = excelMemoryStream.ToArray();
+                excelMemoryStream.Position = 0;
+                return excelMemoryStream;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+                return null;
+            }
+        }
     }
 }

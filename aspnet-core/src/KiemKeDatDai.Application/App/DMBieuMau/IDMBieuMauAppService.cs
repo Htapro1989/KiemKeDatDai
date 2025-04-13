@@ -19,5 +19,6 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> Delete(long id);
         Task<CommonResponseDto> GetDetailBieuByKyHieu(BieuMauDetailInputDto input);
         Task<FileStreamResult> DownloadBieuMau(BieuMauDetailInputDto input);
+        Task<FileStreamResult> DownloadTemplate(string mabieu);
     }
 }
