@@ -1001,7 +1001,7 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var template = "Template_DVHC.xlsx";
+                var template = "TemplateImport_DVHC.xlsx";
                 MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template)));
                 return new FileStreamResult(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 {
