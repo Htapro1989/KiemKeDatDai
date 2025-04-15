@@ -29,6 +29,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
+using System.IO;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
@@ -42,6 +43,8 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
+        private readonly IRepository<EntitiesDb.File, long> _fileRepos;
+        private readonly IFileKiemKeAppService _iFileKiemKeAppService;
         //private readonly ILogAppService _iLogAppService;
 
         private readonly ICache mainCache;
@@ -53,7 +56,9 @@ namespace KiemKeDatDai.App.DMBieuMau
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IRepository<EntitiesDb.File, long> fileRepos,
+            IFileKiemKeAppService iFileKiemKeAppService
             //ILogAppService iLogAppService
             )
         {
@@ -62,6 +67,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
+            _fileRepos = fileRepos;
+            _iFileKiemKeAppService = iFileKiemKeAppService;
             //_iLogAppService = iLogAppService;
         }
         [AbpAuthorize]
@@ -70,7 +77,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                PagedResultDto<YKienOuputDto> pagedResultDto = new PagedResultDto<YKienOuputDto>();
                 var query = (from obj in _yKienRepos.GetAll()
                              select new YKienOuputDto
                              {
@@ -82,20 +88,30 @@ namespace KiemKeDatDai.App.DMBieuMau
                                  NoiDungTraLoi = obj.NoiDungTraLoi,
                                  Year = obj.Year,
                                  PheDuyet = obj.PheDuyet,
-                                 Url = obj.Url,
+                                 FileId = obj.FileId,
                                  NgayTraLoi = obj.NgayTraLoi,
                                  CreationTime = obj.CreationTime,
                                  Active = obj.Active
                              })
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Email.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.DonViCongTac.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDungYKien.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDungTraLoi.ToLower().Contains(input.Filter.ToLower()))
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()));
-                pagedResultDto.Items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(x => x.CreationTime).ToListAsync();
-                pagedResultDto.TotalCount = await query.CountAsync();
-                commonResponseDto.ReturnValue = pagedResultDto;
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower())
+                             || x.Email.ToLower().Contains(input.Filter.ToLower())
+                             || x.DonViCongTac.ToLower().Contains(input.Filter.ToLower())
+                             || x.NoiDungYKien.ToLower().Contains(input.Filter.ToLower())
+                             || x.NoiDungTraLoi.ToLower().Contains(input.Filter.ToLower())
+                             || x.Name.ToLower().Contains(input.Filter.ToLower()));
+
+                var totalCount = await query.CountAsync();
+                var lstYKien = await query.OrderBy(x => x.CreationTime)
+                                    .Skip(input.SkipCount)
+                                    .Take(input.MaxResultCount)
+                                    .ToListAsync();
+
+                commonResponseDto.ReturnValue = new PagedResultDto<YKienOuputDto>()
+                {
+                    Items = lstYKien,
+                    TotalCount = totalCount
+                };
+
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -113,8 +129,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var objdata = await _yKienRepos.FirstOrDefaultAsync(id);
-                commonResponseDto.ReturnValue = objdata;
+                commonResponseDto.ReturnValue = await _yKienRepos.FirstOrDefaultAsync(id); 
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -127,7 +142,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
         [AbpAllowAnonymous]
-        public async Task<CommonResponseDto> CreateOrUpdate(YKienInputDto input)
+        public async Task<CommonResponseDto> CreateOrUpdate([FromForm] YKienInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
@@ -136,15 +151,40 @@ namespace KiemKeDatDai.App.DMBieuMau
                 if (input.Id != 0)
                 {
                     var data = await _yKienRepos.FirstOrDefaultAsync(input.Id);
+
                     if (data != null)
                     {
-                        input.MapTo(data);
+                        input.MapTo(data); long insertedFileID = 0;
+
+                        if (input.File != null && input.File.Length > 0)
+                        {
+                            //delete old file
+                            if (data.FileId != null)
+                            {
+                                var oldFile = await _fileRepos.FirstOrDefaultAsync(data.FileId);
+                                if (oldFile != null)
+                                {
+                                    System.IO.File.Delete(oldFile.FilePath);
+                                    await _fileRepos.DeleteAsync(oldFile);
+                                }
+                            }
+
+                            insertedFileID = await _iFileKiemKeAppService.CreateFile(input.File, null, input.Year, "");
+                        }
+
+                        if (insertedFileID != 0)
+                        {
+                            data.FileId = insertedFileID;
+                        }
+
                         await _yKienRepos.UpdateAsync(data);
                     }
                 }
                 else
                 {
                     var objdata = input.MapTo<YKien>();
+
+                    objdata.FileId = await _iFileKiemKeAppService.CreateFile(input.File, null, input.Year, "");
                     await _yKienRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -165,8 +205,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _yKienRepos.FirstOrDefaultAsync(id);
+
                 if (objdata != null)
                 {
                     await _yKienRepos.DeleteAsync(objdata);
@@ -177,6 +217,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     commonResponseDto.Message = "Ý kiến này không tồn tại";
                     commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    return commonResponseDto;
                 }
             }
             catch (Exception ex)

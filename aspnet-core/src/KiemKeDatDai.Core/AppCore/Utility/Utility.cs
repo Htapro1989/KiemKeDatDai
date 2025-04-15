@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -37,6 +38,11 @@ namespace KiemKeDatDai.AppCore.Utility
             Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
             string temp = s.Normalize(NormalizationForm.FormD);
             return regex.Replace(temp, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
+        }
+
+        public static string UniqueFileName(string fileName)
+        {
+            return $"{Guid.NewGuid()}{Path.GetExtension(fileName)}";
         }
     }
 }
