@@ -12,9 +12,9 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("Bieu04TKKK")]
     public class Bieu04TKKK : FullAuditedEntity<long>
     {
-        public string STT { get; set; }
-        public string LoaiDat { get; set; }
-        public string Ma { get; set; }
+        public string? STT { get; set; }
+        public string? LoaiDat { get; set; }
+        public string? Ma { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal TongSo_DT { get; set; }
         [Column(TypeName = "decimal(18, 4)")]

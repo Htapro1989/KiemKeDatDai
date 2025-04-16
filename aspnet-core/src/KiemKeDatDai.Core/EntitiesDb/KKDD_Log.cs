@@ -13,8 +13,8 @@ namespace KiemKeDatDai.EntitiesDb
     public class KKDD_Log : FullAuditedEntity<long>
     {
         [StringLength(500)]
-        public string TableModify { get; set; }
+        public string? TableModify { get; set; }
         public long UserId { get; set; }
-        public string Describle { get; set; }
+        public string? Describle { get; set; }
     }
 }

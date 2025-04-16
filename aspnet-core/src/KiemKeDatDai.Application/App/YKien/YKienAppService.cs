@@ -106,6 +106,14 @@ namespace KiemKeDatDai.App.DMBieuMau
                                     .Take(input.MaxResultCount)
                                     .ToListAsync();
 
+                foreach ( var item in lstYKien)
+                {
+                    if (item.FileId != null)
+                    {
+                        item.FileName = _fileRepos.SingleAsync(x => x.Id == item.FileId).Result.FileName;
+                    }
+                }
+
                 commonResponseDto.ReturnValue = new PagedResultDto<YKienOuputDto>()
                 {
                     Items = lstYKien,
@@ -161,7 +169,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             //delete old file
                             if (data.FileId != null)
                             {
-                                var oldFile = await _fileRepos.FirstOrDefaultAsync(data.FileId);
+                                var oldFile = await _fileRepos.FirstOrDefaultAsync(data.FileId.Value);
                                 if (oldFile != null)
                                 {
                                     System.IO.File.Delete(oldFile.FilePath);

@@ -11,8 +11,8 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("KyThongKeKiemKe")]
     public class KyThongKeKiemKe : FullAuditedEntity<long>
     {
-        public string Ma { get; set; }
-        public string Name { get; set; }
+        public string? Ma { get; set; }
+        public string? Name { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
     }

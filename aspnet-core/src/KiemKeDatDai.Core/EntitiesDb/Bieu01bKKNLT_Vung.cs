@@ -12,8 +12,8 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("Bieu01bKKNLT_Vung")]
     public class Bieu01bKKNLT_Vung : FullAuditedEntity<long>
     {
-        public string STT { get; set; }
-        public string TenDVSDD { get; set; }
+        public string? STT { get; set; }
+        public string? TenDVSDD { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal TongDienTichSuDung { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
@@ -36,7 +36,7 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal DatTranhChap { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal DatGiaoQuanLyNhungChuaSuDung { get; set; }
-        public string MaVung { get; set; }
+        public string? MaVung { get; set; }
         public long? VungId { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
