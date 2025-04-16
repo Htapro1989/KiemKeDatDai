@@ -197,7 +197,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var data = await _bieu02aKKNLT_TinhRepos.FirstOrDefaultAsync(x => x.TinhId == dvhcId && x.Year == year);
+                var data = await _bieu02aKKNLT_TinhRepos.GetAllListAsync(x => x.TinhId == dvhcId && x.Year == year);
                 commonResponseDto.ReturnValue = data;
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
