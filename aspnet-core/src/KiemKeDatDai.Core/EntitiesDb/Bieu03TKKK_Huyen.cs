@@ -13,13 +13,13 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("Bieu03TKKK_Huyen")]
     public class Bieu03TKKK_Huyen : FullAuditedEntity<long>
     {
-        public string STT { get; set; }
-        public string LoaiDat { get; set; }
-        public string Ma { get; set; }
+        public string? STT { get; set; }
+        public string? LoaiDat { get; set; }
+        public string? Ma { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal TongDienTich { get; set; }
-        public string DienTichTheoDVHC { get; set; }
-        public string MaHuyen { get; set; }
+        public string? DienTichTheoDVHC { get; set; }
+        public string? MaHuyen { get; set; }
         public long? HuyenId { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
