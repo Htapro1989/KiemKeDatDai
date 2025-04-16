@@ -1,0 +1,22 @@
+﻿
+---------user/pass remote server-------
+IP: 45.120.229.45
+user: Administrator
+pass: Nguyenthikimng@n@1978@kBYamaXW$333666
+pass sql: KiemKeDatDai@2024$123A
+
+
+User admin: admin/ Letinh$202512368
+
+link api: http://45.120.229.45:8000/swagger/index.html
+link web: http://45.120.229.45:8003/
+
+
+-------link hướng dẫn xoá WebDAV---------
+https://dev.to/devvsamjuel/webdav-put-and-delete-http-verbs-remove-webdav-module-on-iis-3l1g
+
+Khôi phục .net: dotnet restore
+
+--------link con web cũ bên tổng cục----------
+http://tk14.gdla.gov.vn/
+user: host; pass: L@tinh2022

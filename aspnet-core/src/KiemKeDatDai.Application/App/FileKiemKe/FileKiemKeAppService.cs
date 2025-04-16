@@ -32,6 +32,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
 using Microsoft.Extensions.Configuration;
+using KiemKeDatDai.AppCore.Utility;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -523,5 +524,33 @@ namespace KiemKeDatDai.RisApplication
                 { ".dgn", "application/octet-stream" }
             };
         }
+
+        public async Task<long> CreateFile(IFormFile file, long? dvhcId, long year, string maDvhc = "")
+        {
+
+            var uploadsFolder = _configuration["FileUpload:FilePath"];
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+            var uniqueFileName = Utility.UniqueFileName(file.FileName);
+
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            var fileEntity = new EntitiesDb.File
+            {
+                FileName = file.FileName,
+                FilePath = filePath,
+                MaDVHC = maDvhc,
+                Year = year,
+                FileType = CommonEnum.FILE_ATTACHMENT,
+                DVHCId = dvhcId != null ? dvhcId : null
+            };
+            return await _fileRepos.InsertAndGetIdAsync(fileEntity);
+        }
+
     }
 }

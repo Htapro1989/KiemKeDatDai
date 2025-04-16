@@ -131,11 +131,13 @@ namespace KiemKeDatDai.RisApplication
                                     .Skip(input.SkipCount)
                                     .Take(input.MaxResultCount)
                                     .ToListAsync();
+
                 commonResponseDto.ReturnValue = new PagedResultDto<DVHCOutputDto>()
                 {
                     Items = lstDvhc,
                     TotalCount = totalCount
                 };
+
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }

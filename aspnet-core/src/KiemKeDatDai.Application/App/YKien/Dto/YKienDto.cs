@@ -1,6 +1,8 @@
 ﻿using Abp.AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using KiemKeDatDai.AppCore.Dto;
 using KiemKeDatDai.EntitiesDb;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,8 @@ namespace KiemKeDatDai.Dto
     [AutoMap(typeof(YKien))]
     public class YKienInputDto : YKien
     {
+        [Ignore]
+        public IFormFile File { get; set; }
     }
     public class YKienDto : PagedAndFilteredInputDto
     {
