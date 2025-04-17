@@ -29,5 +29,6 @@ namespace KiemKeDatDai.Dto
     }
     public class YKienOuputDto : YKien
     {
+        public string FileName { get; set; }
     }
 }

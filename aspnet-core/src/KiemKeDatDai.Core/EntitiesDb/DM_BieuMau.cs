@@ -11,9 +11,9 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("DM_BieuMau")]
     public class DM_BieuMau : FullAuditedEntity<long>
     {
-        public string KyHieu { get; set; }
-        public string NoiDung { get; set; }
-        public string CapDVHC { get; set; }
+        public string? KyHieu { get; set; }
+        public string? NoiDung { get; set; }
+        public string? CapDVHC { get; set; }
         public bool? Active { get; set; }
     }
 }

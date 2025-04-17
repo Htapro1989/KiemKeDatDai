@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiemKeDatDai.Migrations
 {
     [DbContext(typeof(KiemKeDatDaiDbContext))]
-    [Migration("20250412171205_huy_update_20250412")]
-    partial class huy_update_20250412
+    [Migration("20250416193458_update_table_dvhc_nullable")]
+    partial class update_table_dvhc_nullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1409,6 +1409,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
@@ -1491,6 +1492,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DonViHanhChinhCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("DonViHanhChinhId")
@@ -1634,12 +1636,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
@@ -1707,15 +1712,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
@@ -1780,15 +1789,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
@@ -1856,15 +1869,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
@@ -1932,15 +1949,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SatLoVungBoBien")
@@ -2023,9 +2044,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -2035,6 +2058,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
@@ -2135,12 +2159,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -2150,6 +2177,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
@@ -2247,12 +2275,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -2262,6 +2293,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -2362,12 +2394,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -2377,6 +2412,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
@@ -2477,12 +2513,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -2492,6 +2531,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
@@ -2616,9 +2656,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTichSuDung")
@@ -2719,12 +2761,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTichSuDung")
@@ -2822,12 +2867,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -2928,12 +2976,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTichSuDung")
@@ -3034,12 +3085,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTichSuDung")
@@ -3122,9 +3176,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
@@ -3204,12 +3260,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
@@ -3286,12 +3345,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -3371,12 +3433,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
@@ -3456,12 +3521,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenDVSDD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
@@ -3538,12 +3606,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TomngDienTich")
@@ -3620,15 +3691,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TomngDienTich")
@@ -3702,15 +3777,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -3787,15 +3866,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TomngDienTich")
@@ -3872,15 +3955,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TomngDienTich")
@@ -3924,6 +4011,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaDiem")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
@@ -3942,9 +4030,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ten")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Year")
@@ -3979,6 +4069,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaDiem")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
@@ -3997,15 +4088,18 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NamSatLo")
                         .HasColumnType("int");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ten")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Year")
@@ -4040,6 +4134,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaDiem")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
@@ -4055,15 +4150,18 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NamSatLo")
                         .HasColumnType("int");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ten")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -4101,6 +4199,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaDiem")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
@@ -4116,15 +4215,18 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NamSatLo")
                         .HasColumnType("int");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ten")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("VungId")
@@ -4162,6 +4264,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaDiem")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTich")
@@ -4177,15 +4280,18 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NamSatLo")
                         .HasColumnType("int");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ten")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("XaId")
@@ -4253,9 +4359,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -4265,6 +4373,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
@@ -4359,12 +4468,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -4374,6 +4486,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
@@ -4465,12 +4578,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -4480,6 +4596,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -4574,12 +4691,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -4589,6 +4709,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
@@ -4683,12 +4804,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV")
@@ -4698,6 +4822,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH")
@@ -4792,6 +4917,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("GhiChu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -4804,15 +4930,18 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SoGCNDaCap")
                         .HasColumnType("bigint");
 
                     b.Property<string>("TenDonVi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -4883,6 +5012,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("GhiChu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -4895,15 +5025,18 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SoGCNDaCap")
                         .HasColumnType("bigint");
 
                     b.Property<string>("TenDonVi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -4974,6 +5107,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("GhiChu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -4986,18 +5120,22 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SoGCNDaCap")
                         .HasColumnType("bigint");
 
                     b.Property<string>("TenDonVi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -5041,6 +5179,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DienTichTheoDVHC")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -5053,12 +5192,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
@@ -5099,6 +5241,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DienTichTheoDVHC")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("HuyenId")
@@ -5114,15 +5257,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
@@ -5163,6 +5310,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DienTichTheoDVHC")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -5175,15 +5323,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -5227,6 +5379,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DienTichTheoDVHC")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -5239,15 +5392,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TongDienTich")
@@ -5342,9 +5499,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
@@ -5360,6 +5519,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
@@ -5499,12 +5659,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
@@ -5520,6 +5683,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
@@ -5656,12 +5820,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
@@ -5677,6 +5844,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("TinhId")
@@ -5816,12 +5984,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
@@ -5837,6 +6008,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
@@ -5976,12 +6148,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NguoiGocVietNamONuocNgoai_NGV_CC")
@@ -5997,6 +6172,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ToChucKhac_TKH_CC")
@@ -6187,6 +6363,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
@@ -6196,6 +6373,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
@@ -6250,6 +6428,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
@@ -6404,6 +6583,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
@@ -6413,9 +6593,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
@@ -6470,6 +6652,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
@@ -6621,6 +6804,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
@@ -6630,9 +6814,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
@@ -6687,6 +6873,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
@@ -6841,6 +7028,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
@@ -6850,9 +7038,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
@@ -6907,6 +7097,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
@@ -7061,6 +7252,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MCS")
@@ -7070,9 +7262,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NCS")
@@ -7127,6 +7321,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TIN")
@@ -7179,6 +7374,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaChi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichDaCapGCN")
@@ -7194,9 +7390,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("DonVi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GhiChu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -7212,9 +7410,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SoGCNDaCap")
@@ -7255,6 +7455,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaChi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichDaCapGCN")
@@ -7270,9 +7471,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("DonVi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GhiChu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -7288,9 +7491,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SoGCNDaCap")
@@ -7331,6 +7536,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaChi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichDaCapGCN")
@@ -7346,9 +7552,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("DonVi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GhiChu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -7364,12 +7572,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SoGCNDaCap")
@@ -7413,24 +7624,30 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DienTich")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GhiChu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HienTrang_MDT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HienTrang_MLD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("KyTruoc_MDT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KyTruoc_MLD")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -7440,15 +7657,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaKhuVucTongHop")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaLoaiDatSDKetHop")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("STT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("XaId")
@@ -7486,6 +7707,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaChiKhoanhDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichCoBienDong")
@@ -7501,21 +7723,27 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaLoaiDat_SauBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaLoaiDat_TruocBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaLoaiDoiTuong_SauBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaLoaiDoiTuong_TruocBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NoiDungThayDoi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SoHieuThua_SauBienDong")
@@ -7525,12 +7753,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TTKhoanhDat_SauBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TTKhoanhDat_TruocBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenNguoiSDDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("XaId")
@@ -7583,6 +7814,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Year")
@@ -7619,6 +7851,10 @@ namespace KiemKeDatDai.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("JsonConfigSystem")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
@@ -7627,9 +7863,6 @@ namespace KiemKeDatDai.Migrations
 
                     b.Property<int?>("expired_auth")
                         .HasColumnType("int");
-
-                    b.Property<string>("server_file_upload")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -7648,6 +7881,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("CapDVHC")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTime")
@@ -7666,6 +7900,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("KyHieu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -7675,6 +7910,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("NoiDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -7694,6 +7930,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CapDVHCCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("CapDVHCId")
@@ -7740,6 +7977,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ChiTieu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTime")
@@ -7770,12 +8008,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("MaLoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ThuTuHienThi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("parent_code")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("parent_id")
@@ -7804,9 +8045,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("DTSauBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DTTruocBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("DeleterUserId")
@@ -7816,6 +8059,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DiaChiThuaDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DienTichBienDong")
@@ -7831,30 +8075,39 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MDSDSauBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MDSDTruocBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NDThayDoi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SHKDSauBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SHKDTruocBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenChuSuDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ThuaSauBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ThuaTruocBienDong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -7892,6 +8145,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<byte[]>("Geo")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<long>("HuyenId")
@@ -7907,48 +8161,63 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaDoiTuong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaDoiTuongKyTruoc")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaKhoanhDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDLuaChuyenDoi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSanBay")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSanGon")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSatLoBoiDap")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSoLuongDoiTuong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDungKyTruoc")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDungNLT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SoThuTuKhoanhDat")
@@ -8010,36 +8279,47 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaDoiTuong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaDoiTuongKyTruoc")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaHuyen")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaKhoanhDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSanBay")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSanGon")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSatLoBoiDap")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDungNLT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SoThuTuKhoanhDat")
@@ -8095,33 +8375,43 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaDoiTuong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaDoiTuongKyTruoc")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaKhoanhDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaTinh")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaVung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSanBay")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSanGon")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MdSDSatLoBoiDap")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDungNLT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SoThuTuKhoanhDat")
@@ -8174,9 +8464,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaDVHCCapXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("TangGiamKhacId")
@@ -8226,15 +8518,19 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaDVHCCapXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaDoiTuong")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaKhoanhDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MucDichSuDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("SoLuong")
@@ -8372,12 +8668,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FilePath")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -8390,6 +8689,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaDVHC")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Url")
@@ -8433,6 +8733,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("decimal(18, 4)");
 
                     b.Property<byte[]>("Geo")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -8448,12 +8749,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaLoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaLoaiDatKT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("STT")
@@ -8500,9 +8804,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Ma")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Year")
@@ -8525,6 +8831,7 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTime")
@@ -8552,15 +8859,18 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("OrderLabel")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Summary")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Type")
@@ -8614,9 +8924,11 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("MaLoaiDat")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaXa")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Year")
@@ -8651,10 +8963,15 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DonViCongTac")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -8666,21 +8983,25 @@ namespace KiemKeDatDai.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgayTraLoi")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NoiDungTraLoi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NoiDungYKien")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("PheDuyet")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Url")
+                    b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Year")

@@ -14,10 +14,10 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("Data_Target")]
     public class Data_Target : FullAuditedEntity<long>
     {
-        public string MaDVHCCapXa { get; set; }
-        public string MaKhoanhDat { get; set; }
-        public string MucDichSuDung { get; set; }
-        public string MaDoiTuong { get; set; }
+        public string? MaDVHCCapXa { get; set; }
+        public string? MaKhoanhDat { get; set; }
+        public string? MucDichSuDung { get; set; }
+        public string? MaDoiTuong { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal DienTich { get; set; }
         public long SoLuong { get; set; }

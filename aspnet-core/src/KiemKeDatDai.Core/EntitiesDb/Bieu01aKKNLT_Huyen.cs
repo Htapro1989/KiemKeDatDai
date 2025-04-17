@@ -13,7 +13,7 @@ namespace KiemKeDatDai.EntitiesDb
     public class Bieu01aKKNLT_Huyen : FullAuditedEntity<long>
     {
         public string STT { get; set; }
-        public string TenDVSDD { get; set; }
+        public string? TenDVSDD { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal TongDienTichSuDung { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
@@ -50,7 +50,7 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal CacLoaiDatPhiNongNghiepKhac{ get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal DienTichDatChuaSuDung { get; set; }
-        public string MaHuyen { get; set; }
+        public string? MaHuyen { get; set; }
         public long? HuyenId { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }

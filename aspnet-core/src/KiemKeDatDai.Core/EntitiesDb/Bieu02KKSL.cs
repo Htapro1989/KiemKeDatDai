@@ -12,11 +12,11 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("Bieu02KKSL")]
     public class Bieu02KKSL : FullAuditedEntity<long>
     {
-        public string STT { get; set; }
+        public string? STT { get; set; }
         public string Ten { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal DienTich { get; set; }
-        public string DiaDiem { get; set; }
+        public string? DiaDiem { get; set; }
         public int NamSatLo { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }

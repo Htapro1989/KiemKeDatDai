@@ -12,8 +12,8 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("Bieu01bKKNLT")]
     public class Bieu01bKKNLT : FullAuditedEntity<long>
     {
-        public string STT { get; set; }
-        public string TenDVSDD { get; set; }
+        public string? STT { get; set; }
+        public string? TenDVSDD { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal TongDienTichSuDung { get; set; }
         [Column(TypeName = "decimal(18, 4)")]

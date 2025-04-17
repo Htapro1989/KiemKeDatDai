@@ -11,13 +11,13 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("YKien")]
     public class YKien : FullAuditedEntity<long>
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string DonViCongTac { get; set; }
-        public string NoiDungYKien { get; set; }
-        public string NoiDungTraLoi { get; set; }
-        public long FileId { get; set; }
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public string? DonViCongTac { get; set; }
+        public string? NoiDungYKien { get; set; }
+        public string? NoiDungTraLoi { get; set; }
+        public long? FileId { get; set; }
         public bool? PheDuyet { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }

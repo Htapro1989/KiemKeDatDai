@@ -12,7 +12,7 @@ namespace KiemKeDatDai.EntitiesDb
     public class ConfigSystem : FullAuditedEntity<long>
     {
         public int? expired_auth { get; set; }
-        public string JsonConfigSystem { get; set; }
+        public string? JsonConfigSystem { get; set; }
         public bool? Active { get; set; }
     }
 }

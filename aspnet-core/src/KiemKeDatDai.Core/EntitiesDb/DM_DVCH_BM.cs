@@ -12,7 +12,7 @@ namespace KiemKeDatDai.EntitiesDb
     public class DM_DVCH_BM : FullAuditedEntity<long>
     {
         public long CapDVHCId { get; set; }
-        public string CapDVHCCode { get; set; }
+        public string? CapDVHCCode { get; set; }
         public long BieuMauId { get; set; }
         public long Year { get; set; }
     }

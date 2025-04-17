@@ -10,8 +10,8 @@ namespace KiemKeDatDai.EntitiesDb
 {
     public class Bieu02aKKNLT_Vung : FullAuditedEntity<long>
     {
-        public string STT { get; set; }
-        public string TenDonVi { get; set; }
+        public string? STT { get; set; }
+        public string? TenDonVi { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
         public decimal DienTichTheoQDGiaoThue { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
@@ -35,9 +35,9 @@ namespace KiemKeDatDai.EntitiesDb
         public decimal DienTichDaBanGiao { get; set; }
         public string GhiChu { get; set; }
         public long Year { get; set; }
-        public string MaTinh { get; set; }
+        public string? MaTinh { get; set; }
         public long? TinhId { get; set; }
-        public string MaVung { get; set; }
+        public string? MaVung { get; set; }
         public long? VungId { get; set; }
         public long sequence { get; set; }
         public bool? Active { get; set; }
