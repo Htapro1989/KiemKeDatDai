@@ -466,7 +466,7 @@ namespace KiemKeDatDai.RisApplication
             }
             memory.Position = 0;
 
-            return new FileStreamResult(memory, GetContentType(filePath))
+            return new FileStreamResult(memory, Utility.GetContentType(filePath))
             {
                 FileDownloadName = fileEntity.FileName
             };
