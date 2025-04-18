@@ -32,6 +32,7 @@ using static KiemKeDatDai.CommonEnum;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using KiemKeDatDai.AppCore.Dto;
+using KiemKeDatDai.AppCore.Utility;
 namespace KiemKeDatDai.App.DMBieuMau
 {
     public class NewsAppService : KiemKeDatDaiAppServiceBase, INewsAppService
@@ -121,7 +122,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         public async Task<IActionResult> DownloadFileNewsByID(int FileId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
-            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Id == FileId && x.FileType == CommonEnum.FILE_NEWS);
+            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Id == FileId && x.FileType == FILE_NEWS);
             if (fileEntity == null)
             {
                 return new NotFoundObjectResult(new { Message = "File not found on server" });
@@ -140,7 +141,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             memory.Position = 0;
 
-            return new FileStreamResult(memory, GetContentType(filePath))
+            return new FileStreamResult(memory, Utility.GetContentType(filePath))
             {
                 FileDownloadName = fileEntity.FileName
             };
@@ -223,7 +224,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                                 FilePath = filePath,
                                 MaDVHC = "",
                                 Year = input.Year ?? 0,
-                                FileType = CommonEnum.FILE_NEWS,
+                                FileType = FILE_NEWS,
 
                             };
 
@@ -279,7 +280,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                             FilePath = filePath,
                             MaDVHC = "",
                             Year = input.Year ?? 0,
-                            FileType = CommonEnum.FILE_NEWS,
+                            FileType = FILE_NEWS,
                         };
 
                         insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
@@ -338,31 +339,6 @@ namespace KiemKeDatDai.App.DMBieuMau
                 Logger.Error(ex.Message);
             }
             return commonResponseDto;
-        }
-
-        private string GetContentType(string path)
-        {
-            var types = GetMimeTypes();
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return types.ContainsKey(ext) ? types[ext] : "application/octet-stream";
-        }
-
-        private Dictionary<string, string> GetMimeTypes()
-        {
-            return new Dictionary<string, string>
-            {
-                { ".txt", "text/plain" },
-                { ".pdf", "application/pdf" },
-                { ".doc", "application/vnd.ms-word" },
-                { ".docx", "application/vnd.ms-word" },
-                { ".xls", "application/vnd.ms-excel" },
-                { ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
-                { ".png", "image/png" },
-                { ".jpg", "image/jpeg" },
-                { ".jpeg", "image/jpeg" },
-                { ".gif", "image/gif" },
-                { ".csv", "text/csv" }
-            };
         }
     }
 }
