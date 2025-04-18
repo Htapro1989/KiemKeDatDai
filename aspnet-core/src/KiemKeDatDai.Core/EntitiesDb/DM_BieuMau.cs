@@ -15,5 +15,6 @@ namespace KiemKeDatDai.EntitiesDb
         public string? NoiDung { get; set; }
         public string? CapDVHC { get; set; }
         public bool? Active { get; set; }
+        public long Year { get; set; }
     }
 }

@@ -970,17 +970,21 @@ namespace KiemKeDatDai.RisApplication
                                         MaHuyen = item.Value<string>("MaHuyen"),
                                         TenXa = item.Value<string>("TenXa"),
                                         MaXa = item.Value<string>("MaXa"),
-                                        Ma = item.Value<string>("Ma"),
-                                        Name = item.Value<string>("Name"),
-                                        Parent_id = item.Value<long>("Parent_id"),
-                                        Parent_Code = item.Value<string>("Parent_Code"),
-                                        CapDVHCId = item.Value<long>("CapDVHCId"),
+                                        Ma = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaXa") : 
+                                            (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh")),
+                                        Name = item.Value<string>("TenXa") != null && item.Value<string>("TenXa") != "" ? item.Value<string>("TenXa") :
+                                            (item.Value<string>("TenHuyen") != null && item.Value<string>("TenHuyen") != "" ? item.Value<string>("TenHuyen") : item.Value<string>("TenTinh")),
+                                        //Name = item.Value<string>("Name"),
+                                        Parent_id = null,
+                                        Parent_Code = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh"),
+                                        CapDVHCId = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? 4 :
+                                            (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? 3 : 2),
                                         Active = true,
                                         Year = year,
                                         TrangThaiDuyet = null,
                                         NgayGui = null,
                                         NgayDuyet = null,
-                                        SoDVHCCon = item.Value<int>("SoDVHCCon"),
+                                        SoDVHCCon = null,
                                         SoDVHCDaDuyet = null,
                                         MaxFileUpload = null
                                     };
