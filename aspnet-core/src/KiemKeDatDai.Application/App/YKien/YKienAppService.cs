@@ -30,9 +30,11 @@ using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using System.IO;
+using KiemKeDatDai.AppCore.Utility;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
+    [AbpAuthorize]
     public class YKienAppService : KiemKeDatDaiAppServiceBase, IYKienAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -71,7 +73,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             _iFileKiemKeAppService = iFileKiemKeAppService;
             //_iLogAppService = iLogAppService;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetAll(YKienDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -131,7 +132,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -155,7 +155,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
                     var data = await _yKienRepos.FirstOrDefaultAsync(input.Id);
@@ -207,7 +206,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -235,6 +233,35 @@ namespace KiemKeDatDai.App.DMBieuMau
                 Logger.Error(ex.Message);
             }
             return commonResponseDto;
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadFileById(int fileId)
+        {
+            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Id == fileId && x.FileType == FILE_ATTACHMENT);
+            if (fileEntity == null)
+            {
+                return new NotFoundObjectResult(new { Message = "File không tồn tại" });
+            }
+
+            var filePath = fileEntity.FilePath;
+            if (!System.IO.File.Exists(filePath))
+            {
+                return new NotFoundObjectResult(new { Message = "File không tồn tại" });
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return new FileStreamResult(memory, Utility.GetContentType(filePath))
+            {
+                FileDownloadName = fileEntity.FileName
+            };
         }
     }
 }

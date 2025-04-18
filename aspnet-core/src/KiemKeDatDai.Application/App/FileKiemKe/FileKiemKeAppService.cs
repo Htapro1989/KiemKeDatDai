@@ -466,7 +466,7 @@ namespace KiemKeDatDai.RisApplication
             }
             memory.Position = 0;
 
-            return new FileStreamResult(memory, GetContentType(filePath))
+            return new FileStreamResult(memory, Utility.GetContentType(filePath))
             {
                 FileDownloadName = fileEntity.FileName
             };
@@ -494,37 +494,13 @@ namespace KiemKeDatDai.RisApplication
             }
             memory.Position = 0;
 
-            return new FileStreamResult(memory, GetContentType(filePath))
+            return new FileStreamResult(memory, Utility.GetContentType(filePath))
             {
                 FileDownloadName = fileEntity.FileName
             };
         }
-        private string GetContentType(string path)
-        {
-            var types = GetMimeTypes();
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return types.ContainsKey(ext) ? types[ext] : "application/octet-stream";
-        }
 
-        private Dictionary<string, string> GetMimeTypes()
-        {
-            return new Dictionary<string, string>
-            {
-                { ".txt", "text/plain" },
-                { ".pdf", "application/pdf" },
-                { ".doc", "application/vnd.ms-word" },
-                { ".docx", "application/vnd.ms-word" },
-                { ".xls", "application/vnd.ms-excel" },
-                { ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
-                { ".png", "image/png" },
-                { ".jpg", "image/jpeg" },
-                { ".jpeg", "image/jpeg" },
-                { ".gif", "image/gif" },
-                { ".csv", "text/csv" },
-                { ".dgn", "application/octet-stream" }
-            };
-        }
-
+        [AbpAllowAnonymous]
         public async Task<long> CreateFile(IFormFile file, long? dvhcId, long year, string maDvhc = "")
         {
 
