@@ -96,12 +96,14 @@ class QuanLyCapDVHC extends AppComponentBase<IQuanLyCapDVHCProps, IQuanLyCapDVHC
 
 
     public render() {
-        const columns = [
+        const columns:any = [
+            { title: 'Mã', dataIndex: 'maCapDVHC', key: 'maCapDVHC',align:'center' },
             { title: 'Tên', dataIndex: 'name', key: 'name' },
             { title: 'Kỳ thống kê/kiểm kê', dataIndex: 'year', key: 'year' },
             {
                 title: 'Hành động',
                 width: 120,
+                align:'center',
                 render: (text: string, item: any) => (
                     <div>
                         <Dropdown

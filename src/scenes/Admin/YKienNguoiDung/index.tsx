@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react'
 import "./index.less";
 import { Button, Card, Empty, notification, Table } from 'antd';
 import ykienService from '../../../services/ykien/ykienService';
-import { MessageOutlined } from '@ant-design/icons';
+import { CloudDownloadOutlined, MessageOutlined } from '@ant-design/icons';
 import PhanHoiModal from './components/PhanHoiModal';
 import { FormInstance } from 'antd/lib/form';
+var FileSaver = require('file-saver');
 
 export default function YKienNguoiDungPage() {
     const [yKienList, setYKienList] = useState<any>([])
     const formRef = React.createRef<FormInstance>();
+    const [isDowloading, setIsDowloading] = useState(false)
 
     const [phanHoiModal, setPhanHoiModal] = useState({
         visible: false,
@@ -46,6 +48,17 @@ export default function YKienNguoiDungPage() {
         })
     }
 
+    const onDownloadFile = async (item: any) => {
+        setIsDowloading(true)
+        const response = await ykienService.downloadFileByID(item.fileId)
+        if (response) {
+            FileSaver.saveAs(response);
+        } else {
+            notification.error({ message: "Thất bại. Vui lòng thử lại sau" })
+        }
+        setIsDowloading(false)
+    }
+
 
     useEffect(() => {
         getAllYKien()
@@ -58,8 +71,23 @@ export default function YKienNguoiDungPage() {
         { title: 'Nội dung ý kiến', dataIndex: 'noiDungYKien', key: 'noiDungYKien' },
         { title: 'Nội dung phản hồi', dataIndex: 'noiDungTraLoi', key: 'noiDungTraLoi' },
         {
+            title: 'Tệp đính kèm', dataIndex: 'fileName', key: 'fileName', align: 'center',
+            width: 120,
+            render: (text: string, item: any) => (
+                <div>
+                    {
+                        text && (<Button
+                            loading={isDowloading}
+                            onClick={() => { onDownloadFile(item) }}
+                            type="primary" ghost icon={<CloudDownloadOutlined />} />)
+                    }
+                </div>
+            ),
+        },
+        {
             title: 'Gửi phản hồi',
             width: 120,
+            align: 'center',
             render: (text: string, item: any) => (
                 <div>
                     <Button

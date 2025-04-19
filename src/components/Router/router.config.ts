@@ -13,6 +13,7 @@ export const ROUTER_PATH = {
   NEWS: "/tin-tuc",
   CHANGEPASSWORD: "/change-password",
   YKIEN: "/y-kien",
+  NHAP_DL_KIEM_KE: "/nhap-dlkk",
 
 }
 
@@ -142,6 +143,14 @@ export const appRouters: any = [
     icon: TagsOutlined,
     showInMenu: true,
     component: LoadableComponent(() => import('../../scenes/ChangePassword')),
+  },
+  {
+    path: ROUTER_PATH.NHAP_DL_KIEM_KE,
+    title: 'Nhập dư liệu kiểm kê',
+    name: 'nhapDLKK',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/NhapDuLieuKiemKe')),
   },
   {
     path: '/tenants',

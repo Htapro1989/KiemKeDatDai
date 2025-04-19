@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Input, Modal, Tabs, Form } from 'antd';
+import { Input, Modal, Tabs, Form, Checkbox } from 'antd';
 import { GetAllPermissionsOutput } from '../../../../services/role/dto/getAllPermissionsOutput';
 import { L } from '../../../../lib/abpUtility';
 import RoleStore from '../../../../stores/roleStore';
@@ -25,11 +25,11 @@ class CreateOrUpdateRole extends React.Component<ICreateOrUpdateRoleProps> {
   };
 
   render() {
-    // const { permissions } = this.props;
+    const { permissions } = this.props;
 
-    // const options = permissions.map((x: GetAllPermissionsOutput) => {
-    //   return { label: x.displayName, value: x.name };
-    // });
+    const options = permissions.map((x: GetAllPermissionsOutput) => {
+      return { label: x.displayName, value: x.name };
+    });
 
     const formItemLayout = {
       labelCol: {
@@ -50,24 +50,24 @@ class CreateOrUpdateRole extends React.Component<ICreateOrUpdateRoleProps> {
       },
     };
 
-    // const tailFormItemLayout = {
-    //   labelCol: {
-    //     xs: { span: 6 },
-    //     sm: { span: 6 },
-    //     md: { span: 6 },
-    //     lg: { span: 6 },
-    //     xl: { span: 6 },
-    //     xxl: { span: 6 },
-    //   },
-    //   wrapperCol: {
-    //     xs: { span: 18 },
-    //     sm: { span: 18 },
-    //     md: { span: 18 },
-    //     lg: { span: 18 },
-    //     xl: { span: 18 },
-    //     xxl: { span: 18 },
-    //   },
-    // };
+    const tailFormItemLayout = {
+      labelCol: {
+        xs: { span: 6 },
+        sm: { span: 6 },
+        md: { span: 6 },
+        lg: { span: 6 },
+        xl: { span: 6 },
+        xxl: { span: 6 },
+      },
+      wrapperCol: {
+        xs: { span: 18 },
+        sm: { span: 18 },
+        md: { span: 18 },
+        lg: { span: 18 },
+        xl: { span: 18 },
+        xxl: { span: 18 },
+      },
+    };
 
     return (
       <Modal
@@ -81,7 +81,7 @@ class CreateOrUpdateRole extends React.Component<ICreateOrUpdateRoleProps> {
       >
         <Form ref={this.props.formRef} layout='vertical'>
           <Tabs defaultActiveKey={'role'} size={'small'} tabBarGutter={64}>
-            <TabPane tab={'Quyền'} key={'role'}>
+            <TabPane tab={'Vai trò'} key={'role'}>
               <Form.Item label={'Quyền'} name={'name'} rules={rules.name} {...formItemLayout}>
                 <Input />
               </Form.Item>
@@ -92,11 +92,11 @@ class CreateOrUpdateRole extends React.Component<ICreateOrUpdateRoleProps> {
                 <Input />
               </Form.Item>
             </TabPane>
-            {/* <TabPane tab={"Quyền"} key={'permission'} forceRender={true}>
+            <TabPane tab={"Quyền"} key={'permission'} forceRender={true}>
               <Form.Item {...tailFormItemLayout} name={'grantedPermissions'} valuePropName={'value'}>
                 <Checkbox.Group options={options} />
               </Form.Item>
-            </TabPane> */}
+            </TabPane>
           </Tabs>
         </Form>
       </Modal>

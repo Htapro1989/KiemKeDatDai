@@ -70,7 +70,7 @@ const BieuMauPage = (props: IBieuMauProps) => {
       case "05/TKKK":
         return <Bieu05TKKK isFetching={isFetchingData} reportData={reportData} />
       case "06/TKKKQPAN":
-        return <Bieu06TKKKQPAN />
+        return <Bieu06TKKKQPAN isFetching={isFetchingData} reportData={reportData} />
       case "01/KKSL":
         return <Bieu01KKSL />
       case "02/KKSL":

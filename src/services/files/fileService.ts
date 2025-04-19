@@ -39,6 +39,18 @@ class FileManagerService {
         });
         return result.data;
     }
+    public async downloadTemplateDvhc(): Promise<ResponseDto<any[]>> {
+        let result = await http.post(`/api/services/app/DanhMucDVHC/DownloadTemplateDVHC`, null, {
+            responseType: 'blob'
+        });
+        return result.data;
+    }
+    public async uploadFileDVHC(file: any, year: any): Promise<ResponseDto<any[]>> {
+        const formData = new FormData();
+        formData.append('fileUpload', file);
+        let result = await http.post(`/api/services/app/DanhMucDVHC/UploadFileDVHC`, formData, { params: { year } });
+        return result?.data?.result
+    }
 }
 
 export default new FileManagerService();

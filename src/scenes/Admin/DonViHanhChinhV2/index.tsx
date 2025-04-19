@@ -1,10 +1,15 @@
-import { Card, Select, Tree } from 'antd'
+import { Button, Card, Col, Divider, notification, Row, Select, Tree } from 'antd'
 import React, { useEffect, useState } from 'react'
 import dvhcService from '../../../services/dvhc/dvhcService'
 import './index.less'
 import { DonViHanhChinhMapper } from '../../../mapper/DonViHanhChinhMapper'
 import { FormInstance } from 'antd/lib/form'
 import CreateOrUpdateDvhcForm from './components/CreateOrUpdateDvhcForm'
+import UploadFileButton from '../../../components/Upload'
+import fileService from '../../../services/files/fileService'
+import confirm from 'antd/lib/modal/confirm'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+var FileSaver = require('file-saver');
 
 interface IStateDVHC {
     donViHanhChinhList?: any[]
@@ -21,6 +26,8 @@ export default function DonViHanhChinhV2(props: any) {
 
     const [dvhcState, setDvhcState] = useState<IStateDVHC>()
     const [editFormState, setEditFormState] = useState<any>()
+    const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false)
+    const [isUploading, setIsUploading] = useState(false)
 
     const updateState = (newState: Partial<IStateDVHC>) => {
         setDvhcState((prevState) => ({
@@ -149,6 +156,42 @@ export default function DonViHanhChinhV2(props: any) {
         fetchKyKiemKe(dvhcState?.dmKyKiemKeSelected)
     }
 
+    const onDownloadTemplateDVHC = async () => {
+        setIsDownloadingTemplate(true)
+        const response = await fileService.downloadTemplateDvhc();
+        if (response) {
+            FileSaver.saveAs(response, "Template_DVHC.xlsx");
+        } else {
+            notification.error({ message: "Thất bại. Vui lòng thử lại sau" })
+        }
+        setIsDownloadingTemplate(false)
+    }
+
+    const onUploadFile = async (file: any) => {
+        confirm({
+            title: `Tạo đơn vị hành chính cho kỳ kiểm kê năm ${dvhcState?.dmKyKiemKeSelected}?`,
+            icon: <ExclamationCircleOutlined />,
+            content: 'Đơn vị hành chính cũ sẽ bị xóa và tạo mới lại',
+            okText: 'Có',
+            okType: 'primary',
+            cancelText: 'Hủy',
+            onOk() {
+                onUploadFileDvhc(file)
+            }
+        });
+    }
+
+    const onUploadFileDvhc = async (file: any) => {
+        setIsUploading(true)
+        const response = await fileService.uploadFileDVHC(file, dvhcState?.dmKyKiemKeSelected);
+        if (response) {
+            notification.success({ message: "Upload thành công" })
+        } else {
+            notification.error({ message: "Thất bại. Vui lòng thử lại sau" })
+        }
+        setIsUploading(false)
+    }
+
     useEffect(() => {
         if (props.userId)
             fetchKyKiemKe();
@@ -157,43 +200,64 @@ export default function DonViHanhChinhV2(props: any) {
 
     return (
         <Card>
-            <div className='card-wrapper'>
-                <div className='left-component-wrapper'>
-                    <Select
-                        value={dvhcState?.dmKyKiemKeSelected}
-                        onChange={onHandleChangeKyKiemKe}
-                        options={dvhcState?.kyKiemKeOptions}
-                        style={{ marginBottom: 24 }}
-                    />
-                    <div className='right-menu-layout'>
-                        <Tree
-                            autoExpandParent={true}
-                            treeData={dvhcState?.donViHanhChinhList as any}
-                            loadData={onLoadMoreData}
-                            expandedKeys={dvhcState?.sideMenuExpanedKeys}
-                            onExpand={(keys) => {
-                                updateState({
-                                    sideMenuExpanedKeys: keys
-                                })
-                            }}
-                            selectedKeys={[dvhcState?.donViHanhChinhSelected?.key]}
-                            onSelect={(selectedKeys, info) => {
-                                updateEditFormState(info.node)
-                                updateState({
-                                    donViHanhChinhSelected: info.node
-                                })
-                            }
-                            }
+            <div>
+                <div className='card-wrapper'>
+                    <div className='left-component-wrapper'>
+                        <Select
+                            value={dvhcState?.dmKyKiemKeSelected}
+                            onChange={onHandleChangeKyKiemKe}
+                            options={dvhcState?.kyKiemKeOptions}
+                            style={{ marginBottom: 24 }}
                         />
+                        <div className='right-menu-layout'>
+                            <Tree
+                                autoExpandParent={true}
+                                treeData={dvhcState?.donViHanhChinhList as any}
+                                loadData={onLoadMoreData}
+                                expandedKeys={dvhcState?.sideMenuExpanedKeys}
+                                onExpand={(keys) => {
+                                    updateState({
+                                        sideMenuExpanedKeys: keys
+                                    })
+                                }}
+                                selectedKeys={[dvhcState?.donViHanhChinhSelected?.key]}
+                                onSelect={(selectedKeys, info) => {
+                                    updateEditFormState(info.node)
+                                    updateState({
+                                        donViHanhChinhSelected: info.node
+                                    })
+                                }
+                                }
+                            />
+                        </div>
                     </div>
+                    <CreateOrUpdateDvhcForm
+                        donViHanhChinhList={dvhcState?.donViHanhChinhList}
+                        year={dvhcState?.dmKyKiemKeSelected}
+                        entity={editFormState}
+                        onUpdateDvhc={onUpdateDvhc}
+                        onCreateDvhc={onCreateDvhc}
+                        onDeleteDvhc={onDeleteDvhc} />
                 </div>
-                <CreateOrUpdateDvhcForm
-                    donViHanhChinhList={dvhcState?.donViHanhChinhList}
-                    year={dvhcState?.dmKyKiemKeSelected}
-                    entity={editFormState}
-                    onUpdateDvhc={onUpdateDvhc}
-                    onCreateDvhc={onCreateDvhc}
-                    onDeleteDvhc={onDeleteDvhc} />
+                <Divider />
+                <div>
+                    <Row>
+                        <Col flex={1}>
+                            <h1>Upload danh sách đơn vị hành chính: </h1>
+                        </Col>
+                        <UploadFileButton
+                            loading={isUploading}
+                            style={{ marginBottom: 24 }}
+                            title='Upload danh sách DVHC' type='primary' ghost
+                            hideFileSelected={true}
+                            accept="*"
+                            onUpload={onUploadFile} />
+                        <Button
+                            onClick={onDownloadTemplateDVHC}
+                            loading={isDownloadingTemplate}
+                            type='link'>Tải file mẫu</Button>
+                    </Row>
+                </div>
             </div>
         </Card>
     )

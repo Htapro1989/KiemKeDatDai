@@ -1,18 +1,22 @@
+import { Form, Input, InputNumber } from 'antd';
 import React from 'react'
-import { Form, Input } from "antd";
 
-export interface Bieu06Item {
-    key: string;
-    stt: string;
-    donVi: string;
-    diaChiSuDungDat: string;
-    dienTichDatQP: string
-    dienTichKetHop: string
-    loaiDatKetHop: string
-    dienTichDaDo: string
-    soGiayChungNhan: string
-    dienTichDaCapGiay: string
-    ghiChu: string
+
+export interface ItemBieu02 {
+    tenDonVi?: string;
+    dienTichTheoQDGiaoThue?: number;
+    dienTichGiaoDat?: number;
+    dienTichChoThueDat?: number;
+    dienTichChuaXacDinhGiaoThue?: number;
+    dienTichDoDacTL1000?: number;
+    dienTichDoDacTL2000?: number;
+    dienTichDoDacTL5000?: number;
+    dienTichDoDacTL10000?: number;
+    soGCNDaCap?: number;
+    dienTichGCNDaCap?: number;
+    dienTichDaBanGiao?: number;
+    ghiChu?: string;
+    id: string;
 }
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -20,15 +24,12 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     dataIndex: string;
     title: any;
     inputType: 'number' | 'text';
-    record: Bieu06Item;
+    record: ItemBieu02;
     index: number;
     children: React.ReactNode;
-    hasChild: boolean;
-    customChill: any
 }
 
-
-export const EditableCellBieu06: React.FC<EditableCellProps> = ({
+export const Bieu02EditTableCell: React.FC<EditableCellProps> = ({
     editing,
     dataIndex,
     title,
@@ -36,9 +37,10 @@ export const EditableCellBieu06: React.FC<EditableCellProps> = ({
     record,
     index,
     children,
-    hasChild,
     ...restProps
 }) => {
+    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+
     return (
         <td {...restProps}>
             {editing ? (
@@ -52,9 +54,7 @@ export const EditableCellBieu06: React.FC<EditableCellProps> = ({
                         },
                     ]}
                 >
-                    <Input.TextArea
-                        style={{ fontSize: 12 }}
-                        rows={4} />
+                    {inputNode}
                 </Form.Item>
             ) : (
                 children

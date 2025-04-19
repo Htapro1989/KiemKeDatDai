@@ -1,18 +1,18 @@
+import { Form, Input, InputNumber } from 'antd';
 import React from 'react'
-import { Form, Input } from "antd";
 
-export interface Bieu06Item {
-    key: string;
-    stt: string;
+
+export interface ItemBieu06 {
+    id: any;
     donVi: string;
-    diaChiSuDungDat: string;
-    dienTichDatQP: string
-    dienTichKetHop: string
-    loaiDatKetHop: string
-    dienTichDaDo: string
-    soGiayChungNhan: string
-    dienTichDaCapGiay: string
-    ghiChu: string
+    diaChi: string;
+    dienTichDatQuocPhong: number;
+    dienTichKetHopKhac: string;
+    loaiDatKetHopKhac: string;
+    dienTichDaDoDac: string;
+    soGCNDaCap: string;
+    dienTichDaCapGCN: string;
+    ghiChu: string;
 }
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -20,15 +20,12 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     dataIndex: string;
     title: any;
     inputType: 'number' | 'text';
-    record: Bieu06Item;
+    record: ItemBieu06;
     index: number;
     children: React.ReactNode;
-    hasChild: boolean;
-    customChill: any
 }
 
-
-export const EditableCellBieu06: React.FC<EditableCellProps> = ({
+export const Bieu06EditTableCell: React.FC<EditableCellProps> = ({
     editing,
     dataIndex,
     title,
@@ -36,9 +33,10 @@ export const EditableCellBieu06: React.FC<EditableCellProps> = ({
     record,
     index,
     children,
-    hasChild,
     ...restProps
 }) => {
+    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+
     return (
         <td {...restProps}>
             {editing ? (
@@ -52,9 +50,7 @@ export const EditableCellBieu06: React.FC<EditableCellProps> = ({
                         },
                     ]}
                 >
-                    <Input.TextArea
-                        style={{ fontSize: 12 }}
-                        rows={4} />
+                    {inputNode}
                 </Form.Item>
             ) : (
                 children

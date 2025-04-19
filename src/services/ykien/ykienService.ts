@@ -11,6 +11,13 @@ class YKienService {
         let result = await http.post(`/api/services/app/YKien/CreateOrUpdate`, data);
         return result.data.result;
     }
+    public async downloadFileByID(fileId: any): Promise<ResponseDto<any[]>> {
+        let result = await http.get(`/api/services/app/YKien/DownloadFileById`, {
+            params: { fileId },
+            responseType: 'blob'
+        });
+        return result.data;
+    }
 }
 
 export default new YKienService();

@@ -70,11 +70,11 @@ const MenuBar = () => {
           Trang chủ
         </Link>
       </Menu.Item>
-      {/* <Menu.Item key={ROUTER_PATH.REPORT}>
-        <Link to={ROUTER_PATH.REPORT}>
-          Báo cáo
+      <Menu.Item key={ROUTER_PATH.NHAP_DL_KIEM_KE}>
+        <Link to={ROUTER_PATH.NHAP_DL_KIEM_KE}>
+          Nhập dữ liệu kiểm kê
         </Link>
-      </Menu.Item> */}
+      </Menu.Item>
       {
         isGranted('Pages.Roles') && (
           <Menu.SubMenu title='Quản lý hệ thống'>
