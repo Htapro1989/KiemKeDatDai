@@ -2,6 +2,7 @@
 using KiemKeDatDai.ApplicationDto;
 using KiemKeDatDai.Dto;
 using KiemKeDatDai.EntitiesDb;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> GetById(long dvhcId);
         Task<CommonResponseDto> CreateOrUpdate(YKienInputDto input);
         Task<CommonResponseDto> Delete(long id);
+        Task<IActionResult> DownloadFileById(int fileId);
     }
 }
