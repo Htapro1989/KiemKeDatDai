@@ -54,6 +54,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IRepository<DonViHanhChinh, long> _donViHanhChinhRepos;
         private readonly RabbitMQService _rabbitMQService;
         private readonly IConfiguration _configuration;
+        private readonly IRepository<ConfigSystem, long> _configSystemRepos;
 
         //private readonly ILogAppService _iLogAppService;
 
@@ -84,7 +85,8 @@ namespace KiemKeDatDai.RisApplication
             IWebHostEnvironment webHostEnvironment,
             IRepository<DonViHanhChinh, long> donViHanhChinhRepos,
             RabbitMQService rabbitMQService,
-            IConfiguration configuration         //ILogAppService iLogAppService
+            IConfiguration configuration,
+            IRepository<ConfigSystem, long> configSystemRepos       //ILogAppService iLogAppService
             )
         {
             _fileRepos = fileRepos;
@@ -98,6 +100,7 @@ namespace KiemKeDatDai.RisApplication
             _configuration = configuration;
             //_iLogAppService = iLogAppService;
             _userRepos = userRepos;
+            _configSystemRepos = configSystemRepos;
         }
         public async Task<CommonResponseDto> GetFileKyThongKeByDVHC(FileKiemKeFilterDto input)
         {
@@ -303,7 +306,7 @@ namespace KiemKeDatDai.RisApplication
                 }
                 var maxAllowedSize = _configuration["FileUpload:FileUploadLimit"];
                 int _intMaxAllowedSize = 5;
-                
+
                 int.TryParse(maxAllowedSize, out _intMaxAllowedSize);
                 _intMaxAllowedSize = objDVHC.MaxFileUpload ?? _intMaxAllowedSize;
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
@@ -314,6 +317,20 @@ namespace KiemKeDatDai.RisApplication
                         commonResponseDto.Message = "Đã vượt quá số lượng file cho phép";
                         commonResponseDto.ErrorCode = "VUOTQUASOLUONGFILE";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.CanhBao;
+                        return commonResponseDto;
+                    }
+                }
+                var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && x.FileType == CommonEnum.FILE_KYTHONGKE)
+                .OrderByDescending(x => x.CreationTime).FirstOrDefault();
+                var currentConfigSystem = await _configSystemRepos.FirstOrDefaultAsync(x => x.Active == true);
+                if (currentConfigSystem != null)
+                {
+                    var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(currentConfigSystem.JsonConfigSystem);
+                    if (lastUploaded != null && lastUploaded.CreationTime.AddMinutes(jsonConfigSystem.TimeUpload??0) > DateTime.Now)
+                    {
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Message = string.Format("Bạn chỉ được phép tải lên một tệp mỗi {0} phút. Vui lòng đợi trước khi tiếp tục.",jsonConfigSystem.TimeUpload);
+                        commonResponseDto.ErrorCode = "FILEDAUPLOAIDUOCUPLOADTRUOCDO";
                         return commonResponseDto;
                     }
                 }
@@ -396,7 +413,7 @@ namespace KiemKeDatDai.RisApplication
                 }
                 // Check if the file is a ZIP file
                 var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
-                string[] fileExtensions = { ".zip", ".zar", ".pdf", ".docx", ".doc", ".xls", ".xlsx",".dgn" };
+                string[] fileExtensions = { ".zip", ".zar", ".pdf", ".docx", ".doc", ".xls", ".xlsx", ".dgn" };
 
                 if (!fileExtensions.Contains(fileExtension))
                 {
