@@ -322,6 +322,7 @@ namespace KiemKeDatDai.RisApplication
                                  NoiDung = bm.NoiDung,
                                  CapDVHC = bm.CapDVHC,
                                  CreationTime = bm.CreationTime,
+                                 Year = bm.Year
                                  //Active = bm.Active
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
@@ -389,6 +390,7 @@ namespace KiemKeDatDai.RisApplication
                         data.KyHieu = input.KyHieu;
                         data.NoiDung = input.NoiDung;
                         data.CapDVHC = input.CapDVHC;
+                        data.Year = input.Year;
                         //data.Active = input.Active;
                         await _dmbmRepos.UpdateAsync(data);
                     }
