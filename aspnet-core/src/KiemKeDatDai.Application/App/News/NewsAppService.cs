@@ -36,7 +36,6 @@ using KiemKeDatDai.AppCore.Utility;
 using KiemKeDatDai.Authorization;
 namespace KiemKeDatDai.App.DMBieuMau
 {
-    [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
     public class NewsAppService : KiemKeDatDaiAppServiceBase, INewsAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -68,6 +67,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             _userRepos = userRepos;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> GetAll(int type)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -96,6 +96,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -120,6 +121,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Report_DownloadFile)]
         [HttpGet]
         public async Task<IActionResult> DownloadFileNewsByID(int FileId)
         {
@@ -149,6 +151,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             };
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> GetAllPaging(PagedAndFilteredInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -180,6 +183,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> CreateOrUpdate([FromForm] NewsUploadDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -303,6 +307,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         [HttpDelete]
         public async Task<CommonResponseDto> Delete(long id)
         {

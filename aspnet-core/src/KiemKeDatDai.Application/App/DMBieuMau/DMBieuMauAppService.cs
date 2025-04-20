@@ -46,7 +46,6 @@ using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
-    [AbpAuthorize(PermissionNames.Pages_Administration_System_BieuMau)]
     public class DMBieuMauAppService : KiemKeDatDaiAppServiceBase, IDMBieuMauAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -309,6 +308,7 @@ namespace KiemKeDatDai.RisApplication
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
         }
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_BieuMau)]
         public async Task<CommonResponseDto> GetAll(DMBieuMauDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -377,6 +377,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_BieuMau)]
         public async Task<CommonResponseDto> CreateOrUpdate(DMBieuMauInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -419,6 +420,7 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_BieuMau)]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -447,6 +449,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+        [AbpAuthorize(PermissionNames.Pages_Report_XemBaoCao)]
         public async Task<CommonResponseDto> GetDetailBieuByKyHieu(BieuMauDetailInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -1319,6 +1322,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+        [AbpAuthorize(PermissionNames.Pages_Report_DownloadBaoCao)]
         public async Task<FileStreamResult> DownloadBieuMau(BieuMauDetailInputDto input)
         {
             try
@@ -2337,7 +2341,7 @@ namespace KiemKeDatDai.RisApplication
             //};
 
         }
-        
+
         //private MemoryStream DownloadBieuMauByCap(object data, int? capDVHC, long? year, string _ma, string _tenTinh, string _tenHuyen, string _tenXa, string maDVHC, string template)
         //{
         //    try
@@ -2403,7 +2407,8 @@ namespace KiemKeDatDai.RisApplication
         //        Logger.Error(ex.Message);
         //        return null;
         //    }
-        //}
+        //}        
+        [AbpAuthorize(PermissionNames.Pages_Report_NhapBieu)]
         public async Task<CommonResponseDto> UploadBieuExcel(IFormFile fileUplaod, string mabieu, string matinh, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
