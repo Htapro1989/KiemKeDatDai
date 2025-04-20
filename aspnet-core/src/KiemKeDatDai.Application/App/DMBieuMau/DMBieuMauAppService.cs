@@ -46,6 +46,7 @@ using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
+    [AbpAuthorize]
     public class DMBieuMauAppService : KiemKeDatDaiAppServiceBase, IDMBieuMauAppService
     {
         private readonly ICacheManager _cacheManager;
