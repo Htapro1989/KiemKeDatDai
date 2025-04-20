@@ -35,7 +35,6 @@ using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
-    [AbpAuthorize(PermissionNames.Pages_Administration_System_YKien)]
     public class YKienAppService : KiemKeDatDaiAppServiceBase, IYKienAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -74,6 +73,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             _iFileKiemKeAppService = iFileKiemKeAppService;
             //_iLogAppService = iLogAppService;
         }
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_YKien)]
         public async Task<CommonResponseDto> GetAll(YKienDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -133,6 +133,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_YKien)]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -207,6 +208,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_YKien)]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -237,6 +239,7 @@ namespace KiemKeDatDai.App.DMBieuMau
         }
 
 
+        [AbpAuthorize(PermissionNames.Pages_Report_DownloadFile)]
         [HttpGet]
         public async Task<IActionResult> DownloadFileById(int fileId)
         {
