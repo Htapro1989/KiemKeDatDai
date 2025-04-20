@@ -30,10 +30,11 @@ using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using KiemKeDatDai.AppCore.Utility;
 using static KiemKeDatDai.CommonEnum;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
-    [AbpAuthorize]
+    [AbpAuthorize(PermissionNames.Pages_Administration_System_CapDvhc)]
     public class CapDonViHanhChinhAppService : KiemKeDatDaiAppServiceBase, ICapDonViHanhChinhAppService
     {
         private readonly ICacheManager _cacheManager;

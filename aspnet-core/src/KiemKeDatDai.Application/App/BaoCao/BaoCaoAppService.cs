@@ -31,6 +31,7 @@ using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Transactions;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -80,7 +81,7 @@ namespace KiemKeDatDai.RisApplication
         }
 
 
-        [AbpAuthorize]
+        [AbpAuthorize(PermissionNames.Pages_Report_NopBaoCao)]
         public async Task<CommonResponseDto> NopBaoCao(long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();

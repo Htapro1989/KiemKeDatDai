@@ -29,10 +29,11 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
-    [AbpAuthorize]
+    [AbpAuthorize(PermissionNames.Pages_Administration_System_KyKiemKe)]
     public class DMKyKiemKeAppService : KiemKeDatDaiAppServiceBase, IDMKyKiemKeAppService
     {
         private readonly ICacheManager _cacheManager;
