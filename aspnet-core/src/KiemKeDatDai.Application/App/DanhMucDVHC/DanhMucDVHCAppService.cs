@@ -37,10 +37,11 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using OfficeOpenXml;
 using Newtonsoft.Json.Linq;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
-    [AbpAuthorize]
+    [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
     public class DanhMucDVHCAppService : KiemKeDatDaiAppServiceBase, IDonViHanhChinhAppService
     {
         private readonly ICacheManager _cacheManager;

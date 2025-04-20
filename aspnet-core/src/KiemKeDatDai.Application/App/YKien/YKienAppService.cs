@@ -31,10 +31,11 @@ using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using System.IO;
 using KiemKeDatDai.AppCore.Utility;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
-    [AbpAuthorize]
+    [AbpAuthorize(PermissionNames.Pages_Administration_System_YKien)]
     public class YKienAppService : KiemKeDatDaiAppServiceBase, IYKienAppService
     {
         private readonly ICacheManager _cacheManager;

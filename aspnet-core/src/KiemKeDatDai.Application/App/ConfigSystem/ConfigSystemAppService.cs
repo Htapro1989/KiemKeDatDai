@@ -33,9 +33,11 @@ using Microsoft.Extensions.Configuration;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Hosting;
 using NuGet.Protocol;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
+    [AbpAuthorize(PermissionNames.Pages_Administration_System_ConfigSystem)]
     public class ConfigSystemAppService : KiemKeDatDaiAppServiceBase, IConfigSystemAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -71,7 +73,6 @@ namespace KiemKeDatDai.RisApplication
             _options = options;
             //_iLogAppService = iLogAppService;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetAll(string filter)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -98,7 +99,6 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -116,7 +116,6 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> CreateOrUpdate(ConfigSytemInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -170,7 +169,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();

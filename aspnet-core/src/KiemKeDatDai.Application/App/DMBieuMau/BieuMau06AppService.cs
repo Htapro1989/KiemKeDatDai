@@ -1,10 +1,12 @@
-﻿using Abp.Authorization.Users;
+﻿using Abp.Authorization;
+using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.ObjectMapping;
 using Abp.Runtime.Caching;
 using KiemKeDatDai.ApplicationDto;
+using KiemKeDatDai.Authorization;
 using KiemKeDatDai.Authorization.Users;
 using KiemKeDatDai.Dto;
 using KiemKeDatDai.EntitiesDb;
@@ -19,6 +21,7 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.App.DMBieuMau
 {
+    [AbpAuthorize(PermissionNames.Pages_Report_NhapBieu)]
     public class BieuMau06AppService : KiemKeDatDaiAppServiceBase, IBieuMau06AppService
     {
         private readonly ICacheManager _cacheManager;
@@ -40,7 +43,6 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
-        //private readonly ILogAppService _iLogAppService;
 
         private readonly ICache mainCache;
 
@@ -63,7 +65,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
             IHttpContextAccessor httpContextAccessor
-            //ILogAppService iLogAppService
             )
         {
             _cacheManager = cacheManager;
@@ -112,17 +113,10 @@ namespace KiemKeDatDai.App.DMBieuMau
                         data.Year = input.Year;
                         data.Active = input.Active;
                         await _bieu06TKKKQPAN_TinhRepos.UpdateAsync(data);
-                        //insert log
-                        //var log = new LogInputDto
-                        //{
-                        //    UserId = currentUser.Id,
-                        //    Describle = "sửa dữ liệu thông tin hồ chứa"
-                        //};
-                        //_iLogAppService.Create(log);
                     }
                     else
                     {
-                        commonResponseDto.Message = "Hồ chứa này không tồn tại";
+                        commonResponseDto.Message = "Biểu mẫu này không tồn tại";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
@@ -131,13 +125,6 @@ namespace KiemKeDatDai.App.DMBieuMau
                 {
                     var bieu06 = input.MapTo<Bieu06TKKKQPAN_Tinh>();
                     await _bieu06TKKKQPAN_TinhRepos.InsertAsync(bieu06);
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Thêm dữ liệu thông tin hồ chứa"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -155,20 +142,12 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 var bieu06 = await _bieu06TKKKQPAN_TinhRepos.FirstOrDefaultAsync(x => x.Id == id);
                 if (bieu06 != null)
                 {
                     await _bieu06TKKKQPAN_TinhRepos.DeleteAsync(bieu06);
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
-                    //insert log
-                    //var log = new LogInputDto
-                    //{
-                    //    UserId = currentUser.Id,
-                    //    Describle = "Xoá dữ liệu hồ chứa"
-                    //};
-                    //_iLogAppService.Create(log);
                 }
                 else
                 {
@@ -190,8 +169,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var data = await _bieu06TKKKQPAN_TinhRepos.GetAllListAsync(x => x.TinhId == dvhcId && x.Year == year);
-                commonResponseDto.ReturnValue = data;
+                commonResponseDto.ReturnValue = await _bieu06TKKKQPAN_TinhRepos.FirstOrDefaultAsync(x => x.TinhId == dvhcId && x.Year == year); ;
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }

@@ -31,7 +31,7 @@ using KiemKeDatDai.Sessions;
 
 namespace KiemKeDatDai.RisApplication;
 
-[AbpAuthorize]
+[AbpAuthorize(PermissionNames.Pages_Administration_Users)]
 public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
 {
     private readonly UserManager _userManager;

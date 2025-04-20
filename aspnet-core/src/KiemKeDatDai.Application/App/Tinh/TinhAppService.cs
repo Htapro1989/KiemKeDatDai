@@ -38,6 +38,7 @@ using System.ComponentModel;
 using OfficeOpenXml;
 using Newtonsoft.Json.Linq;
 using KiemKeDatDai.App.DMBieuMau.Dto;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -191,7 +192,7 @@ namespace KiemKeDatDai.RisApplication
         }
 
 
-        [AbpAuthorize]
+        [AbpAuthorize(PermissionNames.Pages_Report_DuyetBaoCao)]
         public async Task<CommonResponseDto> DuyetBaoCaoHuyen(string ma, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -268,7 +269,7 @@ namespace KiemKeDatDai.RisApplication
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
-        [AbpAuthorize]
+        [AbpAuthorize(PermissionNames.Pages_Report_HuyBaoCao)]
         public async Task<CommonResponseDto> HuyDuyetBaoCaoHuyen(string ma, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();

@@ -42,10 +42,11 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.CodeAnalysis;
 using OfficeOpenXml;
 using Newtonsoft.Json.Linq;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
-    [AbpAuthorize]
+    [AbpAuthorize(PermissionNames.Pages_Administration_System_BieuMau)]
     public class DMBieuMauAppService : KiemKeDatDaiAppServiceBase, IDMBieuMauAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -418,7 +419,6 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();

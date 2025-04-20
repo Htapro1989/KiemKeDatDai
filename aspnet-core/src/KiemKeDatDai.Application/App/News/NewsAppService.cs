@@ -33,8 +33,10 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using KiemKeDatDai.AppCore.Dto;
 using KiemKeDatDai.AppCore.Utility;
+using KiemKeDatDai.Authorization;
 namespace KiemKeDatDai.App.DMBieuMau
 {
+    [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
     public class NewsAppService : KiemKeDatDaiAppServiceBase, INewsAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -178,7 +180,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
         public async Task<CommonResponseDto> CreateOrUpdate([FromForm] NewsUploadDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -302,7 +303,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize]
         [HttpDelete]
         public async Task<CommonResponseDto> Delete(long id)
         {
