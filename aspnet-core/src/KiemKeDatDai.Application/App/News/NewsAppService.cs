@@ -66,7 +66,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             _fileRepos = fileRepos;
             _userRepos = userRepos;
         }
-
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetAll(int type)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -95,6 +95,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -149,6 +150,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             };
         }
 
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetAllPaging(PagedAndFilteredInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
