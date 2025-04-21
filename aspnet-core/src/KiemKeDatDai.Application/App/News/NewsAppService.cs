@@ -67,7 +67,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             _userRepos = userRepos;
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> GetAll(int type)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -96,7 +95,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -151,7 +149,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             };
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> GetAllPaging(PagedAndFilteredInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
