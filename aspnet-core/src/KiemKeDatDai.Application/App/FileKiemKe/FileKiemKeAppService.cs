@@ -541,7 +541,7 @@ namespace KiemKeDatDai.RisApplication
                 FilePath = filePath,
                 MaDVHC = maDvhc,
                 Year = year,
-                FileType = CommonEnum.FILE_ATTACHMENT,
+                FileType = CommonEnum.FILE_Y_KIEN,
                 DVHCId = dvhcId != null ? dvhcId : null
             };
             return await _fileRepos.InsertAndGetIdAsync(fileEntity);
