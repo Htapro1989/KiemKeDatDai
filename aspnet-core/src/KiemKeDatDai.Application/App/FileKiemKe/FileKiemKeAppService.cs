@@ -33,6 +33,7 @@ using Microsoft.AspNetCore.Hosting;
 
 using Microsoft.Extensions.Configuration;
 using KiemKeDatDai.AppCore.Utility;
+using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -204,7 +205,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-
+        
         public async Task<CommonResponseDto> DeleteAttachFile(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -262,7 +263,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-
+        [AbpAuthorize(PermissionNames.Pages_Report_UploadAPI)]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
         {
@@ -387,7 +388,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-
+        [AbpAuthorize(PermissionNames.Pages_Report_Upload)]
         [HttpPost]
         public async Task<CommonResponseDto> UploadAttachFile([FromForm] FileAttachUploadInputDto input)
         {
@@ -459,7 +460,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-
+        [AbpAuthorize(PermissionNames.Pages_Report_DownloadFile)]
         [HttpGet]
         public async Task<IActionResult> DownloadFile(long year, string maDVHC)
         {
@@ -488,6 +489,7 @@ namespace KiemKeDatDai.RisApplication
                 FileDownloadName = fileEntity.FileName
             };
         }
+        [AbpAuthorize(PermissionNames.Pages_Report_DownloadFile)]
         [HttpGet]
         public async Task<IActionResult> DownloadFileByID(int FileId)
         {
@@ -539,7 +541,7 @@ namespace KiemKeDatDai.RisApplication
                 FilePath = filePath,
                 MaDVHC = maDvhc,
                 Year = year,
-                FileType = CommonEnum.FILE_ATTACHMENT,
+                FileType = CommonEnum.FILE_Y_KIEN,
                 DVHCId = dvhcId != null ? dvhcId : null
             };
             return await _fileRepos.InsertAndGetIdAsync(fileEntity);
