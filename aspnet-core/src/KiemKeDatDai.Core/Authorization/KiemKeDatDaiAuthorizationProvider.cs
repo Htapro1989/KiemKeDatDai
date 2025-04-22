@@ -9,6 +9,7 @@ public class KiemKeDatDaiAuthorizationProvider : AuthorizationProvider
     public override void SetPermissions(IPermissionDefinitionContext context)
     {
         var pages = context.GetPermissionOrNull(PermissionNames.Pages) ?? context.CreatePermission(PermissionNames.Pages, L("Pages"));
+        context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
         var administration = pages.CreateChildPermission(PermissionNames.Pages_Administration, L("Administration"));
 
