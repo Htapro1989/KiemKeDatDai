@@ -42,7 +42,11 @@
     <text name="TenantSelection" value="Sélection du client (tenant)" />
     <text name="TenantSelection_Detail" value="Veuillez choisir l'un de ces clients (tenants) suivants." />
     <text name="Logout" value="Déconnexion" />
-    <text name="SystemManager">Quản trị hệ thống</text>
+    <text name="Pages">Full quyền</text>
+    <text name="Administration">Quản trị hệ thống</text>
+    <text name="Roles">Quản lý vai trò</text>
+    <text name="Users">Quản lý người dùng</text>
+    <text name="SystemManager">Quản lý danh mục</text>
     <text name="CapDvhc">Quản lý cấp ĐVHC</text>
     <text name="ConfigSystem">Quản lý cấu hình hệ thống</text>
     <text name="Dvhc">Quản lý ĐVHC</text>

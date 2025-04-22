@@ -13,16 +13,8 @@ public class KiemKeDatDaiAuthorizationProvider : AuthorizationProvider
         var administration = pages.CreateChildPermission(PermissionNames.Pages_Administration, L("Administration"));
 
         var roles = administration.CreateChildPermission(PermissionNames.Pages_Administration_Roles, L("Roles"));
-        roles.CreateChildPermission(PermissionNames.Pages_Administration_Roles_Create, L("CreatingNewRole"));
-        roles.CreateChildPermission(PermissionNames.Pages_Administration_Roles_Edit, L("EditingRole"));
-        roles.CreateChildPermission(PermissionNames.Pages_Administration_Roles_Delete, L("DeletingRole"));
 
         var users = administration.CreateChildPermission(PermissionNames.Pages_Administration_Users, L("Users"));
-        users.CreateChildPermission(PermissionNames.Pages_Administration_Users_Create, L("CreatingNewUser"));
-        users.CreateChildPermission(PermissionNames.Pages_Administration_Users_Edit, L("EditingUser"));
-        users.CreateChildPermission(PermissionNames.Pages_Administration_Users_Delete, L("DeletingUser"));
-        users.CreateChildPermission(PermissionNames.Pages_Administration_Users_ChangePermissions, L("ChangingPermissions"));
-        users.CreateChildPermission(PermissionNames.Pages_Administration_Users_Impersonation, L("LoginForUsers"));
 
         var systemManager = administration.CreateChildPermission(PermissionNames.Pages_Administration_System, L("SystemManager"));
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_CapDvhc, L("CapDvhc"));
@@ -43,11 +35,6 @@ public class KiemKeDatDaiAuthorizationProvider : AuthorizationProvider
         report.CreateChildPermission(PermissionNames.Pages_Report_HuyBaoCao, L("HuyBaoCao"));
         report.CreateChildPermission(PermissionNames.Pages_Report_DownloadFile, L("DownloadFile"));
         report.CreateChildPermission(PermissionNames.Pages_Report_NhapBieu, L("NhapBieu"));
-
-        context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
-        context.CreatePermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
-        context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
-        context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
     }
 
     private static ILocalizableString L(string name)
