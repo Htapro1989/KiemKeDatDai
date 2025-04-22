@@ -116,7 +116,6 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         await _userManager.DeleteAsync(user);
     }
 
-    [AbpAuthorize(PermissionNames.Pages_Users_Activation)]
     public async Task Activate(EntityDto<long> user)
     {
         await Repository.UpdateAsync(user.Id, async (entity) =>
@@ -125,7 +124,6 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         });
     }
 
-    [AbpAuthorize(PermissionNames.Pages_Users_Activation)]
     public async Task DeActivate(EntityDto<long> user)
     {
         await Repository.UpdateAsync(user.Id, async (entity) =>
