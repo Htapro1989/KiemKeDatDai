@@ -29,7 +29,7 @@ public class KiemKeDatDaiAuthorizationProvider : AuthorizationProvider
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_ConfigSystem, L("ConfigSystem"));
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_Dvhc, L("Dvhc"));
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_BieuMau, L("BieuMau"));
-        systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_KyKiemKe, L("yKiemKe"));
+        systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_KyKiemKe, L("KyKiemKe"));
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_News, L("News"));
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_YKien, L("YKien"));
 

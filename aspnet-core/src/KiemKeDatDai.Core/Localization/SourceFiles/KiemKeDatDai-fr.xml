@@ -42,6 +42,23 @@
     <text name="TenantSelection" value="Sélection du client (tenant)" />
     <text name="TenantSelection_Detail" value="Veuillez choisir l'un de ces clients (tenants) suivants." />
     <text name="Logout" value="Déconnexion" />
-    <text name="SearchWithThreeDot">Rechercher...</text>
+    <text name="SystemManager">Quản trị hệ thống</text>
+    <text name="CapDvhc">Quản lý cấp ĐVHC</text>
+    <text name="ConfigSystem">Quản lý cấu hình hệ thống</text>
+    <text name="Dvhc">Quản lý ĐVHC</text>
+    <text name="BieuMau">Quản lý danh mục biểu mẫu</text>
+    <text name="KyKiemKe">Quản lý kỳ kiểm kê</text>
+    <text name="News">Quản lý kỳ tin tức</text>
+    <text name="YKien">Quản lý ý kiến</text>
+    <text name="Report">Quản lý báo cáo</text>
+    <text name="UploadAPI">Gửi dữ liệu API</text>
+    <text name="Upload">Upload dữ liệu</text>
+    <text name="DownloadBaoCao">Tải báo cáo</text>
+    <text name="NopBaoCao">Nộp báo cáo</text>
+    <text name="XemBaoCao">Xem báo cáo</text>
+    <text name="DuyetBaoCao">Duyệt báo cáo</text>
+    <text name="HuyBaoCao">Huỷ báo cáo</text>
+    <text name="DownloadFile">Tải file</text>
+    <text name="NhapBieu">Nhập biểu</text>
   </texts>
 </localizationDictionary>
