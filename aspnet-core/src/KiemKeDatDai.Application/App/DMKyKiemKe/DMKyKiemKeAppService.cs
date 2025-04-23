@@ -33,6 +33,7 @@ using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
+    [AbpAuthorize]
     public class DMKyKiemKeAppService : KiemKeDatDaiAppServiceBase, IDMKyKiemKeAppService
     {
         private readonly ICacheManager _cacheManager;

@@ -41,7 +41,7 @@ using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
-    [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
+    [AbpAuthorize]
     public class DanhMucDVHCAppService : KiemKeDatDaiAppServiceBase, IDonViHanhChinhAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -72,7 +72,6 @@ namespace KiemKeDatDai.RisApplication
             IHttpContextAccessor httpContextAccessor,
             IDistributedCache distributedCache,
             IMemoryCache cache
-            //ILogAppService iLogAppService
             )
         {
             _cacheManager = cacheManager;
@@ -87,7 +86,6 @@ namespace KiemKeDatDai.RisApplication
             _userRoleRepos = userRoleRepos;
             _distributedCache = distributedCache;
             _cache = cache;
-            //_iLogAppService = iLogAppService;
         }
 
         public async Task<CommonResponseDto> GetAll(DVHCDto input)
@@ -411,6 +409,8 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
         public async Task<CommonResponseDto> CreateOrUpdate(DVHCInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -534,6 +534,7 @@ namespace KiemKeDatDai.RisApplication
             return false;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -917,7 +918,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        [AbpAuthorize]
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
         public async Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUpload, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
