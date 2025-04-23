@@ -58,7 +58,6 @@ namespace KiemKeDatDai.RisApplication
 
             jObject[_section] = JObject.Parse(JsonConvert.SerializeObject(sectionObject));
             File.WriteAllText(physicalPath, JsonConvert.SerializeObject(jObject, Formatting.Indented));
-            //_appConfiguration.Reload();
         }
     }
 
