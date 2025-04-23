@@ -51,8 +51,8 @@
     <text name="ConfigSystem">Quản lý cấu hình hệ thống</text>
     <text name="Dvhc">Quản lý ĐVHC</text>
     <text name="BieuMau">Quản lý danh mục biểu mẫu</text>
-    <text name="KyKiemKe">Quản lý kỳ kiểm kê</text>
-    <text name="News">Quản lý kỳ tin tức</text>
+    <text name="KyKiemKe">Quản lý kỳ thống kê, kiểm kê</text>
+    <text name="News">Quản lý tin tức</text>
     <text name="YKien">Quản lý ý kiến</text>
     <text name="Report">Quản lý báo cáo</text>
     <text name="UploadAPI">Gửi dữ liệu API</text>
