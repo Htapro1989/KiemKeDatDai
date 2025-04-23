@@ -34,6 +34,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Hosting;
 using NuGet.Protocol;
 using KiemKeDatDai.Authorization;
+using KiemKeDatDai.Configuration;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -61,7 +62,6 @@ namespace KiemKeDatDai.RisApplication
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
             IHttpContextAccessor httpContextAccessor,
-            //ILogAppService iLogAppService
             IWritableOptions<ConfigSystemTime> options
             )
         {
@@ -71,7 +71,6 @@ namespace KiemKeDatDai.RisApplication
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
             _options = options;
-            //_iLogAppService = iLogAppService;
         }
         public async Task<CommonResponseDto> GetAll(string filter)
         {
@@ -87,6 +86,7 @@ namespace KiemKeDatDai.RisApplication
                                  Active = con.Active,
                                  CreationTime = con.CreationTime
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -125,13 +125,21 @@ namespace KiemKeDatDai.RisApplication
                 if (input.Id != 0)
                 {
                     var data = await _configSystemRepos.FirstOrDefaultAsync(input.Id);
+
                     if (data != null)
                     {
-                        //_options.Update(opt => {
-                        //    opt.ExpiredTimeToken = data.expired_auth.ToString();
-                        //});
-                        data.expired_auth = input.expired_auth;
+                        if (input.expired_auth != null)
+                        {
+                            _options.Update(opt =>
+                            {
+                                opt.ExpiredTimeToken = input.expired_auth.Value.ToString();
+                            });
+
+                            data.expired_auth = input.expired_auth;
+                        }
+
                         var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(data.JsonConfigSystem);
+
                         if (jsonConfigSystem != null)
                         {
                             jsonConfigSystem.IsRequiredFileDGN = input.IsRequiredFileDGN;
@@ -143,18 +151,22 @@ namespace KiemKeDatDai.RisApplication
                                 IsRequiredFileDGN = input.IsRequiredFileDGN,
                                 TimeUpload = input.TimeUpload != null ? input.TimeUpload : 1
                             };
+
                         data.JsonConfigSystem = jsonConfigSystem.ToJson();
                         data.Active = input.Active;
+
                         await _configSystemRepos.UpdateAsync(data);
                     }
                 }
                 else
                 {
                     var objdata = input.MapTo<ConfigSystem>();
+
                     objdata.JsonConfigSystem = (new JsonConfigSytem { 
                         IsRequiredFileDGN = input.IsRequiredFileDGN,
                         TimeUpload = input.TimeUpload != null ? input.TimeUpload : 1
                     }).ToJson();
+
                     await _configSystemRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -174,8 +186,8 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _configSystemRepos.FirstOrDefaultAsync(id);
+
                 if (objdata != null)
                 {
                     await _configSystemRepos.DeleteAsync(objdata);
