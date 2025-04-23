@@ -4,6 +4,7 @@ import AttactFileTable from './AttactFileTable'
 import UploadFileButton from '../../../components/Upload'
 import fileService from '../../../services/files/fileService'
 import SyncFileTable from './SyncFileTable'
+import utils from '../../../utils/utils'
 
 export default function FileManagerComponent(props: any) {
     const donViHanhChinhSelected = props.donViHanhChinhSelected
@@ -11,6 +12,11 @@ export default function FileManagerComponent(props: any) {
     const [isRefresh, setIsRefresh] = useState<any>()
 
     const onUploadFile = async (file: any) => {
+
+        if (!utils.checkQuyenAction("Pages.Report.Upload")) {
+            return
+        }
+
         setIsLoading(true)
         const response = await fileService.fileSpecificationsUpload(file, donViHanhChinhSelected?.id, donViHanhChinhSelected?.year);
         setIsLoading(false)
@@ -39,8 +45,8 @@ export default function FileManagerComponent(props: any) {
             </Card>
 
             <Card
-            style={{ marginTop: 24 }}
-            title="Quản lý dữ liệu đồng bộ" size='small'>
+                style={{ marginTop: 24 }}
+                title="Quản lý dữ liệu đồng bộ" size='small'>
                 <SyncFileTable
                     isLoading={isLoading}
                     isRefresh={isRefresh}

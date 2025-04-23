@@ -109,7 +109,7 @@ class Role extends AppComponentBase<IRoleProps, IRoleState> {
   };
 
   public render() {
-    const { allPermissions, roles } = this.props.roleStore;
+    const { allPermissions, roles, roleEdit } = this.props.roleStore;
     const columns = [
       { title: 'Vai trò', dataIndex: 'name', key: 'name', width: 150, render: (text: string) => <div>{text}</div> },
       { title: 'Tên hiển thị', dataIndex: 'displayName', key: 'displayName', width: 150, render: (text: string) => <div>{text}</div> },
@@ -138,12 +138,12 @@ class Role extends AppComponentBase<IRoleProps, IRoleState> {
 
     return (
       <div className='roles-page-wrapper'>
-        <h1 className='txt-page-header'>Quản lý quyền hệ thống</h1>
+        <h1 className='txt-page-header'>Quản lý vai trò</h1>
         <Card title={
           <div className='table-header-layout'>
             <div style={{ flex: 1 }}>
               <span style={{ marginRight: 24 }}> Tìm kiếm: </span>
-              <Search placeholder={'Tìm kiếm quyền...'} onSearch={this.handleSearch} />
+              <Search placeholder={'Tìm kiếm vai trò...'} onSearch={this.handleSearch} />
             </div>
             <div className='table-header-layout-right'>
               <Button type="primary" icon={<PlusOutlined />} onClick={() => this.createOrUpdateModalOpen({ id: 0 })}>
@@ -185,6 +185,7 @@ class Role extends AppComponentBase<IRoleProps, IRoleState> {
             permissions={allPermissions}
             roleStore={this.props.roleStore}
             formRef={this.formRef}
+            grandPermission = {roleEdit?.grantedPermissionNames}
           />
         </Card>
       </div>

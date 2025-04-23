@@ -204,7 +204,7 @@ export default function CreateOrUpdateUserDrawer(props: any) {
 
 
                         </TabPane>
-                        <TabPane tab={'Quyền'} key={'rol'} forceRender={true}>
+                        <TabPane tab={'Vai trò'} key={'rol'} forceRender={true}>
                             <Form.Item name={'roleNames'}>
                                 <Checkbox.Group options={options} />
                             </Form.Item>

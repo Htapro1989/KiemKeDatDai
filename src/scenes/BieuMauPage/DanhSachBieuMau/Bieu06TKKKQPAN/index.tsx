@@ -17,7 +17,7 @@ export default function Bieu06TKKKQPAN(props: IBieuMauProps) {
         if (!reportData) {
             return null;
         }
-        return reportData.data.map((data: any) => {
+        return reportData?.data?.map((data: any) => {
             return (<tr key={data.id}>
                 <td>{utils.convertBieuDataViewer(data.stt)}</td>
                 <td>{utils.convertBieuDataViewer(data.donVi)}</td>

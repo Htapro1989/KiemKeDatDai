@@ -6,6 +6,7 @@ import BieuMauPage from '../../BieuMauPage/bieuMauPage';
 import ChiTietBieuMauRequest from '../../../models/BieuMau/ChiTietBieuMauRequest';
 import fileService from '../../../services/files/fileService';
 import { CloudDownloadOutlined, EyeOutlined } from '@ant-design/icons';
+import utils from '../../../utils/utils';
 var FileSaver = require('file-saver');
 
 export interface IBieuDoTabProps {
@@ -25,6 +26,9 @@ export default function BieuDoTab(props: IBieuDoTabProps) {
     })
 
     const onDownloadBieu = async (record: any) => {
+        if (!utils.checkQuyenAction("Pages.Report.DownloadBaoCao")) {
+            return
+        }
         try {
             setIsDowloading({ loading: true, id: record.id })
             const response = await fileService.donwloadBieu({
@@ -68,6 +72,9 @@ export default function BieuDoTab(props: IBieuDoTabProps) {
         },
     ]
     const openReport = (record: any) => {
+        if (!utils.checkQuyenAction("Pages.Report.XemBaoCao")) {
+            return
+        }
         const reportObject = {
             loaiBieuMau: record?.kyHieu,
             capDVHC: props.donViHanhChinhSelected?.capDVHCId,

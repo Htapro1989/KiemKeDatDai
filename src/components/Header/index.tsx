@@ -76,7 +76,7 @@ const MenuBar = () => {
         </Link>
       </Menu.Item>
       {
-        isGranted('Pages.Roles') && (
+        isGranted('Pages.Administration') && (
           <Menu.SubMenu title='Quản lý hệ thống'>
             <Menu.Item key={ROUTER_PATH.CAPDVHC}>
               <Link to={ROUTER_PATH.CAPDVHC}>
@@ -100,7 +100,7 @@ const MenuBar = () => {
             </Menu.Item>
             <Menu.Item key={ROUTER_PATH.ROLES}>
               <Link to={ROUTER_PATH.ROLES}>
-                Quản lý quyền
+                Quản lý vai trò
               </Link>
             </Menu.Item>
             <Menu.Item key={ROUTER_PATH.CAUHINH}>

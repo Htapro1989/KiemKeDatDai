@@ -1,7 +1,8 @@
 import * as abpTypings from '../lib/abp';
 
-import { L } from '../lib/abpUtility';
+import { isGranted, L } from '../lib/abpUtility';
 import { routers } from '../components/Router/router.config';
+import { notification } from 'antd';
 
 declare var abp: any;
 
@@ -99,7 +100,16 @@ class Utils {
   convertBieuDataViewer = (data: any) => {
     if (data == null || data == 0) return '';
     return data;
-}
+  }
+
+  checkQuyenAction(quyen: string) {
+    const isPerm = isGranted(quyen);
+    if (!isPerm) {
+      notification.error({ message: "Bạn không có quyền đối với thao tác này" })
+    }
+    return isPerm
+  }
+
 }
 
 export default new Utils();

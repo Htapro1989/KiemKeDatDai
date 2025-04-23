@@ -4,6 +4,7 @@ import fileService from '../../../services/files/fileService';
 import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { handleCommontResponse } from '../../../services/common/handleResponse';
+import utils from '../../../utils/utils';
 
 var FileSaver = require('file-saver');
 
@@ -41,6 +42,10 @@ export default function AttactFileTable(props: any) {
     }
 
     const onDownloadFile = async (record: any) => {
+        if (!utils.checkQuyenAction("Pages.Report.DownloadFile")) {
+            return
+        }
+
         setIsDowloading({ loading: true, id: record.id })
         const response = await fileService.downloadAttactFileById(record.id)
         setIsDowloading({ loading: false, id: record.id })

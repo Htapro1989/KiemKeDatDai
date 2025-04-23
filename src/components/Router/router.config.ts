@@ -66,7 +66,7 @@ export const appRouters: any = [
   },
   {
     path: ROUTER_PATH.USERS,
-    permission: 'Pages.Users',
+    permission: 'Pages.Administration.Users',
     title: 'Users',
     name: 'user',
     icon: UserOutlined,
@@ -146,7 +146,7 @@ export const appRouters: any = [
   },
   {
     path: ROUTER_PATH.NHAP_DL_KIEM_KE,
-    title: 'Nhập dư liệu kiểm kê',
+    title: 'Nhập dữ liệu kiểm kê',
     name: 'nhapDLKK',
     icon: TagsOutlined,
     showInMenu: true,

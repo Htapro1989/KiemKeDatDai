@@ -51,6 +51,12 @@ class FileManagerService {
         let result = await http.post(`/api/services/app/DanhMucDVHC/UploadFileDVHC`, formData, { params: { year } });
         return result?.data?.result
     }
+    public async uploadBieuDvhc(mabieu: any, matinh: any, year: any, file: any): Promise<ResponseDto<any[]>> {
+        const formData = new FormData();
+        formData.append('fileUplaod', file);
+        let result = await http.post(`/api/services/app/DMBieuMau/UploadBieuExcel`, formData, { params: { year, matinh, mabieu } });
+        return result?.data?.result
+    }
 }
 
 export default new FileManagerService();

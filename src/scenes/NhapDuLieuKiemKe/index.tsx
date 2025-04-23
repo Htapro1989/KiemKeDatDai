@@ -1,11 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './index.less'
-import { Button, Card, Empty, Select, Table } from 'antd'
+import { Button, Card, Empty, notification, Select, Table } from 'antd'
 import CustomModal from '../Home/components/CustomModal';
 import Bieu06Input from './components/Bieu06Input';
 import Bieu02Input from './components/Bieu02Input';
 import { MobXProviderContext } from 'mobx-react';
 import dvhcService from '../../services/dvhc/dvhcService';
+// import { CAP_DVHC_ENUM } from '../../models/enum';
+import utils from '../../utils/utils';
+import UploadFileButton from '../../components/Upload';
+import confirm from 'antd/lib/modal/confirm';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import fileService from '../../services/files/fileService';
 import { CAP_DVHC_ENUM } from '../../models/enum';
 
 function useStores() {
@@ -21,6 +27,8 @@ export default function NhapDuLieuKiemKePage() {
     const { donViHanhChinhStore } = useStores();
     const dvhcId = donViHanhChinhStore?.donViHanhChinhOfUser?.id
     const capDVHCId = donViHanhChinhStore?.donViHanhChinhOfUser?.capDVHCId
+
+    const [isLoadingBieuId, setIsLoadingBieuId] = useState("")
 
     const [dvhcState, setDvhcState] = useState<any>()
     const updateState = (newState: Partial<any>) => {
@@ -39,6 +47,32 @@ export default function NhapDuLieuKiemKePage() {
         })
     }
 
+    const onUploadFile = async (file: any, id: any) => {
+        confirm({
+            title: `Nhập mới dữ liệu kiểm kê cho biểu này?`,
+            icon: <ExclamationCircleOutlined />,
+            content: 'Dữ liệu cũ sẽ bị xóa và tạo mới lại.',
+            okText: 'Có',
+            okType: 'primary',
+            cancelText: 'Hủy',
+            onOk() {
+                onUploadFileDvhc(file, id)
+            }
+        });
+    }
+    const onUploadFileDvhc = async (file: any, id: any) => {
+        setIsLoadingBieuId(id)
+        const response = await fileService.uploadBieuDvhc(
+            id, dvhcId, dvhcState.dmKyKiemKeSelected, file
+        );
+        if (response) {
+            notification.success({ message: "Upload thành công" })
+        } else {
+            notification.error({ message: "Thất bại. Vui lòng thử lại sau" })
+        }
+        setIsLoadingBieuId("")
+    }
+
 
     const columns: any = [
         { title: 'Ký hiệu', dataIndex: 'kyHieu', key: 'kyHieu' },
@@ -49,12 +83,21 @@ export default function NhapDuLieuKiemKePage() {
                 <div>
                     <Button type='primary' style={{ marginRight: 4 }}
                         onClick={() => {
+                            if (!utils.checkQuyenAction("Pages.Report.NhapBieu")) {
+                                return
+                            }
                             if (item.id == 1)
                                 setIsShowModal(true)
                             else setIsShowModal02(true)
                         }}
                     >Biểu mẫu</Button>
-                    <Button type='primary' ghost>File Excel</Button>
+                    <UploadFileButton
+                        loading={isLoadingBieuId == item.kyHieu}
+                        style={{ marginBottom: 24 }}
+                        title='Excel' type='primary' ghost
+                        hideFileSelected={true}
+                        accept="*"
+                        onUpload={(file) => onUploadFile(file, item.kyHieu)} />
                 </div>
             ),
         },
@@ -66,8 +109,9 @@ export default function NhapDuLieuKiemKePage() {
     useEffect(() => {
         fetchKyKiemKe()
     }, [])
-
+    console.log("CAP ", donViHanhChinhStore?.donViHanhChinhOfUser)
     useEffect(() => {
+        
         if (capDVHCId == CAP_DVHC_ENUM.TINH) {
             setTableData([
                 {
@@ -77,7 +121,7 @@ export default function NhapDuLieuKiemKePage() {
                 },
                 {
                     "id": 2,
-                    "kyHieu": "02/aKKNLT",
+                    "kyHieu": "02a/KKNLT",
                     'name': 'Kiểm kê tình hình đo đạc, cấp giấy chứng nhận và hình thức sử dụng đất của các công ty nông, lâm nghiệp',
                 }
             ])
@@ -109,7 +153,7 @@ export default function NhapDuLieuKiemKePage() {
                     dataSource={tableData}
                     locale={{
                         emptyText: (
-                            <Empty description="Không có dữ liệu"> </Empty>
+                            <Empty description="Chỉ đơn vị hành chính cấp tỉnh mới được nhập dữ liệu này"> </Empty>
                         ),
                     }}
                 />
