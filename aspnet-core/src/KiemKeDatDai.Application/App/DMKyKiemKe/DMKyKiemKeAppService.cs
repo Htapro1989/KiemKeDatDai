@@ -33,7 +33,6 @@ using KiemKeDatDai.Authorization;
 
 namespace KiemKeDatDai.RisApplication
 {
-    [AbpAuthorize(PermissionNames.Pages_Administration_System_KyKiemKe)]
     public class DMKyKiemKeAppService : KiemKeDatDaiAppServiceBase, IDMKyKiemKeAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -113,6 +112,8 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_KyKiemKe)]
         public async Task<CommonResponseDto> CreateOrUpdate(DMKyKiemKeInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -148,6 +149,7 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Administration_System_KyKiemKe)]
         [HttpDelete]
         public async Task<CommonResponseDto> Delete(long id)
         {
