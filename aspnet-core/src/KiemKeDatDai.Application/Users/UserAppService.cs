@@ -28,6 +28,9 @@ using System.Threading.Tasks;
 using static KiemKeDatDai.CommonEnum;
 using Microsoft.Extensions.Caching.Memory;
 using KiemKeDatDai.Sessions;
+using Abp.Domain.Uow;
+using System.Transactions;
+using Aspose.Cells;
 
 namespace KiemKeDatDai.RisApplication;
 
@@ -43,6 +46,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
     private readonly IRepository<DonViHanhChinh, long> _dvhcRepos;
     private readonly IRepository<User, long> _userRepos;
     private readonly IMemoryCache _cache;
+    IUnitOfWorkManager _unitOfWorkManager;
 
     public UserAppService(
         IRepository<User, long> repository,
@@ -54,6 +58,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         IRepository<DonViHanhChinh, long> dvhcRepos,
         IRepository<User, long> userRepos,
         IMemoryCache cache,
+        IUnitOfWorkManager unitOfWorkManager,
         LogInManager logInManager)
         : base(repository)
     {
@@ -66,6 +71,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         _dvhcRepos = dvhcRepos;
         _userRepos = userRepos;
         _cache = cache;
+        _unitOfWorkManager = unitOfWorkManager;
     }
 
     public override async Task<UserDto> CreateAsync(CreateUserDto input)
@@ -431,7 +437,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
     {
         return await _cache.GetOrCreateAsync("AllDVHCs", async entry =>
         {
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(6); 
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(6);
             return await _dvhcRepos.GetAll()
                 .Select(x => new DonViHanhChinh
                 {
@@ -456,6 +462,54 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                 })
                 .ToListAsync();
         });
+    }
+    public async Task<CommonResponseDto> UpdateByCapDvhc(int capDvhc, string[] role)
+    {
+        CommonResponseDto commonResponseDto = new CommonResponseDto();
+        using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+        {
+            try
+            {
+                var allDVHC = await _dvhcRepos.GetAllAsync();
+
+                var query = from u in _userRepos.GetAll()
+                            join dvhc in _dvhcRepos.GetAll() on u.DonViHanhChinhCode equals dvhc.Ma
+                            where dvhc.CapDVHCId == capDvhc && u.IsActive == true
+                            select new UserDto
+                            {
+                                Id = u.Id,
+                                UserName = u.UserName,
+                                Name = u.Name,
+                                Surname = u.Surname,
+                                FullName = u.FullName,
+                                EmailAddress = u.EmailAddress,
+                                IsActive = u.IsActive,
+                                CreationTime = u.CreationTime,
+                                DonViHanhChinhId = u.DonViHanhChinhId,
+                                DonViHanhChinhCode = u.DonViHanhChinhCode,
+                                RoleNames = role
+                            };
+
+                var lstUser = await query.ToListAsync();
+
+                foreach (var item in lstUser)
+                {
+                    await UpdateAsync(item);
+                }
+                uow.Complete();
+
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                uow.Dispose();
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error(ex.Message);
+            }
+        }
+        return commonResponseDto;
     }
 }
 
