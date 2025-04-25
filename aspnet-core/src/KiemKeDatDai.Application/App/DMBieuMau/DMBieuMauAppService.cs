@@ -308,6 +308,7 @@ namespace KiemKeDatDai.RisApplication
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Administration_System_BieuMau)]
         public async Task<CommonResponseDto> GetAll(DMBieuMauDto input)
         {
@@ -348,6 +349,8 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetByDVHC(long dvhcId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -377,6 +380,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Administration_System_BieuMau)]
         public async Task<CommonResponseDto> CreateOrUpdate(DMBieuMauInputDto input)
         {
@@ -449,6 +453,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Report_XemBaoCao)]
         public async Task<CommonResponseDto> GetDetailBieuByKyHieu(BieuMauDetailInputDto input)
         {
@@ -1322,6 +1327,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Report_DownloadBaoCao)]
         public async Task<FileStreamResult> DownloadBieuMau(BieuMauDetailInputDto input)
         {
@@ -2408,6 +2414,7 @@ namespace KiemKeDatDai.RisApplication
         //        return null;
         //    }
         //}        
+        
         [AbpAuthorize(PermissionNames.Pages_Report_NhapBieu)]
         public async Task<CommonResponseDto> UploadBieuExcel(IFormFile fileUplaod, string mabieu, string matinh, long year)
         {
@@ -2528,6 +2535,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return null;
         }
+        
         public async Task<FileStreamResult> DownloadTemplate(string mabieu)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -2546,6 +2554,7 @@ namespace KiemKeDatDai.RisApplication
                 throw;
             }
         }
+
         #region Write file into server
         private async Task<string> WriteFile(IFormFile file, string maDVHC)
         {
@@ -2575,6 +2584,7 @@ namespace KiemKeDatDai.RisApplication
             return exactPathDirectory;
         }
         #endregion        
+        
         private MemoryStream DownloadBieuMauByCap(object data, int? capDVHC, long? year, string _ma, string _tenTinh, string _tenHuyen, string _tenXa, string template)
         {
             try

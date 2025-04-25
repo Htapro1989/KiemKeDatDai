@@ -148,6 +148,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllDVHCByYear(int year)
         {
@@ -203,6 +204,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return null;
         }
+
         public async Task<CommonResponseDto> GetByUser(DVHCInput input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -259,6 +261,8 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -310,6 +314,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetByYear(long year, int capDVHC)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -360,6 +365,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetId(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -409,6 +415,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
 
         [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
         public async Task<CommonResponseDto> CreateOrUpdate(DVHCInputDto input)
@@ -564,6 +571,7 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> BaoCaoDVHC(BaoCaoInPutDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -718,6 +726,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetDropDownVung()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -743,6 +752,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetDropDownTinhByVungId(long vungId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -768,6 +778,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetDropDownTinhByMaVung(string ma)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -793,6 +804,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetDropDownTinh()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -818,6 +830,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetDropDownHuyenByTinhId(long tinhId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -843,6 +856,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetDropDownXaByHuyenId(long huyenId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -868,6 +882,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetDropDownHuyenByMaTinh(string ma)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -893,6 +908,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetDropDownXaByMaHuyen(string ma)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -918,6 +934,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
         public async Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUpload, long year)
         {
@@ -1004,6 +1021,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return null;
         }
+
         public async Task<FileStreamResult> DownloadTemplateDVHC()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -1022,6 +1040,7 @@ namespace KiemKeDatDai.RisApplication
                 throw;
             }
         }
+
         private async Task<string> WriteFile(IFormFile file)
         {
             string fileName = "";

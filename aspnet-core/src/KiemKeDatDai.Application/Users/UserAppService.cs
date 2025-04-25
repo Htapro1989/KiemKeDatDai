@@ -433,6 +433,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
 
         return lstMa;
     }
+
     private async Task<List<DonViHanhChinh>> GetAllDVHCWithCacheAsync()
     {
         return await _cache.GetOrCreateAsync("AllDVHCs", async entry =>
@@ -463,6 +464,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                 .ToListAsync();
         });
     }
+
     public async Task<CommonResponseDto> UpdateByCapDvhc(int capDvhc, string[] role)
     {
         CommonResponseDto commonResponseDto = new CommonResponseDto();

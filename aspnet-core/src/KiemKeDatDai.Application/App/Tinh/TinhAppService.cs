@@ -269,6 +269,7 @@ namespace KiemKeDatDai.RisApplication
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Report_HuyBaoCao)]
         public async Task<CommonResponseDto> HuyDuyetBaoCaoHuyen(string ma, long year)
         {
@@ -338,8 +339,6 @@ namespace KiemKeDatDai.RisApplication
             commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
-
-        
 
         public async Task<CommonResponseDto> UpdateBieuTinh(string matinh, long year)
         {
@@ -489,6 +488,7 @@ namespace KiemKeDatDai.RisApplication
                 Logger.Error(ex.Message);
             }
         }
+
         private async Task UpdateBieu01TKKK_Tinh(Bieu01TKKK_Huyen huyen, long tinhId, string maTinh, long year, int hamduyet)
         {
             try
@@ -621,6 +621,7 @@ namespace KiemKeDatDai.RisApplication
                 Logger.Error(ex.Message);
             }
         }
+
         private async Task UpdateBieu02TKKK_Tinh(Bieu02TKKK_Huyen huyen, long tinhId, string maTinh, long year, int hamduyet)
         {
             try
@@ -744,6 +745,7 @@ namespace KiemKeDatDai.RisApplication
                 Logger.Error(ex.Message);
             }
         }
+
         private async Task UpdateBieu03TKKK_Tinh(Bieu03TKKK_Huyen huyen, long tinhId, string maTinh, long year, int hamduyet)
         {
             try
@@ -871,6 +873,7 @@ namespace KiemKeDatDai.RisApplication
                 Logger.Error(ex.Message);
             }
         }
+
         private async Task UpdateBieu04TKKK_Tinh(Bieu04TKKK_Huyen huyen, long tinhId, string maTinh, long year, int hamduyet)
         {
             try
@@ -1070,6 +1073,7 @@ namespace KiemKeDatDai.RisApplication
                 Logger.Error(ex.Message);
             }
         }
+
         private async Task UpdateBieu05TKKK_Tinh(Bieu05TKKK_Huyen huyen, long tinhId, string maTinh, long year, int hamduyet)
         {
             try

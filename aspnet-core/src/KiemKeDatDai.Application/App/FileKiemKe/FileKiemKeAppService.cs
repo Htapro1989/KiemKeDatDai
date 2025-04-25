@@ -225,6 +225,7 @@ namespace KiemKeDatDai.RisApplication
                 throw;
             }
         }
+
         public async Task<CommonResponseDto> CountRequestByCommune(string MaDVHC, int Year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -263,6 +264,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Report_UploadAPI)]
         [HttpPost]
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
@@ -388,6 +390,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Report_Upload)]
         [HttpPost]
         public async Task<CommonResponseDto> UploadAttachFile([FromForm] FileAttachUploadInputDto input)
@@ -460,6 +463,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Report_DownloadFile)]
         [HttpGet]
         public async Task<IActionResult> DownloadFile(long year, string maDVHC)
@@ -489,6 +493,7 @@ namespace KiemKeDatDai.RisApplication
                 FileDownloadName = fileEntity.FileName
             };
         }
+
         [AbpAuthorize(PermissionNames.Pages_Report_DownloadFile)]
         [HttpGet]
         public async Task<IActionResult> DownloadFileByID(int FileId)

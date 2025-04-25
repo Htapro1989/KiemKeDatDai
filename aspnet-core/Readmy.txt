@@ -20,3 +20,12 @@ Khôi phục .net: dotnet restore
 --------link con web cũ bên tổng cục----------
 http://tk14.gdla.gov.vn/
 user: host; pass: L@tinh2022
+
+
+---------inser vai trò cấp xã---------
+insert into AbpUserRoles(CreationTime, CreatorUserId, RoleId, UserId) 
+
+select '2025-04-25 00:52:30.3751994', 1, 4, a.Id
+from AbpUsers a
+inner join DonViHanhChinh b on a.donvihanhchinhid = b.id
+where b.capDVHCId = 4

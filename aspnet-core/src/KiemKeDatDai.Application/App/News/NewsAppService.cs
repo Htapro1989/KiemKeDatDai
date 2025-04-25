@@ -182,6 +182,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> CreateOrUpdate([FromForm] NewsUploadDto input)
         {

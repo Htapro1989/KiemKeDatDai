@@ -96,6 +96,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -113,6 +114,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
 
         [AbpAuthorize(PermissionNames.Pages_Administration_System_KyKiemKe)]
         public async Task<CommonResponseDto> CreateOrUpdate(DMKyKiemKeInputDto input)
@@ -149,6 +151,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
 
         [AbpAuthorize(PermissionNames.Pages_Administration_System_KyKiemKe)]
         [HttpDelete]

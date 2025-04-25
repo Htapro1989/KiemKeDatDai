@@ -73,6 +73,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             _iFileKiemKeAppService = iFileKiemKeAppService;
             //_iLogAppService = iLogAppService;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Administration_System_YKien)]
         public async Task<CommonResponseDto> GetAll(YKienDto input)
         {
@@ -133,6 +134,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+
         [AbpAuthorize(PermissionNames.Pages_Administration_System_YKien)]
         public async Task<CommonResponseDto> GetById(long id)
         {
@@ -151,6 +153,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+
         [AbpAllowAnonymous]
         public async Task<CommonResponseDto> CreateOrUpdate([FromForm] YKienInputDto input)
         {
@@ -237,7 +240,6 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-
 
         [AbpAuthorize(PermissionNames.Pages_Report_DownloadFile)]
         [HttpGet]
