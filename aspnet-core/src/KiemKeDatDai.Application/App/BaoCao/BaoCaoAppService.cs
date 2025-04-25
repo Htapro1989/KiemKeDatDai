@@ -122,6 +122,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         [AbpAllowAnonymous]
         public async Task<CommonResponseDto> ThongKeSoLieu()
         {

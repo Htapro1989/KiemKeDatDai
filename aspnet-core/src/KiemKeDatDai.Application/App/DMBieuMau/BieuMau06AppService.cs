@@ -137,6 +137,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> Delete(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -164,6 +165,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetByDVHC(long dvhcId, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();

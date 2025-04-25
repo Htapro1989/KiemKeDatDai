@@ -99,6 +99,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -116,6 +117,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<CommonResponseDto> CreateOrUpdate(ConfigSytemInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -208,6 +210,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
+
         public async Task<int> GetByActive()
         {
             try
