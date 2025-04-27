@@ -673,7 +673,7 @@ namespace KiemKeDatDai.RisApplication
                             switch (item.CapDVHCId)
                             {
                                 case (int)CAP_DVHC.VUNG:
-                                    var lstMaTinh = allDvhc.Where(x => x.Parent_Code == currentDvhc.Ma).Select(x => x.Ma).ToArray();
+                                    var lstMaTinh = allDvhc.Where(x => x.Parent_Code == baoCaoDVHC_child.MaDVHC).Select(x => x.Ma).ToArray();
                                     baoCaoDVHC_child.Tong = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh));
                                     baoCaoDVHC_child.TongDuyet = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                                     baoCaoDVHC_child.TongNop = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
@@ -815,7 +815,7 @@ namespace KiemKeDatDai.RisApplication
                             switch (item.CapDVHCId)
                             {
                                 case (int)CAP_DVHC.VUNG:
-                                    var lstMaTinh = allDvhc.Where(x => x.Parent_Code == currentDvhc.Ma).Select(x => x.Ma).ToArray();
+                                    var lstMaTinh = allDvhc.Where(x => x.Parent_Code == baoCaoDVHC_child.MaDVHC).Select(x => x.Ma).ToArray();
                                     baoCaoDVHC_child.Tong = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh));
                                     baoCaoDVHC_child.TongDuyet = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                                     baoCaoDVHC_child.TongNop = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh) && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET);
