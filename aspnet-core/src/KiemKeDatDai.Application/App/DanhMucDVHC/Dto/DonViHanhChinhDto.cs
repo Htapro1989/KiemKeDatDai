@@ -22,6 +22,7 @@ namespace KiemKeDatDai.Dto
     public class DVHCOutputDto : DonViHanhChinh
     {
         public int ChildStatus { get; set; }
+        public bool? IsExitsUser { get; set; }
     }
     public class DVHCInput
     {

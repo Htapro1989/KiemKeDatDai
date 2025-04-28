@@ -91,6 +91,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetAll(DVHCDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from obj in _dvhcRepos.GetAll()
@@ -188,6 +189,7 @@ namespace KiemKeDatDai.RisApplication
                     WriteIndented = true,
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // 👈 Fix lỗi Unicode
                 };
+
                 string json = JsonSerializer.Serialize(pagedResultDto, options);
                 byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(json);
 
@@ -208,13 +210,15 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetByUser(DVHCInput input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
-                PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
                 var userObj = await _userRepos.FirstOrDefaultAsync(input.UserId.Value);
+
                 if (userObj != null)
                 {
                     var dvhcId = userObj.DonViHanhChinhId;
+
                     if (dvhcId != 0)
                     {
                         var query = (from dvhc in _dvhcRepos.GetAll()
@@ -241,6 +245,7 @@ namespace KiemKeDatDai.RisApplication
                                          ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
                                          CreationTime = dvhc.CreationTime
                                      });
+
                         commonResponseDto.ReturnValue = await query.ToListAsync();
                         commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                         commonResponseDto.Message = "Thành Công";
@@ -266,9 +271,9 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
-                PagedResultDto<DVHCDto> pagedResultDto = new PagedResultDto<DVHCDto>();
                 var query = (from dvhc in _dvhcRepos.GetAll()
                              join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
                              where dvhc.Parent_id == id
@@ -293,9 +298,20 @@ namespace KiemKeDatDai.RisApplication
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
                                  ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
                              });
+
                 if (query != null)
                 {
-                    commonResponseDto.ReturnValue = await query.ToListAsync();
+                    var lstDvhc = await query.ToListAsync();
+
+                    foreach (var item in lstDvhc)
+                    {
+                        if (await _userRepos.FirstOrDefaultAsync(x => x.DonViHanhChinhCode ==item.Ma) != null)
+                        {
+                            item.IsExitsUser = true;
+                        }
+                    }
+
+                    commonResponseDto.ReturnValue = lstDvhc;
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
@@ -318,6 +334,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetByYear(long year, int capDVHC)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
@@ -344,6 +361,7 @@ namespace KiemKeDatDai.RisApplication
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
                                  ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
                              });
+
                 if (query != null)
                 {
                     commonResponseDto.ReturnValue = await query.ToListAsync();
@@ -369,6 +387,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetId(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
@@ -395,6 +414,7 @@ namespace KiemKeDatDai.RisApplication
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
                                  ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
                              });
+
                 if (query != null)
                 {
                     commonResponseDto.ReturnValue = await query.ToListAsync();
@@ -431,9 +451,11 @@ namespace KiemKeDatDai.RisApplication
                 }
                 var currentUser = await GetCurrentUserAsync();
                 var allDvhc = await _dvhcRepos.GetAllAsync();
+
                 if (input.Id != 0)
                 {
                     var data = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
+
                     if (data != null)
                     {
                         if (input.Ma != data.Ma)
@@ -446,8 +468,10 @@ namespace KiemKeDatDai.RisApplication
                                 return commonResponseDto;
                             }
                         }
+
                         data = input.MapTo(data);
                         data.TrangThaiDuyet = input.TrangThaiDuyet;
+
                         switch (data.CapDVHCId)
                         {
                             case (int)CAP_DVHC.XA:
@@ -493,7 +517,9 @@ namespace KiemKeDatDai.RisApplication
                         commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
+
                     var dvhc = input.MapTo<DVHCInputDto>();
+
                     switch (dvhc.CapDVHCId)
                     {
                         case (int)CAP_DVHC.XA:
@@ -519,6 +545,7 @@ namespace KiemKeDatDai.RisApplication
                         default:
                             break;
                     }
+
                     await _dvhcRepos.InsertAsync(dvhc);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -547,8 +574,8 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 var objDVHC = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == id);
+
                 if (objDVHC != null)
                 {
                     await _dvhcRepos.DeleteAsync(objDVHC);
@@ -581,6 +608,7 @@ namespace KiemKeDatDai.RisApplication
                 var lstBaoCao = new List<BaoCaoDonViHanhChinhOutPutDto>();
                 var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.Ma && x.Year == input.Year);
                 var allDvhc = await _dvhcRepos.GetAllAsync();
+
                 if (currentDvhc != null)
                 {
                     //lấy thằng gốc
@@ -595,7 +623,9 @@ namespace KiemKeDatDai.RisApplication
                         TrangThaiDuyet = currentDvhc.TrangThaiDuyet,
                         ChildStatus = 1
                     };
+
                     baoCaoDVHC.Root = currentUser.DonViHanhChinhCode == input.Ma ? true : false;
+
                     switch (currentDvhc.CapDVHCId)
                     {
                         case (int)CAP_DVHC.TRUNG_UONG:
@@ -632,14 +662,18 @@ namespace KiemKeDatDai.RisApplication
                         default:
                             break;
                     }
+
                     //lấy danh sách con
                     var lstChild = allDvhc.Where(x => x.Parent_Code == input.Ma && x.Year == input.Year).ToList();
+
                     //Xác định  trạng thái button nộp báo cáo
                     if (baoCaoDVHC.Root == true)
                     {
                         baoCaoDVHC.IsNopBaoCao = (baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.CHO_DUYET && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET) ? true : false;
+                        
                         if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG || baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
                             baoCaoDVHC.IsNopBaoCao = false;
+
                         if (baoCaoDVHC.ChildStatus == 0)
                         {
                             baoCaoDVHC.IsNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
@@ -647,13 +681,16 @@ namespace KiemKeDatDai.RisApplication
                         else
                         {
                             var soDaDuyet = allDvhc.Count(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                            
                             if (soDaDuyet == lstChild.Count && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET)
                                 baoCaoDVHC.IsNopBaoCao = true;
                             else
                                 baoCaoDVHC.IsNopBaoCao = false;
                         }
                     }
+
                     lstBaoCao.Add(baoCaoDVHC);
+
                     if (lstChild != null)
                     {
                         foreach (var item in lstChild)
@@ -670,6 +707,7 @@ namespace KiemKeDatDai.RisApplication
                                 TrangThaiDuyet = item.TrangThaiDuyet,
                                 IsNopBaoCao = false
                             };
+
                             switch (item.CapDVHCId)
                             {
                                 case (int)CAP_DVHC.VUNG:
@@ -704,6 +742,7 @@ namespace KiemKeDatDai.RisApplication
                                 default:
                                     break;
                             }
+
                             lstBaoCao.Add(baoCaoDVHC_child);
                         }
                     }
@@ -754,6 +793,7 @@ namespace KiemKeDatDai.RisApplication
                     };
 
                     baoCaoDVHC.Root = currentUser.DonViHanhChinhCode == input.Ma ? true : false;
+
                     switch (currentDvhc.CapDVHCId)
                     {
                         case (int)CAP_DVHC.TRUNG_UONG:
@@ -846,6 +886,7 @@ namespace KiemKeDatDai.RisApplication
                                 default:
                                     break;
                             }
+
                             lstBaoCao.Add(baoCaoDVHC_child);
                         }
                     }
@@ -871,6 +912,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetDropDownVung()
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
@@ -881,6 +923,7 @@ namespace KiemKeDatDai.RisApplication
                                  Name = dvhc.Name,
                                  Ma = dvhc.Ma,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -897,6 +940,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetDropDownTinhByVungId(long vungId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
@@ -907,6 +951,7 @@ namespace KiemKeDatDai.RisApplication
                                  Name = dvhc.Name,
                                  Ma = dvhc.Ma,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -923,6 +968,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetDropDownTinhByMaVung(string ma)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
@@ -933,6 +979,7 @@ namespace KiemKeDatDai.RisApplication
                                  Name = dvhc.Name,
                                  Ma = dvhc.Ma,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -950,6 +997,7 @@ namespace KiemKeDatDai.RisApplication
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
+
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.TINH
@@ -959,6 +1007,7 @@ namespace KiemKeDatDai.RisApplication
                                  Name = dvhc.Name,
                                  Ma = dvhc.Ma,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -977,6 +1026,7 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+
                 var query = (from dvhc in _dvhcRepos.GetAll()
                              where dvhc.CapDVHCId == (int)CAP_DVHC.HUYEN && dvhc.Parent_id == tinhId
                              select new DropDownListDVHCDto
@@ -985,6 +1035,7 @@ namespace KiemKeDatDai.RisApplication
                                  Name = dvhc.Name,
                                  Ma = dvhc.Ma,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -1001,6 +1052,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetDropDownXaByHuyenId(long huyenId)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
@@ -1011,6 +1063,7 @@ namespace KiemKeDatDai.RisApplication
                                  Name = dvhc.Name,
                                  Ma = dvhc.Ma,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -1027,6 +1080,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetDropDownHuyenByMaTinh(string ma)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
@@ -1037,6 +1091,7 @@ namespace KiemKeDatDai.RisApplication
                                  Name = dvhc.Name,
                                  Ma = dvhc.Ma,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -1053,6 +1108,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetDropDownXaByMaHuyen(string ma)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from dvhc in _dvhcRepos.GetAll()
@@ -1063,6 +1119,7 @@ namespace KiemKeDatDai.RisApplication
                                  Name = dvhc.Name,
                                  Ma = dvhc.Ma,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -1087,17 +1144,19 @@ namespace KiemKeDatDai.RisApplication
 
                 var dt = new System.Data.DataTable();
                 var fi = new FileInfo(urlFile);
+
                 // Check if the file exists
                 if (!fi.Exists)
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "File " + urlFile + " không tồn tại";
                 }
+
                 //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
-
                 var worksheets = excel.Workbook.Worksheets;
+
                 if (worksheets == null)
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
@@ -1108,6 +1167,7 @@ namespace KiemKeDatDai.RisApplication
                     foreach (var sheet in worksheets)
                     {
                         var table = sheet.Tables.FirstOrDefault();
+
                         if (table != null)
                         {
                             //if (sheet.Index == 0)
@@ -1116,6 +1176,7 @@ namespace KiemKeDatDai.RisApplication
                             //}
                             var tableData = table.ToDataTable();
                             var jArray = JArray.FromObject(tableData);
+
                             foreach (var item in jArray)
                             {
                                 if (item != null)
@@ -1148,6 +1209,7 @@ namespace KiemKeDatDai.RisApplication
                                         SoDVHCDaDuyet = null,
                                         MaxFileUpload = null
                                     };
+
                                     await _dvhcRepos.InsertAsync(data);
                                 }
                             }
@@ -1186,17 +1248,21 @@ namespace KiemKeDatDai.RisApplication
         {
             string fileName = "";
             string exactPathDirectory = "";
+
             try
             {
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks.ToString() + extension;
                 var filePath = "wwwroot\\Uploads\\Files\\DVHC";
+
                 if (!Directory.Exists(filePath))
                 {
                     Directory.CreateDirectory(filePath);
                 }
+
                 exactPathDirectory = "wwwroot\\Uploads\\Files\\DVHC" + "\\" + fileName;
                 var exactPath = "wwwroot\\Uploads\\Files\\DVHC" + "\\" + fileName;
+
                 using (var stream = new FileStream(exactPath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
