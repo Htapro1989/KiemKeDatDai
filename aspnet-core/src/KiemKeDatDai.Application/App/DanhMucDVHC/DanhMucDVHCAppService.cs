@@ -1181,36 +1181,61 @@ namespace KiemKeDatDai.RisApplication
                             {
                                 if (item != null)
                                 {
-                                    var data = new DonViHanhChinh()
+                                    var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == item.Value<string>("MaXa") && x.Year == year);
+                                    if (dvhcObj != null)
                                     {
-                                        TenVung = item.Value<string>("TenVung"),
-                                        MaVung = item.Value<string>("MaVung"),
-                                        TenTinh = item.Value<string>("TenTinh"),
-                                        MaTinh = item.Value<string>("MaTinh"),
-                                        TenHuyen = item.Value<string>("TenHuyen"),
-                                        MaHuyen = item.Value<string>("MaHuyen"),
-                                        TenXa = item.Value<string>("TenXa"),
-                                        MaXa = item.Value<string>("MaXa"),
-                                        Ma = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaXa") : 
-                                            (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh")),
-                                        Name = item.Value<string>("TenXa") != null && item.Value<string>("TenXa") != "" ? item.Value<string>("TenXa") :
-                                            (item.Value<string>("TenHuyen") != null && item.Value<string>("TenHuyen") != "" ? item.Value<string>("TenHuyen") : item.Value<string>("TenTinh")),
+                                        dvhcObj.TenVung = item.Value<string>("TenVung");
+                                        dvhcObj.MaVung = item.Value<string>("MaVung");
+                                        dvhcObj.TenTinh = item.Value<string>("TenTinh");
+                                        dvhcObj.MaTinh = item.Value<string>("MaTinh");
+                                        dvhcObj.TenHuyen = item.Value<string>("TenHuyen");
+                                        dvhcObj.MaHuyen = item.Value<string>("MaHuyen");
+                                        dvhcObj.TenXa = item.Value<string>("TenXa");
+                                        dvhcObj.MaXa = item.Value<string>("MaXa");
+                                        dvhcObj.Ma = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaXa") :
+                                        (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh"));
+                                        dvhcObj.Name = item.Value<string>("TenXa") != null && item.Value<string>("TenXa") != "" ? item.Value<string>("TenXa") :
+                                        (item.Value<string>("TenHuyen") != null && item.Value<string>("TenHuyen") != "" ? item.Value<string>("TenHuyen") : item.Value<string>("TenTinh"));
                                         //Name = item.Value<string>("Name"),
-                                        Parent_id = null,
-                                        Parent_Code = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh"),
-                                        CapDVHCId = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? 4 :
+                                        dvhcObj.Parent_Code = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh");
+                                        dvhcObj.CapDVHCId = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? 4 :
+                                        (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? 3 : 2);
+                                        dvhcObj.Active = true;
+                                        dvhcObj.Year = year;
+                                        _dvhcRepos.Update(dvhcObj);
+                                    }
+                                    else
+                                    {
+                                        var data = new DonViHanhChinh()
+                                        {
+                                            TenVung = item.Value<string>("TenVung"),
+                                            MaVung = item.Value<string>("MaVung"),
+                                            TenTinh = item.Value<string>("TenTinh"),
+                                            MaTinh = item.Value<string>("MaTinh"),
+                                            TenHuyen = item.Value<string>("TenHuyen"),
+                                            MaHuyen = item.Value<string>("MaHuyen"),
+                                            TenXa = item.Value<string>("TenXa"),
+                                            MaXa = item.Value<string>("MaXa"),
+                                            Ma = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaXa") :
+                                            (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh")),
+                                            Name = item.Value<string>("TenXa") != null && item.Value<string>("TenXa") != "" ? item.Value<string>("TenXa") :
+                                            (item.Value<string>("TenHuyen") != null && item.Value<string>("TenHuyen") != "" ? item.Value<string>("TenHuyen") : item.Value<string>("TenTinh")),
+                                            //Name = item.Value<string>("Name"),
+                                            Parent_id = null,
+                                            Parent_Code = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh"),
+                                            CapDVHCId = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? 4 :
                                             (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? 3 : 2),
-                                        Active = true,
-                                        Year = year,
-                                        TrangThaiDuyet = null,
-                                        NgayGui = null,
-                                        NgayDuyet = null,
-                                        SoDVHCCon = null,
-                                        SoDVHCDaDuyet = null,
-                                        MaxFileUpload = null
-                                    };
-
-                                    await _dvhcRepos.InsertAsync(data);
+                                            Active = true,
+                                            Year = year,
+                                            TrangThaiDuyet = null,
+                                            NgayGui = null,
+                                            NgayDuyet = null,
+                                            SoDVHCCon = null,
+                                            SoDVHCDaDuyet = null,
+                                            MaxFileUpload = null
+                                        };
+                                        await _dvhcRepos.InsertAsync(data);
+                                    }
                                 }
                             }
                         }
