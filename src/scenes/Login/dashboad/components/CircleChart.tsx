@@ -6,7 +6,7 @@ export default function CircleChart(props: any) {
     
     const circleOptions = {
         title: {
-            text: 'Phần trăm DVHC đã nộp báo cáo',
+            text: 'DVHC đã nộp báo cáo',
             subtext: '2024',
             left: 'center'
         },

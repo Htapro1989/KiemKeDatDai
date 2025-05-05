@@ -58,6 +58,13 @@ class DvhcService {
     let result = await http.post(`/api/services/app/DanhMucDVHC/BaoCaoDVHC`, body);
     return result.data.result;
   }
+  public async getBaoCaoDVHCForDashboard(ma: String, year: String): Promise<ResponseDto<any[]>> {
+    const body = {
+      ma, year
+    }
+    let result = await http.post(`/api/services/app/DanhMucDVHC/BaoCaoDVHCForDashboard`, body);
+    return result.data.result;
+  }
 
   //Cấp đơn vị hành chính
 

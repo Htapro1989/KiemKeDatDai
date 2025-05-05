@@ -67,6 +67,7 @@ export default function YKienNguoiDungPage() {
     const columns: any = [
         { title: 'Người gửi', dataIndex: 'name', key: 'name' },
         { title: 'Email', dataIndex: 'email', key: 'email' },
+        { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
         { title: 'Đơn vị công tác', dataIndex: 'donViCongTac', key: 'donViCongTac' },
         { title: 'Nội dung ý kiến', dataIndex: 'noiDungYKien', key: 'noiDungYKien' },
         { title: 'Nội dung phản hồi', dataIndex: 'noiDungTraLoi', key: 'noiDungTraLoi' },

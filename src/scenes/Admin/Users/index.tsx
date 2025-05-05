@@ -18,6 +18,10 @@ export interface IUserProps {
   sessionStore: SessionStore;
 }
 
+interface MaDvhcSelected {
+  id?: string;
+  ma?: string
+}
 export interface IUserState {
   modalVisible: boolean;
   maxResultCount: number;
@@ -25,10 +29,7 @@ export interface IUserState {
   userId: number;
   filter: string;
   entitySelected?: any;
-  maDvhcSelected?: {
-    ma?: any,
-    id?: any
-  }
+  maDvhcSelected: MaDvhcSelected
 }
 
 const confirm = Modal.confirm;
@@ -47,8 +48,8 @@ class User extends AppComponentBase<IUserProps, IUserState> {
     filter: '',
     entitySelected: null,
     maDvhcSelected: {
-      ma: null,
-      id: null
+      ma: "0",
+      id: "0"
     }
   };
 
@@ -113,7 +114,7 @@ class User extends AppComponentBase<IUserProps, IUserState> {
 
   handleCreate = (dvhcId: any) => {
     const form = this.formRef.current;
-
+    const userSeleted: any = this.state.entitySelected;
     form!.validateFields().then(async (values: any) => {
       if (this.state.userId === 0) {
         await this.props.userStore.create({
@@ -124,8 +125,8 @@ class User extends AppComponentBase<IUserProps, IUserState> {
       } else {
         await this.props.userStore.update({
           ...values,
-          donViHanhChinhId: this.state.maDvhcSelected.id,
-          donViHanhChinhCode: this.state.maDvhcSelected.ma,
+          donViHanhChinhId: userSeleted?.donViHanhChinhId,
+          donViHanhChinhCode:userSeleted?.donViHanhChinhCode,
           id: this.state.userId
         });
       }
@@ -137,7 +138,6 @@ class User extends AppComponentBase<IUserProps, IUserState> {
   };
 
   handleSearch = (value: string) => {
-    console.log("SEARCH", value);
     this.setState({ filter: value }, async () => await this.getAll());
   };
 

@@ -14,6 +14,7 @@ export const ROUTER_PATH = {
   CHANGEPASSWORD: "/change-password",
   YKIEN: "/y-kien",
   NHAP_DL_KIEM_KE: "/nhap-dlkk",
+  BIEU: "/quan-ly-bieu",
 
 }
 
@@ -75,7 +76,7 @@ export const appRouters: any = [
   },
   {
     path: ROUTER_PATH.ROLES,
-    permission: 'Pages.Roles',
+    permission: 'Pages.Administration',
     title: 'Roles',
     name: 'role',
     icon: TagsOutlined,
@@ -84,7 +85,7 @@ export const appRouters: any = [
   },
   {
     path: ROUTER_PATH.CAPDVHC,
-    permission: 'Pages.Roles',
+    permission: 'Pages.Administration',
     title: 'Cấp đơn vị hành chính',
     name: 'capdvhc',
     icon: TagsOutlined,
@@ -93,7 +94,7 @@ export const appRouters: any = [
   },
   {
     path: ROUTER_PATH.DONVIHANHCHINH,
-    permission: 'Pages.Roles',
+    permission: 'Pages.Administration',
     title: 'Đơn vị hành chính',
     name: 'dvhc',
     icon: TagsOutlined,
@@ -102,7 +103,7 @@ export const appRouters: any = [
   },
   {
     path: ROUTER_PATH.KYKIEMKE,
-    permission: 'Pages.Roles',
+    permission: 'Pages.Administration',
     title: 'Kỳ thống kê kiểm kê',
     name: 'kykiemke',
     icon: TagsOutlined,
@@ -111,7 +112,7 @@ export const appRouters: any = [
   },
   {
     path: ROUTER_PATH.CAUHINH,
-    permission: 'Pages.Roles',
+    permission: 'Pages.Administration',
     title: 'Cấu hình hệ thống',
     name: 'cauhinh',
     icon: TagsOutlined,
@@ -120,7 +121,7 @@ export const appRouters: any = [
   },
   {
     path: ROUTER_PATH.NEWS,
-    permission: 'Pages.Roles',
+    permission: 'Pages.Administration',
     title: 'Cấu hình tin tức',
     name: 'cauhinh',
     icon: TagsOutlined,
@@ -128,8 +129,17 @@ export const appRouters: any = [
     component: LoadableComponent(() => import('../../scenes/Admin/News')),
   },
   {
+    path: ROUTER_PATH.BIEU,
+    permission: 'Pages.Administration',
+    title: 'Quản lý biểu mẫu',
+    name: 'bieu',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/Admin/Bieu')),
+  },
+  {
     path: ROUTER_PATH.YKIEN,
-    permission: 'Pages.Roles',
+    permission: 'Pages.Administration',
     title: 'Ý kiến người dùng',
     name: 'ykien',
     icon: TagsOutlined,

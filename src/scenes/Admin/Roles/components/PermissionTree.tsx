@@ -1,124 +1,6 @@
 import { Tree } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-const res = [
-    {
-        "name": "Pages.Administration.System.BieuMau",
-        "displayName": "[Bieu mau]",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.System.CapDvhc",
-        "displayName": "[Cap dvhc]",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.System.ConfigSystem",
-        "displayName": "[Config system]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.DownloadBaoCao",
-        "displayName": "[Download bao cao]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.DownloadFile",
-        "displayName": "[Download file]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.DuyetBaoCao",
-        "displayName": "[Duyet bao cao]",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.System.Dvhc",
-        "displayName": "[Dvhc]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.HuyBaoCao",
-        "displayName": "[Huy bao cao]",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.System.KyKiemKe",
-        "displayName": "[Ky kiem ke]",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.System.News",
-        "displayName": "[News]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.NhapBieu",
-        "displayName": "[Nhap bieu]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.NopBaoCao",
-        "displayName": "[Nop bao cao]",
-        "description": null
-    },
-    {
-        "name": "Pages",
-        "displayName": "[Pages]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report",
-        "displayName": "[Report]",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.System",
-        "displayName": "[System manager]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.UploadAPI",
-        "displayName": "[Upload aPI]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.Upload",
-        "displayName": "[Upload]",
-        "description": null
-    },
-    {
-        "name": "Pages.Report.XemBaoCao",
-        "displayName": "[Xem bao cao]",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.System.YKien",
-        "displayName": "[YKien]",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration",
-        "displayName": "Administration",
-        "description": null
-    },
-    {
-        "name": "Pages.Roles",
-        "displayName": "Roles",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.Roles",
-        "displayName": "Roles",
-        "description": null
-    },
-    {
-        "name": "Pages.Administration.Users",
-        "displayName": "Users",
-        "description": null
-    }
-]
-
 export function buildTreeFromFlatTreeData(data: any) {
     const keyMap = new Map();
 
@@ -144,16 +26,6 @@ export function buildTreeFromFlatTreeData(data: any) {
     return tree;
 }
 
-const x = res.map(permission => {
-    return {
-        title: permission.displayName,
-        key: permission.name,
-        children: []
-    }
-})
-const x3 = buildTreeFromFlatTreeData(x)
-console.log(x3)
-
 const PermissionTree = (props: any) => {
     const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
@@ -172,8 +44,6 @@ const PermissionTree = (props: any) => {
             setCheckedKeys(props.selectedKeys)
         }
     }, [props.selectedKeys])
-
-
 
     return (
         <Tree

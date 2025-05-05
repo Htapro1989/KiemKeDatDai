@@ -22,4 +22,5 @@ export interface DonViHanhChinh {
     creationTime?: string;
     creatorUserId?: number | null;
     id?: number;
+    isExitsUser?:any
 }

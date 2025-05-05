@@ -9,6 +9,7 @@ import NewModals from '../components/NewModals';
 import CreatePhanHoiModal from '../../Admin/YKienNguoiDung/components/CreatePhanHoiModal';
 import { FormInstance } from 'antd/lib/form';
 import ykienService from '../../../services/ykien/ykienService';
+import FloatingChat from '../components/FloatingChat';
 
 interface IGdlaHomePageProps {
     onLogin: () => void;
@@ -170,6 +171,7 @@ export default function GdlaHomePage(props: IGdlaHomePageProps) {
                 }}
                 onCreate={handleCreate}
             />
+            <FloatingChat/>
             <Footer />
         </div>
     )

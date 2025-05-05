@@ -70,11 +70,15 @@ const MenuBar = () => {
           Trang chủ
         </Link>
       </Menu.Item>
-      <Menu.Item key={ROUTER_PATH.NHAP_DL_KIEM_KE}>
-        <Link to={ROUTER_PATH.NHAP_DL_KIEM_KE}>
-          Nhập dữ liệu kiểm kê
-        </Link>
-      </Menu.Item>
+      {
+        isGranted("Pages.Report.NhapBieu") && (
+          <Menu.Item key={ROUTER_PATH.NHAP_DL_KIEM_KE}>
+            <Link to={ROUTER_PATH.NHAP_DL_KIEM_KE}>
+              Nhập dữ liệu kiểm kê
+            </Link>
+          </Menu.Item>
+        )
+      }
       {
         isGranted('Pages.Administration') && (
           <Menu.SubMenu title='Quản lý hệ thống'>
@@ -85,7 +89,7 @@ const MenuBar = () => {
             </Menu.Item>
             <Menu.Item key={ROUTER_PATH.KYKIEMKE}>
               <Link to={ROUTER_PATH.KYKIEMKE}>
-                Quản lý kỳ thống kê, kiểm kê
+                Quản lý Kỳ thống kê, kiểm kê
               </Link>
             </Menu.Item>
             <Menu.Item key={ROUTER_PATH.DONVIHANHCHINH}>
@@ -93,14 +97,19 @@ const MenuBar = () => {
                 Quản lý Đơn vị hành chính
               </Link>
             </Menu.Item>
+            <Menu.Item key={ROUTER_PATH.BIEU}>
+              <Link to={ROUTER_PATH.BIEU}>
+                Quản lý Biểu mẫu
+              </Link>
+            </Menu.Item>
             <Menu.Item key={ROUTER_PATH.USERS}>
               <Link to={ROUTER_PATH.USERS}>
-                Quản lý người dùng
+                Quản lý Người dùng
               </Link>
             </Menu.Item>
             <Menu.Item key={ROUTER_PATH.ROLES}>
               <Link to={ROUTER_PATH.ROLES}>
-                Quản lý vai trò
+                Quản lý Vai trò
               </Link>
             </Menu.Item>
             <Menu.Item key={ROUTER_PATH.CAUHINH}>

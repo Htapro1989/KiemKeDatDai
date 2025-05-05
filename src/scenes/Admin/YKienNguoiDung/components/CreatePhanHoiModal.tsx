@@ -38,6 +38,9 @@ export default function CreatePhanHoiModal(props: any) {
                     </Form.Item>
                 </Col>
             </Row>
+            <Form.Item label={"Số điện thoại"} name={'phone'} rules={rules.required}>
+                <Input placeholder='Số điện thoại' />
+            </Form.Item>
 
             <Form.Item label={"Ý kiến"} name={'noiDungYKien'} rules={rules.required}>
                 <Input.TextArea
@@ -59,7 +62,8 @@ export default function CreatePhanHoiModal(props: any) {
             </Row>
 
 
-
+            <Form.Item label={"Tên tệp"} name={'file'} hidden={true}>
+            </Form.Item>
         </FormModal>
     )
 }

@@ -27,7 +27,7 @@ export default function DvhcTree(props: any) {
             return
         };
 
-        const donViHanhChinhList = dvhcByUserResponse.returnValue.map(DonViHanhChinhMapper.toDonViHanhChinhMenu);
+        const donViHanhChinhList = dvhcByUserResponse.returnValue.map(DonViHanhChinhMapper.toDonViHanhChinhMenuByUser);
 
         const donViHanhChinhSelected = donViHanhChinhList?.[0] || [];
         const newlist = await fetchDonViHanhChinhListByParentKey(donViHanhChinhSelected?.id, donViHanhChinhList) || []
@@ -45,7 +45,7 @@ export default function DvhcTree(props: any) {
         if (!parentId) return;
         const dvhcByParentIdResponse = await dvhcService.getByParentId(parentId)
         if (!dvhcByParentIdResponse || dvhcByParentIdResponse.code != 1 || dvhcByParentIdResponse.returnValue.length <= 0) return;
-        const children = dvhcByParentIdResponse.returnValue.map(DonViHanhChinhMapper.toDonViHanhChinhMenu);
+        const children = dvhcByParentIdResponse.returnValue.map(DonViHanhChinhMapper.toDonViHanhChinhMenuByUser);
         const updateTreeData = (list: any[], key: string, children: any[]): any[] =>
             list.map(node => {
                 if (node.key == key) {

@@ -10,6 +10,15 @@ export const DonViHanhChinhMapper = {
             className: `tree-menu-item-${dvhc.trangThaiDuyet}`,
             ...dvhc
         };
+    },
+    toDonViHanhChinhMenuByUser: (dvhc: DonViHanhChinh): DonViHanhChinhMenu => {
+        return {
+            key: String(dvhc.id),
+            title: dvhc.name,
+            isLeaf: dvhc.childStatus !== 1,
+            className: `tree-menu-item-2-${dvhc.isExitsUser}`,
+            ...dvhc
+        };
     }
 };
 

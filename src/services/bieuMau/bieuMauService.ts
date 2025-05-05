@@ -3,6 +3,16 @@ import http from '../httpService';
 
 class BieuMauService {
 
+    public async getAll(): Promise<ResponseDto<any>> {
+        let result = await http.get(`/api/services/app/DMBieuMau/GetAllAdmin`);
+        return result.data.result;
+    }
+
+    public async createOrUpdate(body: any): Promise<ResponseDto<any>> {
+        let result = await http.post(`/api/services/app/DMBieuMau/CreateOrUpdate`, body);
+        return result.data.result;
+    }
+
     public async getBieuMauByDvhcId(dvhcId: String): Promise<ResponseDto<any>> {
         let result = await http.get(`/api/services/app/DMBieuMau/GetByDVHC?dvhcId=${dvhcId}`);
         return result.data.result;
@@ -45,6 +55,10 @@ class BieuMauService {
     }
     public async onDeleteItemBieu02ById(id: any): Promise<ResponseDto<any>> {
         let result = await http.delete(`/api/services/app/BieuMau02aKKNLT/Delete`, { params: { id } });
+        return result.data.result;
+    }
+    public async onDeleteById(id: any): Promise<ResponseDto<any>> {
+        let result = await http.delete(`/api/services/app/DMBieuMau/Delete`, { params: { id } });
         return result.data.result;
     }
 
