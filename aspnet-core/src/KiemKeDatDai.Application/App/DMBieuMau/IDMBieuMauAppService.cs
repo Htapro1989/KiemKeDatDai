@@ -14,6 +14,8 @@ namespace KiemKeDatDai.RisApplication
     public interface IDMBieuMauAppService : IApplicationService
     {
         Task<CommonResponseDto> GetAll(DMBieuMauDto obj);
+        Task<CommonResponseDto> GetAllAdmin();
+        Task<CommonResponseDto> GetById(long id);
         Task<CommonResponseDto> GetByDVHC(long dvhcId);
         Task<CommonResponseDto> CreateOrUpdate(DMBieuMauInputDto input);
         Task<CommonResponseDto> Delete(long id);
