@@ -19,8 +19,8 @@ namespace KiemKeDatDai.EntitiesDb
         public long Year { get; set; }
         public string? MaDVHC { get; set; }
         public long? DVHCId { get; set; }
-        public int? CountImportedTable { get; set; }
-        public int? ImportedStatus { get; set; }
+        public int? CountImportedTable { get; set; } = 0;
+        public int? ImportedStatus { get; set; } = 1;
         public News? News { get; set; }
     }
 }
