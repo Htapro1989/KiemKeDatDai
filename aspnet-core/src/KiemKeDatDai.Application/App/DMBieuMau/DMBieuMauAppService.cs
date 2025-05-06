@@ -1459,7 +1459,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.TRUNG_UONG:
                                     {
                                         var data = await _bieu01TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
-                                        if (data.Count == 0)
+                                        if (data.Count > 0)
                                         {
                                             excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
@@ -1468,7 +1468,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.VUNG:
                                     {
                                         var data = await _bieu01TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-                                        if (data.Count == 0)
+                                        if (data.Count > 0)
                                         {
                                             excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
@@ -1477,7 +1477,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.TINH:
                                     {
                                         var data = await _bieu01TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-                                        if (data.Count == 0)
+                                        if (data.Count > 0)
                                         {
                                             excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
@@ -1486,7 +1486,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.HUYEN:
                                     {
                                         var data = await _bieu01TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
-                                        if (data.Count == 0)
+                                        if (data.Count > 0)
                                         {
                                             excelMemoryStream = DownloadBieuMauByCap(data, input.CapDVHC, input.Year, input.MaDVHC, _tenTinh, _tenHuyen, _tenxa, template);
                                         }
