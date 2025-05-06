@@ -16,6 +16,7 @@ namespace KiemKeDatDai.Dto
     public class DMBieuMauDto : PagedAndFilteredInputDto
     {
         public string NoiDung { get; set; }
+        public long? Year { get; set; }
     }
     public class DMBieuMauOuputDto : DM_BieuMau
     {

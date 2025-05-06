@@ -43,6 +43,7 @@ using Microsoft.CodeAnalysis;
 using OfficeOpenXml;
 using Newtonsoft.Json.Linq;
 using KiemKeDatDai.Authorization;
+using KiemKeDatDai.AppCore.Utility;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -327,12 +328,16 @@ namespace KiemKeDatDai.RisApplication
                                  Year = bm.Year
                                  //Active = bm.Active
                              })
-                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower())
+                                                                                || x.KyHieu.ToLower().Contains(input.Filter.ToLower()))
+                             .WhereIf(input.Year != null, x => x.Year == input.Year);
+
                 var totalCount = await query.CountAsync();
                 var lstData = await query.OrderBy(x => x.CreationTime)
                                     .Skip(input.SkipCount)
                                     .Take(input.MaxResultCount)
                                     .ToListAsync();
+
                 commonResponseDto.ReturnValue = new PagedResultDto<DMBieuMauOuputDto>()
                 {
                     Items = lstData,
@@ -478,9 +483,11 @@ namespace KiemKeDatDai.RisApplication
             try
             {
                 var currentUser = await GetCurrentUserAsync();
+
                 if (input.Id != 0)
                 {
                     var data = await _dmbmRepos.FirstOrDefaultAsync(input.Id);
+
                     if (data != null)
                     {
                         data.KyHieu = input.KyHieu;
@@ -488,6 +495,7 @@ namespace KiemKeDatDai.RisApplication
                         data.CapDVHC = input.CapDVHC;
                         data.Year = input.Year;
                         //data.Active = input.Active;
+
                         await _dmbmRepos.UpdateAsync(data);
                     }
                     else
@@ -499,7 +507,15 @@ namespace KiemKeDatDai.RisApplication
                 }
                 else
                 {
+                    if (CheckKyHieuExist(input.KyHieu, input.Year))
+                    {
+                        commonResponseDto.Message = "Biểu mẫu " + input.KyHieu + " của năm " + input.Year + " đã tồn tại";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
                     var objBM = input.MapTo<DMBieuMauInputDto>();
+
                     await _dmbmRepos.InsertAsync(objBM);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -512,6 +528,16 @@ namespace KiemKeDatDai.RisApplication
                 Logger.Error(ex.Message);
             }
             return commonResponseDto;
+        }
+
+        private bool CheckKyHieuExist(string kyhieu, long year)
+        {
+            var objBM = _dmbmRepos.GetAll().FirstOrDefault(x => x.KyHieu == kyhieu && x.Year != year);
+            if (objBM != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Administration_System_BieuMau)]
@@ -2757,6 +2783,104 @@ namespace KiemKeDatDai.RisApplication
                 Logger.Error(ex.Message);
                 return null;
             }
+        }
+
+        public List<DropDownListDVHCDto> GetKyHieuBieuMau()
+        {
+            var lstKyHieu = new List<DropDownListDVHCDto>();
+
+            foreach (var item in Enum.GetValues(typeof(KY_HIEU)))
+            {
+                string kyhieu = "";
+                string tenBieu = "";
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_01_TKKK)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_01_TKKK);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_01_TKKK);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_02_TKKK)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_02_TKKK);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_02_TKKK);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_03_TKKK)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_03_TKKK);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_03_TKKK);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_04_TKKK)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_04_TKKK);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_04_TKKK);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_05_TKKK)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_05_TKKK);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_05_TKKK);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_06_TKKKQPAN)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_06_TKKKQPAN);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_06_TKKKQPAN);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_01_KKSL)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_01_KKSL);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_01_KKSL);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_02_KKSL)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_02_KKSL);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_02_KKSL);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_01a_KKNLT)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_01a_KKNLT);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_01a_KKNLT);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_01b_KKNLT)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_01b_KKNLT);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_01b_KKNLT);
+                }  
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_01c_KKNLT)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_01c_KKNLT);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_01c_KKNLT);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_PL_III)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_PL_III);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_PL_III);
+                }   
+
+                if (Convert.ToInt32(item) == (int)KY_HIEU.BIEU_PL_IV)
+                {
+                    kyhieu = GetEnumDisplayString(KY_HIEU.BIEU_PL_IV);
+                    tenBieu = GetEnumDisplayString(TEN_BIEU.BIEU_PL_IV);
+                }   
+                
+                lstKyHieu.Add(new DropDownListDVHCDto()
+                {
+                    Id = Convert.ToInt32(item),
+                    Ma = kyhieu,
+                    Name = tenBieu
+                });
+            }
+
+            return lstKyHieu;
         }
     }
 }

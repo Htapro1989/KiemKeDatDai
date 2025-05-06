@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services;
 using KiemKeDatDai.App.Huyen.Dto;
+using KiemKeDatDai.AppCore.Utility;
 using KiemKeDatDai.ApplicationDto;
 using KiemKeDatDai.Dto;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +23,6 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> GetDetailBieuByKyHieu(BieuMauDetailInputDto input);
         Task<FileStreamResult> DownloadBieuMau(BieuMauDetailInputDto input);
         Task<FileStreamResult> DownloadTemplate(string mabieu);
+        List<DropDownListDVHCDto> GetKyHieuBieuMau();
     }
 }

@@ -63,12 +63,63 @@ namespace KiemKeDatDai
             DUYET = 1,
             HUY = 2
         }
-        public enum LOAI_DE_NGHI_DUYET_TAI_KHOAN_DOANH_NGHIEP
+        public enum KY_HIEU
         {
-            [EnumDisplayString("Đề nghị tạo tài khoản")]
-            DE_NGHI_KHOI_TAO_TAI_KHOAN = 1,
-            [EnumDisplayString("Đề nghị thay đổi thông tin")]
-            DE_NGHI_THAY_DOI_THONG_TIN = 2
+            [EnumDisplayString("01/TKKK")]
+             BIEU_01_TKKK = 1,
+            [EnumDisplayString("02/TKKK")]
+             BIEU_02_TKKK = 2,
+            [EnumDisplayString("03/TKKK")]
+             BIEU_03_TKKK = 3,
+            [EnumDisplayString("04/TKKK")]
+             BIEU_04_TKKK = 4,
+            [EnumDisplayString("05/TKKK")]
+             BIEU_05_TKKK = 5,
+            [EnumDisplayString("06/TKKKQPAN")]
+            BIEU_06_TKKKQPAN = 6,
+            [EnumDisplayString("01/KKSL")]
+            BIEU_01_KKSL = 7,
+            [EnumDisplayString("02/KKSL")]
+            BIEU_02_KKSL = 8,
+            [EnumDisplayString("01a/KKNLT")]
+            BIEU_01a_KKNLT = 9,
+            [EnumDisplayString("01b/KKNLT")]
+            BIEU_01b_KKNLT = 10,
+            [EnumDisplayString("01c/KKNLT")]
+            BIEU_01c_KKNLT = 11,
+            [EnumDisplayString("PL.III")]
+            BIEU_PL_III = 12,
+            [EnumDisplayString("PL.IV")]
+            BIEU_PL_IV = 13
+        }
+        public enum TEN_BIEU
+        {
+            [EnumDisplayString("Thống kê, kiểm kê diện tích đất đai")]
+             BIEU_01_TKKK = 1,
+            [EnumDisplayString("Thống kê, kiểm kê đối tượng sử dụng đất và đối tượng được giao quản lý đất")]
+             BIEU_02_TKKK = 2,
+            [EnumDisplayString("Thống kê, kiểm kê diện tích đất đai theo đơn vị hành chínhK")]
+             BIEU_03_TKKK = 3,
+            [EnumDisplayString("Cơ cấu, diện tích theo loại đất, đối tượng sử dụng đất và đối tượng được giao quản lý đất")]
+             BIEU_04_TKKK = 4,
+            [EnumDisplayString("Chu chuyển diện tích của các loại đất")]
+             BIEU_05_TKKK = 5,
+            [EnumDisplayString("Thống kê, kiểm kê đất quốc phòng, đất an ninh")]
+            BIEU_06_TKKKQPAN = 6,
+            [EnumDisplayString("Kiểm kê diện tích đất bị sạt lở, bồi đắp trong 5 năm")]
+            BIEU_01_KKSL = 7,
+            [EnumDisplayString("Danh sách các điểm sạt lở, bồi đắp trong 5 năm")]
+            BIEU_02_KKSL = 8,
+            [EnumDisplayString("Kiểm kê tình hình quản lý, sử dụng đất của các công ty nông, lâm nghiệp")]
+            BIEU_01a_KKNLT = 9,
+            [EnumDisplayString("Kiểm kê tình hình quản lý, sử dụng đất của các công ty nông, lâm nghiệp")]
+            BIEU_01b_KKNLT = 10,
+            [EnumDisplayString("Kiểm kê tình hình, quản lý sử dụng đất của các công ty nông, lâm nghiệp")]
+            BIEU_01c_KKNLT = 11,
+            [EnumDisplayString("Danh sách các khoanh đất thống kê, kiểm kê đất đai")]
+            BIEU_PL_III = 12,
+            [EnumDisplayString("Danh sách các trường hợp biến động trong năm thống kê đất đai và kỳ kiểm kê đất đai")]
+            BIEU_PL_IV = 13
         }
 
         public class ComboBoxDto
