@@ -107,6 +107,10 @@ namespace KiemKeDatDai.EntityFrameworkCore
             .WithOne(up => up.News)
             .HasForeignKey<News>(up => up.FileId)
             .IsRequired(false);
+            modelBuilder.Entity<File>().Property(p => p.CountImportedTable)
+        .HasDefaultValue(0);
+            modelBuilder.Entity<File>().Property(p => p.ImportedStatus).HasDefaultValue(1);
+
         }
     }
 }
