@@ -11,7 +11,7 @@ namespace KiemKeDatDai.RisApplication
 {
     public interface INewsAppService : IApplicationService
     {
-        Task<CommonResponseDto> GetAll(int type);
+        Task<CommonResponseDto> GetAll(NewsFilterDto filter);
         Task<CommonResponseDto> GetById(long id);
         Task<CommonResponseDto> CreateOrUpdate(NewsUploadDto input);
         Task<CommonResponseDto> Delete(long id);
