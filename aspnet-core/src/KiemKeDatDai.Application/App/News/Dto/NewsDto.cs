@@ -50,5 +50,6 @@ namespace KiemKeDatDai.Dto
     /// </summary>
     public class NewsFilterDto : PagedAndFilteredInputDto
     {
+        public int Type { get; set; } = 0;
     }
 }

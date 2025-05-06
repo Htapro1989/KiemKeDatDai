@@ -67,14 +67,19 @@ namespace KiemKeDatDai.App.DMBieuMau
             _userRepos = userRepos;
         }
         [AbpAllowAnonymous]
-        public async Task<CommonResponseDto> GetAll(int type)
+        public async Task<CommonResponseDto> GetAll(NewsFilterDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 var lstBM = new List<NewsDto>();
-                var query = await _newsRepos.GetAll().Include(x => x.File).Where(x => x.Type == type).OrderBy(x => x.OrderLabel).ToListAsync();
-                var lstNewsDto = _objectMapper.Map<List<NewsDto>>(query);
+                var query = _newsRepos.GetAll().Include(x => x.File).Where(x => x.Type == input.Type)
+                .WhereIf(!input.Filter.IsNullOrEmpty(), x => x.Title.Contains(input.Filter) || x.Content.Contains(input.Filter) || x.Summary.Contains(input.Filter))
+                .OrderBy(x => x.OrderLabel);
+                var totalCount = await query.CountAsync();
+                var queryResult = await query.OrderBy(x => x.OrderLabel).Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
+
+                var lstNewsDto = _objectMapper.Map<List<NewsDto>>(queryResult);
                 lstNewsDto.ForEach(x =>
                 {
                     //Console.WriteLine(x.CreatorUserId);
