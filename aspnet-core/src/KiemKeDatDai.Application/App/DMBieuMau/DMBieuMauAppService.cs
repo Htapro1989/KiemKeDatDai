@@ -355,36 +355,37 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
         [AbpAllowAnonymous]
-        public async Task<CommonResponseDto> GetAllAdmin()
+        public async Task<CommonResponseDto> GetAllAdmin(DMBieuMauDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 PagedResultDto<DMBieuMauOuputDto> pagedResultDto = new PagedResultDto<DMBieuMauOuputDto>();
                 var lstBM = await _dmbmRepos.GetAllListAsync();
-                //var query = (from bm in _dmbmRepos.GetAll()
-                //             select new DMBieuMauOuputDto
-                //             {
-                //                 Id = bm.Id,
-                //                 KyHieu = bm.KyHieu,
-                //                 NoiDung = bm.NoiDung,
-                //                 CapDVHC = bm.CapDVHC,
-                //                 CreationTime = bm.CreationTime,
-                //                 Year = bm.Year
-                //                 //Active = bm.Active
-                //             })
-                //             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
-                //var totalCount = await query.CountAsync();
-                //var lstData = await query.OrderBy(x => x.CreationTime)
-                //                    .Skip(input.SkipCount)
-                //                    .Take(input.MaxResultCount)
-                //                    .ToListAsync();
-                //commonResponseDto.ReturnValue = new PagedResultDto<DMBieuMauOuputDto>()
-                //{
-                //    Items = lstData,
-                //    TotalCount = totalCount
-                //};
-                commonResponseDto.ReturnValue = lstBM;
+                var query = (from bm in _dmbmRepos.GetAll()
+                             select new DMBieuMauOuputDto
+                             {
+                                 Id = bm.Id,
+                                 KyHieu = bm.KyHieu,
+                                 NoiDung = bm.NoiDung,
+                                 CapDVHC = bm.CapDVHC,
+                                 CreationTime = bm.CreationTime,
+                                 Year = bm.Year
+                                 //Active = bm.Active
+                             })
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.NoiDung), x => x.NoiDung.ToLower().Contains(input.NoiDung.ToLower()))
+                             .WhereIf(input.Year != null, x => x.Year.Equals(input.Year));
+                var totalCount = await query.CountAsync();
+                var lstData = await query.OrderBy(x => x.CreationTime)
+                                    .Skip(input.SkipCount)
+                                    .Take(input.MaxResultCount)
+                                    .ToListAsync();
+                commonResponseDto.ReturnValue = new PagedResultDto<DMBieuMauOuputDto>()
+                {
+                    Items = lstData,
+                    TotalCount = totalCount
+                };
+                //commonResponseDto.ReturnValue = lstData;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
