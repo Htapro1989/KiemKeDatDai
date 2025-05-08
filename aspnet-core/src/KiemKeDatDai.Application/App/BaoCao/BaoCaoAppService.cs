@@ -32,6 +32,14 @@ using static KiemKeDatDai.CommonEnum;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Transactions;
 using KiemKeDatDai.Authorization;
+using System.Linq.Expressions;
+using Abp.EntityFrameworkCore;
+using KiemKeDatDai.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Data.SqlClient;
+using Dapper;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -65,7 +73,8 @@ namespace KiemKeDatDai.RisApplication
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
-
+        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
         private readonly ICache mainCache;
 
         public BaoCaoAppService(ICacheManager cacheManager,
@@ -95,7 +104,8 @@ namespace KiemKeDatDai.RisApplication
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IConfiguration configuration
             )
         {
             _dvhcRepos = dvhcRepos;
@@ -123,6 +133,8 @@ namespace KiemKeDatDai.RisApplication
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
+            _configuration = configuration;
+            _connectionString = _configuration["ConnectionStrings:Default"];
         }
 
 
@@ -232,15 +244,15 @@ namespace KiemKeDatDai.RisApplication
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
-            {
+            //using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+            //{
                 try
                 {
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma && x.Year == year);
 
                     if (objdata != null)
                     {
-                        if (objdata.TrangThaiDuyet != (int)TRANG_THAI_DUYET.CHUA_GUI)
+                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET || objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
                         {
                             commonResponseDto.Message = "ĐVHC này đang chờ duyệt hoặc đã duyệt, không thể xoá dữ liệu";
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;
@@ -249,163 +261,17 @@ namespace KiemKeDatDai.RisApplication
 
                         else
                         {
-                            //xoá bieu01
-                            var lstBieu01 = await _bieu01TKKK_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu01 != null && lstBieu01.Count > 0)
+                            using (var con = new SqlConnection(_connectionString))
                             {
-                                foreach (var item in lstBieu01)
-                                {
-                                    await _bieu01TKKK_XaRepos.DeleteAsync(item);
-                                }
-                            }
+                            var sql = "SELECT [name] FROM sys.objects WHERE type = 'P' AND is_ms_shipped = 0";
+                            var result = await con.QueryAsync<string>(sql);
+                            await con.ExecuteAsync(
+                                "Delete_All_BieuXa", // Tên stored procedure
+                                new { MaXa = ma, @Year = year },
+                                commandType: CommandType.StoredProcedure // Chỉ định đây là stored procedure
+                            );
+                        }
 
-                            //xoá bieu02
-                            var lstBieu02 = await _bieu02TKKK_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu02 != null && lstBieu02.Count > 0)
-                            {
-                                foreach (var item in lstBieu02)
-                                {
-                                    await _bieu02TKKK_XaRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá bieu04
-                            var lstBieu04 = await _bieu04TKKK_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu04 != null && lstBieu04.Count > 0)
-                            {
-                                foreach (var item in lstBieu04)
-                                {
-                                    await _bieu04TKKK_XaRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá bieu05
-                            var lstBieu05 = await _bieu05TKKK_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu05 != null && lstBieu05.Count > 0)
-                            {
-                                foreach (var item in lstBieu05)
-                                {
-                                    await _bieu05TKKK_XaRepos.DeleteAsync(item);
-                                }
-                            }
-                            //xoá Bieu01aKKNLT_Xa
-                            var lstBieu01aKKNLT_Xa = await _bieu01aKKNLT_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu01aKKNLT_Xa != null && lstBieu01aKKNLT_Xa.Count > 0)
-                            {
-                                foreach (var item in lstBieu01aKKNLT_Xa)
-                                {
-                                    await _bieu01aKKNLT_XaRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá Bieu01bKKNLT
-                            var lstBieu01bKKNLT = await _bieu01bKKNLT_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu01bKKNLT != null && lstBieu01bKKNLT.Count > 0)
-                            {
-                                foreach (var item in lstBieu01bKKNLT)
-                                {
-                                    await _bieu01bKKNLT_XaRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá Bieu01cKKNLT
-                            var lstBieu01cKKNLT = await _bieu01cKKNLT_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu01cKKNLT != null && lstBieu01cKKNLT.Count > 0)
-                            {
-                                foreach (var item in lstBieu01cKKNLT)
-                                {
-                                    await _bieu01cKKNLT_XaRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá bieu01KKSL_Xa
-                            var lstBieu01KKSL_Xa = await _bieu01KKSL_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu01KKSL_Xa != null && lstBieu01KKSL_Xa.Count > 0)
-                            {
-                                foreach (var item in lstBieu01KKSL_Xa)
-                                {
-                                    await _bieu01KKSL_XaRepos.DeleteAsync(item);
-                                }
-                            }
-                            //xoá bieu02KKSL_Xa
-                            var lstBieu02KKSL_Xa = await _bieu02KKSL_XaRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieu02KKSL_Xa != null && lstBieu02KKSL_Xa.Count > 0)
-                            {
-                                foreach (var item in lstBieu02KKSL_Xa)
-                                {
-                                    await _bieu02KKSL_XaRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá bieuPhuLucIII
-                            var lstBieuPhuLucIII = await _bieuPhuLucIIIRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieuPhuLucIII != null && lstBieuPhuLucIII.Count > 0)
-                            {
-                                foreach (var item in lstBieuPhuLucIII)
-                                {
-                                    await _bieuPhuLucIIIRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá BieuPhuLucIV
-                            var lstBieuPhuLucIV = await _bieuPhuLucIVRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstBieuPhuLucIV != null && lstBieuPhuLucIV.Count > 0)
-                            {
-                                foreach (var item in lstBieuPhuLucIV)
-                                {
-                                    await _bieuPhuLucIVRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá KhoanhDat_KyTruoc
-                            var lstKhoanhDat_KyTruoc = await _khoanhDat_KyTruocRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstKhoanhDat_KyTruoc != null && lstKhoanhDat_KyTruoc.Count > 0)
-                            {
-                                foreach (var item in lstKhoanhDat_KyTruoc)
-                                {
-                                    await _khoanhDat_KyTruocRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá Data_Target
-                            var lstData_Target = await _data_TargetRepos.GetAll().Where(x => x.MaDVHCCapXa == ma && x.year == year).ToListAsync();
-                            if (lstData_Target != null && lstData_Target.Count > 0)
-                            {
-                                foreach (var item in lstData_Target)
-                                {
-                                    await _data_TargetRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá Data_Commune
-                            var lstData_Commune = await _data_CommuneRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstData_Commune != null && lstData_Commune.Count > 0)
-                            {
-                                foreach (var item in lstData_Commune)
-                                {
-                                    await _data_CommuneRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá Data_TangGiamKhac
-                            var lstData_TangGiamKhac = await _data_TangGiamKhacRepos.GetAll().Where(x => x.MaDVHCCapXa == ma && x.Year == year).ToListAsync();
-                            if (lstData_TangGiamKhac != null && lstData_TangGiamKhac.Count > 0)
-                            {
-                                foreach (var item in lstData_TangGiamKhac)
-                                {
-                                    await _data_TangGiamKhacRepos.DeleteAsync(item);
-                                }
-                            }
-
-                            //xoá SoLieuKyTruoc
-                            var lstSoLieuKyTruoc = await _soLieuKyTruocRepos.GetAll().Where(x => x.MaXa == ma && x.Year == year).ToListAsync();
-                            if (lstSoLieuKyTruoc != null && lstSoLieuKyTruoc.Count > 0)
-                            {
-                                foreach (var item in lstSoLieuKyTruoc)
-                                {
-                                    await _soLieuKyTruocRepos.DeleteAsync(item);
-                                }
-                            }
                         }
                     }
                     else
@@ -416,16 +282,16 @@ namespace KiemKeDatDai.RisApplication
                     }
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
-                    uow.Complete();
+                    //uow.Complete();
                 }
                 catch (Exception ex)
                 {
-                    uow.Dispose();
+                    //uow.Dispose();
                     commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = ex.Message;
                     Logger.Fatal(ex.Message);
                 }
-            }
+            //}
             return commonResponseDto;
         }
     }
