@@ -24,6 +24,7 @@ public class KiemKeDatDaiAuthorizationProvider : AuthorizationProvider
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_KyKiemKe, L("KyKiemKe"));
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_News, L("News"));
         systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_YKien, L("YKien"));
+        systemManager.CreateChildPermission(PermissionNames.Pages_Administration_System_ThongKe, L("ThongKe"));
 
         var report = administration.CreateChildPermission(PermissionNames.Pages_Report, L("Report"));
         report.CreateChildPermission(PermissionNames.Pages_Report_UploadAPI, L("UploadAPI"));

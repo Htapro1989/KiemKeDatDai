@@ -25,6 +25,7 @@ public static class PermissionNames
     public const string Pages_Administration_System_KyKiemKe = "Pages.Administration.System.KyKiemKe";
     public const string Pages_Administration_System_YKien = "Pages.Administration.System.YKien";
     public const string Pages_Administration_System_News = "Pages.Administration.System.News";
+    public const string Pages_Administration_System_ThongKe = "Pages.Administration.System.ThongKe";
 
     public const string Pages_Report = "Pages.Report";
 

@@ -64,5 +64,6 @@
     <text name="HuyBaoCao">Huỷ báo cáo</text>
     <text name="DownloadFile">Tải file</text>
     <text name="NhapBieu">Nhập biểu</text>
+    <text name="ThongKe">Thống kê</text>
   </texts>
 </localizationDictionary>
