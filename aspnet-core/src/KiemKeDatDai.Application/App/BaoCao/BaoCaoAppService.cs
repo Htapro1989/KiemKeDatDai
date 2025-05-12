@@ -148,7 +148,7 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x=>x.Ma == currentUser.DonViHanhChinhCode && x.Year == year);
+                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Year == year);
 
                     if (objdata != null)
                     {
@@ -202,7 +202,7 @@ namespace KiemKeDatDai.RisApplication
                     _thongke.TongSoHuyenHoanThanh = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.HUYEN && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                     _thongke.TongSoXa = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.Year == year);
                     _thongke.TongSoXaHoanThanh = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    
+
                     var _listMaTinhMNPB = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_MIEN_NUI_PHIA_BAC).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
                     var _listMaTinhDBSH = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DONG_BANG_SONG_HONG).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
                     var _listMaTinhDHMT = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DUYEN_HAI_MIEN_TRUNG).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
@@ -215,7 +215,7 @@ namespace KiemKeDatDai.RisApplication
                     _thongke.VungTayNguyen = await _dvhcRepos.CountAsync(x => _listMaTinhTN.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                     _thongke.VungDongNamBo = await _dvhcRepos.CountAsync(x => _listMaTinhDNBc.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
                     _thongke.VungDongBangSongCuuLong = await _dvhcRepos.CountAsync(x => _listMaTinhDBSCL.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    
+
                     _thongke.PhanTramVungMienNuiPhiaBac = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungMienNuiPhiaBac / _thongke.TongSoXa.Value * 100, 2) : 0;
                     _thongke.PhanTramVungDongBangSongHong = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDongBangSongHong / _thongke.TongSoXa.Value * 100, 2) : 0;
                     _thongke.PhanTramVungDuyenHaiMienTrung = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDuyenHaiMienTrung / _thongke.TongSoXa.Value * 100, 2) : 0;
@@ -244,27 +244,23 @@ namespace KiemKeDatDai.RisApplication
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            //using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
-            //{
-                try
+            try
+            {
+                var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma && x.Year == year);
+
+                if (objdata != null)
                 {
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma && x.Year == year);
-
-                    if (objdata != null)
+                    if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET || objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
                     {
-                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET || objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
-                        {
-                            commonResponseDto.Message = "ĐVHC này đang chờ duyệt hoặc đã duyệt, không thể xoá dữ liệu";
-                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                            return commonResponseDto;
-                        }
+                        commonResponseDto.Message = "ĐVHC này đang chờ duyệt hoặc đã duyệt, không thể xoá dữ liệu";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
 
-                        else
+                    else
+                    {
+                        using (var con = new SqlConnection(_connectionString))
                         {
-                            using (var con = new SqlConnection(_connectionString))
-                            {
-                            var sql = "SELECT [name] FROM sys.objects WHERE type = 'P' AND is_ms_shipped = 0";
-                            var result = await con.QueryAsync<string>(sql);
                             await con.ExecuteAsync(
                                 "Delete_All_BieuXa", // Tên stored procedure
                                 new { MaXa = ma, @Year = year },
@@ -272,26 +268,53 @@ namespace KiemKeDatDai.RisApplication
                             );
                         }
 
-                        }
                     }
-                    else
-                    {
-                        commonResponseDto.Message = "ĐVHC này không tồn tại";
-                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                        return commonResponseDto;
-                    }
+                }
+                else
+                {
+                    commonResponseDto.Message = "ĐVHC này không tồn tại";
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    return commonResponseDto;
+                }
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Fatal(ex.Message);
+            }
+            return commonResponseDto;
+        }
+
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> ReportNumberXaByDate(DateTime fromDate, DateTime toDate)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            try
+            {
+                DateTime endDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);
+                DateTime startDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
+                using (var con = new SqlConnection(_connectionString))
+                {
+                    var result = await con.QueryAsync<int>(
+                        "ReportNumberXaByDate", // Tên stored procedure
+                        new { @FromDate = startDate, @ToDate = endDate },
+                        commandType: CommandType.StoredProcedure // Chỉ định đây là stored procedure
+                    );
+                    commonResponseDto.ReturnValue = result.ToArray()[0];
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
-                    //uow.Complete();
                 }
-                catch (Exception ex)
-                {
-                    //uow.Dispose();
-                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = ex.Message;
-                    Logger.Fatal(ex.Message);
-                }
-            //}
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Fatal(ex.Message);
+            }
             return commonResponseDto;
         }
     }
