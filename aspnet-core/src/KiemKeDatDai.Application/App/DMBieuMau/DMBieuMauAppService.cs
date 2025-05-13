@@ -1327,6 +1327,38 @@ namespace KiemKeDatDai.RisApplication
                                 break;
                         }
                         break;
+                    case "02a/KKNLT":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    var data = await _bieu02aKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    commonResponseDto.ReturnValue = data;
+                                    break;
+                                }
+                            //case (int)CAP_DVHC.VUNG:
+                            //    {
+                            //        var data = await _bieu05TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                            //        commonResponseDto.ReturnValue = data;
+                            //        break;
+                            //    }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await _bieu02aKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
+
+                                    commonResponseDto.ReturnValue = new
+                                    {
+                                        tenXa = _tenxa,
+                                        tenHuyen = _tenHuyen,
+                                        tenTinh = _tenTinh,
+                                        data
+                                    };
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
                     case "PL.III":
                         switch (input.CapDVHC)
                         {
