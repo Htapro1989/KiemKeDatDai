@@ -13,7 +13,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+      - name: Allow git directory ownership
+        run: |
+            git config --global --add safe.directory "C:\services\KiemKeDatDai_QA\KiemKeDatDai"
       - name: Deploy to server qa
         if: github.ref == 'refs/heads/qa'
         run: |
