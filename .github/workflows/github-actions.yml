@@ -37,6 +37,7 @@ jobs:
       - name: Restore dependencies
         if: github.ref == 'refs/heads/qa'
         run: |
+
             cd C:\services\KiemKeDatDai_QA\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet restore
       - name: Restore dependencies
