@@ -3,6 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
+      - qa
       - release
 
 jobs:
@@ -12,22 +13,57 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Deploy to server
+      - name: Allow git directory ownership
+        run: |
+            git config --global --add safe.directory "C:\services\KiemKeDatDai_QA\KiemKeDatDai"
+      - name: Deploy to server qa
+        if: github.ref == 'refs/heads/qa'
+        run: |
+            cd C:\services\KiemKeDatDai_QA\KiemKeDatDai
+            git pull origin qa
+      - name: Deploy to server product
+        if: github.ref == 'refs/heads/release'
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai
             git pull origin release
-      - name: Stop IIS Website
+
+      - name: Stop IIS Website qa
+        if: github.ref == 'refs/heads/qa'
+        run: |
+            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KiemKeDatDai_qa'" -Verb RunAs
+      - name: Stop IIS Website product
+        if: github.ref == 'refs/heads/release'
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KiemKeDatDai_auto'" -Verb RunAs
+
       - name: Restore dependencies
+        if: github.ref == 'refs/heads/qa'
+        run: |
+
+            cd C:\services\KiemKeDatDai_QA\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            dotnet restore
+      - name: Restore dependencies
+        if: github.ref == 'refs/heads/release'
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet restore
+
       - name: publish dotnet
+        if: github.ref == 'refs/heads/qa'
+        run: |
+            cd C:\services\KiemKeDatDai_QA\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            dotnet publish --no-restore
+      - name: publish dotnet
+        if: github.ref == 'refs/heads/release'
         run: |
             cd C:\inetpub\wwwroot\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish --no-restore
+            
       - name: start IIS Website
+        if: github.ref == 'refs/heads/qa'
+        run: |
+            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KiemKeDatDai_qa'" -Verb RunAs
+      - name: start IIS Website
+        if: github.ref == 'refs/heads/release'
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KiemKeDatDai_auto'" -Verb RunAs

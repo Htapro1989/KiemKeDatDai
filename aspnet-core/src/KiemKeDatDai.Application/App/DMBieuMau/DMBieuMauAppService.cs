@@ -355,36 +355,37 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
         [AbpAllowAnonymous]
-        public async Task<CommonResponseDto> GetAllAdmin()
+        public async Task<CommonResponseDto> GetAllAdmin(DMBieuMauDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 PagedResultDto<DMBieuMauOuputDto> pagedResultDto = new PagedResultDto<DMBieuMauOuputDto>();
                 var lstBM = await _dmbmRepos.GetAllListAsync();
-                //var query = (from bm in _dmbmRepos.GetAll()
-                //             select new DMBieuMauOuputDto
-                //             {
-                //                 Id = bm.Id,
-                //                 KyHieu = bm.KyHieu,
-                //                 NoiDung = bm.NoiDung,
-                //                 CapDVHC = bm.CapDVHC,
-                //                 CreationTime = bm.CreationTime,
-                //                 Year = bm.Year
-                //                 //Active = bm.Active
-                //             })
-                //             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
-                //var totalCount = await query.CountAsync();
-                //var lstData = await query.OrderBy(x => x.CreationTime)
-                //                    .Skip(input.SkipCount)
-                //                    .Take(input.MaxResultCount)
-                //                    .ToListAsync();
-                //commonResponseDto.ReturnValue = new PagedResultDto<DMBieuMauOuputDto>()
-                //{
-                //    Items = lstData,
-                //    TotalCount = totalCount
-                //};
-                commonResponseDto.ReturnValue = lstBM;
+                var query = (from bm in _dmbmRepos.GetAll()
+                             select new DMBieuMauOuputDto
+                             {
+                                 Id = bm.Id,
+                                 KyHieu = bm.KyHieu,
+                                 NoiDung = bm.NoiDung,
+                                 CapDVHC = bm.CapDVHC,
+                                 CreationTime = bm.CreationTime,
+                                 Year = bm.Year
+                                 //Active = bm.Active
+                             })
+                             .WhereIf(!string.IsNullOrWhiteSpace(input.NoiDung), x => x.NoiDung.ToLower().Contains(input.NoiDung.ToLower()))
+                             .WhereIf(input.Year != null, x => x.Year.Equals(input.Year));
+                var totalCount = await query.CountAsync();
+                var lstData = await query.OrderBy(x => x.CreationTime)
+                                    .Skip(input.SkipCount)
+                                    .Take(input.MaxResultCount)
+                                    .ToListAsync();
+                commonResponseDto.ReturnValue = new PagedResultDto<DMBieuMauOuputDto>()
+                {
+                    Items = lstData,
+                    TotalCount = totalCount
+                };
+                //commonResponseDto.ReturnValue = lstData;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -1312,6 +1313,38 @@ namespace KiemKeDatDai.RisApplication
                             case (int)CAP_DVHC.XA:
                                 {
                                     var data = await _bieu01cKKNLT_XaRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
+
+                                    commonResponseDto.ReturnValue = new
+                                    {
+                                        tenXa = _tenxa,
+                                        tenHuyen = _tenHuyen,
+                                        tenTinh = _tenTinh,
+                                        data
+                                    };
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case "02a/KKNLT":
+                        switch (input.CapDVHC)
+                        {
+                            case (int)CAP_DVHC.TRUNG_UONG:
+                                {
+                                    var data = await _bieu02aKKNLTRepos.GetAllListAsync(x => x.Year == input.Year);
+                                    commonResponseDto.ReturnValue = data;
+                                    break;
+                                }
+                            //case (int)CAP_DVHC.VUNG:
+                            //    {
+                            //        var data = await _bieu05TKKK_VungRepos.GetAllListAsync(x => x.Year == input.Year && x.MaVung == input.MaDVHC);
+                            //        commonResponseDto.ReturnValue = data;
+                            //        break;
+                            //    }
+                            case (int)CAP_DVHC.TINH:
+                                {
+                                    var data = await _bieu02aKKNLT_TinhRepos.GetAllListAsync(x => x.Year == input.Year && x.MaTinh == input.MaDVHC);
 
                                     commonResponseDto.ReturnValue = new
                                     {
