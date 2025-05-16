@@ -239,6 +239,7 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+
         [AbpAuthorize]
         public async Task<CommonResponseDto> DeleteAllDataXa(long year, string ma)
         {
