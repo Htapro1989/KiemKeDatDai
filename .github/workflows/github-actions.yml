@@ -13,11 +13,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+      - name: Allow git directory ownership
+        run: |
+            git config --global --add safe.directory "C:\services\KiemKeDatDai_QA\KiemKeDatDai"
       - name: Deploy to server qa
         if: github.ref == 'refs/heads/qa'
         run: |
-            cd C:\inetpub\wwwroot\KiemKeDatDai_qa\KiemKeDatDai
+            cd C:\services\KiemKeDatDai_QA\KiemKeDatDai
             git pull origin qa
       - name: Deploy to server product
         if: github.ref == 'refs/heads/release'
@@ -37,7 +39,8 @@ jobs:
       - name: Restore dependencies
         if: github.ref == 'refs/heads/qa'
         run: |
-            cd C:\inetpub\wwwroot\KiemKeDatDai_qa\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+
+            cd C:\services\KiemKeDatDai_QA\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet restore
       - name: Restore dependencies
         if: github.ref == 'refs/heads/release'
@@ -48,7 +51,7 @@ jobs:
       - name: publish dotnet
         if: github.ref == 'refs/heads/qa'
         run: |
-            cd C:\inetpub\wwwroot\KiemKeDatDai_qa\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            cd C:\services\KiemKeDatDai_QA\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish --no-restore
       - name: publish dotnet
         if: github.ref == 'refs/heads/release'
