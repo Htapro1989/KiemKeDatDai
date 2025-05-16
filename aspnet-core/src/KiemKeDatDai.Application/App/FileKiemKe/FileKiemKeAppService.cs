@@ -205,7 +205,7 @@ namespace KiemKeDatDai.RisApplication
             }
             return commonResponseDto;
         }
-        
+
         public async Task<CommonResponseDto> DeleteAttachFile(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -307,17 +307,17 @@ namespace KiemKeDatDai.RisApplication
 
                     return commonResponseDto;
                 }
-                var maxAllowedSize = _configuration["FileUpload:FileUploadLimit"];
-                int _intMaxAllowedSize = 5;
+                // var maxAllowedSize = _configuration["FileUpload:FileUploadLimit"];
+                int _intMaxAllowedSize = 0;
 
-                int.TryParse(maxAllowedSize, out _intMaxAllowedSize);
-                _intMaxAllowedSize = objDVHC.MaxFileUpload ?? _intMaxAllowedSize;
+                // int.TryParse(maxAllowedSize, out _intMaxAllowedSize);
+                _intMaxAllowedSize = objDVHC.MaxFileUpload ?? 0;//?? _intMaxAllowedSize;
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
                 {
-                    var count = await _fileRepos.CountAsync(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && x.FileType == CommonEnum.FILE_KYTHONGKE);
-                    if (count > _intMaxAllowedSize)
+                    //var count = await _fileRepos.CountAsync(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && x.FileType == CommonEnum.FILE_KYTHONGKE);
+                    if (_intMaxAllowedSize == 0)
                     {
-                        commonResponseDto.Message = "Đã vượt quá số lượng file cho phép";
+                        commonResponseDto.Message = "Bạn đã hết lượt upload file cho đơn vị hành chính này.";
                         commonResponseDto.ErrorCode = "VUOTQUASOLUONGFILE";
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.CanhBao;
                         return commonResponseDto;
@@ -329,10 +329,10 @@ namespace KiemKeDatDai.RisApplication
                 if (currentConfigSystem != null)
                 {
                     var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(currentConfigSystem.JsonConfigSystem);
-                    if (lastUploaded != null && lastUploaded.CreationTime.AddMinutes(jsonConfigSystem.TimeUpload??0) > DateTime.Now)
+                    if (lastUploaded != null && lastUploaded.CreationTime.AddMinutes(jsonConfigSystem.TimeUpload ?? 0) > DateTime.Now)
                     {
                         commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                        commonResponseDto.Message = string.Format("Bạn chỉ được phép tải lên một tệp mỗi {0} phút. Vui lòng đợi trước khi tiếp tục.",jsonConfigSystem.TimeUpload);
+                        commonResponseDto.Message = string.Format("Bạn chỉ được phép tải lên một tệp mỗi {0} phút. Vui lòng đợi trước khi tiếp tục.", jsonConfigSystem.TimeUpload);
                         commonResponseDto.ErrorCode = "FILEDAUPLOAIDUOCUPLOADTRUOCDO";
                         return commonResponseDto;
                     }
@@ -372,7 +372,13 @@ namespace KiemKeDatDai.RisApplication
                 };
 
                 var insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
-
+                //update max file upload
+                if (objDVHC != null)
+                {
+                    objDVHC.MaxFileUpload -= 1;
+                    await _donViHanhChinhRepos.UpdateAsync(objDVHC);
+                }
+                //send message to rabbitmq
                 fileEntity.Id = insertedFileID;
                 var fileOutput = _objectMapper.Map<FileKiemKeOuputDto>(fileEntity);
                 fileOutput.DeletedFilePath = pathDeleted;
