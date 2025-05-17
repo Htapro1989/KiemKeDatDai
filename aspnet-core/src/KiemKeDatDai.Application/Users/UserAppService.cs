@@ -226,7 +226,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         if (await _userManager.CheckPasswordAsync(user, input.CurrentPassword))
         {
             CheckErrors(await _userManager.ChangePasswordAsync(user, input.NewPassword));
-            user.IsChangePass = true;
+            user.IsChangePass = false;
             CheckErrors(await _userManager.UpdateAsync(user));
         }
         else
