@@ -12,6 +12,7 @@ namespace KiemKeDatDai.Dto
     [AutoMap(typeof(DonViHanhChinh))]
     public class DVHCInputDto : DonViHanhChinh
     {
+
     }
     public class DVHCDto : PagedAndFilteredInputDto
     {
