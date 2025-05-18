@@ -311,10 +311,11 @@ namespace KiemKeDatDai.RisApplication
                 foreach (var item in lstDvhc)
                 {
                     item.IsExitsUser = lstUserCode.Contains(item.Ma);
-                    if (item.IsExitsUser == true)
-                    {
-                        lstDvhc.Find(x => x.Ma == item.Parent_Code).IsExitsUser = true;
-                    }
+                    //if (item.IsExitsUser == true)
+                    //{
+                    //    var dvhcParent = lstDvhc.FirstOrDefault(x => x.Ma == item.Parent_Code);
+                    //    dvhcParent.IsExitsUser = true;
+                    //}
                 }
 
                 commonResponseDto.ReturnValue = lstDvhc;
