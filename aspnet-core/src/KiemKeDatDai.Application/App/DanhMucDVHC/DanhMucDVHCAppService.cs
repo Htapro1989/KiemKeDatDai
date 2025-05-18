@@ -299,28 +299,27 @@ namespace KiemKeDatDai.RisApplication
                                  ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
                              });
 
-                if (query != null)
-                {
-                    var lstDvhc = await query.ToListAsync();
+                var lstDvhc = await query.ToListAsync();
 
-                    foreach (var item in lstDvhc)
+                var lstMa = lstDvhc.Select(x => x.Ma).ToList();
+                var lstUserCode = await _userRepos.GetAll()
+                    .Where(u => lstMa.Contains(u.DonViHanhChinhCode))
+                    .Select(u => u.DonViHanhChinhCode)
+                    .Distinct()
+                    .ToListAsync();
+
+                foreach (var item in lstDvhc)
+                {
+                    item.IsExitsUser = lstUserCode.Contains(item.Ma);
+                    if (item.IsExitsUser == true)
                     {
-                        if (await _userRepos.FirstOrDefaultAsync(x => x.DonViHanhChinhCode ==item.Ma) != null)
-                        {
-                            item.IsExitsUser = true;
-                        }
+                        lstDvhc.Find(x => x.Ma == item.Parent_Code).IsExitsUser = true;
                     }
+                }
 
-                    commonResponseDto.ReturnValue = lstDvhc;
-                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
-                    commonResponseDto.Message = "Thành Công";
-                }
-                else
-                {
-                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Không có dữ liệu!";
-                    return commonResponseDto;
-                }
+                commonResponseDto.ReturnValue = lstDvhc;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
@@ -670,7 +669,7 @@ namespace KiemKeDatDai.RisApplication
                     if (baoCaoDVHC.Root == true)
                     {
                         baoCaoDVHC.IsNopBaoCao = (baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.CHO_DUYET && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET) ? true : false;
-                        
+
                         if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG || baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
                             baoCaoDVHC.IsNopBaoCao = false;
 
@@ -681,7 +680,7 @@ namespace KiemKeDatDai.RisApplication
                         else
                         {
                             var soDaDuyet = allDvhc.Count(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                            
+
                             if (soDaDuyet == lstChild.Count && baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET)
                                 baoCaoDVHC.IsNopBaoCao = true;
                             else
