@@ -546,6 +546,7 @@ namespace KiemKeDatDai.RisApplication
                         objtinh.ToChucKinhTe_KTQ -= huyen.ToChucKinhTe_KTQ;
                         objtinh.CongDongDanCu_CDQ -= huyen.CongDongDanCu_CDQ;
                     }
+
                     await _bieu01TKKK_TinhRepos.UpdateAsync(objtinh);
                 }
                 else
