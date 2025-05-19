@@ -6,8 +6,8 @@ class NewsService {
         let result = await http.get(`/api/services/app/News/GetAll?type=${type}`);
         return result.data.result;
     }
-    public async getNewsPagging(): Promise<ResponseDto<any[]>> {
-        let result = await http.get(`/api/services/app/News/GetAllPaging?MaxResultCount=1000&SkipCount=0`);
+    public async getNewsPagging(data: any): Promise<ResponseDto<any[]>> {
+        let result = await http.get(`/api/services/app/News/GetAllPaging`, { params: data });
         return result.data.result;
     }
     public async deleteNews(id: any): Promise<ResponseDto<any[]>> {

@@ -75,7 +75,7 @@ export default function QuanLyBieuPage() {
     const getAll = async () => {
         const listdvhcResponse = await bieuMauService.getAll();
         if (listdvhcResponse.code == 1) {
-            setListBieu(listdvhcResponse.returnValue);
+            setListBieu(listdvhcResponse.returnValue?.items);
         }
     }
     const handleCreate = () => {

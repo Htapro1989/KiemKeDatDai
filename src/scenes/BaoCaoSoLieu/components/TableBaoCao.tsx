@@ -1,4 +1,4 @@
-import { Button, notification, Row, Table, Tag } from 'antd';
+import { Button, Modal, notification, Row, Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
@@ -7,6 +7,10 @@ import baoCaoService from '../../../services/baoCao/baoCaoService';
 import ConfirmButton from '../../../components/AppComponentBase/ConfirmButton';
 import { CAP_DVHC_ENUM } from '../../../models/enum';
 import './style.less'
+import { isGranted } from '../../../lib/abpUtility';
+import { handleCommontResponse } from '../../../services/common/handleResponse';
+
+const confirm = Modal.confirm;
 
 interface ITableBaoCaoProps {
     maDVHC: any;
@@ -19,6 +23,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
     const [isActioning, setIsActioning] = useState<any>()
     const [expandedKeys, setExpandedKeys] = useState<any[]>([])
     const [isFetchingData, setIsFetchingData] = useState(false)
+
 
     const renderTrangThaiBaoCao: any = (text: string, item: any) => {
         if (item.root && item.isNopBaoCao)
@@ -52,6 +57,34 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                 </Row>
             )
         return null;
+    }
+    const renderAction: any = (text: string, item: any) => {
+
+        if (item.capDVHC == CAP_DVHC_ENUM.XA && isGranted('Pages.Administration')) {
+            return <Button
+            style={{ marginTop: 4 }}
+                type="primary"
+                size='small'
+                loading={isActioning?.maDv == item.maDVHC && isActioning?.loading}
+                onClick={() => {
+                    confirm({
+                        title: 'Bạn muốn xóa dữ liệu của đơn vị này?',
+                        onOk() {
+                            onXoaDuLieu(item)
+                        },
+                        onCancel() {
+                            console.log('Cancel');
+                        },
+                    });
+                }}>Xóa dữ liệu</Button>
+        }
+        return null;
+    }
+
+    const onXoaDuLieu = async (item: any) => {
+        const response = await baoCaoService.deleteAllDataXa({ year: props.year, ma: item.maDVHC })
+        handleCommontResponse(response)
+
     }
 
     const onDuyetBaoCaoDonViBenDuoi = async (maDVHCNopBaoCao: string) => {
@@ -146,7 +179,15 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         },
         {
             title: 'Hành động', dataIndex: 'action', key: 'action', align: "center",
-            render: renderTrangThaiBaoCao,
+            render: (text: string, item: any) => {
+                return (
+                    <div>
+                        {renderTrangThaiBaoCao(text, item)}
+                        {renderAction(text, item)}
+                    </div>
+                )
+            },
+            // renderTrangThaiBaoCao,
             //Vùng ko đc phép duyệt/nộp báo cáo
             className: CAP_DVHC_ENUM.VUNG == props.capDVHCID ? "hidden-column" : '',
         },

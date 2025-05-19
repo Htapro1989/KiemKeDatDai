@@ -68,6 +68,16 @@ class BaoCaoService {
         return result.data.result;
     }
 
+    public async deleteAllDataXa(params: any): Promise<ResponseDto<any[]>> {
+        let result = await http.delete(`/api/services/app/BaoCao/DeleteAllDataXa`, { params });
+        return result.data.result;
+    }
+
+    public async soLuongXaDaNop(fromDate: string, toDate: String): Promise<ResponseDto<any>> {
+        let result = await http.post(`/api/services/app/BaoCao/ReportNumberXaByDate?fromDate=${fromDate}&toDate=${toDate}`);
+        return result.data.result;
+    }
+
 }
 
 export default new BaoCaoService();

@@ -2,12 +2,12 @@ import React from 'react'
 import './index.less';
 import { Button, Card, Form, Input, notification } from 'antd';
 import accountService from '../../services/account/accountService';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { ROUTER_PATH } from '../../components/Router/router.config';
 
 export default function ChangePasswordPage() {
     const [form] = Form.useForm();
-    const history = useHistory();
+    // const history = useHistory();
 
     const query = new URLSearchParams(window.location.search);
     const isFirstLogin = query.get('firstLogin');
@@ -19,12 +19,12 @@ export default function ChangePasswordPage() {
                 currentPassword: values.oldPassword,
                 newPassword: values.newPassword,
             })
-            if (resp.success) {
+            if (resp) {
                 notification.success({
                     message: 'Đổi mật khẩu thành công',
                 })
                 form.resetFields();
-                history.push(ROUTER_PATH.HOME);
+                window.location.href = ROUTER_PATH.HOME;
             } else {
                 notification.error({
                     message: 'Đổi mật khẩu thất bại',

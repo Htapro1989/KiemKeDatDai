@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import './index.less'
-import { Button, Card, Dropdown, Empty, Menu, Modal, notification, Table, Tag } from 'antd'
+import { Button, Card, Col, Dropdown, Empty, Input, Menu, Modal, notification, Row, Table, Tag } from 'antd'
 import { PlusOutlined, SettingOutlined } from '@ant-design/icons'
 import newsService from '../../../services/news/newsService'
 import CreateOrUpdateNewsModal from './components/CreateOrUpdateKyKiemKe'
 import { FormInstance } from 'antd/lib/form'
 const confirm = Modal.confirm;
+const Search = Input.Search;
+
 export default function NewsPage() {
     const formRef = React.createRef<FormInstance>();
     const [news, setnews] = useState<any>([])
@@ -14,10 +16,15 @@ export default function NewsPage() {
         entity: null
     })
     const [isLoading, setIsLoading] = useState(false)
+    const [filterData, setFilterData] = useState({
+        filter: '',
+        maxResultCount: 10,
+        skipCount: 0
+    })
 
 
-    const getNews = async () => {
-        const response = await newsService.getNewsPagging()
+    const getNews = async (dataFilter?: any) => {
+        const response = await newsService.getNewsPagging(dataFilter || filterData);
         setnews(response.returnValue)
     }
 
@@ -73,6 +80,23 @@ export default function NewsPage() {
             entity: item
         })
     }
+    const handleTableChange = (pagination: any) => {
+        const newFilterData = {
+            ...filterData,
+            skipCount: (pagination.current - 1) * filterData.maxResultCount!
+        }
+        setFilterData(newFilterData)
+        getNews(newFilterData)
+    };
+
+    const handleSearch = (value: string) => {
+        const newFilterData = {
+            ...filterData,
+            filter: value
+        }
+        setFilterData(newFilterData)
+        getNews(newFilterData)
+    };
 
     const columns: any = [
         {
@@ -144,21 +168,25 @@ export default function NewsPage() {
         },
     ];
 
-
-
-
     return (
         <div className='capdvhc-page-wrapper'>
             <h1 className='txt-page-header'>Cấu hình tin tức</h1>
 
             <Card title={
                 <div className='table-header-layout'>
-                    <div style={{ flex: 1 }}>
-                    </div>
                     <div className='table-header-layout-right'>
-                        <Button type="primary" icon={<PlusOutlined />} onClick={() => { createOrUpdateModalOpen() }}>
-                            Tạo mới
-                        </Button>
+                        <Row style={{ width: '100%' }}>
+                            <Col>
+                                <Search placeholder={'Tìm kiếm...'} onSearch={handleSearch} />
+                            </Col>
+                            <Col flex={1} />
+                            <Col>
+                                <Button type="primary" icon={<PlusOutlined />} onClick={() => { createOrUpdateModalOpen() }}>
+                                    Tạo mới
+                                </Button>
+                            </Col>
+                        </Row>
+
                     </div>
                 </div>
             }>
@@ -168,9 +196,9 @@ export default function NewsPage() {
                     columns={columns}
                     size='small'
                     scroll={{ y: 600 }}
-                    // pagination={{ pageSize: 10, total: news === undefined ? 0 : news.totalCount, defaultCurrent: 1 }}
-                    pagination={false}
+                    pagination={{ pageSize: 10, total: news === undefined ? 0 : news.totalCount, defaultCurrent: 1 }}
                     loading={false}
+                    onChange={handleTableChange}
                     dataSource={news === undefined ? [] : news.items}
                     locale={{
                         emptyText: (

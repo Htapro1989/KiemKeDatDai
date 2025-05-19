@@ -71,7 +71,7 @@ export default function GdlaHomePage(props: IGdlaHomePageProps) {
         <div className='gdla-home-page'>
             <div className='gdla-home-page__header'>
                 <div className='header_logo_layout'>
-                    <img src='https://tk.gdla.gov.vn/Images/monre-logo2023.png' />
+                    <img style={{width:64,height:64}} src='https://tk24.vbdlis.vn/assets/LandingPage/logo-de43ecf7.png' />
                 </div>
                 <div className='header_text_layout'>
                     <p className='header_text_top'>CỤC QUẢN LÝ ĐẤT ĐAI - BỘ NÔNG NGHIỆP VÀ MÔI TRƯỜNG</p>
@@ -127,7 +127,13 @@ export default function GdlaHomePage(props: IGdlaHomePageProps) {
                                     className='body-button button-center'
                                     onClick={props.onLogin}
                                     icon={<LinkOutlined />}>
-                                    Tổng hợp số liệu TKKK</Button>
+                                    TKKK2024</Button>
+                                {/* <Button
+                                    type='text'
+                                    className='body-button button-center'
+                                    onClick={() => window.open('https://tk24.vbdlis.vn', '_blank')}
+                                    icon={<LinkOutlined />}>
+                                    TKOnline</Button> */}
                             </div>
                         </div>
                         <div className='gdla-home-page__body__right'>
@@ -171,7 +177,7 @@ export default function GdlaHomePage(props: IGdlaHomePageProps) {
                 }}
                 onCreate={handleCreate}
             />
-            <FloatingChat/>
+            <FloatingChat />
             <Footer />
         </div>
     )

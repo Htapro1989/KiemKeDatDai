@@ -11,11 +11,12 @@ import Bieu02KKSL from './DanhSachBieuMau/Bieu02KKSL';
 import Bieu01aKKNLT from './DanhSachBieuMau/Bieu01aKKNLT';
 import Bieu01bKKNLT from './DanhSachBieuMau/Bieu01bKKNLT';
 import Bieu01cKKNLT from './DanhSachBieuMau/Bieu01cKKNLT';
-import Bieu02KKKNLT from './DanhSachBieuMau/Bieu02KKKNLT';
+// import Bieu02KKKNLT from './DanhSachBieuMau/Bieu02KKKNLT';
 import bieuMauService from '../../services/bieuMau/bieuMauService';
 import ChiTietBieuMauRequest from '../../models/BieuMau/ChiTietBieuMauRequest';
 import PhuLucIII from './DanhSachBieuMau/PhuLucIII';
 import PhuLucIV from './DanhSachBieuMau/PhuLucIV';
+import Bieu02aKKNLT from './DanhSachBieuMau/Bieu02aKKNLT';
 
 
 
@@ -81,8 +82,8 @@ const BieuMauPage = (props: IBieuMauProps) => {
         return <Bieu01bKKNLT />
       case "01c/KKNLT":
         return <Bieu01cKKNLT />
-      case "01c/KKNLT":
-        return <Bieu02KKKNLT />
+      case "02a/KKNLT":
+        return <Bieu02aKKNLT isFetching={isFetchingData} reportData={reportData}/>
       case "PL.III":
         return <PhuLucIII isFetching={isFetchingData} reportData={reportData} />
       case "PL.IV":

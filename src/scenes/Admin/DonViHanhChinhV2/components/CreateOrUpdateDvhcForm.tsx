@@ -213,7 +213,7 @@ export default function CreateOrUpdateDvhcForm(props: any) {
 
                 {
                     (entity?.capDVHCId == CAP_DVHC_ENUM.XA || (formState.action == CREATE && entity?.capDVHCId == CAP_DVHC_ENUM.HUYEN)) && (
-                        <Form.Item label="Số lượng tệp tải lên tối đa" name="maxFileUpload" rules={rules.required}>
+                        <Form.Item label="Số lượng tệp tải lên còn lại" name="maxFileUpload" rules={rules.required}>
                             <Input />
                         </Form.Item>
                     )

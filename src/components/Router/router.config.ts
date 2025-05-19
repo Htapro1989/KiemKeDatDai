@@ -15,6 +15,7 @@ export const ROUTER_PATH = {
   YKIEN: "/y-kien",
   NHAP_DL_KIEM_KE: "/nhap-dlkk",
   BIEU: "/quan-ly-bieu",
+  THONG_TIN_TONG_HOP: "/thong-tin-tong-hop",
 
 }
 
@@ -127,6 +128,15 @@ export const appRouters: any = [
     icon: TagsOutlined,
     showInMenu: true,
     component: LoadableComponent(() => import('../../scenes/Admin/News')),
+  },
+  {
+    path: ROUTER_PATH.THONG_TIN_TONG_HOP,
+    permission: 'Pages.Administration',
+    title: 'Thong tin tổng hợp',
+    name: 'thongtintonghop',
+    icon: TagsOutlined,
+    showInMenu: true,
+    component: LoadableComponent(() => import('../../scenes/Admin/SoLuongXaDaNop')),
   },
   {
     path: ROUTER_PATH.BIEU,

@@ -127,9 +127,16 @@ const MenuBar = () => {
                 Ý kiến người dùng
               </Link>
             </Menu.Item>
+            <Menu.Item key={ROUTER_PATH.THONG_TIN_TONG_HOP}>
+              <Link to={ROUTER_PATH.THONG_TIN_TONG_HOP}>
+                Thông tin tổng hợp
+              </Link>
+            </Menu.Item>
           </Menu.SubMenu>
         )
       }
+      
+      
 
     </Menu>
   )
@@ -145,7 +152,7 @@ export class Header extends React.Component<IHeaderProps> {
     return (
       <div className={'header-container'}>
         <div style={{ width: 294 }}>
-          <img className='header_logo_layout' src='https://tk.gdla.gov.vn/Images/monre-logo2023.png' />
+          <img className='header_logo_layout' src='https://tk24.vbdlis.vn/assets/LandingPage/logo-de43ecf7.png' />
         </div>
 
         <div className='header__menu_layout'>
