@@ -56,7 +56,6 @@ namespace KiemKeDatDai.RisApplication
         private readonly IRepository<UserRole, long> _userRoleRepos;
         private readonly IDistributedCache _distributedCache;
         private readonly IMemoryCache _cache;
-        //private readonly ILogAppService _iLogAppService;
 
         private readonly ICache mainCache;
 
@@ -301,7 +300,55 @@ namespace KiemKeDatDai.RisApplication
 
                 var lstDvhc = await query.ToListAsync();
 
-                var lstMa = lstDvhc.Select(x => x.Ma).ToList();
+                commonResponseDto.ReturnValue = lstDvhc;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                throw;
+            }
+            return commonResponseDto;
+        }
+
+        public async Task<CommonResponseDto> GetByIdForUser(long id)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            try
+            {
+                var query = (from dvhc in _dvhcRepos.GetAll()
+                             join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
+                             where dvhc.Parent_id == id
+                             select new DVHCOutputDto
+                             {
+                                 Id = dvhc.Id,
+                                 TenVung = dvhc.TenVung,
+                                 MaVung = dvhc.MaVung,
+                                 TenTinh = dvhc.TenTinh,
+                                 MaTinh = dvhc.MaTinh,
+                                 TenHuyen = dvhc.TenHuyen,
+                                 MaHuyen = dvhc.MaHuyen,
+                                 TenXa = dvhc.TenXa,
+                                 MaXa = dvhc.MaXa,
+                                 Ma = dvhc.Ma,
+                                 Name = dvhc.Name,
+                                 Parent_id = dvhc.Parent_id,
+                                 Parent_Code = dvhc.Parent_Code,
+                                 CapDVHCId = dvhc.CapDVHCId,
+                                 Active = dvhc.Active,
+                                 Year = dvhc.Year,
+                                 TrangThaiDuyet = dvhc.TrangThaiDuyet,
+                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                             });
+
+                var lstDvhc = await query.ToListAsync();
+
+                var maDvhc = _dvhcRepos.Single(x => x.Id == id).Ma;
+
+                var lstMa = await _iUserAppService.GetChildrenMa(maDvhc);
                 var lstUserCode = await _userRepos.GetAll()
                     .Where(u => lstMa.Contains(u.DonViHanhChinhCode))
                     .Select(u => u.DonViHanhChinhCode)
@@ -311,11 +358,6 @@ namespace KiemKeDatDai.RisApplication
                 foreach (var item in lstDvhc)
                 {
                     item.IsExitsUser = lstUserCode.Contains(item.Ma);
-                    //if (item.IsExitsUser == true)
-                    //{
-                    //    var dvhcParent = lstDvhc.FirstOrDefault(x => x.Ma == item.Parent_Code);
-                    //    dvhcParent.IsExitsUser = true;
-                    //}
                 }
 
                 commonResponseDto.ReturnValue = lstDvhc;
