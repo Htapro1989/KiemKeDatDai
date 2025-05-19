@@ -93,10 +93,10 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
                     var data = await _bieu06TKKKQPAN_TinhRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
+
                     if (data != null)
                     {
                         data.STT = input.STT;
@@ -112,6 +112,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         data.TinhId = input.TinhId;
                         data.Year = input.Year;
                         data.Active = input.Active;
+
                         await _bieu06TKKKQPAN_TinhRepos.UpdateAsync(data);
                     }
                     else
@@ -124,6 +125,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 else
                 {
                     var bieu06 = input.MapTo<Bieu06TKKKQPAN_Tinh>();
+
                     await _bieu06TKKKQPAN_TinhRepos.InsertAsync(bieu06);
                 }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
@@ -144,9 +146,11 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var bieu06 = await _bieu06TKKKQPAN_TinhRepos.FirstOrDefaultAsync(x => x.Id == id);
+
                 if (bieu06 != null)
                 {
                     await _bieu06TKKKQPAN_TinhRepos.DeleteAsync(bieu06);
+
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
@@ -172,6 +176,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 commonResponseDto.ReturnValue = await _bieu06TKKKQPAN_TinhRepos.GetAllListAsync(x => x.TinhId == dvhcId && x.Year == year);
+                
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }

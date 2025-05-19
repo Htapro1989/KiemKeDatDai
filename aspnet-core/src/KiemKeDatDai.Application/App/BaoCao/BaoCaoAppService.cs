@@ -190,55 +190,53 @@ namespace KiemKeDatDai.RisApplication
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+            try
             {
-                try
-                {
-                    var _thongke = new ThongKeSoLieuOutputDto();
-                    var year = 2024;
-                    _thongke.TongSoTinh = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.Year == year);
-                    _thongke.TongSoTinhHoanThanh = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    _thongke.TongSoHuyen = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.HUYEN && x.Year == year);
-                    _thongke.TongSoHuyenHoanThanh = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.HUYEN && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    _thongke.TongSoXa = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.Year == year);
-                    _thongke.TongSoXaHoanThanh = await _dvhcRepos.CountAsync(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                var year = 2024;
+                var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Year == year).ToListAsync();
+                var _thongke = new ThongKeSoLieuOutputDto();
 
-                    var _listMaTinhMNPB = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_MIEN_NUI_PHIA_BAC).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
-                    var _listMaTinhDBSH = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DONG_BANG_SONG_HONG).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
-                    var _listMaTinhDHMT = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DUYEN_HAI_MIEN_TRUNG).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
-                    var _listMaTinhTN = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_TAY_NGUYEN).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
-                    var _listMaTinhDNBc = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DONG_NAM_BO).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
-                    var _listMaTinhDBSCL = await _dvhcRepos.GetAll().Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DONG_BANG_SONG_CUU_LONG).ToString() && x.Year == year).Select(x => x.Ma).ToListAsync();
-                    _thongke.VungMienNuiPhiaBac = await _dvhcRepos.CountAsync(x => _listMaTinhMNPB.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    _thongke.VungDongBangSongHong = await _dvhcRepos.CountAsync(x => _listMaTinhDBSH.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    _thongke.VungDuyenHaiMienTrung = await _dvhcRepos.CountAsync(x => _listMaTinhDHMT.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    _thongke.VungTayNguyen = await _dvhcRepos.CountAsync(x => _listMaTinhTN.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    _thongke.VungDongNamBo = await _dvhcRepos.CountAsync(x => _listMaTinhDNBc.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
-                    _thongke.VungDongBangSongCuuLong = await _dvhcRepos.CountAsync(x => _listMaTinhDBSCL.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                _thongke.TongSoTinh = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.TINH);
+                _thongke.TongSoTinhHoanThanh = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                _thongke.TongSoHuyen = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.HUYEN);
+                _thongke.TongSoHuyenHoanThanh = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.HUYEN && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                _thongke.TongSoXa = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.XA);
+                _thongke.TongSoXaHoanThanh = allDvhc.Count(x => x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
 
-                    _thongke.PhanTramVungMienNuiPhiaBac = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungMienNuiPhiaBac / _thongke.TongSoXa.Value * 100, 2) : 0;
-                    _thongke.PhanTramVungDongBangSongHong = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDongBangSongHong / _thongke.TongSoXa.Value * 100, 2) : 0;
-                    _thongke.PhanTramVungDuyenHaiMienTrung = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDuyenHaiMienTrung / _thongke.TongSoXa.Value * 100, 2) : 0;
-                    _thongke.PhanTramVungTayNguyen = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungTayNguyen / _thongke.TongSoXa.Value * 100, 2) : 0;
-                    _thongke.PhanTramVungDongNamBo = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDongNamBo / _thongke.TongSoXa.Value * 100, 2) : 0;
-                    _thongke.PhanTramVungDongBangSongCuuLong = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDongBangSongCuuLong / _thongke.TongSoXa.Value * 100, 2) : 0;
-                    _thongke.ChuaNopBaoCao = 100 - (_thongke.PhanTramVungMienNuiPhiaBac + _thongke.PhanTramVungDongBangSongHong + _thongke.PhanTramVungDuyenHaiMienTrung + _thongke.PhanTramVungTayNguyen + _thongke.PhanTramVungDongNamBo + _thongke.PhanTramVungDongBangSongCuuLong);
-                    commonResponseDto.ReturnValue = _thongke;
-                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
-                    commonResponseDto.Message = "Thành Công";
-                    uow.Complete();
-                }
-                catch (Exception ex)
-                {
-                    uow.Dispose();
-                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = ex.Message;
-                    Logger.Fatal(ex.Message);
-                }
+                var _listMaTinhMNPB = allDvhc.Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_MIEN_NUI_PHIA_BAC).ToString()).Select(x => x.Ma).ToList();
+                var _listMaTinhDBSH = allDvhc.Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DONG_BANG_SONG_HONG).ToString()).Select(x => x.Ma).ToList();
+                var _listMaTinhDHMT = allDvhc.Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DUYEN_HAI_MIEN_TRUNG).ToString()).Select(x => x.Ma).ToList();
+                var _listMaTinhTN = allDvhc.Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_TAY_NGUYEN).ToString()).Select(x => x.Ma).ToList();
+                var _listMaTinhDNBc = allDvhc.Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DONG_NAM_BO).ToString()).Select(x => x.Ma).ToList();
+                var _listMaTinhDBSCL = allDvhc.Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH && x.MaVung == ((int)VUNG_MIEN.VUNG_DONG_BANG_SONG_CUU_LONG).ToString()).Select(x => x.Ma).ToList();
+
+                _thongke.VungMienNuiPhiaBac = allDvhc.Count(x => _listMaTinhMNPB.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                _thongke.VungDongBangSongHong = allDvhc.Count(x => _listMaTinhDBSH.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                _thongke.VungDuyenHaiMienTrung = allDvhc.Count(x => _listMaTinhDHMT.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                _thongke.VungTayNguyen = allDvhc.Count(x => _listMaTinhTN.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                _thongke.VungDongNamBo = allDvhc.Count(x => _listMaTinhDNBc.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+                _thongke.VungDongBangSongCuuLong = allDvhc.Count(x => _listMaTinhDBSCL.Contains(x.MaTinh) && x.CapDVHCId == (int)CAP_DVHC.XA && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+
+                _thongke.PhanTramVungMienNuiPhiaBac = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungMienNuiPhiaBac / _thongke.TongSoXa.Value * 100, 2) : 0;
+                _thongke.PhanTramVungDongBangSongHong = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDongBangSongHong / _thongke.TongSoXa.Value * 100, 2) : 0;
+                _thongke.PhanTramVungDuyenHaiMienTrung = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDuyenHaiMienTrung / _thongke.TongSoXa.Value * 100, 2) : 0;
+                _thongke.PhanTramVungTayNguyen = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungTayNguyen / _thongke.TongSoXa.Value * 100, 2) : 0;
+                _thongke.PhanTramVungDongNamBo = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDongNamBo / _thongke.TongSoXa.Value * 100, 2) : 0;
+                _thongke.PhanTramVungDongBangSongCuuLong = _thongke.TongSoXa > 0 ? Math.Round((decimal)_thongke.VungDongBangSongCuuLong / _thongke.TongSoXa.Value * 100, 2) : 0;
+                _thongke.ChuaNopBaoCao = 100 - (_thongke.PhanTramVungMienNuiPhiaBac + _thongke.PhanTramVungDongBangSongHong + _thongke.PhanTramVungDuyenHaiMienTrung + _thongke.PhanTramVungTayNguyen + _thongke.PhanTramVungDongNamBo + _thongke.PhanTramVungDongBangSongCuuLong);
+
+                commonResponseDto.ReturnValue = _thongke;
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Fatal(ex.Message);
             }
             return commonResponseDto;
         }
-
 
         [AbpAuthorize]
         public async Task<CommonResponseDto> DeleteAllDataXa(long year, string ma)
