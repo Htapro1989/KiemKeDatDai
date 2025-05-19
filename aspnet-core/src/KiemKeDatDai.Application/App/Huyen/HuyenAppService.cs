@@ -817,7 +817,7 @@ namespace KiemKeDatDai.RisApplication
                     NguoiVietNamONuocNgoai_CNN_CC = xa.NguoiVietNamONuocNgoai_CNN_CC,
                     CoQuanNhaNuoc_TCN_DT = xa.CoQuanNhaNuoc_TCN_DT,
                     CoQuanNhaNuoc_TCN_CC = xa.CoQuanNhaNuoc_TCN_CC,
-                    DonViSuNghiep_TSN_DT = xa.NguoiVietNamONuocNgoai_CNN_DT,
+                    DonViSuNghiep_TSN_DT = xa.DonViSuNghiep_TSN_DT,
                     DonViSuNghiep_TSN_CC = xa.DonViSuNghiep_TSN_CC,
                     ToChucXaHoi_TXH_DT = xa.ToChucXaHoi_TXH_DT,
                     ToChucXaHoi_TXH_CC = xa.ToChucXaHoi_TXH_CC,
@@ -862,45 +862,80 @@ namespace KiemKeDatDai.RisApplication
             try
             {
                 var objhuyen = await _bieu04TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.MaHuyen == maHuyen && x.Ma == xa.Ma && x.Year == year);
+                var objhuyents = await _bieu04TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.MaHuyen == maHuyen && x.Ma == "TS" && x.Year == year);
                 if (objhuyen.Id > 0)
                 {
                     //update duyệt xã
                     if (hamduyet == (int)HAM_DUYET.DUYET)
                     {
+                        //objhuyen.TongSo_DT += xa.TongSo_DT;
+                        //objhuyen.TongSo_CC += xa.TongSo_CC;
+                        //objhuyen.CaNhanTrongNuoc_CNV_DT += xa.CaNhanTrongNuoc_CNV_DT;
+                        //objhuyen.CaNhanTrongNuoc_CNV_CC += xa.CaNhanTrongNuoc_CNV_CC;
+                        //objhuyen.NguoiVietNamONuocNgoai_CNN_DT += xa.NguoiVietNamONuocNgoai_CNN_DT;
+                        //objhuyen.NguoiVietNamONuocNgoai_CNN_CC += xa.NguoiVietNamONuocNgoai_CNN_CC;
+                        //objhuyen.CoQuanNhaNuoc_TCN_DT += xa.CoQuanNhaNuoc_TCN_DT;
+                        //objhuyen.CoQuanNhaNuoc_TCN_CC += xa.CoQuanNhaNuoc_TCN_CC;
+                        //objhuyen.DonViSuNghiep_TSN_DT += xa.DonViSuNghiep_TSN_DT;
+                        //objhuyen.DonViSuNghiep_TSN_CC += xa.DonViSuNghiep_TSN_CC;
+                        //objhuyen.ToChucXaHoi_TXH_DT += xa.ToChucXaHoi_TXH_DT;
+                        //objhuyen.ToChucXaHoi_TXH_CC += xa.ToChucXaHoi_TXH_CC;
+                        //objhuyen.ToChucKinhTe_TKT_DT += xa.ToChucKinhTe_TKT_DT;
+                        //objhuyen.ToChucKinhTe_TKT_CC += xa.ToChucKinhTe_TKT_CC;
+                        //objhuyen.ToChucKhac_TKH_DT += xa.ToChucKhac_TKH_DT;
+                        //objhuyen.ToChucKhac_TKH_CC += xa.ToChucKhac_TKH_CC;
+                        //objhuyen.ToChucTonGiao_TTG_DT += xa.ToChucTonGiao_TTG_DT;
+                        //objhuyen.ToChucTonGiao_TTG_CC += xa.ToChucTonGiao_TTG_CC;
+                        //objhuyen.CongDongDanCu_CDS_DT += xa.CongDongDanCu_CDS_DT;
+                        //objhuyen.CongDongDanCu_CDS_CC += xa.CongDongDanCu_CDS_CC;
+                        //objhuyen.ToChucNuocNgoai_TNG_DT += xa.ToChucNuocNgoai_TNG_DT;
+                        //objhuyen.ToChucNuocNgoai_TNG_CC += xa.ToChucNuocNgoai_TNG_CC;
+                        //objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT += xa.NguoiGocVietNamONuocNgoai_NGV_DT;
+                        //objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC += xa.NguoiGocVietNamONuocNgoai_NGV_CC;
+                        //objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT += xa.ToChucKinhTeVonNuocNgoai_TVN_DT;
+                        //objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC += xa.ToChucKinhTeVonNuocNgoai_TVN_CC;
+                        //objhuyen.CoQuanNhaNuoc_TCQ_DT += xa.CoQuanNhaNuoc_TCQ_DT;
+                        //objhuyen.CoQuanNhaNuoc_TCQ_CC += xa.CoQuanNhaNuoc_TCQ_CC;
+                        //objhuyen.DonViSuNghiep_TSQ_DT += xa.DonViSuNghiep_TSQ_DT;
+                        //objhuyen.DonViSuNghiep_TSQ_CC += xa.DonViSuNghiep_TSQ_CC;
+                        //objhuyen.ToChucKinhTe_KTQ_DT += xa.ToChucKinhTe_KTQ_DT;
+                        //objhuyen.ToChucKinhTe_KTQ_CC += xa.ToChucKinhTe_KTQ_CC;
+                        //objhuyen.CongDongDanCu_CDQ_DT += xa.CongDongDanCu_CDQ_DT;
+                        //objhuyen.CongDongDanCu_CDQ_CC += xa.CongDongDanCu_CDQ_CC;
                         objhuyen.TongSo_DT += xa.TongSo_DT;
-                        objhuyen.TongSo_CC += xa.TongSo_CC;
+                        objhuyen.TongSo_CC = Math.Round(objhuyen.TongSo_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CaNhanTrongNuoc_CNV_DT += xa.CaNhanTrongNuoc_CNV_DT;
-                        objhuyen.CaNhanTrongNuoc_CNV_CC += xa.CaNhanTrongNuoc_CNV_CC;
+                        objhuyen.CaNhanTrongNuoc_CNV_CC = Math.Round(objhuyen.CaNhanTrongNuoc_CNV_DT * 100 / objhuyents.TongSo_DT,4);
                         objhuyen.NguoiVietNamONuocNgoai_CNN_DT += xa.NguoiVietNamONuocNgoai_CNN_DT;
-                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC += xa.NguoiVietNamONuocNgoai_CNN_CC;
+                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objhuyen.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CoQuanNhaNuoc_TCN_DT += xa.CoQuanNhaNuoc_TCN_DT;
-                        objhuyen.CoQuanNhaNuoc_TCN_CC += xa.CoQuanNhaNuoc_TCN_CC;
+                        objhuyen.CoQuanNhaNuoc_TCN_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.DonViSuNghiep_TSN_DT += xa.DonViSuNghiep_TSN_DT;
-                        objhuyen.DonViSuNghiep_TSN_CC += xa.DonViSuNghiep_TSN_CC;
+                        objhuyen.DonViSuNghiep_TSN_CC = Math.Round(objhuyen.DonViSuNghiep_TSN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucXaHoi_TXH_DT += xa.ToChucXaHoi_TXH_DT;
-                        objhuyen.ToChucXaHoi_TXH_CC += xa.ToChucXaHoi_TXH_CC;
+                        objhuyen.ToChucXaHoi_TXH_CC = Math.Round(objhuyen.ToChucXaHoi_TXH_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucKinhTe_TKT_DT += xa.ToChucKinhTe_TKT_DT;
-                        objhuyen.ToChucKinhTe_TKT_CC += xa.ToChucKinhTe_TKT_CC;
+                        objhuyen.ToChucKinhTe_TKT_CC = Math.Round(objhuyen.ToChucKinhTe_TKT_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucKhac_TKH_DT += xa.ToChucKhac_TKH_DT;
-                        objhuyen.ToChucKhac_TKH_CC += xa.ToChucKhac_TKH_CC;
+                        objhuyen.ToChucKhac_TKH_CC = Math.Round(objhuyen.ToChucKhac_TKH_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucTonGiao_TTG_DT += xa.ToChucTonGiao_TTG_DT;
-                        objhuyen.ToChucTonGiao_TTG_CC += xa.ToChucTonGiao_TTG_CC;
+                        objhuyen.ToChucTonGiao_TTG_CC = Math.Round(objhuyen.ToChucTonGiao_TTG_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CongDongDanCu_CDS_DT += xa.CongDongDanCu_CDS_DT;
-                        objhuyen.CongDongDanCu_CDS_CC += xa.CongDongDanCu_CDS_CC;
+                        objhuyen.CongDongDanCu_CDS_CC = Math.Round(objhuyen.CongDongDanCu_CDS_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucNuocNgoai_TNG_DT += xa.ToChucNuocNgoai_TNG_DT;
-                        objhuyen.ToChucNuocNgoai_TNG_CC += xa.ToChucNuocNgoai_TNG_CC;
+                        objhuyen.ToChucNuocNgoai_TNG_CC = Math.Round(objhuyen.ToChucNuocNgoai_TNG_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT += xa.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC += xa.NguoiGocVietNamONuocNgoai_NGV_CC;
+                        objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT += xa.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC += xa.ToChucKinhTeVonNuocNgoai_TVN_CC;
+                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CoQuanNhaNuoc_TCQ_DT += xa.CoQuanNhaNuoc_TCQ_DT;
-                        objhuyen.CoQuanNhaNuoc_TCQ_CC += xa.CoQuanNhaNuoc_TCQ_CC;
+                        objhuyen.CoQuanNhaNuoc_TCQ_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.DonViSuNghiep_TSQ_DT += xa.DonViSuNghiep_TSQ_DT;
-                        objhuyen.DonViSuNghiep_TSQ_CC += xa.DonViSuNghiep_TSQ_CC;
+                        objhuyen.DonViSuNghiep_TSQ_CC = Math.Round(objhuyen.DonViSuNghiep_TSQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucKinhTe_KTQ_DT += xa.ToChucKinhTe_KTQ_DT;
-                        objhuyen.ToChucKinhTe_KTQ_CC += xa.ToChucKinhTe_KTQ_CC;
+                        objhuyen.ToChucKinhTe_KTQ_CC = Math.Round(objhuyen.ToChucKinhTe_KTQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CongDongDanCu_CDQ_DT += xa.CongDongDanCu_CDQ_DT;
-                        objhuyen.CongDongDanCu_CDQ_CC += xa.CongDongDanCu_CDQ_CC;
+                        objhuyen.CongDongDanCu_CDQ_CC = Math.Round(objhuyen.CongDongDanCu_CDQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.STT = xa.STT;
                         objhuyen.LoaiDat = xa.LoaiDat;
                         objhuyen.Year = xa.Year;
@@ -910,39 +945,39 @@ namespace KiemKeDatDai.RisApplication
                     else
                     {
                         objhuyen.TongSo_DT -= xa.TongSo_DT;
-                        objhuyen.TongSo_CC -= xa.TongSo_CC;
+                        objhuyen.TongSo_CC = Math.Round(objhuyen.TongSo_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CaNhanTrongNuoc_CNV_DT -= xa.CaNhanTrongNuoc_CNV_DT;
-                        objhuyen.CaNhanTrongNuoc_CNV_CC -= xa.CaNhanTrongNuoc_CNV_CC;
+                        objhuyen.CaNhanTrongNuoc_CNV_CC = Math.Round(objhuyen.CaNhanTrongNuoc_CNV_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.NguoiVietNamONuocNgoai_CNN_DT -= xa.NguoiVietNamONuocNgoai_CNN_DT;
-                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC -= xa.NguoiVietNamONuocNgoai_CNN_CC;
+                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objhuyen.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CoQuanNhaNuoc_TCN_DT -= xa.CoQuanNhaNuoc_TCN_DT;
-                        objhuyen.CoQuanNhaNuoc_TCN_CC -= xa.CoQuanNhaNuoc_TCN_CC;
+                        objhuyen.CoQuanNhaNuoc_TCN_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.DonViSuNghiep_TSN_DT -= xa.DonViSuNghiep_TSN_DT;
-                        objhuyen.DonViSuNghiep_TSN_CC -= xa.DonViSuNghiep_TSN_CC;
+                        objhuyen.DonViSuNghiep_TSN_CC = Math.Round(objhuyen.DonViSuNghiep_TSN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucXaHoi_TXH_DT -= xa.ToChucXaHoi_TXH_DT;
-                        objhuyen.ToChucXaHoi_TXH_CC -= xa.ToChucXaHoi_TXH_CC;
+                        objhuyen.ToChucXaHoi_TXH_CC = Math.Round(objhuyen.ToChucXaHoi_TXH_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucKinhTe_TKT_DT -= xa.ToChucKinhTe_TKT_DT;
-                        objhuyen.ToChucKinhTe_TKT_CC -= xa.ToChucKinhTe_TKT_CC;
+                        objhuyen.ToChucKinhTe_TKT_CC = Math.Round(objhuyen.ToChucKinhTe_TKT_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucKhac_TKH_DT -= xa.ToChucKhac_TKH_DT;
-                        objhuyen.ToChucKhac_TKH_CC -= xa.ToChucKhac_TKH_CC;
+                        objhuyen.ToChucKhac_TKH_CC = Math.Round(objhuyen.ToChucKhac_TKH_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucTonGiao_TTG_DT -= xa.ToChucTonGiao_TTG_DT;
-                        objhuyen.ToChucTonGiao_TTG_CC -= xa.ToChucTonGiao_TTG_CC;
+                        objhuyen.ToChucTonGiao_TTG_CC = Math.Round(objhuyen.ToChucTonGiao_TTG_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CongDongDanCu_CDS_DT -= xa.CongDongDanCu_CDS_DT;
-                        objhuyen.CongDongDanCu_CDS_CC -= xa.CongDongDanCu_CDS_CC;
+                        objhuyen.CongDongDanCu_CDS_CC = Math.Round(objhuyen.CongDongDanCu_CDS_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucNuocNgoai_TNG_DT -= xa.ToChucNuocNgoai_TNG_DT;
-                        objhuyen.ToChucNuocNgoai_TNG_CC -= xa.ToChucNuocNgoai_TNG_CC;
+                        objhuyen.ToChucNuocNgoai_TNG_CC = Math.Round(objhuyen.ToChucNuocNgoai_TNG_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT -= xa.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC -= xa.NguoiGocVietNamONuocNgoai_NGV_CC;
+                        objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT -= xa.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC -= xa.ToChucKinhTeVonNuocNgoai_TVN_CC;
+                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CoQuanNhaNuoc_TCQ_DT -= xa.CoQuanNhaNuoc_TCQ_DT;
-                        objhuyen.CoQuanNhaNuoc_TCQ_CC -= xa.CoQuanNhaNuoc_TCQ_CC;
+                        objhuyen.CoQuanNhaNuoc_TCQ_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.DonViSuNghiep_TSQ_DT -= xa.DonViSuNghiep_TSQ_DT;
-                        objhuyen.DonViSuNghiep_TSQ_CC -= xa.DonViSuNghiep_TSQ_CC;
+                        objhuyen.DonViSuNghiep_TSQ_CC = Math.Round(objhuyen.DonViSuNghiep_TSQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.ToChucKinhTe_KTQ_DT -= xa.ToChucKinhTe_KTQ_DT;
-                        objhuyen.ToChucKinhTe_KTQ_CC -= xa.ToChucKinhTe_KTQ_CC;
+                        objhuyen.ToChucKinhTe_KTQ_CC = Math.Round(objhuyen.ToChucKinhTe_KTQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CongDongDanCu_CDQ_DT -= xa.CongDongDanCu_CDQ_DT;
-                        objhuyen.CongDongDanCu_CDQ_CC -= xa.CongDongDanCu_CDQ_CC;
+                        objhuyen.CongDongDanCu_CDQ_CC = Math.Round(objhuyen.CongDongDanCu_CDQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                     }
                     await _bieu04TKKK_HuyenRepos.UpdateAsync(objhuyen);
                 }

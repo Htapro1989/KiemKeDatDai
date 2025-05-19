@@ -34,7 +34,7 @@ using Aspose.Cells;
 
 namespace KiemKeDatDai.RisApplication;
 
-[AbpAuthorize(PermissionNames.Pages_Administration_Users)]
+[AbpAuthorize]
 public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
 {
     private readonly UserManager _userManager;
@@ -74,6 +74,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         _unitOfWorkManager = unitOfWorkManager;
     }
 
+    [AbpAuthorize(PermissionNames.Pages_Administration_Users)]
     public override async Task<UserDto> CreateAsync(CreateUserDto input)
     {
         CheckCreatePermission();
@@ -98,6 +99,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         return MapToEntityDto(user);
     }
 
+    [AbpAuthorize(PermissionNames.Pages_Administration_Users)]
     public override async Task<UserDto> UpdateAsync(UserDto input)
     {
         CheckUpdatePermission();
@@ -116,12 +118,14 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         return await GetAsync(input);
     }
 
+    [AbpAuthorize(PermissionNames.Pages_Administration_Users)]
     public override async Task DeleteAsync(EntityDto<long> input)
     {
         var user = await _userManager.GetUserByIdAsync(input.Id);
         await _userManager.DeleteAsync(user);
     }
 
+    [AbpAuthorize(PermissionNames.Pages_Administration_Users)]
     public async Task Activate(EntityDto<long> user)
     {
         await Repository.UpdateAsync(user.Id, async (entity) =>
@@ -130,6 +134,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         });
     }
 
+    [AbpAuthorize(PermissionNames.Pages_Administration_Users)]
     public async Task DeActivate(EntityDto<long> user)
     {
         await Repository.UpdateAsync(user.Id, async (entity) =>
@@ -197,6 +202,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         return user;
     }
 
+    [AbpAuthorize(PermissionNames.Pages_Administration_Users)]
     protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedUserResultRequestDto input)
     {
         return query.OrderBy(input.Sorting);
@@ -220,7 +226,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         if (await _userManager.CheckPasswordAsync(user, input.CurrentPassword))
         {
             CheckErrors(await _userManager.ChangePasswordAsync(user, input.NewPassword));
-            user.IsChangePass = true;
+            user.IsChangePass = false;
             CheckErrors(await _userManager.UpdateAsync(user));
         }
         else
@@ -234,6 +240,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         return true;
     }
 
+    [AbpAuthorize(PermissionNames.Pages_Administration_Users)]
     public async Task<bool> ResetPassword(ResetPasswordDto input)
     {
         if (_abpSession.UserId == null)
@@ -268,7 +275,8 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
 
         return true;
     }
-    [AbpAuthorize]
+
+    [AbpAuthorize(PermissionNames.Pages_Administration_Users)]
     public async Task<CommonResponseDto> GetAllUser(PagedUserResultRequestDto input)
     {
         CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -324,7 +332,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         }
         return commonResponseDto;
     }
-    [AbpAuthorize]
+
     public async Task<CommonResponseDto> GetUserByMaDVHC(PagedUserResultRequestDto input)
     {
         CommonResponseDto commonResponseDto = new CommonResponseDto();
@@ -379,7 +387,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         return commonResponseDto;
     }
 
-    private async Task<List<string>> GetChildrenMa(string ma)
+    public async Task<List<string>> GetChildrenMa(string ma)
     {
         var lstMa = new List<string>();
         var dvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
