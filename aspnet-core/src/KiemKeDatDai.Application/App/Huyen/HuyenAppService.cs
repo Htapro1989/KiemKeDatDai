@@ -1240,12 +1240,15 @@ namespace KiemKeDatDai.RisApplication
                 IsCheck = false,
                 Message = ""
             };
+
             var lstFileName = await _fileRepos.GetAll().Where(x => x.MaDVHC == ma).Select(x => x.FileName).ToListAsync();
             var userXa = await _userRepos.FirstOrDefaultAsync(x => x.DonViHanhChinhCode == ma);
+
             //kiểm tra tên file có giống định dạng BDHT_TenXa.dgn
             if (userXa != null)
             {
                 string nameXa = "BDHT_" + (Utility.convertToUnSign3(userXa.Name)).Replace(" ", "") + ".dgn";
+
                 if (lstFileName.Count > 0)
                 {
                     foreach (var fileName in lstFileName)
@@ -1253,12 +1256,15 @@ namespace KiemKeDatDai.RisApplication
                         if (nameXa.ToLower() == fileName.ToLower())
                         {
                             checkFileDgnReponse.IsCheck = true;
+
                             return checkFileDgnReponse;
                         }
                     }
                 }
+
                 checkFileDgnReponse.Message = " chưa nộp file " + nameXa + " theo quy định.";
             }
+
             return checkFileDgnReponse;
         }
     }

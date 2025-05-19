@@ -96,10 +96,10 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
                     var data = await _bieu02aKKNLT_TinhRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
+                    
                     if (data != null)
                     {
                         data.STT = input.STT;
@@ -121,6 +121,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                         data.TinhId = input.TinhId;
                         data.sequence = input.sequence; 
                         data.Active = input.Active;
+
                         await _bieu02aKKNLT_TinhRepos.UpdateAsync(data);
                     }
                     else
@@ -133,6 +134,7 @@ namespace KiemKeDatDai.App.DMBieuMau
                 else
                 {
                     var bieu02a = input.MapTo<Bieu02aKKNLT_Tinh>();
+
                     await _bieu02aKKNLT_TinhRepos.InsertAsync(bieu02a);
                 }
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
@@ -153,9 +155,11 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 var bieu06 = await _bieu02aKKNLT_TinhRepos.FirstOrDefaultAsync(x => x.Id == id);
+
                 if (bieu06 != null)
                 {
                     await _bieu02aKKNLT_TinhRepos.DeleteAsync(bieu06);
+
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
@@ -181,6 +185,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             try
             {
                 commonResponseDto.ReturnValue = await _bieu02aKKNLT_TinhRepos.FirstOrDefaultAsync(x => x.TinhId == dvhcId && x.Year == year); ;
+                
                 commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }

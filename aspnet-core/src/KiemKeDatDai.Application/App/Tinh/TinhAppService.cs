@@ -203,6 +203,7 @@ namespace KiemKeDatDai.RisApplication
                 {
                     var currentUser = await GetCurrentUserAsync();
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+
                     if (objdata != null)
                     {
                         if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
@@ -211,43 +212,45 @@ namespace KiemKeDatDai.RisApplication
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
-                        else
+
+                        var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
+
+                        if (huyen == null)
                         {
-                            var huyen = await _dvhcRepos.FirstOrDefaultAsync(x=>x.Ma == ma);
-                            if (huyen != null)
-                            {
-                                //gọi hàm update biểu huyện
-                                commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, (int)HAM_DUYET.DUYET);
+                            //gọi hàm update biểu huyện
+                            commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, (int)HAM_DUYET.DUYET);
 
-                                #region cập nhật DVHC huyện sau khi duyệt huyện
-                                huyen.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
-                                huyen.NgayDuyet = DateTime.Now;
-                                await _dvhcRepos.UpdateAsync(huyen);
-                                #endregion
-                            }
-                            else
-                            {
-                                commonResponseDto.Message = "Huyện này không tồn tại";
-                                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                                return commonResponseDto;
-                            }
+                            #region cập nhật DVHC huyện sau khi duyệt huyện
+                            huyen.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
+                            huyen.NgayDuyet = DateTime.Now;
 
-                            #region cập nhật DVHC tỉnh sau khi duyệt huyện
-                            if (objdata.SoDVHCDaDuyet == null)
-                            {
-                                objdata.SoDVHCDaDuyet = 1;
-                            }
-                            else
-                            {
-                                objdata.SoDVHCDaDuyet++;
-                            }
-                            if (objdata.SoDVHCCon == null)
-                            {
-                                objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.MaTinh == currentUser.DonViHanhChinhCode);
-                            }
-                            await _dvhcRepos.UpdateAsync(objdata);
+                            await _dvhcRepos.UpdateAsync(huyen);
                             #endregion
                         }
+                        else
+                        {
+                            commonResponseDto.Message = "Huyện này không tồn tại";
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
+                        }
+
+                        #region cập nhật DVHC tỉnh sau khi duyệt huyện
+                        if (objdata.SoDVHCDaDuyet == null)
+                        {
+                            objdata.SoDVHCDaDuyet = 1;
+                        }
+                        else
+                        {
+                            objdata.SoDVHCDaDuyet++;
+                        }
+
+                        if (objdata.SoDVHCCon == null)
+                        {
+                            objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.MaTinh == currentUser.DonViHanhChinhCode);
+                        }
+
+                        await _dvhcRepos.UpdateAsync(objdata);
+                        #endregion
                     }
                     else
                     {
@@ -281,6 +284,7 @@ namespace KiemKeDatDai.RisApplication
                 {
                     var currentUser = await GetCurrentUserAsync();
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+
                     if (objdata != null)
                     {
                         if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
@@ -289,35 +293,36 @@ namespace KiemKeDatDai.RisApplication
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
-                        else
+
+                        var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
+
+                        if (huyen != null)
                         {
-                            var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
-                            if (huyen != null)
+                            //gọi hàm update biểu huyện
+                            if (huyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
                             {
-                                //gọi hàm update biểu huyện
-                                if (huyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
-                                {
-                                    commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, (int)HAM_DUYET.HUY);
-                                }
-
-                                #region cập nhật DVHC xã sau khi duyệt xã
-                                huyen.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHUA_GUI;
-                                huyen.NgayDuyet = DateTime.Now;
-                                await _dvhcRepos.UpdateAsync(huyen);
-                                #endregion
-                            }
-                            else
-                            {
-                                commonResponseDto.Message = "Huyện này không tồn tại";
-                                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                                return commonResponseDto;
+                                commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, (int)HAM_DUYET.HUY);
                             }
 
-                            #region cập nhật DVHC tỉnh sau khi duyệt huyện
-                            objdata.SoDVHCDaDuyet--;
-                            await _dvhcRepos.UpdateAsync(objdata);
+                            #region cập nhật DVHC xã sau khi duyệt xã
+                            huyen.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHUA_GUI;
+                            huyen.NgayDuyet = DateTime.Now;
+
+                            await _dvhcRepos.UpdateAsync(huyen);
                             #endregion
                         }
+                        else
+                        {
+                            commonResponseDto.Message = "Huyện này không tồn tại";
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
+                        }
+
+                        #region cập nhật DVHC tỉnh sau khi duyệt huyện
+                        objdata.SoDVHCDaDuyet--;
+
+                        await _dvhcRepos.UpdateAsync(objdata);
+                        #endregion
                     }
                     else
                     {
@@ -352,6 +357,7 @@ namespace KiemKeDatDai.RisApplication
 
             #region biểu 01TKKK
             var data_bieu01TKKK = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+
             if (data_bieu01TKKK != null)
             {
                 await CreateOrUpdateBieu01TKKK_Tinh(data_bieu01TKKK, tinh.Id, tinh.MaTinh, year, hamduyet);
@@ -366,6 +372,7 @@ namespace KiemKeDatDai.RisApplication
 
             #region biểu 02TKKK
             var data_bieu02TKKK = await _bieu02TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+            
             if (data_bieu02TKKK != null)
             {
                 await CreateOrUpdateBieu02TKKK_Tinh(data_bieu02TKKK, tinh.Id, tinh.MaTinh, year, hamduyet);
@@ -380,6 +387,7 @@ namespace KiemKeDatDai.RisApplication
 
             #region biểu 03TKKK
             var data_bieu03TKKK = await _bieu03TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+            
             if (data_bieu03TKKK != null)
             {
                 await CreateOrUpdateBieu03TKKK_Tinh(data_bieu03TKKK, tinh.Id, tinh.MaTinh, year, hamduyet);
@@ -394,6 +402,7 @@ namespace KiemKeDatDai.RisApplication
 
             #region biểu 04TKKK
             var data_bieu04TKKK = await _bieu04TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+            
             if (data_bieu04TKKK != null)
             {
                 await CreateOrUpdateBieu04TKKK_Tinh(data_bieu04TKKK, tinh.Id, tinh.MaTinh, year, hamduyet);
@@ -408,6 +417,7 @@ namespace KiemKeDatDai.RisApplication
 
             #region biểu 05TKKK
             var data_bieu05TKKK = await _bieu05TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+            
             if (data_bieu05TKKK != null)
             {
                 await CreateOrUpdateBieu05TKKK_Tinh(data_bieu05TKKK, tinh.Id, tinh.MaTinh, year, hamduyet);
@@ -429,6 +439,7 @@ namespace KiemKeDatDai.RisApplication
         private async Task CreateOrUpdateBieu01TKKK_Tinh(List<Bieu01TKKK_Huyen> huyen, long tinhId, string maTinh, long year, int hamduyet)
         {
             var data_tinh = await _bieu01TKKK_TinhRepos.GetAllListAsync(x => x.MaTinh == maTinh && x.Year == year);
+
             if (data_tinh.Count == 0)
             {
                 foreach (var item in huyen)
@@ -481,6 +492,7 @@ namespace KiemKeDatDai.RisApplication
                     sequence = huyen.sequence,
                     Active = true,
                 };
+
                 await _bieu01TKKK_TinhRepos.InsertAsync(objtinh);
             }
             catch (Exception ex)
@@ -494,6 +506,7 @@ namespace KiemKeDatDai.RisApplication
             try
             {
                 var objtinh = await _bieu01TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year && x.Ma == huyen.Ma);
+
                 if (objtinh.Id > 0)
                 {
                     //update duyệt huyện
@@ -546,6 +559,7 @@ namespace KiemKeDatDai.RisApplication
                         objtinh.ToChucKinhTe_KTQ -= huyen.ToChucKinhTe_KTQ;
                         objtinh.CongDongDanCu_CDQ -= huyen.CongDongDanCu_CDQ;
                     }
+
                     await _bieu01TKKK_TinhRepos.UpdateAsync(objtinh);
                 }
                 else
@@ -880,45 +894,13 @@ namespace KiemKeDatDai.RisApplication
             {
                 var objtinh = await _bieu04TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Year == year && x.Ma == huyen.Ma);
                 var objtinhts = await _bieu04TKKK_TinhRepos.FirstOrDefaultAsync(x => x.MaTinh == maTinh && x.Ma == "TS" && x.Year == year);
+                
                 if (objtinh.Id > 0)
                 {
                     //update duyệt huyện
                     if (hamduyet == (int)HAM_DUYET.DUYET)
                     {
-                        //objtinh.TongSo_DT += huyen.TongSo_DT;
-                        //objtinh.TongSo_CC += huyen.TongSo_CC;
-                        //objtinh.CaNhanTrongNuoc_CNV_DT += huyen.CaNhanTrongNuoc_CNV_DT;
-                        //objtinh.CaNhanTrongNuoc_CNV_CC += huyen.CaNhanTrongNuoc_CNV_CC;
-                        //objtinh.NguoiVietNamONuocNgoai_CNN_DT += huyen.NguoiVietNamONuocNgoai_CNN_DT;
-                        //objtinh.NguoiVietNamONuocNgoai_CNN_CC += huyen.NguoiVietNamONuocNgoai_CNN_CC;
-                        //objtinh.CoQuanNhaNuoc_TCN_DT += huyen.CoQuanNhaNuoc_TCN_DT;
-                        //objtinh.CoQuanNhaNuoc_TCN_CC += huyen.CoQuanNhaNuoc_TCN_CC;
-                        //objtinh.DonViSuNghiep_TSN_DT += huyen.DonViSuNghiep_TSN_DT;
-                        //objtinh.DonViSuNghiep_TSN_CC += huyen.DonViSuNghiep_TSN_CC;
-                        //objtinh.ToChucXaHoi_TXH_DT += huyen.ToChucXaHoi_TXH_DT;
-                        //objtinh.ToChucXaHoi_TXH_CC += huyen.ToChucXaHoi_TXH_CC;
-                        //objtinh.ToChucKinhTe_TKT_DT += huyen.ToChucKinhTe_TKT_DT;
-                        //objtinh.ToChucKinhTe_TKT_CC += huyen.ToChucKinhTe_TKT_CC;
-                        //objtinh.ToChucKhac_TKH_DT += huyen.ToChucKhac_TKH_DT;
-                        //objtinh.ToChucKhac_TKH_CC += huyen.ToChucKhac_TKH_CC;
-                        //objtinh.ToChucTonGiao_TTG_DT += huyen.ToChucTonGiao_TTG_DT;
-                        //objtinh.ToChucTonGiao_TTG_CC += huyen.ToChucTonGiao_TTG_CC;
-                        //objtinh.CongDongDanCu_CDS_DT += huyen.CongDongDanCu_CDS_DT;
-                        //objtinh.CongDongDanCu_CDS_CC += huyen.CongDongDanCu_CDS_CC;
-                        //objtinh.ToChucNuocNgoai_TNG_DT += huyen.ToChucNuocNgoai_TNG_DT;
-                        //objtinh.ToChucNuocNgoai_TNG_CC += huyen.ToChucNuocNgoai_TNG_CC;
-                        //objtinh.NguoiGocVietNamONuocNgoai_NGV_DT += huyen.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        //objtinh.NguoiGocVietNamONuocNgoai_NGV_CC += huyen.NguoiGocVietNamONuocNgoai_NGV_CC;
-                        //objtinh.ToChucKinhTeVonNuocNgoai_TVN_DT += huyen.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        //objtinh.ToChucKinhTeVonNuocNgoai_TVN_CC += huyen.ToChucKinhTeVonNuocNgoai_TVN_CC;
-                        //objtinh.CoQuanNhaNuoc_TCQ_DT += huyen.CoQuanNhaNuoc_TCQ_DT;
-                        //objtinh.CoQuanNhaNuoc_TCQ_CC += huyen.CoQuanNhaNuoc_TCQ_CC;
-                        //objtinh.DonViSuNghiep_TSQ_DT += huyen.DonViSuNghiep_TSQ_DT;
-                        //objtinh.DonViSuNghiep_TSQ_CC += huyen.DonViSuNghiep_TSQ_CC;
-                        //objtinh.ToChucKinhTe_KTQ_DT += huyen.ToChucKinhTe_KTQ_DT;
-                        //objtinh.ToChucKinhTe_KTQ_CC += huyen.ToChucKinhTe_KTQ_CC;
-                        //objtinh.CongDongDanCu_CDQ_DT += huyen.CongDongDanCu_CDQ_DT;
-                        //objtinh.CongDongDanCu_CDQ_CC += huyen.CongDongDanCu_CDQ_CC;
+
                         objtinh.TongSo_DT += huyen.TongSo_DT;
                         objtinh.TongSo_CC = Math.Round(objtinh.TongSo_DT * 100 / (objtinhts.TongSo_DT == 0 ? 1 : objtinhts.TongSo_DT), 4);
                         objtinh.CaNhanTrongNuoc_CNV_DT += huyen.CaNhanTrongNuoc_CNV_DT;
@@ -961,40 +943,6 @@ namespace KiemKeDatDai.RisApplication
                     //update huỷ duyệt huyện
                     else
                     {
-                        //objtinh.TongSo_DT -= huyen.TongSo_DT;
-                        //objtinh.TongSo_CC -= huyen.TongSo_CC;
-                        //objtinh.CaNhanTrongNuoc_CNV_DT -= huyen.CaNhanTrongNuoc_CNV_DT;
-                        //objtinh.CaNhanTrongNuoc_CNV_CC -= huyen.CaNhanTrongNuoc_CNV_CC;
-                        //objtinh.NguoiVietNamONuocNgoai_CNN_DT -= huyen.NguoiVietNamONuocNgoai_CNN_DT;
-                        //objtinh.NguoiVietNamONuocNgoai_CNN_CC -= huyen.NguoiVietNamONuocNgoai_CNN_CC;
-                        //objtinh.CoQuanNhaNuoc_TCN_DT -= huyen.CoQuanNhaNuoc_TCN_DT;
-                        //objtinh.CoQuanNhaNuoc_TCN_CC -= huyen.CoQuanNhaNuoc_TCN_CC;
-                        //objtinh.DonViSuNghiep_TSN_DT -= huyen.DonViSuNghiep_TSN_DT;
-                        //objtinh.DonViSuNghiep_TSN_CC -= huyen.DonViSuNghiep_TSN_CC;
-                        //objtinh.ToChucXaHoi_TXH_DT -= huyen.ToChucXaHoi_TXH_DT;
-                        //objtinh.ToChucXaHoi_TXH_CC -= huyen.ToChucXaHoi_TXH_CC;
-                        //objtinh.ToChucKinhTe_TKT_DT -= huyen.ToChucKinhTe_TKT_DT;
-                        //objtinh.ToChucKinhTe_TKT_CC -= huyen.ToChucKinhTe_TKT_CC;
-                        //objtinh.ToChucKhac_TKH_DT -= huyen.ToChucKhac_TKH_DT;
-                        //objtinh.ToChucKhac_TKH_CC -= huyen.ToChucKhac_TKH_CC;
-                        //objtinh.ToChucTonGiao_TTG_DT -= huyen.ToChucTonGiao_TTG_DT;
-                        //objtinh.ToChucTonGiao_TTG_CC -= huyen.ToChucTonGiao_TTG_CC;
-                        //objtinh.CongDongDanCu_CDS_DT -= huyen.CongDongDanCu_CDS_DT;
-                        //objtinh.CongDongDanCu_CDS_CC -= huyen.CongDongDanCu_CDS_CC;
-                        //objtinh.ToChucNuocNgoai_TNG_DT -= huyen.ToChucNuocNgoai_TNG_DT;
-                        //objtinh.ToChucNuocNgoai_TNG_CC -= huyen.ToChucNuocNgoai_TNG_CC;
-                        //objtinh.NguoiGocVietNamONuocNgoai_NGV_DT -= huyen.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        //objtinh.NguoiGocVietNamONuocNgoai_NGV_CC -= huyen.NguoiGocVietNamONuocNgoai_NGV_CC;
-                        //objtinh.ToChucKinhTeVonNuocNgoai_TVN_DT -= huyen.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        //objtinh.ToChucKinhTeVonNuocNgoai_TVN_CC -= huyen.ToChucKinhTeVonNuocNgoai_TVN_CC;
-                        //objtinh.CoQuanNhaNuoc_TCQ_DT -= huyen.CoQuanNhaNuoc_TCQ_DT;
-                        //objtinh.CoQuanNhaNuoc_TCQ_CC -= huyen.CoQuanNhaNuoc_TCQ_CC;
-                        //objtinh.DonViSuNghiep_TSQ_DT -= huyen.DonViSuNghiep_TSQ_DT;
-                        //objtinh.DonViSuNghiep_TSQ_CC -= huyen.DonViSuNghiep_TSQ_CC;
-                        //objtinh.ToChucKinhTe_KTQ_DT -= huyen.ToChucKinhTe_KTQ_DT;
-                        //objtinh.ToChucKinhTe_KTQ_CC -= huyen.ToChucKinhTe_KTQ_CC;
-                        //objtinh.CongDongDanCu_CDQ_DT -= huyen.CongDongDanCu_CDQ_DT;
-                        //objtinh.CongDongDanCu_CDQ_CC -= huyen.CongDongDanCu_CDQ_CC;
                         objtinh.TongSo_DT -= huyen.TongSo_DT;
                         objtinh.TongSo_CC = Math.Round(objtinh.TongSo_DT * 100 / (objtinhts.TongSo_DT == 0 ? 1 : objtinhts.TongSo_DT), 4);
                         objtinh.CaNhanTrongNuoc_CNV_DT -= huyen.CaNhanTrongNuoc_CNV_DT;
@@ -1030,6 +978,7 @@ namespace KiemKeDatDai.RisApplication
                         objtinh.CongDongDanCu_CDQ_DT -= huyen.CongDongDanCu_CDQ_DT;
                         objtinh.CongDongDanCu_CDQ_CC = Math.Round(objtinh.CongDongDanCu_CDQ_DT * 100 / (objtinhts.TongSo_DT == 0 ? 1 : objtinhts.TongSo_DT), 4);
                     }
+
                     await _bieu04TKKK_TinhRepos.UpdateAsync(objtinh);
                 }
                 else

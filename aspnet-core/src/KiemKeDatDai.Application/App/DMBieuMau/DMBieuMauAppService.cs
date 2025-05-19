@@ -362,6 +362,7 @@ namespace KiemKeDatDai.RisApplication
             {
                 PagedResultDto<DMBieuMauOuputDto> pagedResultDto = new PagedResultDto<DMBieuMauOuputDto>();
                 var lstBM = await _dmbmRepos.GetAllListAsync();
+
                 var query = (from bm in _dmbmRepos.GetAll()
                              select new DMBieuMauOuputDto
                              {
@@ -375,17 +376,19 @@ namespace KiemKeDatDai.RisApplication
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(input.NoiDung), x => x.NoiDung.ToLower().Contains(input.NoiDung.ToLower()))
                              .WhereIf(input.Year != null, x => x.Year.Equals(input.Year));
+               
                 var totalCount = await query.CountAsync();
                 var lstData = await query.OrderBy(x => x.CreationTime)
                                     .Skip(input.SkipCount)
                                     .Take(input.MaxResultCount)
                                     .ToListAsync();
+
                 commonResponseDto.ReturnValue = new PagedResultDto<DMBieuMauOuputDto>()
                 {
                     Items = lstData,
                     TotalCount = totalCount
                 };
-                //commonResponseDto.ReturnValue = lstData;
+
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -405,24 +408,7 @@ namespace KiemKeDatDai.RisApplication
             {
                 PagedResultDto<DMBieuMauOuputDto> pagedResultDto = new PagedResultDto<DMBieuMauOuputDto>();
                 var bieumauObj = await _dmbmRepos.FirstOrDefaultAsync(id);
-                //var query = (from bm in _dmbmRepos.GetAll()
-                //             where bm.Id == id
-                //             select new DMBieuMauOuputDto
-                //             {
-                //                 Id = bm.Id,
-                //                 KyHieu = bm.KyHieu,
-                //                 NoiDung = bm.NoiDung,
-                //                 CapDVHC = bm.CapDVHC,
-                //                 CreationTime = bm.CreationTime,
-                //                 Year = bm.Year
-                //                 //Active = bm.Active
-                //             })
-                //             .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.NoiDung.ToLower().Contains(input.Filter.ToLower()));
-                //var totalCount = await query.CountAsync();
-                //var lstData = await query.OrderBy(x => x.CreationTime)
-                //                    .Skip(input.SkipCount)
-                //                    .Take(input.MaxResultCount)
-                //                    .ToListAsync();
+
                 if (bieumauObj != null)
                 {
                     commonResponseDto.ReturnValue = bieumauObj;
@@ -454,6 +440,7 @@ namespace KiemKeDatDai.RisApplication
             {
                 var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(dvhcId);
                 var dvhcLevel = dvhcObj != null ? dvhcObj.CapDVHCId : 0;
+
                 var query = (from bm in _dmbmRepos.GetAll()
                              join dmdvhcbm in _dmdvhcbmRepos.GetAll() on bm.Id equals dmdvhcbm.BieuMauId
                              where dmdvhcbm.CapDVHCId == dvhcLevel
@@ -464,6 +451,7 @@ namespace KiemKeDatDai.RisApplication
                                  NoiDung = bm.NoiDung,
                                  CapDVHC = bm.CapDVHC,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -534,6 +522,7 @@ namespace KiemKeDatDai.RisApplication
         private bool CheckKyHieuExist(string kyhieu, long year)
         {
             var objBM = _dmbmRepos.GetAll().FirstOrDefault(x => x.KyHieu == kyhieu && x.Year != year);
+
             if (objBM != null)
             {
                 return true;
@@ -547,11 +536,12 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 var objBM = await _dmbmRepos.FirstOrDefaultAsync(id);
+
                 if (objBM != null)
                 {
                     await _dmbmRepos.DeleteAsync(objBM);
+
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
@@ -581,23 +571,31 @@ namespace KiemKeDatDai.RisApplication
                 string _tenHuyen = "";
                 string _tenTinh = "";
                 var allDvhc = await _dvhcRepos.GetAll().ToListAsync();
+
                 switch (input.CapDVHC)
                 {
                     case (int)CAP_DVHC.TINH:
                         _tenTinh = allDvhc.Single(x => x.Ma == input.MaDVHC && x.Year == input.Year).Name;
                         break;
+
                     case (int)CAP_DVHC.HUYEN:
                         var _huyen = allDvhc.FirstOrDefault(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+
                         _tenHuyen = _huyen != null ? _huyen.Name : "";
                         _tenTinh = _huyen != null ? allDvhc.Single(x => x.Ma == _huyen.MaTinh && x.Year == input.Year).Name : "";
                         break;
+
                     case (int)CAP_DVHC.XA:
                         var _xa = allDvhc.FirstOrDefault(x => x.Ma == input.MaDVHC && x.Year == input.Year);
+
                         _tenxa = _xa != null ? _xa.Name : "";
+
                         var huyen = allDvhc.FirstOrDefault(x => x.Ma == _xa.MaHuyen && x.Year == input.Year);
+
                         _tenHuyen = huyen != null ? huyen.Name : "";
                         _tenTinh = huyen != null ? allDvhc.Single(x => x.Ma == huyen.MaTinh && x.Year == input.Year).Name : "";
                         break;
+
                     default:
                         break;
                 }
@@ -610,6 +608,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.TRUNG_UONG:
                                     {
                                         var data = await _bieu01TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -622,6 +621,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.VUNG:
                                     {
                                         var data = await _bieu01TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -634,6 +634,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.TINH:
                                     {
                                         var data = await _bieu01TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -646,6 +647,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.HUYEN:
                                     {
                                         var data = await _bieu01TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -658,6 +660,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.XA:
                                     {
                                         var data = await _bieu01TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -679,6 +682,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.TRUNG_UONG:
                                     {
                                         var data = await _bieu02TKKKRepos.GetAll().Where(x => x.Year == input.Year).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -691,6 +695,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.VUNG:
                                     {
                                         var data = await _bieu02TKKK_VungRepos.GetAll().Where(x => x.Year == input.Year && x.MaVung == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -703,6 +708,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.TINH:
                                     {
                                         var data = await _bieu02TKKK_TinhRepos.GetAll().Where(x => x.Year == input.Year && x.MaTinh == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -715,6 +721,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.HUYEN:
                                     {
                                         var data = await _bieu02TKKK_HuyenRepos.GetAll().Where(x => x.Year == input.Year && x.MaHuyen == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -727,6 +734,7 @@ namespace KiemKeDatDai.RisApplication
                                 case (int)CAP_DVHC.XA:
                                     {
                                         var data = await _bieu02TKKK_XaRepos.GetAll().Where(x => x.Year == input.Year && x.MaXa == input.MaDVHC).OrderBy(x => x.sequence).ToListAsync();
+                                        
                                         commonResponseDto.ReturnValue = new
                                         {
                                             tenXa = _tenxa,
@@ -1364,9 +1372,7 @@ namespace KiemKeDatDai.RisApplication
                         {
                             case (int)CAP_DVHC.XA:
                                 {
-                                    //PagedResultDto<BieuPhuLucIIIDto> pagedResult = new PagedResultDto<BieuPhuLucIIIDto>();
                                     var data = new List<BieuPhuLucIIIDto>();
-                                    //var dvhcPL3 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                                     var queryPL3 = (from item in _dcRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC && item.Year == input.Year
                                                     orderby item.SoThuTuKhoanhDat
@@ -1384,9 +1390,7 @@ namespace KiemKeDatDai.RisApplication
                                                         MaXa = item.MaXa
                                                     });
                                     data = await queryPL3.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
-                                    //pagedResult.TotalCount = lstPL3.Count();
-                                    //pagedResult.Items = lstPL3;
-                                    //result.BieuPhuLucIIIs = await query.ToListAsync();
+                                    
                                     commonResponseDto.ReturnValue = new
                                     {
                                         
@@ -1396,14 +1400,6 @@ namespace KiemKeDatDai.RisApplication
                                         data,
                                         totalCount = data.Count()
                                     };
-                                    //var dataPLIII = await _bieuPhuLucIIIRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
-                                    //commonResponseDto.ReturnValue = new
-                                    //{
-                                    //    tenXa = _tenxa,
-                                    //    tenHuyen = _tenHuyen,
-                                    //    tenTinh = _tenTinh,
-                                    //    dataPLIII
-                                    //};
                                     break;
                                 }
                             default:
@@ -1415,9 +1411,7 @@ namespace KiemKeDatDai.RisApplication
                         {
                             case (int)CAP_DVHC.XA:
                                 {
-                                    //PagedResultDto<BieuPhuLucIVDto> pagedResult = new PagedResultDto<BieuPhuLucIVDto>();
                                     var data = new List<BieuPhuLucIVDto>();
-                                    //var dvhcPL4 = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.MaDVHC && x.Year == input.Year);
                                     var queryPL4 = (from item in _dbdRepos.GetAll()
                                                     where item.MaXa == input.MaDVHC
                                                     select new BieuPhuLucIVDto()
@@ -1435,9 +1429,9 @@ namespace KiemKeDatDai.RisApplication
                                                         DTSauBienDong = item.DTSauBienDong,
                                                         NDTD = item.NDThayDoi
                                                     });
+
                                     data = await queryPL4.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
-                                    //pagedResult.TotalCount = lstPL4.Count();
-                                    //.Items = lstPL4;
+
                                     commonResponseDto.ReturnValue = new
                                     {
                                         tenXa = _tenxa,
@@ -1446,15 +1440,6 @@ namespace KiemKeDatDai.RisApplication
                                         data,
                                         totalCount = data.Count()
                                     };
-                                    //var dataPLIV = await _bieuPhuLucIVRepos.GetAllListAsync(x => x.Year == input.Year && x.MaXa == input.MaDVHC);
-
-                                    //commonResponseDto.ReturnValue = new
-                                    //{
-                                    //    tenXa = _tenxa,
-                                    //    tenHuyen = _tenHuyen,
-                                    //    tenTinh = _tenTinh,
-                                    //    dataPLIV
-                                    //};
                                     break;
                                 }
                             default:
@@ -1488,6 +1473,7 @@ namespace KiemKeDatDai.RisApplication
                 var excelMemoryStream = new MemoryStream();
                 string template = "";
                 var allDvhc = await _dvhcRepos.GetAll().ToListAsync();
+
                 switch (input.CapDVHC)
                 {
                     case (int)CAP_DVHC.TINH:
@@ -2484,86 +2470,9 @@ namespace KiemKeDatDai.RisApplication
                 Logger.Error(ex.Message);
             }
             return null;
-            //var _GetFilePath = filePath;
-            //var provider = new FileExtensionContentTypeProvider();
-            //if (!provider.TryGetContentType(filePath, out var contentType))
-            //{
-            //    contentType = "application/octet-stream";
-            //}
-            //return new FileStreamResult(new FileStream(filePath, FileMode.Open), contentType)
-            //{
-            //    FileDownloadName = Path.GetFileName(filePath)
-            //};
 
         }
 
-        //private MemoryStream DownloadBieuMauByCap(object data, int? capDVHC, long? year, string _ma, string _tenTinh, string _tenHuyen, string _tenXa, string maDVHC, string template)
-        //{
-        //    try
-        //    {
-
-        //        var excelMemoryStream = new MemoryStream();
-        //        Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template))));
-        //        WorkbookDesigner wd = new WorkbookDesigner(wb);
-
-        //        wd.SetDataSource("data", data);
-        //        if (template == "Template_Bieu03TKKK.xlsx")
-        //        {
-        //            var lstDVHC = _dvhcRepos.GetAllListAsync(x => x.Parent_Code == maDVHC).Result;
-        //            if (lstDVHC != null && lstDVHC.Count > 0)
-        //            {
-        //                int start = 4 + lstDVHC.Count;
-        //                var dsHeader = new Dictionary<string, object>();
-        //                dsHeader["tinh"] = _tenTinh;
-        //                dsHeader["huyen"] = _tenHuyen;
-        //                dsHeader["year"] = "(Đến ngày 31/12/" + year.ToString() + ")";
-
-        //                // Convert sang Dictionary để thêm các giá trị động
-        //                //var dictHeader = (IDictionary<string, object>)dsHeader;
-        //                Worksheet worksheet = wb.Worksheets[0];
-        //                for (int i = 0; i < lstDVHC.Count; i++)
-        //                {
-        //                    string dvhc = "dvhc" + i.ToString();
-        //                    dsHeader[dvhc] = lstDVHC[i].Name;
-        //                }
-        //                wd.SetDataSource("Header", dsHeader);
-        //                while(start < 34) 
-        //                {
-        //                    worksheet.Cells.DeleteColumn(start);
-        //                    start++;
-        //                }
-        //            }
-
-        //            wd.SetDataSource("Header", new[] { new
-        //                                    {
-        //                                        tinh = _tenTinh,
-        //                                        huyen = _tenHuyen,
-        //                                        xa = _tenXa,
-        //                                        year = "(Đến ngày 31/12/" + year.ToString() + ")"
-        //                                    }});
-
-        //        }
-        //        else
-        //            wd.SetDataSource("Header", new[] { new
-        //                                    {
-        //                                        tinh = _tenTinh,
-        //                                        huyen = _tenHuyen,
-        //                                        xa = _tenXa,
-        //                                        year = "(Đến ngày 31/12/" + year.ToString() + ")"
-        //                                    }});
-        //        wd.Process();
-        //        wb.Save(excelMemoryStream, SaveFormat.Xlsx);
-        //        byte[] bytesInStream = excelMemoryStream.ToArray();
-        //        excelMemoryStream.Position = 0;
-        //        return excelMemoryStream;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.Error(ex.Message);
-        //        return null;
-        //    }
-        //}        
-        
         [AbpAuthorize(PermissionNames.Pages_Report_NhapBieu)]
         public async Task<CommonResponseDto> UploadBieuExcel(IFormFile fileUplaod, string mabieu, string matinh, long year)
         {
@@ -2575,16 +2484,18 @@ namespace KiemKeDatDai.RisApplication
 
                 var dt = new System.Data.DataTable();
                 var fi = new FileInfo(urlFile);
+
                 // Check if the file exists
                 if (!fi.Exists)
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
                     commonResponseDto.Message = "File " + urlFile + " không tồn tại";
                 }
+
                 ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
                 var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
-
                 var worksheets = excel.Workbook.Worksheets;
+
                 if (worksheets == null)
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
@@ -2595,6 +2506,7 @@ namespace KiemKeDatDai.RisApplication
                     foreach (var sheet in worksheets)
                     {
                         var table = sheet.Tables.FirstOrDefault();
+
                         if (table != null)
                         {
                             switch (mabieu)
@@ -2605,8 +2517,10 @@ namespace KiemKeDatDai.RisApplication
                                         {
                                             await _bieu06TKKKQPAN_TinhRepos.DeleteAsync(x => x.MaTinh == matinh && x.Year == year);
                                         }
+
                                         var tableData = table.ToDataTable();
                                         var jArray = JArray.FromObject(tableData);
+
                                         foreach (var item in jArray)
                                         {
                                             if (item != null)
@@ -2627,19 +2541,23 @@ namespace KiemKeDatDai.RisApplication
                                                     Year = item.Value<long>("Year"),
                                                     Active = item.Value<bool>("Active")
                                                 };
+
                                                 await _bieu06TKKKQPAN_TinhRepos.InsertAsync(data);
                                             }
                                         }
                                         break;
                                     }
+
                                 case "02a/KKNLT":
                                     {
                                         if (sheet.Index == 0)
                                         {
                                             await _bieu02aKKNLT_TinhRepos.DeleteAsync(x => x.MaTinh == matinh && x.Year == year);
                                         }
+
                                         var tableData = table.ToDataTable();
                                         var jArray = JArray.FromObject(tableData);
+
                                         foreach (var item in jArray)
                                         {
                                             if (item != null)
@@ -2739,10 +2657,12 @@ namespace KiemKeDatDai.RisApplication
             try
             {
                 var excelMemoryStream = new MemoryStream();
+
                 Workbook wb = new Workbook(new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template))));
                 WorkbookDesigner wd = new WorkbookDesigner(wb);
 
                 wd.SetDataSource("data", data);
+
                 if (template == "Template_PL3.xlsx" || template == "Template_PL4.xlsx")
                     wd.SetDataSource("Header", new[] { new
                                             {
@@ -2751,11 +2671,13 @@ namespace KiemKeDatDai.RisApplication
                                                 xa = "Tỉnh: " + _tenTinh + " Huyện: " + _tenTinh + " xã: " + _tenXa,
                                                 year = "(Đến ngày 31/12/" + year.ToString() + ")"
                                             }});
+
                 else if (template == "Template_Bieu05TKKK.xlsx")
                 {
                     if (year != null)
                     {
                         var namKyTruoc = year % 10 == 4 || year % 10 == 9 ? year - 4 : year - 1;
+
                         wd.SetDataSource("Header", new[] { new
                                             {
                                                 tinh = _tenTinh,
@@ -2770,22 +2692,25 @@ namespace KiemKeDatDai.RisApplication
                 else if (template == "Template_Bieu03TKKK.xlsx")
                 {
                     var lstDVHC = _dvhcRepos.GetAllListAsync(x => x.Parent_Code == _ma).Result;
+
                     if (lstDVHC != null && lstDVHC.Count > 0)
                     {
                         Worksheet worksheet = wb.Worksheets[0];
                         int start = 34 - lstDVHC.Count;
+
                         while (start > 3)
                         {
                             worksheet.Cells.DeleteColumn(start);
                             start = start - 1;
                         }
+
                         var dsHeader = new Dictionary<string, object>();
+
                         dsHeader["tinh"] = _tenTinh;
                         dsHeader["huyen"] = _tenHuyen;
                         dsHeader["year"] = "(Đến ngày 31/12/" + year.ToString() + ")";
 
                         // Convert sang Dictionary để thêm các giá trị động
-                        //var dictHeader = (IDictionary<string, object>)dsHeader;
                         for (int i = 0; i < lstDVHC.Count; i++)
                         {
                             string dvhc = "dvhc" + (i + 1).ToString();
@@ -2793,6 +2718,7 @@ namespace KiemKeDatDai.RisApplication
                             dsHeader[dvhc] = lstDVHC[i].Name;
                             dsHeader[colnum] = -(5 + lstDVHC.Count - i);
                         }
+
                         wd.SetDataSource("Header", new[] { dsHeader });
 
                     }
@@ -2809,6 +2735,7 @@ namespace KiemKeDatDai.RisApplication
                 wb.Save(excelMemoryStream, SaveFormat.Xlsx);
                 byte[] bytesInStream = excelMemoryStream.ToArray();
                 excelMemoryStream.Position = 0;
+
                 return excelMemoryStream;
             }
             catch (Exception ex)
