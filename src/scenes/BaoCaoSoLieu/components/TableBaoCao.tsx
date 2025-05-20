@@ -9,6 +9,7 @@ import { CAP_DVHC_ENUM } from '../../../models/enum';
 import './style.less'
 import { isGranted } from '../../../lib/abpUtility';
 import { handleCommontResponse } from '../../../services/common/handleResponse';
+import FullPageLoading from '../../../components/Loading/FullpageLoading';
 
 const confirm = Modal.confirm;
 
@@ -23,6 +24,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
     const [isActioning, setIsActioning] = useState<any>()
     const [expandedKeys, setExpandedKeys] = useState<any[]>([])
     const [isFetchingData, setIsFetchingData] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const renderTrangThaiBaoCao: any = (text: string, item: any) => {
@@ -62,7 +64,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
 
         if (item.capDVHC == CAP_DVHC_ENUM.XA && isGranted('Pages.Administration')) {
             return <Button
-            style={{ marginTop: 4 }}
+                style={{ marginTop: 4 }}
                 type="primary"
                 size='small'
                 loading={isActioning?.maDv == item.maDVHC && isActioning?.loading}
@@ -82,12 +84,15 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
     }
 
     const onXoaDuLieu = async (item: any) => {
+        setIsLoading(true)
         const response = await baoCaoService.deleteAllDataXa({ year: props.year, ma: item.maDVHC })
         handleCommontResponse(response)
+        setIsLoading(false)
 
     }
 
     const onDuyetBaoCaoDonViBenDuoi = async (maDVHCNopBaoCao: string) => {
+        setIsLoading(true)
         setIsActioning({
             maDv: maDVHCNopBaoCao,
             loading: true,
@@ -108,8 +113,11 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         setIsActioning({
             loading: false
         })
+        setIsLoading(false)
+
     }
     const onHuyDuyetBaoCaoDonViBenDuoi = async (maDVHCNopBaoCao: string) => {
+        setIsLoading(true)
         setIsActioning({
             maDv: maDVHCNopBaoCao,
             loading: true
@@ -129,9 +137,11 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         setIsActioning({
             loading: false
         })
+        setIsLoading(false)
     }
 
     const onNopBaoCao = async () => {
+        setIsLoading(true)
         setIsActioning({
             maDv: props.maDVHC,
             loading: true
@@ -151,6 +161,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
         setIsActioning({
             loading: false
         })
+        setIsLoading(false)
     }
 
     const columns: ColumnsType<any> = [
@@ -267,6 +278,7 @@ export default function TableBaoCao(props: ITableBaoCaoProps) {
                 dataSource={listDvhc}
                 pagination={false}
             />
+            <FullPageLoading isLoading={isLoading} />
         </div>
     )
 }
