@@ -320,9 +320,9 @@ namespace KiemKeDatDai.RisApplication
 
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll()
+                var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == id);
+                var query = (from dvhc in _dvhcRepos.GetAll().Where(x => x.Parent_Code == currentDvhc.Ma && x.Year == currentDvhc.Year)
                              join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
-                             where dvhc.Parent_id == id
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
@@ -342,23 +342,31 @@ namespace KiemKeDatDai.RisApplication
                                  Active = dvhc.Active,
                                  Year = dvhc.Year,
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
+                                 IsExitsUser = true
                              });
 
                 var lstDvhc = await query.ToListAsync();
 
-                var maDvhc = _dvhcRepos.Single(x => x.Id == id).Ma;
-
-                var lstMa = await _iUserAppService.GetChildrenMa(maDvhc);
-                var lstUserCode = await _userRepos.GetAll()
-                    .Where(u => lstMa.Contains(u.DonViHanhChinhCode))
-                    .Select(u => u.DonViHanhChinhCode)
-                    .Distinct()
-                    .ToListAsync();
+                var allUserMaDvhc = await _userRepos.GetAll()
+                                                             .Select(u => u.DonViHanhChinhCode)
+                                                             .Distinct()
+                                                             .ToListAsync();
 
                 foreach (var item in lstDvhc)
                 {
-                    item.IsExitsUser = lstUserCode.Contains(item.Ma);
+
+                    var lstMa = await _iUserAppService.GetChildrenMa(item.Ma);
+                    lstMa.Add(item.Ma);
+
+                    foreach (var ma in lstMa)
+                    {
+                        if (!allUserMaDvhc.Contains(ma))
+                        {
+                            item.IsExitsUser = false;
+                            break;
+                        }
+                    }
                 }
 
                 commonResponseDto.ReturnValue = lstDvhc;
