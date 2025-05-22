@@ -10,10 +10,10 @@ jobs:
     runs-on: qa-runner
 
     steps:
-    - name: Stop IIS Website product
+      - name: Stop IIS Website product
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
-            
+
       - name: Checkout code
         uses: actions/checkout@v3
 
