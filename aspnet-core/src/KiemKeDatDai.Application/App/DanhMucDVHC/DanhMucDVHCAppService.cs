@@ -314,7 +314,7 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        public async Task GetByIdForUser(long id)
+        public async Task<CommonResponseDto> GetByIdForUser(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -371,23 +371,14 @@ namespace KiemKeDatDai.RisApplication
                 commonResponseDto.ReturnValue = lstDvhc;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
-
             }
-
             catch (Exception ex)
-
             {
-
                 commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-
                 commonResponseDto.Message = ex.Message;
-
                 throw;
-
             }
-
             return commonResponseDto;
-
         }
 
         public async Task<CommonResponseDto> GetByYear(long year, int capDVHC)
@@ -826,7 +817,7 @@ namespace KiemKeDatDai.RisApplication
 
             return dto;
         }
-        
+
         private (int Tong, int Duyet, int Nop) DemBaoCao(List<DonViHanhChinh> all, Func<DonViHanhChinh, bool> condition)
         {
             var list = all.Where(condition).ToList();
