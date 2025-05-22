@@ -321,8 +321,10 @@ namespace KiemKeDatDai.RisApplication
             try
             {
                 var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == id);
-                var query = (from dvhc in _dvhcRepos.GetAll().Where(x => x.Parent_Code == currentDvhc.Ma && x.Year == currentDvhc.Year)
+
+                var query = (from dvhc in _dvhcRepos.GetAll()
                              join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
+                             where dvhc.Parent_Code == currentDvhc.Ma && dvhc.Year == currentDvhc.Year
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
@@ -348,20 +350,17 @@ namespace KiemKeDatDai.RisApplication
 
                 var lstDvhc = await query.ToListAsync();
 
-                var allUserMaDvhc = await _userRepos.GetAll()
-                                                             .Select(u => u.DonViHanhChinhCode)
-                                                             .Distinct()
-                                                             .ToListAsync();
+                var allUser = await _userRepos.GetAll().ToListAsync();
 
                 foreach (var item in lstDvhc)
                 {
-
                     var lstMa = await _iUserAppService.GetChildrenMa(item.Ma);
+
                     lstMa.Add(item.Ma);
 
                     foreach (var ma in lstMa)
                     {
-                        if (!allUserMaDvhc.Contains(ma))
+                        if (allUser.FirstOrDefault(x => x.DonViHanhChinhCode == ma) == null)
                         {
                             item.IsExitsUser = false;
                             break;
@@ -818,7 +817,7 @@ namespace KiemKeDatDai.RisApplication
 
             return dto;
         }
-        
+
         private (int Tong, int Duyet, int Nop) DemBaoCao(List<DonViHanhChinh> all, Func<DonViHanhChinh, bool> condition)
         {
             var list = all.Where(condition).ToList();
