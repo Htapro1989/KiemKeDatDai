@@ -2696,7 +2696,7 @@ namespace KiemKeDatDai.RisApplication
                     if (lstDVHC != null && lstDVHC.Count > 0)
                     {
                         Worksheet worksheet = wb.Worksheets[0];
-                        int start = 34 - lstDVHC.Count;
+                        int start = 33 - lstDVHC.Count;
 
                         while (start > 3)
                         {

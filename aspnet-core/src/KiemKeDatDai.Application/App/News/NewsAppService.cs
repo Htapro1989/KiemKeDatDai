@@ -125,7 +125,7 @@ namespace KiemKeDatDai.App.DMBieuMau
             return commonResponseDto;
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Report_DownloadFile)]
+        [AbpAllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> DownloadFileNewsByID(int FileId)
         {

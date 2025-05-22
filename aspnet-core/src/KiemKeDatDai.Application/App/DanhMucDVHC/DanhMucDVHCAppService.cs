@@ -243,7 +243,9 @@ namespace KiemKeDatDai.RisApplication
                                          Year = dvhc.Year,
                                          TrangThaiDuyet = dvhc.TrangThaiDuyet,
                                          ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
-                                         CreationTime = dvhc.CreationTime
+                                         CreationTime = dvhc.CreationTime,
+                                 MaxFileUpload = dvhc.MaxFileUpload
+
                                      });
 
                         commonResponseDto.ReturnValue = await query.ToListAsync();
@@ -296,7 +298,8 @@ namespace KiemKeDatDai.RisApplication
                                  Active = dvhc.Active,
                                  Year = dvhc.Year,
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
+                                 MaxFileUpload = dvhc.MaxFileUpload
                              });
 
                 var lstDvhc = await query.ToListAsync();
@@ -320,9 +323,11 @@ namespace KiemKeDatDai.RisApplication
 
             try
             {
+                var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == id);
+
                 var query = (from dvhc in _dvhcRepos.GetAll()
                              join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
-                             where dvhc.Parent_id == id
+                             where dvhc.Parent_Code == currentDvhc.Ma && dvhc.Year == currentDvhc.Year
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
@@ -342,23 +347,30 @@ namespace KiemKeDatDai.RisApplication
                                  Active = dvhc.Active,
                                  Year = dvhc.Year,
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
+                                 IsExitsUser = true,
+                                 MaxFileUpload = dvhc.MaxFileUpload
+
                              });
 
                 var lstDvhc = await query.ToListAsync();
 
-                var maDvhc = _dvhcRepos.Single(x => x.Id == id).Ma;
-
-                var lstMa = await _iUserAppService.GetChildrenMa(maDvhc);
-                var lstUserCode = await _userRepos.GetAll()
-                    .Where(u => lstMa.Contains(u.DonViHanhChinhCode))
-                    .Select(u => u.DonViHanhChinhCode)
-                    .Distinct()
-                    .ToListAsync();
+                var allUser = await _userRepos.GetAll().ToListAsync();
 
                 foreach (var item in lstDvhc)
                 {
-                    item.IsExitsUser = lstUserCode.Contains(item.Ma);
+                    var lstMa = await _iUserAppService.GetChildrenMa(item.Ma);
+
+                    lstMa.Add(item.Ma);
+
+                    foreach (var ma in lstMa)
+                    {
+                        if (allUser.FirstOrDefault(x => x.DonViHanhChinhCode == ma) == null)
+                        {
+                            item.IsExitsUser = false;
+                            break;
+                        }
+                    }
                 }
 
                 commonResponseDto.ReturnValue = lstDvhc;
@@ -402,7 +414,9 @@ namespace KiemKeDatDai.RisApplication
                                  Active = dvhc.Active,
                                  Year = dvhc.Year,
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
+                                 MaxFileUpload = dvhc.MaxFileUpload
+
                              });
 
                 if (query != null)
@@ -455,7 +469,9 @@ namespace KiemKeDatDai.RisApplication
                                  Active = dvhc.Active,
                                  Year = dvhc.Year,
                                  TrangThaiDuyet = dvhc.TrangThaiDuyet,
-                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1
+                                 ChildStatus = cdvhc.CapDVHCMin == true ? 0 : 1,
+                                 MaxFileUpload = dvhc.MaxFileUpload
+
                              });
 
                 if (query != null)
@@ -524,6 +540,7 @@ namespace KiemKeDatDai.RisApplication
                                 data.MaHuyen = input.Parent_Code;
                                 data.MaTinh = allDvhc.Single(x => x.Ma == data.MaHuyen).MaTinh;
                                 data.TenTinh = allDvhc.Single(x => x.Ma == data.MaTinh).Name;
+                                data.MaxFileUpload = input.MaxFileUpload;
                                 break;
                             case (int)CAP_DVHC.HUYEN:
                                 data.MaHuyen = input.Ma;
@@ -572,6 +589,7 @@ namespace KiemKeDatDai.RisApplication
                             dvhc.MaHuyen = input.Parent_Code;
                             dvhc.MaTinh = allDvhc.Single(x => x.Ma == dvhc.MaHuyen).MaTinh;
                             dvhc.TenTinh = allDvhc.Single(x => x.Ma == dvhc.MaTinh).Name;
+                            dvhc.MaxFileUpload = input.MaxFileUpload;
                             break;
                         case (int)CAP_DVHC.HUYEN:
                             dvhc.TenHuyen = input.Name;
@@ -810,7 +828,7 @@ namespace KiemKeDatDai.RisApplication
 
             return dto;
         }
-        
+
         private (int Tong, int Duyet, int Nop) DemBaoCao(List<DonViHanhChinh> all, Func<DonViHanhChinh, bool> condition)
         {
             var list = all.Where(condition).ToList();
