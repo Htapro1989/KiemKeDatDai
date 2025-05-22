@@ -32,7 +32,7 @@ export default function NewModals(props: IModalProps) {
         >
             <div>
                 <h3>{props.data?.title}</h3>
-                <div style={{ marginTop: 16, marginBottom: 16 }}>{props.data?.content}</div>
+                <div style={{ marginTop: 16, marginBottom: 16 }} dangerouslySetInnerHTML={{ __html: props.data?.content }} />
                 {
                     props.data?.fileId && <div>
                         <div>Tệp đính kèm: <span

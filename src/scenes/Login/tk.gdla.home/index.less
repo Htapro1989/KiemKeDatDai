@@ -46,7 +46,8 @@
             margin-bottom: 0;
             font-weight: bold;
         }
-        .header_text_layout-right{
+
+        .header_text_layout-right {
             flex-direction: row;
             justify-content: center;
             align-items: center;
@@ -96,34 +97,51 @@
         overflow-y: auto;
         padding: 14px;
     }
+    .body-content2 {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        height: 646px;
+        overflow: scroll;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 14px;
+    }
 
     .body-bottom {
         display: flex;
+        flex: 1;
         flex-direction: row;
         justify-content: center;
-        padding: 21px;
         padding: 10px 15px;
-        // background-color: #FFFF;
         border-top: 1px solid #ddd;
-        text-decoration: underline;
 
         .body-button {
-            // background-color: #4d9235;
-            // color: #FFF;
-            // height: 48px;
-           
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             color: #F4600C;
         }
 
         .button-center {
-            // background-color: #952a14;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             color: #F4600C;
         }
     }
+    .bottom-goi-y{
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        align-items: center;
+        padding: 18px 15px;
+        border-top: 1px solid #ddd;
+        background-color: #ffffff;
+        font-weight: bold;
+        font-size: 12px;
+        color: #F4600C;
+
+    }
+    
 
     .body-text-content {
         line-height: 2.2;
@@ -164,4 +182,39 @@
         overflow: hidden;
     }
 
+
+  
 }
+.button-top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 0;
+    background-color: #2A99FE;
+    height: 70px;
+    border-radius: 8px;
+    margin: 4px;
+    color: #ffffff;
+}
+
+.arrow-down {
+    width: 2px; /* chiều ngang thân mũi tên */
+    height: 60px; /* độ dài đuôi */
+    background-color: black;
+    position: relative;
+    margin: 5px auto;
+  }
+
+  .arrow-down::after {
+    content: "";
+    position: absolute;
+    bottom: -5px; /* để đầu mũi tên nằm ngay dưới thân */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid black;
+  }

@@ -1,8 +1,7 @@
-import { Button, Card, notification } from 'antd';
+import { Button, Card, Col, notification, Row } from 'antd';
 import './index.less';
 import React, { useEffect, useState } from 'react'
 import DashBoadComponent from '../dashboad';
-import { LinkOutlined } from '@ant-design/icons';
 import Footer from '../../../components/Footer';
 import newsService from '../../../services/news/newsService';
 import NewModals from '../components/NewModals';
@@ -10,6 +9,7 @@ import CreatePhanHoiModal from '../../Admin/YKienNguoiDung/components/CreatePhan
 import { FormInstance } from 'antd/lib/form';
 import ykienService from '../../../services/ykien/ykienService';
 import FloatingChat from '../components/FloatingChat';
+import { LinkOutlined } from '@ant-design/icons';
 
 interface IGdlaHomePageProps {
     onLogin: () => void;
@@ -71,7 +71,7 @@ export default function GdlaHomePage(props: IGdlaHomePageProps) {
         <div className='gdla-home-page'>
             <div className='gdla-home-page__header'>
                 <div className='header_logo_layout'>
-                    <img style={{width:64,height:64}} src='https://tk24.vbdlis.vn/assets/LandingPage/logo-de43ecf7.png' />
+                    <img style={{ width: 64, height: 64 }} src='https://tk24.vbdlis.vn/assets/LandingPage/logo-de43ecf7.png' />
                 </div>
                 <div className='header_text_layout'>
                     <p className='header_text_top'>CỤC QUẢN LÝ ĐẤT ĐAI - BỘ NÔNG NGHIỆP VÀ MÔI TRƯỜNG</p>
@@ -88,7 +88,7 @@ export default function GdlaHomePage(props: IGdlaHomePageProps) {
                     <div className='gdla-home-page__body'>
                         <div className='gdla-home-page__body__left'>
                             <div className='body-header'> VĂN BẢN CHỈ ĐẠO</div>
-                            <div className='body-content'>
+                            <div className='body-content2'>
                                 {
                                     dataType['1']
                                         .filter((item: any) => item.status == 1)
@@ -121,19 +121,38 @@ export default function GdlaHomePage(props: IGdlaHomePageProps) {
                                         ))
                                 }
                             </div>
-                            <div className='body-bottom'>
-                                <Button
-                                    type='text'
-                                    className='body-button button-center'
-                                    onClick={props.onLogin}
-                                    icon={<LinkOutlined />}>
-                                    TKKK2024</Button>
-                                {/* <Button
-                                    type='text'
-                                    className='body-button button-center'
-                                    onClick={() => window.open('https://tk24.vbdlis.vn', '_blank')}
-                                    icon={<LinkOutlined />}>
-                                    TKOnline</Button> */}
+                            <div>
+                                <Row style={{ width: '100%' }}>
+                                    <Col flex={1}>
+                                        <div>
+                                            <div className='button-top'>Phần mềm xử lý số liệu TKKK2024</div>
+                                            <div className="arrow-down"></div>
+                                            <div className='body-bottom'>
+                                                <Button
+                                                    type='text'
+                                                    className='body-button button-center'
+                                                    onClick={props.onLogin}
+                                                    icon={<LinkOutlined />}>
+                                                    TKKK2024 TỔNG HỢP</Button>
+                                            </div>
+                                        </div>
+                                    </Col>
+                                    <Col flex={1}>
+                                        <div className='button-top'>
+                                            <div>Phần mềm xử lý số kiệu kiểm kê</div>
+                                            <div style={{ textAlign: 'center' }}>(TKDestop Basic)</div>
+                                        </div>
+                                        <div className="arrow-down"></div>
+                                        <div className='body-bottom'>
+                                            <Button
+                                                type='text'
+                                                className='body-button button-center'
+                                                onClick={() => window.open('https://tk24.vbdlis.vn', '_blank')}
+                                                icon={<LinkOutlined />}>
+                                                TK ONLINE</Button>
+                                        </div>
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
                         <div className='gdla-home-page__body__right'>
@@ -151,10 +170,13 @@ export default function GdlaHomePage(props: IGdlaHomePageProps) {
                                         ))
                                 }
                             </div>
-                            <div className='body-bottom'>
-                                <Button type='text'
+                            <div style={{ flex: 1 }}>
+
+                            </div>
+                            <div className='bottom-goi-y'>
+                                <a
                                     onClick={() => setIsShowGuiYKienModal(true)}
-                                    className='body-button'> Gửi ý kiến</Button>
+                                    className='body-button'> Gửi ý kiến</a>
                             </div>
                         </div>
                     </div>

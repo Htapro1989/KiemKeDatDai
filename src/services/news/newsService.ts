@@ -3,7 +3,7 @@ import http from "../httpService";
 
 class NewsService {
     public async getNewsByType(type: any): Promise<ResponseDto<any[]>> {
-        let result = await http.get(`/api/services/app/News/GetAll?type=${type}`);
+        let result = await http.get(`/api/services/app/News/GetAll?type=${type}&MaxResultCount=1000`);
         return result.data.result;
     }
     public async getNewsPagging(data: any): Promise<ResponseDto<any[]>> {
