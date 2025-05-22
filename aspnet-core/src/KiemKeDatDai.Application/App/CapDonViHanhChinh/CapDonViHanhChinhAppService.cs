@@ -71,6 +71,7 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> GetAll(CapDVHCDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
+
             try
             {
                 var query = (from cap in _capDVHCRepos.GetAll()
