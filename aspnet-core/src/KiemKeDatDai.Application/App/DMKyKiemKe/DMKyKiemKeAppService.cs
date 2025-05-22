@@ -84,6 +84,7 @@ namespace KiemKeDatDai.RisApplication
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Ma.ToLower().Contains(filter.ToLower()))
                              .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Name.ToLower().Contains(filter.ToLower()));
+
                 commonResponseDto.ReturnValue = await query.OrderByDescending(x => x.Year).ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -122,22 +123,24 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
                     var data = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(input.Id);
+
                     if (data != null)
                     {
                         data.Ma = input.Ma;
                         data.Name = input.Name;
                         data.Year = input.Year;
                         data.Active = input.Active;
+
                         await _dmKyThongKeKiemKeRepos.UpdateAsync(data);
                     }
                 }
                 else
                 {
                     var objdata = input.MapTo<KyThongKeKiemKe>();
+
                     await _dmKyThongKeKiemKeRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -160,11 +163,12 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
+
                 if (objdata != null)
                 {
                     await _dmKyThongKeKiemKeRepos.DeleteAsync(objdata);
+
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }

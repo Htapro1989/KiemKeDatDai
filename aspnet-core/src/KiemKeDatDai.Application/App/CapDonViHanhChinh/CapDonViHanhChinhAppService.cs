@@ -86,6 +86,7 @@ namespace KiemKeDatDai.RisApplication
                              })
                              .WhereIf((input.MaCapDVHC != null), x => x.MaCapDVHC == input.MaCapDVHC)
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()));
+                
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -104,6 +105,7 @@ namespace KiemKeDatDai.RisApplication
             try
             {
                 var obj = await _capDVHCRepos.FirstOrDefaultAsync(id);
+
                 commonResponseDto.ReturnValue = obj;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -121,10 +123,10 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 if (input.Id != 0)
                 {
                     var data = await _capDVHCRepos.FirstOrDefaultAsync(input.Id);
+
                     if (data != null)
                     {
                         data.MaCapDVHC = input.MaCapDVHC;
@@ -132,12 +134,14 @@ namespace KiemKeDatDai.RisApplication
                         data.Year = input.Year;
                         data.CapDVHCMin = input.CapDVHCMin;
                         data.Active = input.Active;
+
                         await _capDVHCRepos.UpdateAsync(data);
                     }
                 }
                 else
                 {
                     var objdata = input.MapTo<CapDVHC>();
+
                     await _capDVHCRepos.InsertAsync(objdata);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -157,11 +161,12 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _capDVHCRepos.FirstOrDefaultAsync(id);
+
                 if (objdata != null)
                 {
                     await _capDVHCRepos.DeleteAsync(objdata);
+
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
@@ -191,6 +196,7 @@ namespace KiemKeDatDai.RisApplication
                                  Ma = cap.MaCapDVHC.ToString(),
                                  Name = cap.Name,
                              });
+
                 commonResponseDto.ReturnValue = await query.ToListAsync();
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";

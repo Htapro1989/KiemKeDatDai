@@ -3,6 +3,7 @@ using Abp.Application.Services.Dto;
 using KiemKeDatDai.ApplicationDto;
 using KiemKeDatDai.Roles.Dto;
 using KiemKeDatDai.Users.Dto;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace KiemKeDatDai.RisApplication;
@@ -18,4 +19,5 @@ public interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedUser
     Task<CommonResponseDto> GetAllUser(PagedUserResultRequestDto input);
     Task<CommonResponseDto> GetUserByMaDVHC(PagedUserResultRequestDto input);
     Task<CommonResponseDto> UpdateByCapDvhc(int capDvhc, string[] role);
+    Task<List<string>> GetChildrenMa(string ma);
 }

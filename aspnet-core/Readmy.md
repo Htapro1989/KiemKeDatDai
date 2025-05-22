@@ -1,10 +1,15 @@
 ﻿
 ---------user/pass remote server-------
+server chính
 IP: 45.120.229.45
 user: Administrator
 pass: Nguyenthikimng@n@1978@kBYamaXW$333666
 pass sql: KiemKeDatDai@2024$123A
 
+server qa
+IP: 45.120.229.43
+user: Administrator
+pass: Nguyenthikimng@n@1978@dU8NJw4E$2025
 
 User admin: admin/ Letinh$202512368
 

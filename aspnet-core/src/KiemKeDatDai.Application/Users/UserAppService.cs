@@ -387,7 +387,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         return commonResponseDto;
     }
 
-    private async Task<List<string>> GetChildrenMa(string ma)
+    public async Task<List<string>> GetChildrenMa(string ma)
     {
         var lstMa = new List<string>();
         var dvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
