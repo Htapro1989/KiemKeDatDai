@@ -10,7 +10,7 @@ jobs:
     runs-on: qa-runner
 
     steps:
-      - name: Stop IIS Website product
+      - name: Stop IIS Website QA KKDD
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
 
@@ -21,18 +21,14 @@ jobs:
         run: |
             git pull origin qa
 
-      - name: Stop IIS Website product
-        run: |
-            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
-
       - name: Restore dependencies
         run: |
-            cd \KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet restore
 
       - name: publish dotnet
         run: |
-            cd \KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish --no-restore
             
       - name: start IIS Website
