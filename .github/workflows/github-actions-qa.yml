@@ -1,0 +1,36 @@
+name: Deploy to QA Server
+
+on:
+  push:
+    branches:
+      - qa
+
+jobs:
+  deploy:
+    runs-on: qa-runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Pull git code
+        run: |
+            git pull origin qa
+
+      - name: Stop IIS Website product
+        run: |
+            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
+
+      - name: Restore dependencies
+        run: |
+            cd \KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            dotnet restore
+
+      - name: publish dotnet
+        run: |
+            cd \KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            dotnet publish --no-restore
+            
+      - name: start IIS Website
+        run: |
+            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
