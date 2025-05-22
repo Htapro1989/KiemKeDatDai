@@ -28,6 +28,10 @@ class DvhcService {
     let result = await http.get(`/api/services/app/DanhMucDVHC/GetById?id=${parentId}`);
     return result.data.result;
   }
+  public async getByParentUserId(parentId: String): Promise<ResponseDto<DonViHanhChinh[]>> {
+    let result = await http.get(`/api/services/app/DanhMucDVHC/GetByIdForUser?id=${parentId}`);
+    return result.data.result;
+  }
   public async getById(parentId: String): Promise<ResponseDto<DonViHanhChinh[]>> {
     let result = await http.get(`/api/services/app/DanhMucDVHC/GetId?id=${parentId}`);
     return result.data.result;
