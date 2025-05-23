@@ -29,8 +29,8 @@ jobs:
       - name: publish dotnet
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
-            dotnet publish KiemKeDatDai.Web.Host.csproj --no-restore -c Release -o ./publish \ -p:EnvironmentName=QA
-            
+            dotnet publish --no-restore -c Release -o ./publish \ 
+            copy /Y C:\githubrunner\_work\appsettings.json C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host/bin\Release\net9.0/publish/appsettings.json
       - name: start IIS Website
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
