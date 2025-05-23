@@ -29,7 +29,7 @@ jobs:
       - name: publish dotnet
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
-            dotnet publish --no-restore -c Release -o ./publish \ 
+            dotnet publish --no-restore
             copy /Y C:\githubrunner\_work\appsettings.json C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host/bin\Release\net9.0/publish/appsettings.json
       - name: start IIS Website
         run: |
