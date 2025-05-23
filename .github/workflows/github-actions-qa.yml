@@ -29,8 +29,7 @@ jobs:
       - name: publish dotnet
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
-            dotnet publish --no-restore -c Release -o ./publish \
-              -p:EnvironmentName=QA
+            dotnet publish --no-restore -c Release -o ./publish \ -p:EnvironmentName=QA
             
       - name: start IIS Website
         run: |
