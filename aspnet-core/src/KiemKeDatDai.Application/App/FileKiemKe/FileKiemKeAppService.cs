@@ -56,6 +56,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly RabbitMQService _rabbitMQService;
         private readonly IConfiguration _configuration;
         private readonly IRepository<ConfigSystem, long> _configSystemRepos;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         //private readonly ILogAppService _iLogAppService;
 
@@ -87,7 +88,8 @@ namespace KiemKeDatDai.RisApplication
             IRepository<DonViHanhChinh, long> donViHanhChinhRepos,
             RabbitMQService rabbitMQService,
             IConfiguration configuration,
-            IRepository<ConfigSystem, long> configSystemRepos       //ILogAppService iLogAppService
+            IRepository<ConfigSystem, long> configSystemRepos,
+            IUnitOfWorkManager unitOfWorkManager     //ILogAppService iLogAppService
             )
         {
             _fileRepos = fileRepos;
@@ -102,6 +104,7 @@ namespace KiemKeDatDai.RisApplication
             //_iLogAppService = iLogAppService;
             _userRepos = userRepos;
             _configSystemRepos = configSystemRepos;
+            _unitOfWorkManager = unitOfWorkManager;
         }
         public async Task<CommonResponseDto> GetFileKyThongKeByDVHC(FileKiemKeFilterDto input)
         {
@@ -270,131 +273,131 @@ namespace KiemKeDatDai.RisApplication
         public async Task<CommonResponseDto> UploadFile([FromForm] FileUploadInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
-            try
+
+            // mở transaction
+            using (var uow = _unitOfWorkManager.Begin())
             {
-                var objDVHC = _donViHanhChinhRepos.FirstOrDefault(x => x.MaXa == input.MaDVHC & x.Year == input.Year);
-                if (objDVHC == null)
+                try
                 {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Đơn vị hành chính không tồn tại";
-                    commonResponseDto.ErrorCode = "DONVIHANHCHINHKHONGTONTAI";
-                    return commonResponseDto;
-                }
-
-                if (objDVHC?.TrangThaiDuyet == (int)CommonEnum.TRANG_THAI_DUYET.DA_DUYET)
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Đơn vị hành chính đã được duyệt không thể thêm file";
-                    commonResponseDto.ErrorCode = "DONVIHANHCHINHDADUYET";
-                    return commonResponseDto;
-                }
-
-                if (input.File == null || input.File.Length == 0)
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Không có file nào được upload.";
-                    commonResponseDto.ErrorCode = "FILEKHONGTONTAI";
-
-                    return commonResponseDto;
-                }
-                // Check if the file is a ZIP file
-                var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
-                if (fileExtension != ".zip")
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Chỉ chấp nhận file ZIP.";
-                    commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
-
-                    return commonResponseDto;
-                }
-                // var maxAllowedSize = _configuration["FileUpload:FileUploadLimit"];
-                int _intMaxAllowedSize = 0;
-
-                // int.TryParse(maxAllowedSize, out _intMaxAllowedSize);
-                _intMaxAllowedSize = objDVHC.MaxFileUpload ?? 0;//?? _intMaxAllowedSize;
-                using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
-                {
-                    //var count = await _fileRepos.CountAsync(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && x.FileType == CommonEnum.FILE_KYTHONGKE);
-                    if (_intMaxAllowedSize == 0)
+                    var objDVHC = _donViHanhChinhRepos.FirstOrDefault(x => x.MaXa == input.MaDVHC & x.Year == input.Year);
+                    if (objDVHC == null)
                     {
-                        commonResponseDto.Message = "Bạn đã hết lượt upload file cho đơn vị hành chính này.";
-                        commonResponseDto.ErrorCode = "VUOTQUASOLUONGFILE";
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.CanhBao;
-                        return commonResponseDto;
+                        return Fail("Đơn vị hành chính không tồn tại", "DONVIHANHCHINHKHONGTONTAI");
                     }
-                }
-                var lastUploaded = _fileRepos.GetAll().Where(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && x.FileType == CommonEnum.FILE_KYTHONGKE)
-                .OrderByDescending(x => x.CreationTime).FirstOrDefault();
-                var currentConfigSystem = await _configSystemRepos.FirstOrDefaultAsync(x => x.Active == true);
-                if (currentConfigSystem != null)
-                {
-                    var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(currentConfigSystem.JsonConfigSystem);
-                    if (lastUploaded != null && lastUploaded.CreationTime.AddMinutes(jsonConfigSystem.TimeUpload ?? 0) > DateTime.Now)
+
+                    if (objDVHC?.TrangThaiDuyet == (int)CommonEnum.TRANG_THAI_DUYET.DA_DUYET)
                     {
-                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                        commonResponseDto.Message = string.Format("Bạn chỉ được phép tải lên một tệp mỗi {0} phút. Vui lòng đợi trước khi tiếp tục.", jsonConfigSystem.TimeUpload);
-                        commonResponseDto.ErrorCode = "FILEDAUPLOAIDUOCUPLOADTRUOCDO";
-                        return commonResponseDto;
+                        return Fail("Đơn vị hành chính đã được duyệt không thể thêm file", "DONVIHANHCHINHDADUYET");
                     }
-                }
-                // Save the file to a directory
-                var uploadsFolder = _configuration["FileUpload:FilePath"];
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-                var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(input.File.FileName)}";
 
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await input.File.CopyToAsync(stream);
+                    if (input.File == null || input.File.Length == 0)
+                    {
+                        return Fail("Không có file nào được upload.", "FILEKHONGTONTAI");
+                    }
+
+                    var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
+                    if (fileExtension != ".zip")
+                    {
+                        return Fail("Chỉ chấp nhận file ZIP.", "SAIDINHDANGFILE");
+                    }
+
+                    int _intMaxAllowedSize = objDVHC.MaxFileUpload ?? 0;
+                    using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
+                    {
+                        if (_intMaxAllowedSize == 0)
+                        {
+                            return Warning("Bạn đã hết lượt upload file cho đơn vị hành chính này.", "VUOTQUASOLUONGFILE");
+                        }
+                    }
+
+                    var lastUploaded = _fileRepos.GetAll()
+                        .Where(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && x.FileType == CommonEnum.FILE_KYTHONGKE)
+                        .OrderByDescending(x => x.CreationTime).FirstOrDefault();
+
+                    var currentConfigSystem = await _configSystemRepos.FirstOrDefaultAsync(x => x.Active == true);
+                    if (currentConfigSystem != null)
+                    {
+                        var jsonConfigSystem = JsonConvert.DeserializeObject<JsonConfigSytem>(currentConfigSystem.JsonConfigSystem);
+                        if (lastUploaded != null && lastUploaded.CreationTime.AddMinutes(jsonConfigSystem.TimeUpload ?? 0) > DateTime.Now)
+                        {
+                            return Fail($"Bạn chỉ được phép tải lên một tệp mỗi {jsonConfigSystem.TimeUpload} phút. Vui lòng đợi trước khi tiếp tục.", "FILEDAUPLOAIDUOCUPLOADTRUOCDO");
+                        }
+                    }
+
+                    var uploadsFolder = _configuration["FileUpload:FilePath"];
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(input.File.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await input.File.CopyToAsync(stream);
+                    }
+
+                    var pathDeleted = "";
+                    var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted);
+                    if (currentFile != null)
+                    {
+                        pathDeleted = currentFile.FilePath;
+                        await _fileRepos.DeleteAsync(currentFile);
+                    }
+
+                    var fileEntity = new EntitiesDb.File
+                    {
+                        FileName = input.File.FileName,
+                        FilePath = filePath,
+                        MaDVHC = input.MaDVHC,
+                        Year = input.Year,
+                        FileType = CommonEnum.FILE_KYTHONGKE,
+                        DVHCId = objDVHC?.Id
+                    };
+
+                    var insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
+
+                    if (objDVHC != null)
+                    {
+                        objDVHC.MaxFileUpload -= 1;
+                        await _donViHanhChinhRepos.UpdateAsync(objDVHC);
+                    }
+
+                    fileEntity.Id = insertedFileID;
+                    var fileOutput = _objectMapper.Map<FileKiemKeOuputDto>(fileEntity);
+                    fileOutput.DeletedFilePath = pathDeleted;
+
+                    await _rabbitMQService.SendMessage<FileKiemKeOuputDto>(fileOutput);
+
+                    await uow.CompleteAsync(); //  commit nếu không lỗi
+
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "File upload thành công";
                 }
-
-                //get dvhcid
-                var pathDeleted = "";
-                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted);
-                if (currentFile != null)
+                catch (Exception ex)
                 {
-                    //delete file
-                    pathDeleted = currentFile.FilePath;
-                    await _fileRepos.DeleteAsync(currentFile);
+                    // rollback tự động nếu không gọi CompleteAsync
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = ex.Message;
                 }
-
-                var fileEntity = new EntitiesDb.File
-                {
-                    FileName = input.File.FileName,
-                    FilePath = filePath,
-                    MaDVHC = input.MaDVHC,
-                    Year = input.Year,
-                    FileType = CommonEnum.FILE_KYTHONGKE,
-                    DVHCId = objDVHC?.Id
-                };
-
-                var insertedFileID = await _fileRepos.InsertAndGetIdAsync(fileEntity);
-                //update max file upload
-                if (objDVHC != null)
-                {
-                    objDVHC.MaxFileUpload -= 1;
-                    await _donViHanhChinhRepos.UpdateAsync(objDVHC);
-                }
-                //send message to rabbitmq
-                fileEntity.Id = insertedFileID;
-                var fileOutput = _objectMapper.Map<FileKiemKeOuputDto>(fileEntity);
-                fileOutput.DeletedFilePath = pathDeleted;
-                //push message to rabbitmq
-                await _rabbitMQService.SendMessage<FileKiemKeOuputDto>(fileOutput);
-
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThanhCong;
-                commonResponseDto.Message = "File upload thành công";
             }
-            catch (Exception ex)
-            {
-                commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                commonResponseDto.Message = ex.ToString();
-                throw;
-            }
+
             return commonResponseDto;
+
+            // Helper methods
+            CommonResponseDto Fail(string message, string code) => new()
+            {
+                Code = CommonEnum.ResponseCodeStatus.ThatBai,
+                Message = message,
+                ErrorCode = code
+            };
+
+            CommonResponseDto Warning(string message, string code) => new()
+            {
+                Code = CommonEnum.ResponseCodeStatus.CanhBao,
+                Message = message,
+                ErrorCode = code
+            };
         }
 
         [AbpAuthorize(PermissionNames.Pages_Report_Upload)]

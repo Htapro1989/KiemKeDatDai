@@ -17,7 +17,7 @@ public class RabbitMQService
         _username = configuration["RabbitMQ:UserName"];
         _password = configuration["RabbitMQ:Password"];
         _exchangeName = configuration["RabbitMQ:ExchangeName"];
-        _queueName = configuration["RabbitMQ:QueueName"];   
+        _queueName = configuration["RabbitMQ:QueueName"];
     }
 
     public async Task SendMessage<T>(T messageObject)
@@ -36,6 +36,18 @@ public class RabbitMQService
 
             await channel.QueueDeclareAsync(queue: _queueName, durable: false, exclusive: false, autoDelete: false,
     arguments: null);
+            await channel.ExchangeDeclareAsync(
+            exchange: _exchangeName,
+            type: ExchangeType.Direct,  // hoặc "fanout", "topic", "headers"
+            durable: false,
+            autoDelete: false,
+            arguments: null
+            );
+            await channel.QueueBindAsync(
+                queue: _queueName,
+                exchange: _exchangeName,
+                routingKey: _queueName
+            );
             string jsonMessage = JsonSerializer.Serialize(messageObject);
             var body = Encoding.UTF8.GetBytes(jsonMessage);
 
