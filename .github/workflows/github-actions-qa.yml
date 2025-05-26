@@ -21,6 +21,7 @@ jobs:
         run: |
             git pull origin qa
 
+
       - name: Restore dependencies
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
@@ -30,10 +31,7 @@ jobs:
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish --no-restore
-        
-      - name: Overwrite appsetting using CMD 
-        shell: cmd
-        run: copy /Y C:\githubrunner\_work\appsettings.json C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\Kie  KeDatDai.Web.Host\bin\Release\net9.0\publish\
+             
       - name: start IIS Website
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
