@@ -20,14 +20,6 @@ jobs:
       - name: Pull git code
         run: |
             git pull origin qa
-      - name: Update database
-        run: |
-            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.EntityFrameworkCore
-            dotnet ef --help
-            dotnet ef database update --project KiemKeDatDai.EntityFrameworkCore.csproj
-        env:
-            ASPNETCORE_ENVIRONMENT: QA
-            ConnectionStrings__Default: "Default"
 
       - name: Restore dependencies
         run: |
@@ -38,10 +30,10 @@ jobs:
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish --no-restore
+        env:
+            ASPNETCORE_ENVIRONMENT: QA
+            ConnectionStrings__Default: "Default"
 
-      - name: Overwrite appsetting using CMD 
-        shell: cmd
-        run: copy /Y C:\githubrunner\_work\appsettings.json C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host\bin\Release\net9.0\publish\
       - name: start IIS Website
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
