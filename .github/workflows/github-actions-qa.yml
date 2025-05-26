@@ -23,6 +23,7 @@ jobs:
       - name: Update database
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.EntityFrameworkCore
+            dotnet ef --help
             dotnet ef database update --project KiemKeDatDai.EntityFrameworkCore.csproj
         env:
             ASPNETCORE_ENVIRONMENT: QA
