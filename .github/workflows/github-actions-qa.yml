@@ -33,10 +33,10 @@ jobs:
       - name: Copy to run folder
         shell: powershell
         run: |
-          if (Test-Path "C:\inetpub\wwwroot\KKDD_qa_auto") {
-              Remove-Item -Recurse -Force "C:\inetpub\wwwroot\KKDD_qa_auto"
+          if (Test-Path "C:\githubrunner\KKDD_qa_auto") {
+              Remove-Item -Recurse -Force "C:\githubrunner\KKDD_qa_auto"
           }
-          Copy-Item -Path ".\publish" -Destination "C:\inetpub\wwwroot\KKDD_qa_auto" -Recurse
+          Copy-Item -Path ".\publish" -Destination "C:\githubrunner\KKDD_qa_auto" -Recurse
       - name: start IIS Website
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
