@@ -22,9 +22,9 @@ jobs:
             git pull origin qa
       - name: Update database
         run: |
-            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.EntityFrameworkCore
             dotnet tool restore
-            dotnet ef database update --no-build --no-restore --project KiemKeDatDai.EntityFrameworkCore --startup-project KiemKeDatDai.Web.Host
+            dotnet ef database update --no-build --no-restore 
 
       - name: Restore dependencies
         run: |
