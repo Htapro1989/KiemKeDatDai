@@ -10,10 +10,7 @@ jobs:
     runs-on: qa-runner
 
     steps:
-      - name: Stop IIS Website QA KKDD
-        run: |
-            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
-
+    
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -30,6 +27,9 @@ jobs:
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish --no-restore -c Release -o ./publish
+      - name: Stop IIS Website QA KKDD
+        run: |
+            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
       - name: Copy to run folder
         shell: powershell
         run: |
