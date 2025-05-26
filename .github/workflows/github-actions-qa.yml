@@ -23,6 +23,7 @@ jobs:
       - name: Update database
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.EntityFrameworkCore
+            dotnet tool restore
             dotnet ef database update --no-build
 
       - name: Restore dependencies
