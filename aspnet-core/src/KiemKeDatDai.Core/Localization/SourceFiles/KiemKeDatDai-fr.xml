@@ -1,47 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="fr">
   <texts>
-    <text name="HomePage" value="Accueil" />
+    <text name="HomePage" value="Trang chủ" />
     <text name="About" value="A propos" />
     <text name="WelcomeMessage" value="Bienvenue sur KiemKeDatDai !" />
     
-    <text name="FormIsNotValidMessage" value="Le formulaire n'est pas valide. Veuillez le corriger." />
-    <text name="TenantNameCanNotBeEmpty" value="Le nom de client (tenant) doit être renseigné." />
+    <text name="FormIsNotValidMessage" value="Biểu mẫu này không hợp lệ. Vui lòng sửa lại." />
+    <text name="TenantNameCanNotBeEmpty" value="Phải nhập tên khách hàng (người thuê)." />
 
-    <text name="InvalidUserNameOrPassword" value="Nom d'utilisateur ou mot de passe non valide." />
+    <text name="InvalidUserNameOrPassword" value="Tên người dùng hoặc mật khẩu không hợp lệ" />
     <text name="ThereIsNoTenantDefinedWithName{0}" value="Il n'y a aucun nom de client (tenant) correspondant à {0}" />
     <text name="TenantIsNotActive" value="Le client (tenant) {0} n'est pas actif." />
-    <text name="UserIsNotActiveAndCanNotLogin" value="L'utilisateur {0} n'est pas actif ou ne peut pas s'authentifier." />
-    <text name="PleaseEnterLoginInformation" value="Veuillez entrer vos informations d'authentification" />
+    <text name="UserIsNotActiveAndCanNotLogin" value="Người dùng {0} không hoạt động hoặc không thể xác thực." />
+    <text name="PleaseEnterLoginInformation" value="Vui lòng nhập thông tin xác thực của bạn" />
     <text name="TenancyName" value="Nom du client (tenant)" />
-    <text name="UserNameOrEmail" value="Nom d'utilisateur ou email" />
-    <text name="Password" value="Mot de passe" />
-    <text name="RememberMe" value="Se rappeler de moi" />
-    <text name="LogIn" value="Se connecter" />
+    <text name="UserNameOrEmail" value="Tên người dùng hoặc email" />
+    <text name="Password" value="Mật khẩu" />
+    <text name="RememberMe" value="Nhớ tài khoản" />
+    <text name="LogIn" value="Đăng nhập" />
 
-    <text name="LoginFailed" value="Echec d'authentification !" />
+    <text name="LoginFailed" value="Xác thực không thành công!" />
 
-    <text name="NameSurname" value="Nom de famille" />
-    <text name="UserName" value="Nom d'utilisateur" />
-    <text name="Name" value="Prénom" />
-    <text name="Surname" value="Nom de famille" />
-    <text name="EmailAddress" value="Adresse email" />
+    <text name="NameSurname" value="Họ" />
+    <text name="UserName" value="Tên đăng nhập" />
+    <text name="Name" value="Tên" />
+    <text name="Surname" value="Tên đệm" />
+    <text name="EmailAddress" value="Địa chỉ email" />
 
     <text name="Tenants" value="Clients (tenants)" />
-    <text name="SavedSuccessfully" value="Enregistrement réussi" />
+    <text name="SavedSuccessfully" value="Đăng ký thành công" />
     <text name="CreateNewTenant" value="Créer un nouveau client (tenant)" />
-    <text name="AdminEmailAddress" value="Adresse email de l'administrateur" />
-    <text name="Save" value="Valider" />
-    <text name="Cancel" value="Annuler" />
+    <text name="AdminEmailAddress" value="Địa chỉ email của quản trị viên" />
+    <text name="Save" value="Lưu" />
+    <text name="Cancel" value="Huỷ" />
     <text name="TenantName_Regex_Description" value="Le nom de client (tenant) doit comporter au moins 2 caractères et commencer par une lettre suivie d'autres lettres, chiffres ou tirets." />
-    <text name="DefaultPasswordIs" value="Le mot de passe par défaut est {0}" />
+    <text name="DefaultPasswordIs" value="Mật khẩu mặc định là {0}" />
     <text name="CanBeEmptyToLoginAsHost" value="Peut être laissé vide pour s'authentifier en tant qu'hébergeur (host)." />
-    <text name="Register" value="S'enregistrer" />
-    <text name="OrLoginWith" value="Ou s'authentifier avec" />
-    <text name="WaitingForActivationMessage" value="Votre compte est en attente d'activation par l'administrateur du système." />
+    <text name="Register" value="Đăng ký" />
+    <text name="OrLoginWith" value="Hoặc xác thực với" />
+    <text name="WaitingForActivationMessage" value="Tài khoản của bạn đang chờ quản trị viên hệ thống kích hoạt." />
     <text name="TenantSelection" value="Sélection du client (tenant)" />
     <text name="TenantSelection_Detail" value="Veuillez choisir l'un de ces clients (tenants) suivants." />
-    <text name="Logout" value="Déconnexion" />
+    <text name="Logout" value="Đăng xuất" />
     <text name="Pages">Full quyền</text>
     <text name="Administration">Quản trị hệ thống</text>
     <text name="Roles">Quản lý vai trò</text>

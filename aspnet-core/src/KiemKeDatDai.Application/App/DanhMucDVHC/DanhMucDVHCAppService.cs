@@ -55,6 +55,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
+        private readonly IRepository<EntitiesDb.File, long> _fileRepos;
         private readonly IDistributedCache _distributedCache;
         private readonly IMemoryCache _cache;
 
@@ -69,6 +70,7 @@ namespace KiemKeDatDai.RisApplication
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
+            IRepository<EntitiesDb.File, long> fileRepos,
             IHttpContextAccessor httpContextAccessor,
             IDistributedCache distributedCache,
             IMemoryCache cache
@@ -84,6 +86,7 @@ namespace KiemKeDatDai.RisApplication
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
+            _fileRepos = fileRepos;
             _distributedCache = distributedCache;
             _cache = cache;
         }
@@ -669,7 +672,7 @@ namespace KiemKeDatDai.RisApplication
                 var currentUser = await GetCurrentUserAsync();
                 var lstBaoCao = new List<BaoCaoDonViHanhChinhOutPutDto>();
                 var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.Ma && x.Year == input.Year);
-                var allDvhc = await _dvhcRepos.GetAll().ToListAsync();
+                var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Active == true && x.Year == input.Year).ToListAsync();
 
                 if (currentDvhc == null)
                 {
@@ -683,7 +686,7 @@ namespace KiemKeDatDai.RisApplication
                 rootBaoCao.Root = currentUser.DonViHanhChinhCode == input.Ma ? true : false;
 
                 //lấy danh sách con
-                var lstChild = allDvhc.Where(x => x.Parent_Code == input.Ma && x.Year == input.Year).ToList();
+                var lstChild = allDvhc.Where(x => x.Parent_Code == input.Ma).ToList();
 
                 //Xác định  trạng thái button nộp báo cáo
                 if (rootBaoCao.Root == true)
@@ -726,7 +729,7 @@ namespace KiemKeDatDai.RisApplication
                 var currentUser = await _userRepos.FirstOrDefaultAsync(x => x.DonViHanhChinhCode == 0.ToString());
                 var lstBaoCao = new List<BaoCaoDonViHanhChinhOutPutDto>();
                 var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == input.Ma && x.Year == input.Year);
-                var allDvhc = await _dvhcRepos.GetAll().ToListAsync();
+                var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Active == true && x.Year == input.Year).ToListAsync();
 
                 if (currentDvhc == null)
                 {
@@ -741,7 +744,7 @@ namespace KiemKeDatDai.RisApplication
 
 
                 //lấy danh sách con
-                var lstChild = allDvhc.Where(x => x.Parent_Code == input.Ma && x.Year == input.Year).ToList();
+                var lstChild = allDvhc.Where(x => x.Parent_Code == input.Ma).ToList();
                 lstBaoCao.Add(rootBaoCao);
 
                 if (lstChild != null)
@@ -769,6 +772,15 @@ namespace KiemKeDatDai.RisApplication
 
         private async Task<BaoCaoDonViHanhChinhOutPutDto> BuildBaoCaoAsync(DonViHanhChinh dvhc, BaoCaoInPutDto input, List<DonViHanhChinh> allDvhc)
         {
+            var allFile = _fileRepos.GetAll()
+                .Where(x => x.Year == input.Year && x.MaDVHC != "")
+                .AsEnumerable()
+                .DistinctBy(x => x.MaDVHC)
+                .ToList();
+            var allDvhcXa = allDvhc
+                .Where(x => x.CapDVHCId == (int)CAP_DVHC.XA)
+                .ToList();
+
             var dto = new BaoCaoDonViHanhChinhOutPutDto
             {
                 Id = dvhc.Id,
@@ -781,12 +793,24 @@ namespace KiemKeDatDai.RisApplication
                 ChildStatus = 1
             };
 
+            var tongDayDuLieuInputDto = new TongDayDuLieuInputDto
+            {
+                AllDvhc = allDvhcXa,
+                AllFile = allFile,
+                MaXa = null,
+                MaHuyen = null,
+                MaTinh = null,
+                ListMaTinh = new List<string>()
+            };
+
             switch (dvhc.CapDVHCId)
             {
                 case (int)CAP_DVHC.XA:
                     dto.Tong = 1;
                     dto.TongDuyet = dvhc.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET ? 1 : 0;
                     dto.TongNop = dvhc.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET ? 1 : 0;
+                    tongDayDuLieuInputDto.MaXa = dvhc.MaXa;
+                    dto.TongDayDuLieu = TongDayDuLieu(tongDayDuLieuInputDto);
                     dto.ChildStatus = 0;
 
                     var bieu01 = await _bieu01TKKK_XaXaRepos.FirstOrDefaultAsync(x => x.MaXa == dvhc.Ma && x.Year == input.Year);
@@ -799,6 +823,8 @@ namespace KiemKeDatDai.RisApplication
                     dto.Tong = dataHuyen.Tong;
                     dto.TongDuyet = dataHuyen.Duyet;
                     dto.TongNop = dataHuyen.Nop;
+                    tongDayDuLieuInputDto.MaHuyen = dvhc.MaHuyen;
+                    dto.TongDayDuLieu = TongDayDuLieu(tongDayDuLieuInputDto);
                     break;
 
                 case (int)CAP_DVHC.TINH:
@@ -806,6 +832,8 @@ namespace KiemKeDatDai.RisApplication
                     dto.Tong = dataTinh.Tong;
                     dto.TongDuyet = dataTinh.Duyet;
                     dto.TongNop = dataTinh.Nop;
+                    tongDayDuLieuInputDto.MaTinh = dvhc.MaTinh;
+                    dto.TongDayDuLieu = TongDayDuLieu(tongDayDuLieuInputDto);
                     break;
 
                 case (int)CAP_DVHC.VUNG:
@@ -815,13 +843,17 @@ namespace KiemKeDatDai.RisApplication
                     dto.TongDuyet = dataVung.Duyet;
                     dto.TongNop = dataVung.Nop;
                     dto.TrangThaiDuyet = null;
+                    tongDayDuLieuInputDto.ListMaTinh = lstMaTinh.ToList();
+                    dto.TongDayDuLieu = TongDayDuLieu(tongDayDuLieuInputDto);
                     break;
 
                 case (int)CAP_DVHC.TRUNG_UONG:
-                    var dataTW = DemBaoCao(allDvhc, x => x.CapDVHCId == (int)CAP_DVHC.XA && x.MaTinh == dvhc.MaTinh);
+                    var dataTW = DemBaoCao(allDvhc, x => x.CapDVHCId == (int)CAP_DVHC.XA);
                     dto.Tong = dataTW.Tong;
                     dto.TongDuyet = dataTW.Duyet;
                     dto.TongNop = dataTW.Nop;
+                    tongDayDuLieuInputDto.ListMaTinh = allDvhc.Where(x => x.CapDVHCId == (int)CAP_DVHC.TINH).Select(x => x.Ma).ToList();
+                    dto.TongDayDuLieu = TongDayDuLieu(tongDayDuLieuInputDto);
                     break;
 
             }
@@ -835,8 +867,48 @@ namespace KiemKeDatDai.RisApplication
             return (
                 list.Count,
                 list.Count(x => x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET),
-                list.Count(x => x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET)
+                list.Count(x => x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET || x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
             );
+        }
+
+        private int TongDayDuLieu(TongDayDuLieuInputDto input)
+        {
+            var lstMaXa = new List<string>();
+
+            if (input.MaXa != null)
+            {
+                lstMaXa.Add(input.MaXa);
+            }
+
+            if (input.MaHuyen != null)
+            {
+                lstMaXa = input.AllDvhc
+                    .Where(x => x.MaHuyen == input.MaHuyen)
+                    .Select(x => x.MaXa)
+                    .Distinct()
+                    .ToList();
+            }
+
+            if (input.MaTinh != null)
+            {
+                lstMaXa = input.AllDvhc
+                    .Where(x => x.MaTinh == input.MaTinh)
+                    .Select(x => x.MaXa)
+                    .Distinct()
+                    .ToList();
+            }
+
+            if (input.ListMaTinh != null)
+            {
+                lstMaXa = input.AllDvhc
+                    .Where(x => input.ListMaTinh.Contains(x.MaTinh))
+                    .Select(x => x.MaXa)
+                    .Distinct()
+                    .ToList();
+            }
+
+            var query = input.AllFile.Where(x => lstMaXa.Contains(x.MaDVHC)).ToList();
+            return query.Count();
         }
 
         private async Task<bool> CheckNopBaoCao(BaoCaoDonViHanhChinhOutPutDto baoCaoDVHC, BaoCaoInPutDto input, List<DonViHanhChinh> allDvhc, List<DonViHanhChinh> lstChild)
