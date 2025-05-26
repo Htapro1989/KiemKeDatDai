@@ -29,8 +29,14 @@ jobs:
       - name: publish dotnet
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
-            dotnet publish --no-restore
-
+            dotnet publish --no-restore -c Release -o ./publish
+      - name: Copy to run folder
+        run: |
+          if (Test-Path "C:\inetpub\wwwroot\KKDD_qa_auto") {
+              Remove-Item -Recurse -Force "C:\inetpub\wwwroot\KKDD_qa_auto"
+          }
+          Copy-Item -Path ".\publish" -Destination "C:\inetpub\wwwroot\KKDD_qa_auto" -Recurse
+        shell: pwsh
       - name: start IIS Website
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
