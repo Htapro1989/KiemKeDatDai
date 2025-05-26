@@ -23,9 +23,8 @@ jobs:
       - name: Update database
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.EntityFrameworkCore
-            dotnet tool install --global dotnet-ef
-            dotnet tool list -g
-            dotnet ef database update --connection "Server=45.120.229.43\\SQL2022; Database=KiemKeDatDai; Trusted_Connection=False; TrustServerCertificate=True; uid=sa; password=DataTK@2025KKK$123BCD569;"
+
+            dotnet ef database update --connection "Server=WIN-S1IBJB84OOO\SQL2022; Database=KiemKeDatDai; Trusted_Connection=True; TrustServerCertificate=True; uid=sa; password=DataTK@2025KKK$123BCD569;"
 
       - name: Restore dependencies
         run: |
