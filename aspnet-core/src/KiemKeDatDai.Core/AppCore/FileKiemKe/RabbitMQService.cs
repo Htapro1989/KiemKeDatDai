@@ -39,7 +39,7 @@ public class RabbitMQService
             await channel.ExchangeDeclareAsync(
             exchange: _exchangeName,
             type: ExchangeType.Direct,  // hoặc "fanout", "topic", "headers"
-            durable: false,
+            durable: true,
             autoDelete: false,
             arguments: null
             );
