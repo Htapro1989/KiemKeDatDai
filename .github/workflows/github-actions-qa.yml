@@ -24,7 +24,7 @@ jobs:
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.EntityFrameworkCore
             dotnet tool install --global dotnet-ef
-            dotnet ef database update
+            dotnet-ef database update
 
       - name: Restore dependencies
         run: |
