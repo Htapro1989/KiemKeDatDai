@@ -24,7 +24,7 @@ jobs:
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.EntityFrameworkCore
             dotnet tool install --global dotnet-ef
-            dotnet ef database update --project KiemKeDatDai.EntityFrameworkCore.csproj
+            dotnet-ef database update --project KiemKeDatDai.EntityFrameworkCore.csproj
         env:
             ASPNETCORE_ENVIRONMENT: QA
             ConnectionStrings__Default: "Default"
