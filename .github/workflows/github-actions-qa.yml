@@ -23,8 +23,9 @@ jobs:
       - name: Update database
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            dotnet tool restore
             dotnet ef database update --no-build --no-restore --project KiemKeDatDai.EntityFrameworkCore --startup-project KiemKeDatDai.Web.Host
-            
+
       - name: Restore dependencies
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
