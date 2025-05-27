@@ -25,7 +25,7 @@ jobs:
       - name: Stop IIS Website QA KKDD
         run: |
             %windir%\system32\inetsrv\appcmd stop site /site.name:"KKDD_qa_auto"
-
+        shell: cmd
       - name: publish dotnet
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
@@ -33,3 +33,4 @@ jobs:
       - name: start IIS Website
         run: |
             %windir%\system32\inetsrv\appcmd start site /site.name:"KKDD_qa_auto"
+        shell: cmd
