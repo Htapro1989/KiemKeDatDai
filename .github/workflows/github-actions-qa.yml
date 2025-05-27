@@ -22,21 +22,13 @@ jobs:
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet restore
-
-      - name: publish dotnet
-        run: |
-            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
-            dotnet publish --no-restore -c Release -o ./publish
       - name: Stop IIS Website QA KKDD
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
-      - name: Copy to run folder
-        shell: powershell
+      - name: publish dotnet
         run: |
-          if (Test-Path "C:\githubrunner\KKDD_qa_auto") {
-              Remove-Item -Recurse -Force "C:\githubrunner\KKDD_qa_auto"
-          }
-          Copy-Item -Path ".\aspnet-core\src\KiemKeDatDai.Web.Host\publish" -Destination "C:\githubrunner\KKDD_qa_auto" -Recurse
+            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            dotnet publish --no-restore -c Release -o C:\githubrunner\KKDD_qa_auto
       - name: start IIS Website
         run: |
             Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
