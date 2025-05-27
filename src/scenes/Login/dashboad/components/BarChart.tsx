@@ -26,7 +26,7 @@ export default function BarChart(props: any) {
             data: [
                 'Trung du và miền núi phía Bắc',
                 'Bắc Trung Bộ và Duyên hải miền Trung',
-                'Đồng bắng sông Hồng',
+                'Đồng bằng sông Hồng',
                 'Tây Nguyên',
                 'Đồng bằng sông Cửu Long',
                 'Đông Nam Bộ']

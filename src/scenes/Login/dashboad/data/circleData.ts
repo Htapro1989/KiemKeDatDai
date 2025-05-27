@@ -34,7 +34,7 @@ export const circleOptions = {
       data: [
          { value: 580, name: 'Vùng trung du và miền núi phía Bắc' },
         { value: 1048, name: 'Vùng Bắc Trung Bộ và Duyên hải miền Trung' },
-        { value: 735, name: 'Vùng đồng bắng sông Hồng' },
+        { value: 735, name: 'Vùng đồng bằng sông Hồng' },
         { value: 484, name: 'Vùng Tây Nguyên' },
         { value: 300, name: 'Vùng đồng bằng sông Cửu Long' },
           { value: 300, name: 'Vùng Đông Nam Bộ' },

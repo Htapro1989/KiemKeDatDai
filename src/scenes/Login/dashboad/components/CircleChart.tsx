@@ -41,7 +41,7 @@ export default function CircleChart(props: any) {
                 data: [
                     { value: baoCaoData?.phanTramVungMienNuiPhiaBac, name: 'Vùng trung du và miền núi phía Bắc' },
                     { value: baoCaoData?.phanTramVungDuyenHaiMienTrung, name: 'Vùng Bắc Trung Bộ và Duyên hải miền Trung' },
-                    { value: baoCaoData?.phanTramVungDongBangSongHong, name: 'Vùng đồng bắng sông Hồng' },
+                    { value: baoCaoData?.phanTramVungDongBangSongHong, name: 'Vùng đồng bằng sông Hồng' },
                     { value: baoCaoData?.phanTramVungTayNguyen, name: 'Vùng Tây Nguyên' },
                     { value: baoCaoData?.phanTramVungDongBangSongCuuLong, name: 'Vùng đồng bằng sông Cửu Long' },
                     { value: baoCaoData?.phanTramVungDongNamBo, name: 'Vùng Đông Nam Bộ' },
