@@ -44,6 +44,7 @@ namespace KiemKeDatDai.Dto
         public long? ParentId { get; set; }
         public DateTime? NgayCapNhat { get; set; }
         public int? TrangThaiDuyet { get; set; }
+        public int? TongDayDuLieu { get; set; }
         public int? TongNop { get; set; }
         public int? TongDuyet { get; set; }
         public int? Tong { get; set; }
@@ -57,5 +58,13 @@ namespace KiemKeDatDai.Dto
         public string Ten { get; set; }
         public string MaXa { get; set; }
         public long Parent_id { get; set; }
+    }
+    public class TongDayDuLieuInputDto{
+        public List<EntitiesDb.File> AllFile { get; set; }
+        public List<DonViHanhChinh> AllDvhc { get; set; }
+        public string MaXa { get; set; }
+        public string MaHuyen { get; set; }
+        public string MaTinh { get; set; }
+        public List<string> ListMaTinh { get; set; }
     }
 }

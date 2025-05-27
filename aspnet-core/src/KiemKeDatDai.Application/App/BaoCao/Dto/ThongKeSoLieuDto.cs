@@ -9,8 +9,10 @@ namespace KiemKeDatDai.Dto
     public class ThongKeSoLieuOutputDto
     {
         public int? TongSoTinh { get; set; }
+        public int? TongSoTinhChoDuyet { get; set; }
         public int? TongSoTinhHoanThanh { get; set; }
         public int? TongSoHuyen { get; set; }
+        public int? TongSoHuyenChoDuyet { get; set; }
         public int? TongSoHuyenHoanThanh { get; set; }
         public int? TongSoXa { get; set; }
         public int? TongSoXaHoanThanh { get; set; }
