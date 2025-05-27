@@ -291,7 +291,7 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        [AbpAuthorize(PermissionNames.Pages_Administration_System_ThongKe)]
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> ReportNumberXaByDate(DateTime fromDate, DateTime toDate)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
