@@ -24,11 +24,12 @@ jobs:
             dotnet restore
       - name: Stop IIS Website QA KKDD
         run: |
-            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
+            %windir%\system32\inetsrv\appcmd stop site /site.name:"KKDD_qa_auto"
+
       - name: publish dotnet
         run: |
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet publish --no-restore -c Release -o C:\githubrunner\KKDD_qa_auto
       - name: start IIS Website
         run: |
-            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
+            %windir%\system32\inetsrv\appcmd start site /site.name:"KKDD_qa_auto"
