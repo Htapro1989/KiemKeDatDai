@@ -279,9 +279,11 @@ namespace KiemKeDatDai.RisApplication
 
             try
             {
-                var query = (from dvhc in _dvhcRepos.GetAll()
+                var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == id);
+
+                var query = (from dvhc in _dvhcRepos.GetAll().Where(x => x.Active == true && x.Year == currentDvhc.Year)
                              join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
-                             where dvhc.Parent_id == id
+                             where dvhc.Parent_Code == currentDvhc.Ma 
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
@@ -328,9 +330,9 @@ namespace KiemKeDatDai.RisApplication
             {
                 var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == id);
 
-                var query = (from dvhc in _dvhcRepos.GetAll()
+                var query = (from dvhc in _dvhcRepos.GetAll().Where(x => x.Active == true && x.Year == currentDvhc.Year)
                              join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
-                             where dvhc.Parent_Code == currentDvhc.Ma && dvhc.Year == currentDvhc.Year
+                             where dvhc.Parent_Code == currentDvhc.Ma 
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
