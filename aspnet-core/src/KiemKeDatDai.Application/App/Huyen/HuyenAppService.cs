@@ -191,6 +191,7 @@ namespace KiemKeDatDai.RisApplication
                 {
                     var currentUser = await GetCurrentUserAsync();
                     var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+
                     if (currentDvhc != null)
                     {
                         if (currentDvhc.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)

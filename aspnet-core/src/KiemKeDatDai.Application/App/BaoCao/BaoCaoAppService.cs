@@ -67,6 +67,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IRepository<Data_Commune, long> _data_CommuneRepos;
         private readonly IRepository<Data_TangGiamKhac, long> _data_TangGiamKhacRepos;
         private readonly IRepository<Data_BienDong, long> _data_BienDongRepos;
+        private readonly IRepository<File, long> _fileRepos;
         IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<User, long> _userRepos;
         private readonly IObjectMapper _objectMapper;
@@ -101,6 +102,7 @@ namespace KiemKeDatDai.RisApplication
             IRepository<Data_BienDong, long> data_BienDongRepos,
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<User, long> userRepos,
+            IRepository<File, long> fileRepos,
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
@@ -133,6 +135,7 @@ namespace KiemKeDatDai.RisApplication
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
+            _fileRepos = fileRepos;
             _configuration = configuration;
             _connectionString = _configuration["ConnectionStrings:Default"];
         }
@@ -148,21 +151,31 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Year == year);
+                    var curentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Year == year);
 
-                    if (objdata != null)
+                    if (curentDvhc != null)
                     {
-                        if (objdata.SoDVHCDaDuyet < objdata.SoDVHCCon && objdata.CapDVHCId != 4)
+                        if (curentDvhc.CapDVHCId == (int)CAP_DVHC.XA)
+                        {
+                            if (await CheckFileXaDayDuLieu(curentDvhc.Ma, year) == false)
+                            {
+                                commonResponseDto.Message = "Xã chưa đẩy dữ liệu. Vui lòng kiểm tra lại";
+                                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                                return commonResponseDto;
+                            }
+                        }
+
+                        if (curentDvhc.SoDVHCDaDuyet < curentDvhc.SoDVHCCon && curentDvhc.CapDVHCId != 4)
                         {
                             commonResponseDto.Message = "Chưa duyệt hết các ĐVHC trực thuộc";
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
 
-                        objdata.NgayGui = DateTime.Now;
-                        objdata.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
+                        curentDvhc.NgayGui = DateTime.Now;
+                        curentDvhc.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
 
-                        await _dvhcRepos.UpdateAsync(objdata);
+                        await _dvhcRepos.UpdateAsync(curentDvhc);
                     }
                     else
                     {
@@ -183,6 +196,19 @@ namespace KiemKeDatDai.RisApplication
                 }
             }
             return commonResponseDto;
+        }
+        private async Task<bool> CheckFileXaDayDuLieu(string ma, long year)
+        {
+            var lstFileName = await _fileRepos
+                .GetAll()
+                .Where(x => x.MaDVHC == ma && x.Year == year && x.FileType == FILE_KYTHONGKE)
+                .ToListAsync();
+
+            if (lstFileName.Count > 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         [AbpAllowAnonymous]
