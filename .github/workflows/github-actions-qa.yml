@@ -16,6 +16,7 @@ jobs:
 
       - name: Pull git code
         run: |
+            git config --global --add safe.directory C:/githubrunner/_work/KiemKeDatDai/KiemKeDatDai
             git pull origin qa
 
       - name: Restore dependencies
