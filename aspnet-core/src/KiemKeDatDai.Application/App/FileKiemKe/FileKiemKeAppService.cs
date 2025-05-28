@@ -289,6 +289,14 @@ namespace KiemKeDatDai.RisApplication
                     return commonResponseDto;
                 }
 
+                if (objDVHC?.TrangThaiDuyet == (int)CommonEnum.TRANG_THAI_DUYET.CHO_DUYET)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Đơn vị hành chính đang chờ duyệt không thể thêm file";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHCHODUYET";
+                    return commonResponseDto;
+                }
+
                 if (input.File == null || input.File.Length == 0)
                 {
                     commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
