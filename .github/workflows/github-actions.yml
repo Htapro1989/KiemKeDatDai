@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: TKKK24
+    runs-on: prod-runner
 
     steps:
       - name: Checkout code
