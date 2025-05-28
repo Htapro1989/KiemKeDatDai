@@ -303,7 +303,7 @@ namespace KiemKeDatDai.RisApplication
 
             try
             {
-                DateTime endDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);
+                DateTime endDate = toDate.AddDays(1);
                 DateTime startDate = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day, 0, 0, 0);
                 using (var con = new SqlConnection(_connectionString))
                 {
