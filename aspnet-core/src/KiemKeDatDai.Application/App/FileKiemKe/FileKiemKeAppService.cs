@@ -319,6 +319,7 @@ namespace KiemKeDatDai.RisApplication
                 int _intMaxAllowedSize = 0;
 
                 // int.TryParse(maxAllowedSize, out _intMaxAllowedSize);
+
                 _intMaxAllowedSize = objDVHC.MaxFileUpload ?? 0;//?? _intMaxAllowedSize;
                 using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
                 {
