@@ -84,6 +84,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         user.TenantId = AbpSession.TenantId;
         user.IsEmailConfirmed = true;
         user.IsChangePass = true;
+        user.IsLockoutEnabled = false;
 
         await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
@@ -107,6 +108,8 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         var user = await _userManager.GetUserByIdAsync(input.Id);
 
         MapToEntity(input, user);
+
+        user.IsLockoutEnabled = false;
 
         CheckErrors(await _userManager.UpdateAsync(user));
 
