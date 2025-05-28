@@ -15,6 +15,7 @@ namespace KiemKeDatDai.Dto
         public int? TongSoHuyenChoDuyet { get; set; }
         public int? TongSoHuyenHoanThanh { get; set; }
         public int? TongSoXa { get; set; }
+        public int? TongSoXaDayDuLieu { get; set; }
         public int? TongSoXaHoanThanh { get; set; }
         public int? VungMienNuiPhiaBac { get; set; }
         public int? VungDongBangSongHong { get; set; }

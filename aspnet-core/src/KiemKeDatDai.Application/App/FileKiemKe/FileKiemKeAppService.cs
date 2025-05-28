@@ -290,16 +290,34 @@ namespace KiemKeDatDai.RisApplication
                         return Fail("Đơn vị hành chính đã được duyệt không thể thêm file", "DONVIHANHCHINHDADUYET");
                     }
 
-                    if (input.File == null || input.File.Length == 0)
-                    {
-                        return Fail("Không có file nào được upload.", "FILEKHONGTONTAI");
-                    }
+                if (objDVHC?.TrangThaiDuyet == (int)CommonEnum.TRANG_THAI_DUYET.CHO_DUYET)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Đơn vị hành chính đang chờ duyệt không thể thêm file";
+                    commonResponseDto.ErrorCode = "DONVIHANHCHINHCHODUYET";
+                    return commonResponseDto;
+                }
 
-                    var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
-                    if (fileExtension != ".zip")
-                    {
-                        return Fail("Chỉ chấp nhận file ZIP.", "SAIDINHDANGFILE");
-                    }
+                if (input.File == null || input.File.Length == 0)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Không có file nào được upload.";
+                    commonResponseDto.ErrorCode = "FILEKHONGTONTAI";
+
+                    return commonResponseDto;
+                }
+                // Check if the file is a ZIP file
+                var fileExtension = Path.GetExtension(input.File.FileName).ToLowerInvariant();
+                if (fileExtension != ".zip")
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Chỉ chấp nhận file ZIP.";
+                    commonResponseDto.ErrorCode = "SAIDINHDANGFILE";
+
+                    return commonResponseDto;
+                }
+                // var maxAllowedSize = _configuration["FileUpload:FileUploadLimit"];
+                int _intMaxAllowedSize = 0;
 
                     int _intMaxAllowedSize = objDVHC.MaxFileUpload ?? 0;
                     using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))

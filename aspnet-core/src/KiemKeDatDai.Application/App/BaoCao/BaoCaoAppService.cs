@@ -207,6 +207,11 @@ namespace KiemKeDatDai.RisApplication
                 _thongke.TongSoXa = allDvhc.Count(x => x.CapDVHCId == xa);
                 _thongke.TongSoXaHoanThanh = allDvhc.Count(x => x.CapDVHCId == xa && x.TrangThaiDuyet == daDuyet);
 
+                DateTime fromDate = new DateTime(2024, 01, 01), toDate = DateTime.Now;
+                var result = await ReportNumberXaByDate(fromDate, toDate);
+
+                _thongke.TongSoXaDayDuLieu = (int)result.ReturnValue;
+
                 var _listMaTinhMNPB = allDvhc.Where(x => x.CapDVHCId == tinh && x.MaVung == ((int)VUNG_MIEN.VUNG_MIEN_NUI_PHIA_BAC).ToString()).Select(x => x.Ma).ToList();
                 var _listMaTinhDBSH = allDvhc.Where(x => x.CapDVHCId == tinh && x.MaVung == ((int)VUNG_MIEN.VUNG_DONG_BANG_SONG_HONG).ToString()).Select(x => x.Ma).ToList();
                 var _listMaTinhDHMT = allDvhc.Where(x => x.CapDVHCId == tinh && x.MaVung == ((int)VUNG_MIEN.VUNG_DUYEN_HAI_MIEN_TRUNG).ToString()).Select(x => x.Ma).ToList();
