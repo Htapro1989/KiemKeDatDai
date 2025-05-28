@@ -24,9 +24,6 @@ jobs:
             cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet restore
 
-      - name: Who am I
-        run: whoami
-        shell: cmd
       - name: Stop IIS Website QA KKDD
         run: |
             %windir%\system32\inetsrv\appcmd stop site /site.name:"KKDD_qa_auto"
