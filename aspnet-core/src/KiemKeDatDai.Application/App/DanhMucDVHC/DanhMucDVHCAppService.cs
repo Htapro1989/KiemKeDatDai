@@ -39,6 +39,7 @@ using OfficeOpenXml;
 using Newtonsoft.Json.Linq;
 using KiemKeDatDai.Authorization;
 using Humanizer;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -535,6 +536,7 @@ namespace KiemKeDatDai.RisApplication
 
                         data = input.MapTo(data);
                         data.TrangThaiDuyet = input.TrangThaiDuyet;
+                        data.Active = true;
 
                         switch (data.CapDVHCId)
                         {
@@ -584,6 +586,7 @@ namespace KiemKeDatDai.RisApplication
                     }
 
                     var dvhc = input.MapTo<DVHCInputDto>();
+                    dvhc.Active = true;
 
                     switch (dvhc.CapDVHCId)
                     {
