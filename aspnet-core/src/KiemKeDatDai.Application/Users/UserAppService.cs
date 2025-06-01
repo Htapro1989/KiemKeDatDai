@@ -369,11 +369,10 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                              DonViHanhChinhCode = obj.DonViHanhChinhCode,
                              DonViHanhChinh = dvhc.Name
                          })
-                         .WhereIf(string.IsNullOrEmpty(input.Keyword), x => x.UserName.Contains(input.Keyword)
-                                || x.DonViHanhChinhCode.Contains(input.Keyword)
-                                || x.FullName.Contains(input.Keyword)
-                                || x.Name.Contains(input.Keyword)
-                                || x.EmailAddress.Contains(input.Keyword));
+                         .WhereIf(!string.IsNullOrEmpty(input.Keyword), x => x.UserName.ToLower().Contains(input.Keyword.ToLower())
+                                || x.DonViHanhChinhCode.ToLower().Contains(input.Keyword.ToLower())
+                                || x.Name.ToLower().Contains(input.Keyword.ToLower())
+                                || x.EmailAddress.ToLower().Contains(input.Keyword.ToLower()));
 
             var totalCount = await query.CountAsync();
             var lstUser = await query.OrderBy(x => x.CreationTime)
