@@ -31,6 +31,7 @@ using KiemKeDatDai.Sessions;
 using Abp.Domain.Uow;
 using System.Transactions;
 using Aspose.Cells;
+using Abp.Collections.Extensions;
 
 namespace KiemKeDatDai.RisApplication;
 
@@ -347,6 +348,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                 commonResponseDto.Message = "Mã đơn vị hành chính không được để trống.";
                 return commonResponseDto;
             }
+
             var lstMa = await GetChildrenMa(input.Ma);
             lstMa.Add(input.Ma);
 
@@ -366,7 +368,12 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
                              DonViHanhChinhId = obj.DonViHanhChinhId,
                              DonViHanhChinhCode = obj.DonViHanhChinhCode,
                              DonViHanhChinh = dvhc.Name
-                         });
+                         })
+                         .WhereIf(!string.IsNullOrEmpty(input.Keyword), x => x.UserName.ToLower().Contains(input.Keyword.ToLower())
+                                || x.DonViHanhChinhCode.ToLower().Contains(input.Keyword.ToLower())
+                                || x.Name.ToLower().Contains(input.Keyword.ToLower())
+                                || x.EmailAddress.ToLower().Contains(input.Keyword.ToLower()));
+
             var totalCount = await query.CountAsync();
             var lstUser = await query.OrderBy(x => x.CreationTime)
                                 .Skip(input.SkipCount)
