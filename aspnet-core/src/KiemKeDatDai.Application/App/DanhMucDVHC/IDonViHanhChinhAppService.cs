@@ -31,7 +31,8 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> GetDropDownHuyenByMaTinh(string ma);
         Task<CommonResponseDto> GetDropDownXaByHuyenId(long huyenId);
         Task<CommonResponseDto> GetDropDownXaByMaHuyen(string ma);
-        Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUplaod, long year);
+        Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUplaod);
         Task<FileStreamResult> DownloadTemplateDVHC();
+        Task<string> WriteFile(IFormFile file, string tenThuMuc);
     }
 }

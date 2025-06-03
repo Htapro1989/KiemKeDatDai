@@ -40,6 +40,7 @@ using Newtonsoft.Json.Linq;
 using KiemKeDatDai.Authorization;
 using Humanizer;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Aspose.Cells;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -59,6 +60,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IRepository<EntitiesDb.File, long> _fileRepos;
         private readonly IDistributedCache _distributedCache;
         private readonly IMemoryCache _cache;
+        IUnitOfWorkManager _unitOfWorkManager;
 
         private readonly ICache mainCache;
 
@@ -74,6 +76,7 @@ namespace KiemKeDatDai.RisApplication
             IRepository<EntitiesDb.File, long> fileRepos,
             IHttpContextAccessor httpContextAccessor,
             IDistributedCache distributedCache,
+            IUnitOfWorkManager unitOfWorkManager,
             IMemoryCache cache
             )
         {
@@ -90,6 +93,7 @@ namespace KiemKeDatDai.RisApplication
             _fileRepos = fileRepos;
             _distributedCache = distributedCache;
             _cache = cache;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public async Task<CommonResponseDto> GetAll(DVHCDto input)
@@ -282,7 +286,7 @@ namespace KiemKeDatDai.RisApplication
 
                 var query = (from dvhc in _dvhcRepos.GetAll().Where(x => x.Active == true && x.Year == currentDvhc.Year)
                              join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
-                             where dvhc.Parent_Code == currentDvhc.Ma 
+                             where dvhc.Parent_Code == currentDvhc.Ma
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
@@ -331,7 +335,7 @@ namespace KiemKeDatDai.RisApplication
 
                 var query = (from dvhc in _dvhcRepos.GetAll().Where(x => x.Active == true && x.Year == currentDvhc.Year)
                              join cdvhc in _cdvhcRepos.GetAll() on dvhc.CapDVHCId equals cdvhc.MaCapDVHC
-                             where dvhc.Parent_Code == currentDvhc.Ma 
+                             where dvhc.Parent_Code == currentDvhc.Ma
                              select new DVHCOutputDto
                              {
                                  Id = dvhc.Id,
@@ -512,110 +516,16 @@ namespace KiemKeDatDai.RisApplication
                     return commonResponseDto;
                 }
                 var currentUser = await GetCurrentUserAsync();
-                var allDvhc = await _dvhcRepos.GetAllAsync();
+                var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Year == input.Year).ToListAsync();
 
                 if (input.Id != 0)
                 {
-                    var data = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
-
-                    if (data != null)
-                    {
-                        if (input.Ma != data.Ma)
-                        {
-
-                            if (CheckMaDVHC(input.Ma))
-                            {
-                                commonResponseDto.Message = "Mã đơn vị hành chính này đã tồn tại";
-                                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                                return commonResponseDto;
-                            }
-                        }
-
-                        data = input.MapTo(data);
-                        data.TrangThaiDuyet = input.TrangThaiDuyet;
-                        data.Active = true;
-
-                        switch (data.CapDVHCId)
-                        {
-                            case (int)CAP_DVHC.XA:
-                                data.TenXa = data.Name;
-                                data.MaXa = input.Ma;
-                                data.TenHuyen = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
-                                data.MaHuyen = input.Parent_Code;
-                                data.MaTinh = allDvhc.Single(x => x.Ma == data.MaHuyen).MaTinh;
-                                data.TenTinh = allDvhc.Single(x => x.Ma == data.MaTinh).Name;
-                                data.MaxFileUpload = input.MaxFileUpload;
-                                break;
-                            case (int)CAP_DVHC.HUYEN:
-                                data.MaHuyen = input.Ma;
-                                data.TenHuyen = data.Name;
-                                data.TenTinh = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
-                                data.MaTinh = input.Parent_Code;
-                                break;
-                            case (int)CAP_DVHC.TINH:
-                                data.TenTinh = data.Name;
-                                data.MaTinh = input.Ma;
-                                data.TenVung = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
-                                data.MaVung = input.Parent_Code;
-                                break;
-                            case (int)CAP_DVHC.VUNG:
-                                data.TenVung = data.Name;
-                                break;
-                            default:
-                                break;
-                        }
-                        await _dvhcRepos.UpdateAsync(data);
-                    }
-                    else
-                    {
-                        commonResponseDto.Message = "Đơn vị hành chính này không tồn tại";
-                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                        return commonResponseDto;
-                    }
+                    commonResponseDto = await Update(input, allDvhc);
                 }
                 else
                 {
-                    if (CheckMaDVHC(input.Ma))
-                    {
-                        commonResponseDto.Message = "Mã đơn vị hành chính này đã tồn tại";
-                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                        return commonResponseDto;
-                    }
-
-                    var dvhc = input.MapTo<DVHCInputDto>();
-                    dvhc.Active = true;
-
-                    switch (dvhc.CapDVHCId)
-                    {
-                        case (int)CAP_DVHC.XA:
-                            dvhc.TenXa = input.Name;
-                            dvhc.MaXa = input.Ma;
-                            dvhc.TenHuyen = allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
-                            dvhc.MaHuyen = input.Parent_Code;
-                            dvhc.MaTinh = allDvhc.Single(x => x.Ma == dvhc.MaHuyen).MaTinh;
-                            dvhc.TenTinh = allDvhc.Single(x => x.Ma == dvhc.MaTinh).Name;
-                            dvhc.MaxFileUpload = input.MaxFileUpload;
-                            break;
-                        case (int)CAP_DVHC.HUYEN:
-                            dvhc.TenHuyen = input.Name;
-                            dvhc.MaHuyen = input.Ma;
-                            dvhc.TenTinh = allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
-                            dvhc.MaTinh = input.Parent_Code;
-                            break;
-                        case (int)CAP_DVHC.TINH:
-                            dvhc.TenTinh = input.Name;
-                            dvhc.MaTinh = input.Ma;
-                            dvhc.TenVung = allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
-                            dvhc.MaVung = input.Parent_Code;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    await _dvhcRepos.InsertAsync(dvhc);
+                    commonResponseDto = await Create(input, allDvhc);
                 }
-                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
-                commonResponseDto.Message = "Thành Công";
             }
             catch (Exception ex)
             {
@@ -623,6 +533,118 @@ namespace KiemKeDatDai.RisApplication
                 commonResponseDto.Message = ex.Message;
                 throw;
             }
+            return commonResponseDto;
+        }
+
+        public async Task<CommonResponseDto> Create(DVHCInputDto input, List<DonViHanhChinh> allDvhc)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            if (CheckMaDVHC(input.Ma))
+            {
+                commonResponseDto.Message = "Mã đơn vị hành chính" + input.Ma + "đã tồn tại";
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                return commonResponseDto;
+            }
+
+            var dvhc = input.MapTo<DVHCInputDto>();
+            dvhc.Active = true;
+
+            switch (dvhc.CapDVHCId)
+            {
+                case (int)CAP_DVHC.XA:
+                    dvhc.TenXa = input.Name;
+                    dvhc.MaXa = input.Ma;
+                    dvhc.TenHuyen = input.TenHuyen != null ? input.TenHuyen : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                    dvhc.MaHuyen = input.MaHuyen != null ? input.MaHuyen : input.Parent_Code;
+                    dvhc.MaTinh = input.MaTinh != null ? input.MaTinh : allDvhc.Single(x => x.Ma == dvhc.MaHuyen).MaTinh;
+                    dvhc.TenTinh = input.TenTinh != null ? input.TenTinh : allDvhc.Single(x => x.Ma == dvhc.MaTinh).Name;
+                    dvhc.MaxFileUpload = input.MaxFileUpload != null ? input.MaxFileUpload : 5;
+                    break;
+                case (int)CAP_DVHC.HUYEN:
+                    dvhc.TenHuyen = input.Name;
+                    dvhc.MaHuyen = input.Ma;
+                    dvhc.TenTinh = input.TenTinh != null ? input.TenTinh : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                    dvhc.MaTinh = input.MaTinh != null ? input.MaTinh : input.Parent_Code;
+                    break;
+                case (int)CAP_DVHC.TINH:
+                    dvhc.TenTinh = input.Name;
+                    dvhc.MaTinh = input.Ma;
+                    dvhc.TenVung = input.TenVung != null ? input.TenVung : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                    dvhc.MaVung = input.MaVung != null ? input.MaVung : input.Parent_Code;
+                    break;
+                default:
+                    break;
+            }
+
+            await _dvhcRepos.InsertAsync(dvhc);
+
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
+            return commonResponseDto;
+        }
+
+        private async Task<CommonResponseDto> Update(DVHCInputDto input, List<DonViHanhChinh> allDvhc)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            var data = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == input.Id);
+
+            if (data == null)
+            {
+                commonResponseDto.Message = "Đơn vị hành chính này không tồn tại";
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                return commonResponseDto;
+
+            }
+
+            //Nếu sửa mã đvhc thì phải check lại mã này đã tồn tại chưa
+            if (input.Ma != data.Ma)
+            {
+                if (CheckMaDVHC(input.Ma))
+                {
+                    commonResponseDto.Message = "Mã đơn vị hành chính" + input.Ma + "đã tồn tại";
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    return commonResponseDto;
+                }
+            }
+
+            data = input.MapTo(data);
+            data.TrangThaiDuyet = input.TrangThaiDuyet;
+            data.Active = true;
+
+            switch (data.CapDVHCId)
+            {
+                case (int)CAP_DVHC.XA:
+                    data.TenXa = data.Name;
+                    data.MaXa = input.Ma;
+                    data.TenHuyen = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
+                    data.MaHuyen = input.Parent_Code;
+                    data.MaTinh = allDvhc.Single(x => x.Ma == data.MaHuyen).MaTinh;
+                    data.TenTinh = allDvhc.Single(x => x.Ma == data.MaTinh).Name;
+                    data.MaxFileUpload = input.MaxFileUpload;
+                    break;
+                case (int)CAP_DVHC.HUYEN:
+                    data.MaHuyen = input.Ma;
+                    data.TenHuyen = data.Name;
+                    data.TenTinh = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
+                    data.MaTinh = input.Parent_Code;
+                    break;
+                case (int)CAP_DVHC.TINH:
+                    data.TenTinh = data.Name;
+                    data.MaTinh = input.Ma;
+                    data.TenVung = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
+                    data.MaVung = input.Parent_Code;
+                    break;
+                case (int)CAP_DVHC.VUNG:
+                    data.TenVung = data.Name;
+                    break;
+                default:
+                    break;
+            }
+            await _dvhcRepos.UpdateAsync(data);
+
+            commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+            commonResponseDto.Message = "Thành Công";
             return commonResponseDto;
         }
 
@@ -1163,125 +1185,113 @@ namespace KiemKeDatDai.RisApplication
         }
 
         [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
-        public async Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUpload, long year)
+        public async Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUpload)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
-            try
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
-                //var results = new List<List<DamInfoJsonOutput>>();
-                var urlFile = await WriteFile(fileUpload);
-
-                var dt = new System.Data.DataTable();
-                var fi = new FileInfo(urlFile);
-
-                // Check if the file exists
-                if (!fi.Exists)
+                try
                 {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "File " + urlFile + " không tồn tại";
-                }
+                    //var results = new List<List<DamInfoJsonOutput>>();
+                    string tenThuMuc = "DVHC";
+                    var urlFile = await WriteFile(fileUpload, tenThuMuc);
 
-                //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
-                var worksheets = excel.Workbook.Worksheets;
+                    var dt = new System.Data.DataTable();
+                    var fi = new FileInfo(urlFile);
 
-                if (worksheets == null)
-                {
-                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
-                    commonResponseDto.Message = "Không đọc được file";
-                }
-                else
-                {
+                    // Check if the file exists
+                    if (!fi.Exists)
+                    {
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Message = "File " + urlFile + " không tồn tại";
+                        return commonResponseDto;
+                    }
+
+                    //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
+                    var worksheets = excel.Workbook.Worksheets;
+
+                    if (worksheets == null)
+                    {
+                        commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                        commonResponseDto.Message = "Không đọc được file";
+                        return commonResponseDto;
+                    }
+
                     foreach (var sheet in worksheets)
                     {
                         var table = sheet.Tables.FirstOrDefault();
 
                         if (table != null)
                         {
-                            //if (sheet.Index == 0)
-                            //{
-                            //    await _dvhcRepos.DeleteAsync(x => x.Year == year);
-                            //}
                             var tableData = table.ToDataTable();
                             var jArray = JArray.FromObject(tableData);
+                            var year = jArray[0].Value<long>("Year");
+                            var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Year == year).ToListAsync();
 
                             foreach (var item in jArray)
                             {
                                 if (item != null)
                                 {
-                                    var dvhcObj = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == item.Value<string>("MaXa") && x.Year == year);
-                                    if (dvhcObj != null)
+                                    if (item.Value<string>("CapDvhc") == null)
                                     {
-                                        dvhcObj.TenVung = item.Value<string>("TenVung");
-                                        dvhcObj.MaVung = item.Value<string>("MaVung");
-                                        dvhcObj.TenTinh = item.Value<string>("TenTinh");
-                                        dvhcObj.MaTinh = item.Value<string>("MaTinh");
-                                        dvhcObj.TenHuyen = item.Value<string>("TenHuyen");
-                                        dvhcObj.MaHuyen = item.Value<string>("MaHuyen");
-                                        dvhcObj.TenXa = item.Value<string>("TenXa");
-                                        dvhcObj.MaXa = item.Value<string>("MaXa");
-                                        dvhcObj.Ma = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaXa") :
-                                        (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh"));
-                                        dvhcObj.Name = item.Value<string>("TenXa") != null && item.Value<string>("TenXa") != "" ? item.Value<string>("TenXa") :
-                                        (item.Value<string>("TenHuyen") != null && item.Value<string>("TenHuyen") != "" ? item.Value<string>("TenHuyen") : item.Value<string>("TenTinh"));
-                                        //Name = item.Value<string>("Name"),
-                                        dvhcObj.Parent_Code = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh");
-                                        dvhcObj.CapDVHCId = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? 4 :
-                                        (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? 3 : 2);
-                                        dvhcObj.Active = true;
-                                        dvhcObj.Year = year;
-                                        _dvhcRepos.Update(dvhcObj);
+                                        commonResponseDto.Message = "Chưa có cấp đơn vị hành chính";
+                                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                                        return commonResponseDto;
                                     }
-                                    else
+
+                                    var capDvhc = item.Value<long>("CapDvhc");
+                                    
+                                    var input = new DVHCInputDto()
                                     {
-                                        var data = new DonViHanhChinh()
-                                        {
-                                            TenVung = item.Value<string>("TenVung"),
-                                            MaVung = item.Value<string>("MaVung"),
-                                            TenTinh = item.Value<string>("TenTinh"),
-                                            MaTinh = item.Value<string>("MaTinh"),
-                                            TenHuyen = item.Value<string>("TenHuyen"),
-                                            MaHuyen = item.Value<string>("MaHuyen"),
-                                            TenXa = item.Value<string>("TenXa"),
-                                            MaXa = item.Value<string>("MaXa"),
-                                            Ma = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaXa") :
-                                            (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh")),
-                                            Name = item.Value<string>("TenXa") != null && item.Value<string>("TenXa") != "" ? item.Value<string>("TenXa") :
-                                            (item.Value<string>("TenHuyen") != null && item.Value<string>("TenHuyen") != "" ? item.Value<string>("TenHuyen") : item.Value<string>("TenTinh")),
-                                            //Name = item.Value<string>("Name"),
-                                            Parent_id = null,
-                                            Parent_Code = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? item.Value<string>("MaHuyen") : item.Value<string>("MaTinh"),
-                                            CapDVHCId = item.Value<string>("MaXa") != null && item.Value<string>("MaXa") != "" ? 4 :
-                                            (item.Value<string>("MaHuyen") != null && item.Value<string>("MaHuyen") != "" ? 3 : 2),
-                                            Active = true,
-                                            Year = year,
-                                            TrangThaiDuyet = null,
-                                            NgayGui = null,
-                                            NgayDuyet = null,
-                                            SoDVHCCon = null,
-                                            SoDVHCDaDuyet = null,
-                                            MaxFileUpload = null
-                                        };
-                                        await _dvhcRepos.InsertAsync(data);
+                                        TenVung = item.Value<string>("TenVung"),
+                                        MaVung = item.Value<string>("MaVung"),
+                                        TenTinh = item.Value<string>("TenTinh"),
+                                        MaTinh = item.Value<string>("MaTinh"),
+                                        TenHuyen = item.Value<string>("TenHuyen"),
+                                        MaHuyen = item.Value<string>("MaHuyen"),
+                                        TenXa = item.Value<string>("TenXa"),
+                                        CapDVHCId = capDvhc
+                                    };
+
+                                    switch (capDvhc)
+                                    {
+                                        case (int)CAP_DVHC.XA:
+                                            input.Name = input.TenXa;
+                                            input.Ma = input.MaXa;
+                                            break;
+                                        case (int)CAP_DVHC.HUYEN:
+                                            input.Name = input.TenHuyen;
+                                            input.Ma = input.MaHuyen;
+                                            break;
+                                        case (int)CAP_DVHC.TINH:
+                                            input.Name = input.TenTinh;
+                                            input.Ma = input.MaTinh;
+                                            break;
                                     }
+
+                                    commonResponseDto = await Create(input, allDvhc);
                                 }
                             }
+
+                            uow.Complete();
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    uow.Dispose();
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = ex.Message;
+                    Logger.Fatal(ex.Message);
+                }
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return null;
+            return commonResponseDto;
         }
 
         public async Task<FileStreamResult> DownloadTemplateDVHC()
         {
-            CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
                 var template = "TemplateImport_DVHC.xlsx";
@@ -1298,7 +1308,7 @@ namespace KiemKeDatDai.RisApplication
             }
         }
 
-        private async Task<string> WriteFile(IFormFile file)
+        public async Task<string> WriteFile(IFormFile file, string tenThuMuc)
         {
             string fileName = "";
             string exactPathDirectory = "";
@@ -1307,15 +1317,15 @@ namespace KiemKeDatDai.RisApplication
             {
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks.ToString() + extension;
-                var filePath = "wwwroot\\Uploads\\Files\\DVHC";
+                var filePath = "wwwroot\\Uploads\\Files\\" + tenThuMuc;
 
                 if (!Directory.Exists(filePath))
                 {
                     Directory.CreateDirectory(filePath);
                 }
 
-                exactPathDirectory = "wwwroot\\Uploads\\Files\\DVHC" + "\\" + fileName;
-                var exactPath = "wwwroot\\Uploads\\Files\\DVHC" + "\\" + fileName;
+                exactPathDirectory = "wwwroot\\Uploads\\Files\\" + tenThuMuc + "\\" + fileName;
+                var exactPath = "wwwroot\\Uploads\\Files\\" + tenThuMuc + "\\" + fileName;
 
                 using (var stream = new FileStream(exactPath, FileMode.Create))
                 {
