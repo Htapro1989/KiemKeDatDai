@@ -216,7 +216,7 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
@@ -256,7 +256,7 @@ namespace KiemKeDatDai.RisApplication
                         }
                         if (objdata.SoDVHCCon == null)
                         {
-                            objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_id == currentUser.DonViHanhChinhId.Value);
+                            objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_Code == currentUser.DonViHanhChinhCode);
                         }
                         await _dvhcRepos.UpdateAsync(objdata);
                         #endregion
@@ -292,7 +292,7 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);

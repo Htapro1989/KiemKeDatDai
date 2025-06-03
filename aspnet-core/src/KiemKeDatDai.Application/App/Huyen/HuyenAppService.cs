@@ -190,7 +190,7 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+                    var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
 
                     if (currentDvhc != null)
                     {
@@ -249,7 +249,7 @@ namespace KiemKeDatDai.RisApplication
                             }
                             if (currentDvhc.SoDVHCCon == null)
                             {
-                                currentDvhc.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_id == currentUser.DonViHanhChinhId.Value);
+                                currentDvhc.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_Code == currentUser.DonViHanhChinhCode);
                             }
                             await _dvhcRepos.UpdateAsync(currentDvhc);
                             #endregion
@@ -286,7 +286,7 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(currentUser.DonViHanhChinhId.Value);
+                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
                     if (objdata != null)
                     {
                         if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)

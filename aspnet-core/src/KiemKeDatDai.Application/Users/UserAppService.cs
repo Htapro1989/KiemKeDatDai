@@ -32,12 +32,18 @@ using Abp.Domain.Uow;
 using System.Transactions;
 using Aspose.Cells;
 using Abp.Collections.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
+using OfficeOpenXml;
 
 namespace KiemKeDatDai.RisApplication;
 
 [AbpAuthorize]
 public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
 {
+    private readonly IDonViHanhChinhAppService _iDonViHanhChinhAppService;
     private readonly UserManager _userManager;
     private readonly RoleManager _roleManager;
     private readonly IRepository<Authorization.Roles.Role> _roleRepository;
@@ -50,6 +56,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
     IUnitOfWorkManager _unitOfWorkManager;
 
     public UserAppService(
+        IDonViHanhChinhAppService iDonViHanhChinhAppService,
         IRepository<User, long> repository,
         UserManager userManager,
         RoleManager roleManager,
@@ -63,6 +70,7 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         LogInManager logInManager)
         : base(repository)
     {
+        _iDonViHanhChinhAppService = iDonViHanhChinhAppService;
         _userManager = userManager;
         _roleManager = roleManager;
         _roleRepository = roleRepository;
@@ -530,6 +538,146 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
             }
         }
         return commonResponseDto;
+    }
+
+    public async Task<CommonResponseDto> UploadFileUser(IFormFile fileUpload)
+    {
+        CommonResponseDto commonResponseDto = new CommonResponseDto();
+        using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+        {
+            try
+            {
+                //var results = new List<List<DamInfoJsonOutput>>();
+                string tenThuMuc = "User";
+                var urlFile = await _iDonViHanhChinhAppService.WriteFile(fileUpload, tenThuMuc);
+
+                var dt = new System.Data.DataTable();
+                var fi = new FileInfo(urlFile);
+
+                // Check if the file exists
+                if (!fi.Exists)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "File " + urlFile + " không tồn tại";
+                    return commonResponseDto;
+                }
+
+                //ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                var excel = new ExcelPackage(new MemoryStream(System.IO.File.ReadAllBytes(urlFile)));
+                var worksheets = excel.Workbook.Worksheets;
+
+                if (worksheets == null)
+                {
+                    commonResponseDto.Code = CommonEnum.ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Không đọc được file";
+                    return commonResponseDto;
+                }
+
+                foreach (var sheet in worksheets)
+                {
+                    var table = sheet.Tables.FirstOrDefault();
+
+                    if (table != null)
+                    {
+                        var tableData = table.ToDataTable();
+                        var jArray = JArray.FromObject(tableData);
+                        var allDvhc = await _dvhcRepos.GetAll().ToListAsync();
+
+                        foreach (var item in jArray)
+                        {
+                            if (item != null)
+                            {
+                                List<string> roleNames = new List<string>();
+                                roleNames.Add(item.Value<string>("VaiTro"));
+
+                                var input = new CreateUserDto()
+                                {
+                                    UserName = item.Value<string>("UserName"),
+                                    Password = item.Value<string>("Password"),
+                                    Surname = item.Value<string>("Ho"),
+                                    Name = item.Value<string>("Ten"),
+                                    EmailAddress = item.Value<string>("Email"),
+                                    DonViHanhChinhCode = item.Value<string>("MaDvhc"),
+                                    RoleNames = roleNames.ToArray(),
+                                    IsActive = true
+                                };
+
+                                commonResponseDto = ValidUserUploadExcel(input);
+
+                                await CreateAsync(input);
+                            }
+                        }
+
+                        commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                        commonResponseDto.Message = "Thành Công";
+                        uow.Complete();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                uow.Dispose();
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Fatal(ex.Message);
+            }
+        }
+        return commonResponseDto;
+    }
+
+    private CommonResponseDto ValidUserUploadExcel(CreateUserDto input)
+    {
+        CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+        if (input.UserName == null)
+        {
+            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+            commonResponseDto.Message = "UserName không được để trống";
+            return commonResponseDto;
+        }
+
+        if (input.Password == null)
+        {
+            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+            commonResponseDto.Message = "Password không được để trống";
+            return commonResponseDto;
+        }
+
+        if (input.Name == null)
+        {
+            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+            commonResponseDto.Message = "Name không được để trống";
+            return commonResponseDto;
+        }
+
+        if (input.DonViHanhChinhCode == null)
+        {
+            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+            commonResponseDto.Message = "Mã đơn vị hành chính không được để trống";
+            return commonResponseDto;
+        }
+
+        return commonResponseDto;
+    }
+
+    public async Task<FileStreamResult> DownloadTemplateUser()
+    {
+        CommonResponseDto commonResponseDto = new CommonResponseDto();
+        try
+        {
+            var template = "TemplateImport_User.xlsx";
+            MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template)));
+            return new FileStreamResult(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                FileDownloadName = "Template_User.xlsx"
+            };
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 }
 
