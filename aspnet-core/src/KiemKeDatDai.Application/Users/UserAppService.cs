@@ -37,13 +37,13 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using OfficeOpenXml;
+using KiemKeDatDai.AppCore.Utility;
 
 namespace KiemKeDatDai.RisApplication;
 
 [AbpAuthorize]
 public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
 {
-    private readonly IDonViHanhChinhAppService _iDonViHanhChinhAppService;
     private readonly UserManager _userManager;
     private readonly RoleManager _roleManager;
     private readonly IRepository<Authorization.Roles.Role> _roleRepository;
@@ -56,7 +56,6 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
     IUnitOfWorkManager _unitOfWorkManager;
 
     public UserAppService(
-        IDonViHanhChinhAppService iDonViHanhChinhAppService,
         IRepository<User, long> repository,
         UserManager userManager,
         RoleManager roleManager,
@@ -70,7 +69,6 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         LogInManager logInManager)
         : base(repository)
     {
-        _iDonViHanhChinhAppService = iDonViHanhChinhAppService;
         _userManager = userManager;
         _roleManager = roleManager;
         _roleRepository = roleRepository;
@@ -547,9 +545,9 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         {
             try
             {
-                //var results = new List<List<DamInfoJsonOutput>>();
+                var allUser = await _userRepos.GetAll().Where(x => x.IsActive == true).ToListAsync();
                 string tenThuMuc = "User";
-                var urlFile = await _iDonViHanhChinhAppService.WriteFile(fileUpload, tenThuMuc);
+                var urlFile = await Utility.WriteFile(fileUpload, tenThuMuc);
 
                 var dt = new System.Data.DataTable();
                 var fi = new FileInfo(urlFile);
@@ -605,6 +603,11 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
 
                                 commonResponseDto = ValidUserUploadExcel(input);
 
+                                if (CheckUserNameDulicate(allUser, input.UserName))
+                                {
+                                    input.UserName = input.UserName + 1;
+                                }
+
                                 await CreateAsync(input);
                             }
                         }
@@ -659,6 +662,16 @@ public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUser
         }
 
         return commonResponseDto;
+    }
+
+    private bool CheckUserNameDulicate(List<User> allUser, string userName)
+    {
+        var user = allUser.FirstOrDefault(x => x.UserName == userName);
+        if (user != null)
+        {
+            return true;
+        }
+        return false;
     }
 
     public async Task<FileStreamResult> DownloadTemplateUser()

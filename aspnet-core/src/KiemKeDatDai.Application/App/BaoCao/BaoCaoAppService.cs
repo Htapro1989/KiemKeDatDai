@@ -151,7 +151,8 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var curentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Year == year);
+                    var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Year == year).ToListAsync();
+                    var curentDvhc = allDvhc.FirstOrDefault(x => x.Ma == currentUser.DonViHanhChinhCode);
 
                     if (curentDvhc != null)
                     {
@@ -165,7 +166,11 @@ namespace KiemKeDatDai.RisApplication
                             }
                         }
 
-                        if (curentDvhc.SoDVHCDaDuyet < curentDvhc.SoDVHCCon && curentDvhc.CapDVHCId != 4)
+                        var soDVHCCon = allDvhc.Count(x => x.Parent_Code == curentDvhc.Ma);
+                        var soDVHCDaDuyet = allDvhc.Count(x => x.Parent_Code == curentDvhc.Ma && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
+
+                        //Kiểm tra xem đã duyệt hết các đvhc trực thuộc chưa
+                        if (soDVHCDaDuyet < soDVHCCon && curentDvhc.CapDVHCId != 4)
                         {
                             commonResponseDto.Message = "Chưa duyệt hết các ĐVHC trực thuộc";
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace KiemKeDatDai.AppCore.Utility
 {
@@ -68,6 +69,38 @@ namespace KiemKeDatDai.AppCore.Utility
                 { ".csv", "text/csv" },
                 { ".dgn", "application/octet-stream" }
             };
+        }
+
+        public static async Task<string> WriteFile(IFormFile file, string tenThuMuc)
+        {
+            string fileName = "";
+            string exactPathDirectory = "";
+
+            try
+            {
+                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+                fileName = DateTime.Now.Ticks.ToString() + extension;
+                var filePath = "wwwroot\\Uploads\\Files\\" + tenThuMuc;
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                exactPathDirectory = "wwwroot\\Uploads\\Files\\" + tenThuMuc + "\\" + fileName;
+                var exactPath = "wwwroot\\Uploads\\Files\\" + tenThuMuc + "\\" + fileName;
+
+                using (var stream = new FileStream(exactPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return exactPathDirectory;
         }
     }
 }

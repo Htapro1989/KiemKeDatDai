@@ -33,6 +33,5 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> GetDropDownXaByMaHuyen(string ma);
         Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUplaod);
         Task<FileStreamResult> DownloadTemplateDVHC();
-        Task<string> WriteFile(IFormFile file, string tenThuMuc);
     }
 }

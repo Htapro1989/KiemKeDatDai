@@ -1194,7 +1194,7 @@ namespace KiemKeDatDai.RisApplication
                 {
                     //var results = new List<List<DamInfoJsonOutput>>();
                     string tenThuMuc = "DVHC";
-                    var urlFile = await WriteFile(fileUpload, tenThuMuc);
+                    var urlFile = await Utility.WriteFile(fileUpload, tenThuMuc);
 
                     var dt = new System.Data.DataTable();
                     var fi = new FileInfo(urlFile);
@@ -1306,38 +1306,6 @@ namespace KiemKeDatDai.RisApplication
 
                 throw;
             }
-        }
-
-        public async Task<string> WriteFile(IFormFile file, string tenThuMuc)
-        {
-            string fileName = "";
-            string exactPathDirectory = "";
-
-            try
-            {
-                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                fileName = DateTime.Now.Ticks.ToString() + extension;
-                var filePath = "wwwroot\\Uploads\\Files\\" + tenThuMuc;
-
-                if (!Directory.Exists(filePath))
-                {
-                    Directory.CreateDirectory(filePath);
-                }
-
-                exactPathDirectory = "wwwroot\\Uploads\\Files\\" + tenThuMuc + "\\" + fileName;
-                var exactPath = "wwwroot\\Uploads\\Files\\" + tenThuMuc + "\\" + fileName;
-
-                using (var stream = new FileStream(exactPath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return exactPathDirectory;
         }
     }
 }
