@@ -10,27 +10,29 @@ jobs:
     runs-on: qa-runner
 
     steps:
+    
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Pull git code
         run: |
+            git config --global --add safe.directory C:/githubrunner/_work/KiemKeDatDai/KiemKeDatDai
             git pull origin qa
-
-      - name: Stop IIS Website product
-        run: |
-            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe stop site /site.name:'KKDD_qa_auto'" -Verb RunAs
 
       - name: Restore dependencies
         run: |
-            cd \KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
             dotnet restore
 
+      - name: Stop IIS Website QA KKDD
+        run: |
+            %windir%\system32\inetsrv\appcmd stop site /site.name:"KKDD_qa_auto"
+        shell: cmd
       - name: publish dotnet
         run: |
-            cd \KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
-            dotnet publish --no-restore
-            
+            cd C:\githubrunner\_work\KiemKeDatDai\KiemKeDatDai\aspnet-core\src\KiemKeDatDai.Web.Host
+            dotnet publish --no-restore -c Release -o C:\githubrunner\KKDD_qa_auto
       - name: start IIS Website
         run: |
-            Start-Process powershell -ArgumentList "cd C:\Windows\System32\inetsrv; .\appcmd.exe start site /site.name:'KKDD_qa_auto'" -Verb RunAs
+            %windir%\system32\inetsrv\appcmd start site /site.name:"KKDD_qa_auto"
+        shell: cmd

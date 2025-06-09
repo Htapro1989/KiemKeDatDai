@@ -12,8 +12,8 @@ namespace KiemKeDatDai.EntitiesDb
     [Table("BieuPhuLucIV")]
     public class BieuPhuLucIV : FullAuditedEntity<long>
     {
-        public int? SoHieuThua_TruocBienDong { get; set; }
-        public int? SoHieuThua_SauBienDong { get; set; }
+        public string? SoHieuThua_TruocBienDong { get; set; }
+        public string? SoHieuThua_SauBienDong { get; set; }
         public string? TenNguoiSDDat { get; set; }
         public string? DiaChiKhoanhDat { get; set; }
         [Column(TypeName = "decimal(18, 4)")]
