@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "KiemKeDatDai.Web.Host",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/KiemKeDatDai.Web.Host/bin/Debug/net9.0/KiemKeDatDai.Web.Host.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/KiemKeDatDai.Web.Host",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/KiemKeDatDai.Web.Host/Views"
+      }
+    }
+  ]
+}
