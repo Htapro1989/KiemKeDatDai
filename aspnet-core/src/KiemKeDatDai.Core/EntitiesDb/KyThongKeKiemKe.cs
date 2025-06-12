@@ -13,6 +13,7 @@ namespace KiemKeDatDai.EntitiesDb
     {
         public string? Ma { get; set; }
         public string? Name { get; set; }
+        public int? LoaiCapDVHC { get; set; }
         public long Year { get; set; }
         public bool? Active { get; set; }
     }
