@@ -858,6 +858,7 @@ namespace KiemKeDatDai.RisApplication
         private async Task CreateOrUpdateBieu03TKKK_Tinh(List<Bieu03TKKK_Tinh> tinh, long vungId, string maVung, long year, int hamduyet)
         {
             var data_TW = await _bieu03TKKKRepos.GetAllListAsync(x => x.Year == year);
+
             if (data_TW.Count == 0)
             {
                 foreach (var item in tinh)
@@ -889,6 +890,7 @@ namespace KiemKeDatDai.RisApplication
                     DienTich = tinh.TongDienTich,
                 };
                 var lstBieu03Tkkk_tinh = new List<DVHCBieu03TKKKDto>();
+
                 lstBieu03Tkkk_tinh.Add(bieu03Tkkk_tinh);
                 //Thêm mới bản ghi trung ương
                 var objTW = new Bieu03TKKK()
@@ -902,6 +904,7 @@ namespace KiemKeDatDai.RisApplication
                     sequence = tinh.sequence,
                     Active = true,
                 };
+
                 await _bieu03TKKKRepos.InsertAsync(objTW);
                 //Thêm mới bản ghi vùng
                 var objVung = new Bieu03TKKK_Vung()
@@ -917,6 +920,7 @@ namespace KiemKeDatDai.RisApplication
                     sequence = tinh.sequence,
                     Active = true,
                 };
+
                 await _bieu03TKKK_VungRepos.InsertAsync(objVung);
             }
             catch (Exception ex)
@@ -931,6 +935,7 @@ namespace KiemKeDatDai.RisApplication
             {
                 var objTW = await _bieu03TKKKRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year);
                 var objVung = await _bieu03TKKK_VungRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year && x.MaVung == maVung);
+
                 if (objTW.Id > 0)
                 {
                     var dientichtheoDVHC_TW = objTW.DienTichTheoDVHC.FromJson<List<DVHCBieu03TKKKDto>>();
@@ -947,6 +952,16 @@ namespace KiemKeDatDai.RisApplication
                             DienTich = tinh.TongDienTich,
                         };
 
+                        // check xem tỉnh này đã tồn tại trong json chưa, nếu tồn tại thì xóa đi add lại
+                        //------------trung ương--------------------//
+                        var currentTinh_TW = dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma);
+
+                        if (currentTinh_TW != null)
+                        {
+                            objTW.TongDienTich -= tinh.TongDienTich;
+                            dientichtheoDVHC_TW.Remove(currentTinh_TW);
+                        }
+
                         objTW.TongDienTich += tinh.TongDienTich;
                         objTW.STT = tinh.STT;
                         objTW.LoaiDat = tinh.LoaiDat;
@@ -954,6 +969,15 @@ namespace KiemKeDatDai.RisApplication
                         objTW.sequence = tinh.sequence;
                         dientichtheoDVHC_TW.Add(bieu03Tkkk_tinh);
                         objTW.DienTichTheoDVHC = dientichtheoDVHC_TW.ToJson();
+
+                        //------------vùng--------------------//
+                        var currentTinh_Vung = dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma);
+
+                        if (currentTinh_Vung != null)
+                        {
+                            objVung.TongDienTich -= tinh.TongDienTich;
+                            dientichtheoDVHC_Vung.Remove(currentTinh_Vung);
+                        }
 
                         objVung.TongDienTich += tinh.TongDienTich;
                         objVung.STT = tinh.STT;
@@ -966,16 +990,27 @@ namespace KiemKeDatDai.RisApplication
                     //update huỷ duyệt tỉnh
                     else
                     {
+                        //------------trung ương--------------------//
                         objTW.TongDienTich -= tinh.TongDienTich;
-                        if (dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma) != null)
-                            dientichtheoDVHC_TW.Remove(dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma));
+
+                        var currentTinh_TW = dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma);
+
+                        if (currentTinh_TW != null)
+                            dientichtheoDVHC_TW.Remove(currentTinh_TW);
+
                         objTW.DienTichTheoDVHC = dientichtheoDVHC_TW.ToJson();
 
+                        //------------vùng--------------------//
                         objVung.TongDienTich -= tinh.TongDienTich;
-                        if (dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma) != null)
-                            dientichtheoDVHC_Vung.Remove(dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma));
+
+                        var currentTinh_Vung = dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma);
+
+                        if (currentTinh_Vung != null)
+                            dientichtheoDVHC_Vung.Remove(currentTinh_Vung);
+
                         objVung.DienTichTheoDVHC = dientichtheoDVHC_Vung.ToJson();
                     }
+
                     await _bieu03TKKKRepos.UpdateAsync(objTW);
                     await _bieu03TKKK_VungRepos.UpdateAsync(objVung);
                 }
