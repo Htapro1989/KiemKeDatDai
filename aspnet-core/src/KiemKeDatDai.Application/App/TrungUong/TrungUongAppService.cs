@@ -217,10 +217,12 @@ namespace KiemKeDatDai.RisApplication
                 {
                     var currentUser = await GetCurrentUserAsync();
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
+
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                         var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
+
                         if (vung == null)
                         {
                             commonResponseDto.Message = "Tỉnh này không nằm trong vùng nào";
@@ -258,6 +260,7 @@ namespace KiemKeDatDai.RisApplication
                         {
                             objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_Code == currentUser.DonViHanhChinhCode);
                         }
+
                         await _dvhcRepos.UpdateAsync(objdata);
                         #endregion
                     }
@@ -293,10 +296,12 @@ namespace KiemKeDatDai.RisApplication
                 {
                     var currentUser = await GetCurrentUserAsync();
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
+
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                         var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
+
                         if (tinh != null)
                         {
                             //gọi hàm update biểu tỉnh

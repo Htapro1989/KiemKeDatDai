@@ -215,7 +215,7 @@ namespace KiemKeDatDai.RisApplication
 
                         var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
 
-                        if (huyen == null)
+                        if (huyen != null)
                         {
                             //gọi hàm update biểu huyện
                             commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, (int)HAM_DUYET.DUYET);
