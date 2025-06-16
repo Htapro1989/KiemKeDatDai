@@ -677,6 +677,7 @@ namespace KiemKeDatDai.RisApplication
         private async Task CreateOrUpdateBieu03TKKK_Huyen(List<Bieu01TKKK_Xa> xa, long huyenId, string maHuyen, long year, int hamduyet)
         {
             var data_huyen = await _bieu03TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+
             if (data_huyen.Count == 0)
             {
                 foreach (var item in xa)
@@ -735,12 +736,22 @@ namespace KiemKeDatDai.RisApplication
             try
             {
                 var objhuyen = await _bieu03TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.MaHuyen == maHuyen && x.Ma == xa.Ma && x.Year == year);
+
                 if (objhuyen.Id > 0)
                 {
                     var dientichtheoDVHC = objhuyen.DienTichTheoDVHC.FromJson<List<DVHCBieu03TKKKDto>>();
                     //update duyệt xã
                     if (hamduyet == (int)HAM_DUYET.DUYET)
                     {
+                        // check xem xã này đã tồn tại trong json chưa, nếu tồn tại thì xóa đi add lại
+                        var currentXa = dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma);
+
+                        if (currentXa != null)
+                        {
+                            objhuyen.TongDienTich -= xa.TongDienTichDVHC;
+                            dientichtheoDVHC.Remove(currentXa);
+                        }
+
                         var bieu03Tkkk_xa = new DVHCBieu03TKKKDto
                         {
                             TenDVHC = _dvhcRepos.Single(x => x.Ma == xa.MaXa).Name,
@@ -749,6 +760,7 @@ namespace KiemKeDatDai.RisApplication
                             MaLoaiDat = xa.Ma,
                             DienTich = xa.TongDienTichDVHC,
                         };
+
                         objhuyen.TongDienTich += xa.TongDienTichDVHC;
                         objhuyen.STT = xa.STT;
                         objhuyen.LoaiDat = xa.LoaiDat;
@@ -761,10 +773,15 @@ namespace KiemKeDatDai.RisApplication
                     else
                     {
                         objhuyen.TongDienTich -= xa.TongDienTichDVHC;
-                        if (dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma) != null)
-                            dientichtheoDVHC.Remove(dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma));
+
+                        var currentXa = dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma);
+
+                        if (currentXa != null)
+                            dientichtheoDVHC.Remove(currentXa);
+
                         objhuyen.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
                     }
+
                     await _bieu03TKKK_HuyenRepos.UpdateAsync(objhuyen);
                 }
                 else
