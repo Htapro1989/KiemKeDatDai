@@ -362,7 +362,7 @@ namespace KiemKeDatDai.RisApplication
 
                 //get dvhcid
                 var pathDeleted = "";
-                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted);
+                var currentFile = _fileRepos.FirstOrDefault(x => x.MaDVHC == input.MaDVHC && x.Year == input.Year && !x.IsDeleted &&x.FileType == CommonEnum.FILE_KYTHONGKE);
                 if (currentFile != null)
                 {
                     //delete file
