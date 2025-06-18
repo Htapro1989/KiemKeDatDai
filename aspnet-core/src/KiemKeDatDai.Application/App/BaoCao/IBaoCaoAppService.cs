@@ -15,5 +15,6 @@ namespace KiemKeDatDai.RisApplication
         Task<CommonResponseDto> ThongKeSoLieu();
         Task<CommonResponseDto> DeleteAllDataXa(long year, string ma);
         Task<CommonResponseDto> ReportNumberXaByDate(DateTime fromDate, DateTime toDate);
+        Task<CommonResponseDto> DeleteAllBieuHuyen(long year, string maHuyen);
     }
 }
