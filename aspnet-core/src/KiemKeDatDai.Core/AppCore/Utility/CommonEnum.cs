@@ -122,6 +122,12 @@ namespace KiemKeDatDai
             BIEU_PL_IV = 13
         }
 
+        public enum LOAI_CAP_DVHC
+        {
+            BA_CAP = 3,
+            BON_CAP = 4
+        }
+
         public class ComboBoxDto
         {
             public long Id { get; set; }
