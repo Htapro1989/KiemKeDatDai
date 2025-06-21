@@ -217,10 +217,12 @@ namespace KiemKeDatDai.RisApplication
                 {
                     var currentUser = await GetCurrentUserAsync();
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
+
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                         var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
+
                         if (vung == null)
                         {
                             commonResponseDto.Message = "Tỉnh này không nằm trong vùng nào";
@@ -258,6 +260,7 @@ namespace KiemKeDatDai.RisApplication
                         {
                             objdata.SoDVHCCon = await _dvhcRepos.CountAsync(x => x.Parent_Code == currentUser.DonViHanhChinhCode);
                         }
+
                         await _dvhcRepos.UpdateAsync(objdata);
                         #endregion
                     }
@@ -293,10 +296,12 @@ namespace KiemKeDatDai.RisApplication
                 {
                     var currentUser = await GetCurrentUserAsync();
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
+
                     if (objdata != null)
                     {
                         var tinh = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
                         var vung = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == tinh.MaVung && x.Year == year && x.CapDVHCId == (int)CAP_DVHC.VUNG);
+
                         if (tinh != null)
                         {
                             //gọi hàm update biểu tỉnh
@@ -853,6 +858,7 @@ namespace KiemKeDatDai.RisApplication
         private async Task CreateOrUpdateBieu03TKKK_Tinh(List<Bieu03TKKK_Tinh> tinh, long vungId, string maVung, long year, int hamduyet)
         {
             var data_TW = await _bieu03TKKKRepos.GetAllListAsync(x => x.Year == year);
+
             if (data_TW.Count == 0)
             {
                 foreach (var item in tinh)
@@ -884,6 +890,7 @@ namespace KiemKeDatDai.RisApplication
                     DienTich = tinh.TongDienTich,
                 };
                 var lstBieu03Tkkk_tinh = new List<DVHCBieu03TKKKDto>();
+
                 lstBieu03Tkkk_tinh.Add(bieu03Tkkk_tinh);
                 //Thêm mới bản ghi trung ương
                 var objTW = new Bieu03TKKK()
@@ -897,6 +904,7 @@ namespace KiemKeDatDai.RisApplication
                     sequence = tinh.sequence,
                     Active = true,
                 };
+
                 await _bieu03TKKKRepos.InsertAsync(objTW);
                 //Thêm mới bản ghi vùng
                 var objVung = new Bieu03TKKK_Vung()
@@ -912,6 +920,7 @@ namespace KiemKeDatDai.RisApplication
                     sequence = tinh.sequence,
                     Active = true,
                 };
+
                 await _bieu03TKKK_VungRepos.InsertAsync(objVung);
             }
             catch (Exception ex)
@@ -926,6 +935,7 @@ namespace KiemKeDatDai.RisApplication
             {
                 var objTW = await _bieu03TKKKRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year);
                 var objVung = await _bieu03TKKK_VungRepos.FirstOrDefaultAsync(x => x.Ma == tinh.Ma && x.Year == year && x.MaVung == maVung);
+
                 if (objTW.Id > 0)
                 {
                     var dientichtheoDVHC_TW = objTW.DienTichTheoDVHC.FromJson<List<DVHCBieu03TKKKDto>>();
@@ -942,6 +952,16 @@ namespace KiemKeDatDai.RisApplication
                             DienTich = tinh.TongDienTich,
                         };
 
+                        // check xem tỉnh này đã tồn tại trong json chưa, nếu tồn tại thì xóa đi add lại
+                        //------------trung ương--------------------//
+                        var currentTinh_TW = dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma);
+
+                        if (currentTinh_TW != null)
+                        {
+                            objTW.TongDienTich -= tinh.TongDienTich;
+                            dientichtheoDVHC_TW.Remove(currentTinh_TW);
+                        }
+
                         objTW.TongDienTich += tinh.TongDienTich;
                         objTW.STT = tinh.STT;
                         objTW.LoaiDat = tinh.LoaiDat;
@@ -949,6 +969,15 @@ namespace KiemKeDatDai.RisApplication
                         objTW.sequence = tinh.sequence;
                         dientichtheoDVHC_TW.Add(bieu03Tkkk_tinh);
                         objTW.DienTichTheoDVHC = dientichtheoDVHC_TW.ToJson();
+
+                        //------------vùng--------------------//
+                        var currentTinh_Vung = dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma);
+
+                        if (currentTinh_Vung != null)
+                        {
+                            objVung.TongDienTich -= tinh.TongDienTich;
+                            dientichtheoDVHC_Vung.Remove(currentTinh_Vung);
+                        }
 
                         objVung.TongDienTich += tinh.TongDienTich;
                         objVung.STT = tinh.STT;
@@ -961,16 +990,27 @@ namespace KiemKeDatDai.RisApplication
                     //update huỷ duyệt tỉnh
                     else
                     {
+                        //------------trung ương--------------------//
                         objTW.TongDienTich -= tinh.TongDienTich;
-                        if (dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma) != null)
-                            dientichtheoDVHC_TW.Remove(dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma));
+
+                        var currentTinh_TW = dientichtheoDVHC_TW.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma);
+
+                        if (currentTinh_TW != null)
+                            dientichtheoDVHC_TW.Remove(currentTinh_TW);
+
                         objTW.DienTichTheoDVHC = dientichtheoDVHC_TW.ToJson();
 
+                        //------------vùng--------------------//
                         objVung.TongDienTich -= tinh.TongDienTich;
-                        if (dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma) != null)
-                            dientichtheoDVHC_Vung.Remove(dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma));
+
+                        var currentTinh_Vung = dientichtheoDVHC_Vung.FirstOrDefault(x => x.MaDVHC == tinh.MaTinh && x.MaLoaiDat == tinh.Ma);
+
+                        if (currentTinh_Vung != null)
+                            dientichtheoDVHC_Vung.Remove(currentTinh_Vung);
+
                         objVung.DienTichTheoDVHC = dientichtheoDVHC_Vung.ToJson();
                     }
+
                     await _bieu03TKKKRepos.UpdateAsync(objTW);
                     await _bieu03TKKK_VungRepos.UpdateAsync(objVung);
                 }
@@ -992,7 +1032,7 @@ namespace KiemKeDatDai.RisApplication
             var data_TW = await _bieu04TKKKRepos.GetAllListAsync(x => x.Year == year);
             if (data_TW.Count == 0)
             {
-                foreach (var item in tinh)
+                foreach (var item in tinh.OrderBy(x => x.sequence))
                 {
                     //Tạo các bản ghi trung ương tương ứng với bản ghi tỉnh
                     await CreateBieu04TKKK_Tinh(item, vungId, maVung);
@@ -1000,7 +1040,7 @@ namespace KiemKeDatDai.RisApplication
             }
             else
             {
-                foreach (var item in tinh)
+                foreach (var item in tinh.OrderBy(x => x.sequence))
                 {
                     //Cập nhật các bản ghi trung ương tương ứng với bản ghi tỉnh
                     await UpdateBieu04TKKK_Tinh(item, vungId, maVung, year, hamduyet);
@@ -1204,37 +1244,37 @@ namespace KiemKeDatDai.RisApplication
                         objTW.TongSo_DT += tinh.TongSo_DT;
                         objTW.TongSo_CC = Math.Round(objTW.TongSo_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
                         objTW.CaNhanTrongNuoc_CNV_DT += tinh.CaNhanTrongNuoc_CNV_DT;
-                        objTW.CaNhanTrongNuoc_CNV_CC = Math.Round(objTW.CaNhanTrongNuoc_CNV_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CaNhanTrongNuoc_CNV_CC = Math.Round(objTW.CaNhanTrongNuoc_CNV_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.NguoiVietNamONuocNgoai_CNN_DT += tinh.NguoiVietNamONuocNgoai_CNN_DT;
-                        objTW.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objTW.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objTW.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CoQuanNhaNuoc_TCN_DT += tinh.CoQuanNhaNuoc_TCN_DT;
-                        objTW.CoQuanNhaNuoc_TCN_CC = Math.Round(objTW.CoQuanNhaNuoc_TCN_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CoQuanNhaNuoc_TCN_CC = Math.Round(objTW.CoQuanNhaNuoc_TCN_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.DonViSuNghiep_TSN_DT += tinh.DonViSuNghiep_TSN_DT;
-                        objTW.DonViSuNghiep_TSN_CC = Math.Round(objTW.DonViSuNghiep_TSN_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.DonViSuNghiep_TSN_CC = Math.Round(objTW.DonViSuNghiep_TSN_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucXaHoi_TXH_DT += tinh.ToChucXaHoi_TXH_DT;
-                        objTW.ToChucXaHoi_TXH_CC = Math.Round(objTW.ToChucXaHoi_TXH_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucXaHoi_TXH_CC = Math.Round(objTW.ToChucXaHoi_TXH_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucKinhTe_TKT_DT += tinh.ToChucKinhTe_TKT_DT;
-                        objTW.ToChucKinhTe_TKT_CC = Math.Round(objTW.ToChucKinhTe_TKT_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucKinhTe_TKT_CC = Math.Round(objTW.ToChucKinhTe_TKT_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucKhac_TKH_DT += tinh.ToChucKhac_TKH_DT;
-                        objTW.ToChucKhac_TKH_CC = Math.Round(objTW.ToChucKhac_TKH_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucKhac_TKH_CC = Math.Round(objTW.ToChucKhac_TKH_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucTonGiao_TTG_DT += tinh.ToChucTonGiao_TTG_DT;
-                        objTW.ToChucTonGiao_TTG_CC = Math.Round(objTW.ToChucTonGiao_TTG_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucTonGiao_TTG_CC = Math.Round(objTW.ToChucTonGiao_TTG_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CongDongDanCu_CDS_DT += tinh.CongDongDanCu_CDS_DT;
-                        objTW.CongDongDanCu_CDS_CC = Math.Round(objTW.CongDongDanCu_CDS_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CongDongDanCu_CDS_CC = Math.Round(objTW.CongDongDanCu_CDS_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucNuocNgoai_TNG_DT += tinh.ToChucNuocNgoai_TNG_DT;
-                        objTW.ToChucNuocNgoai_TNG_CC = Math.Round(objTW.ToChucNuocNgoai_TNG_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucNuocNgoai_TNG_CC = Math.Round(objTW.ToChucNuocNgoai_TNG_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.NguoiGocVietNamONuocNgoai_NGV_DT += tinh.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        objTW.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objTW.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objTW.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucKinhTeVonNuocNgoai_TVN_DT += tinh.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        objTW.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objTW.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objTW.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CoQuanNhaNuoc_TCQ_DT += tinh.CoQuanNhaNuoc_TCQ_DT;
-                        objTW.CoQuanNhaNuoc_TCQ_CC = Math.Round(objTW.CoQuanNhaNuoc_TCQ_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CoQuanNhaNuoc_TCQ_CC = Math.Round(objTW.CoQuanNhaNuoc_TCQ_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.DonViSuNghiep_TSQ_DT += tinh.DonViSuNghiep_TSQ_DT;
-                        objTW.DonViSuNghiep_TSQ_CC = Math.Round(objTW.DonViSuNghiep_TSQ_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.DonViSuNghiep_TSQ_CC = Math.Round(objTW.DonViSuNghiep_TSQ_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucKinhTe_KTQ_DT += tinh.ToChucKinhTe_KTQ_DT;
-                        objTW.ToChucKinhTe_KTQ_CC = Math.Round(objTW.ToChucKinhTe_KTQ_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucKinhTe_KTQ_CC = Math.Round(objTW.ToChucKinhTe_KTQ_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CongDongDanCu_CDQ_DT += tinh.CongDongDanCu_CDQ_DT;
-                        objTW.CongDongDanCu_CDQ_CC = Math.Round(objTW.CongDongDanCu_CDQ_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CongDongDanCu_CDQ_CC = Math.Round(objTW.CongDongDanCu_CDQ_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.STT = tinh.STT;
                         objTW.LoaiDat = tinh.LoaiDat;
                         objTW.Year = tinh.Year;
@@ -1243,37 +1283,37 @@ namespace KiemKeDatDai.RisApplication
                         objVung.TongSo_DT += tinh.TongSo_DT;
                         objVung.TongSo_CC = Math.Round(objVung.TongSo_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
                         objVung.CaNhanTrongNuoc_CNV_DT += tinh.CaNhanTrongNuoc_CNV_DT;
-                        objVung.CaNhanTrongNuoc_CNV_CC = Math.Round(objVung.CaNhanTrongNuoc_CNV_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CaNhanTrongNuoc_CNV_CC = Math.Round(objVung.CaNhanTrongNuoc_CNV_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.NguoiVietNamONuocNgoai_CNN_DT += tinh.NguoiVietNamONuocNgoai_CNN_DT;
-                        objVung.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objVung.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objVung.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CoQuanNhaNuoc_TCN_DT += tinh.CoQuanNhaNuoc_TCN_DT;
-                        objVung.CoQuanNhaNuoc_TCN_CC = Math.Round(objVung.CoQuanNhaNuoc_TCN_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CoQuanNhaNuoc_TCN_CC = Math.Round(objVung.CoQuanNhaNuoc_TCN_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.DonViSuNghiep_TSN_DT += tinh.DonViSuNghiep_TSN_DT;
-                        objVung.DonViSuNghiep_TSN_CC = Math.Round(objVung.DonViSuNghiep_TSN_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.DonViSuNghiep_TSN_CC = Math.Round(objVung.DonViSuNghiep_TSN_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucXaHoi_TXH_DT += tinh.ToChucXaHoi_TXH_DT;
-                        objVung.ToChucXaHoi_TXH_CC = Math.Round(objVung.ToChucXaHoi_TXH_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucXaHoi_TXH_CC = Math.Round(objVung.ToChucXaHoi_TXH_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucKinhTe_TKT_DT += tinh.ToChucKinhTe_TKT_DT;
-                        objVung.ToChucKinhTe_TKT_CC = Math.Round(objVung.ToChucKinhTe_TKT_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucKinhTe_TKT_CC = Math.Round(objVung.ToChucKinhTe_TKT_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucKhac_TKH_DT += tinh.ToChucKhac_TKH_DT;
-                        objVung.ToChucKhac_TKH_CC = Math.Round(objVung.ToChucKhac_TKH_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucKhac_TKH_CC = Math.Round(objVung.ToChucKhac_TKH_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucTonGiao_TTG_DT += tinh.ToChucTonGiao_TTG_DT;
-                        objVung.ToChucTonGiao_TTG_CC = Math.Round(objVung.ToChucTonGiao_TTG_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucTonGiao_TTG_CC = Math.Round(objVung.ToChucTonGiao_TTG_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CongDongDanCu_CDS_DT += tinh.CongDongDanCu_CDS_DT;
-                        objVung.CongDongDanCu_CDS_CC = Math.Round(objVung.CongDongDanCu_CDS_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CongDongDanCu_CDS_CC = Math.Round(objVung.CongDongDanCu_CDS_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucNuocNgoai_TNG_DT += tinh.ToChucNuocNgoai_TNG_DT;
-                        objVung.ToChucNuocNgoai_TNG_CC = Math.Round(objVung.ToChucNuocNgoai_TNG_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucNuocNgoai_TNG_CC = Math.Round(objVung.ToChucNuocNgoai_TNG_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.NguoiGocVietNamONuocNgoai_NGV_DT += tinh.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        objVung.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objVung.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objVung.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucKinhTeVonNuocNgoai_TVN_DT += tinh.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        objVung.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objVung.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objVung.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CoQuanNhaNuoc_TCQ_DT += tinh.CoQuanNhaNuoc_TCQ_DT;
-                        objVung.CoQuanNhaNuoc_TCQ_CC = Math.Round(objVung.CoQuanNhaNuoc_TCQ_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CoQuanNhaNuoc_TCQ_CC = Math.Round(objVung.CoQuanNhaNuoc_TCQ_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.DonViSuNghiep_TSQ_DT += tinh.DonViSuNghiep_TSQ_DT;
-                        objVung.DonViSuNghiep_TSQ_CC = Math.Round(objVung.DonViSuNghiep_TSQ_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.DonViSuNghiep_TSQ_CC = Math.Round(objVung.DonViSuNghiep_TSQ_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucKinhTe_KTQ_DT += tinh.ToChucKinhTe_KTQ_DT;
-                        objVung.ToChucKinhTe_KTQ_CC = Math.Round(objVung.ToChucKinhTe_KTQ_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucKinhTe_KTQ_CC = Math.Round(objVung.ToChucKinhTe_KTQ_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CongDongDanCu_CDQ_DT += tinh.CongDongDanCu_CDQ_DT;
-                        objVung.CongDongDanCu_CDQ_CC = Math.Round(objVung.CongDongDanCu_CDQ_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CongDongDanCu_CDQ_CC = Math.Round(objVung.CongDongDanCu_CDQ_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.STT = tinh.STT;
                         objVung.LoaiDat = tinh.LoaiDat;
                         objVung.Year = tinh.Year;
@@ -1352,74 +1392,74 @@ namespace KiemKeDatDai.RisApplication
                         //objVung.CongDongDanCu_CDQ_DT -= tinh.CongDongDanCu_CDQ_DT;
                         //objVung.CongDongDanCu_CDQ_CC -= tinh.CongDongDanCu_CDQ_CC;
                         objTW.TongSo_DT -= tinh.TongSo_DT;
-                        objTW.TongSo_CC = Math.Round(objTW.TongSo_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.TongSo_CC = Math.Round(objTW.TongSo_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CaNhanTrongNuoc_CNV_DT -= tinh.CaNhanTrongNuoc_CNV_DT;
-                        objTW.CaNhanTrongNuoc_CNV_CC = Math.Round(objTW.CaNhanTrongNuoc_CNV_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CaNhanTrongNuoc_CNV_CC = Math.Round(objTW.CaNhanTrongNuoc_CNV_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.NguoiVietNamONuocNgoai_CNN_DT -= tinh.NguoiVietNamONuocNgoai_CNN_DT;
-                        objTW.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objTW.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objTW.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CoQuanNhaNuoc_TCN_DT -= tinh.CoQuanNhaNuoc_TCN_DT;
-                        objTW.CoQuanNhaNuoc_TCN_CC = Math.Round(objTW.CoQuanNhaNuoc_TCN_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CoQuanNhaNuoc_TCN_CC = Math.Round(objTW.CoQuanNhaNuoc_TCN_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.DonViSuNghiep_TSN_DT -= tinh.DonViSuNghiep_TSN_DT;
-                        objTW.DonViSuNghiep_TSN_CC = Math.Round(objTW.DonViSuNghiep_TSN_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.DonViSuNghiep_TSN_CC = Math.Round(objTW.DonViSuNghiep_TSN_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucXaHoi_TXH_DT -= tinh.ToChucXaHoi_TXH_DT;
-                        objTW.ToChucXaHoi_TXH_CC = Math.Round(objTW.ToChucXaHoi_TXH_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucXaHoi_TXH_CC = Math.Round(objTW.ToChucXaHoi_TXH_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucKinhTe_TKT_DT -= tinh.ToChucKinhTe_TKT_DT;
-                        objTW.ToChucKinhTe_TKT_CC = Math.Round(objTW.ToChucKinhTe_TKT_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucKinhTe_TKT_CC = Math.Round(objTW.ToChucKinhTe_TKT_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucKhac_TKH_DT -= tinh.ToChucKhac_TKH_DT;
-                        objTW.ToChucKhac_TKH_CC = Math.Round(objTW.ToChucKhac_TKH_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucKhac_TKH_CC = Math.Round(objTW.ToChucKhac_TKH_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucTonGiao_TTG_DT -= tinh.ToChucTonGiao_TTG_DT;
-                        objTW.ToChucTonGiao_TTG_CC = Math.Round(objTW.ToChucTonGiao_TTG_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucTonGiao_TTG_CC = Math.Round(objTW.ToChucTonGiao_TTG_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CongDongDanCu_CDS_DT -= tinh.CongDongDanCu_CDS_DT;
-                        objTW.CongDongDanCu_CDS_CC = Math.Round(objTW.CongDongDanCu_CDS_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CongDongDanCu_CDS_CC = Math.Round(objTW.CongDongDanCu_CDS_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucNuocNgoai_TNG_DT -= tinh.ToChucNuocNgoai_TNG_DT;
-                        objTW.ToChucNuocNgoai_TNG_CC = Math.Round(objTW.ToChucNuocNgoai_TNG_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucNuocNgoai_TNG_CC = Math.Round(objTW.ToChucNuocNgoai_TNG_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.NguoiGocVietNamONuocNgoai_NGV_DT -= tinh.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        objTW.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objTW.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objTW.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucKinhTeVonNuocNgoai_TVN_DT -= tinh.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        objTW.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objTW.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objTW.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CoQuanNhaNuoc_TCQ_DT -= tinh.CoQuanNhaNuoc_TCQ_DT;
-                        objTW.CoQuanNhaNuoc_TCQ_CC = Math.Round(objTW.CoQuanNhaNuoc_TCQ_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CoQuanNhaNuoc_TCQ_CC = Math.Round(objTW.CoQuanNhaNuoc_TCQ_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.DonViSuNghiep_TSQ_DT -= tinh.DonViSuNghiep_TSQ_DT;
-                        objTW.DonViSuNghiep_TSQ_CC = Math.Round(objTW.DonViSuNghiep_TSQ_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.DonViSuNghiep_TSQ_CC = Math.Round(objTW.DonViSuNghiep_TSQ_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.ToChucKinhTe_KTQ_DT -= tinh.ToChucKinhTe_KTQ_DT;
-                        objTW.ToChucKinhTe_KTQ_CC = Math.Round(objTW.ToChucKinhTe_KTQ_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.ToChucKinhTe_KTQ_CC = Math.Round(objTW.ToChucKinhTe_KTQ_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
                         objTW.CongDongDanCu_CDQ_DT -= tinh.CongDongDanCu_CDQ_DT;
-                        objTW.CongDongDanCu_CDQ_CC = Math.Round(objTW.CongDongDanCu_CDQ_DT * 100 / (objTWts.TongSo_DT == 0 ? 1 : objTWts.TongSo_DT), 4);
+                        objTW.CongDongDanCu_CDQ_CC = Math.Round(objTW.CongDongDanCu_CDQ_DT * 100 / (objTW.TongSo_DT == 0 ? 1 : objTW.TongSo_DT), 4);
 
                         objVung.TongSo_DT -= tinh.TongSo_DT;
-                        objVung.TongSo_CC = Math.Round(objVung.TongSo_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.TongSo_CC = Math.Round(objVung.TongSo_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CaNhanTrongNuoc_CNV_DT -= tinh.CaNhanTrongNuoc_CNV_DT;
-                        objVung.CaNhanTrongNuoc_CNV_CC = Math.Round(objVung.CaNhanTrongNuoc_CNV_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CaNhanTrongNuoc_CNV_CC = Math.Round(objVung.CaNhanTrongNuoc_CNV_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.NguoiVietNamONuocNgoai_CNN_DT -= tinh.NguoiVietNamONuocNgoai_CNN_DT;
-                        objVung.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objVung.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objVung.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CoQuanNhaNuoc_TCN_DT -= tinh.CoQuanNhaNuoc_TCN_DT;
-                        objVung.CoQuanNhaNuoc_TCN_CC = Math.Round(objVung.CoQuanNhaNuoc_TCN_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CoQuanNhaNuoc_TCN_CC = Math.Round(objVung.CoQuanNhaNuoc_TCN_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.DonViSuNghiep_TSN_DT -= tinh.DonViSuNghiep_TSN_DT;
-                        objVung.DonViSuNghiep_TSN_CC = Math.Round(objVung.DonViSuNghiep_TSN_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.DonViSuNghiep_TSN_CC = Math.Round(objVung.DonViSuNghiep_TSN_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucXaHoi_TXH_DT -= tinh.ToChucXaHoi_TXH_DT;
-                        objVung.ToChucXaHoi_TXH_CC = Math.Round(objVung.ToChucXaHoi_TXH_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucXaHoi_TXH_CC = Math.Round(objVung.ToChucXaHoi_TXH_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucKinhTe_TKT_DT -= tinh.ToChucKinhTe_TKT_DT;
-                        objVung.ToChucKinhTe_TKT_CC = Math.Round(objVung.ToChucKinhTe_TKT_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucKinhTe_TKT_CC = Math.Round(objVung.ToChucKinhTe_TKT_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucKhac_TKH_DT -= tinh.ToChucKhac_TKH_DT;
-                        objVung.ToChucKhac_TKH_CC = Math.Round(objVung.ToChucKhac_TKH_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucKhac_TKH_CC = Math.Round(objVung.ToChucKhac_TKH_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucTonGiao_TTG_DT -= tinh.ToChucTonGiao_TTG_DT;
-                        objVung.ToChucTonGiao_TTG_CC = Math.Round(objVung.ToChucTonGiao_TTG_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucTonGiao_TTG_CC = Math.Round(objVung.ToChucTonGiao_TTG_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CongDongDanCu_CDS_DT -= tinh.CongDongDanCu_CDS_DT;
-                        objVung.CongDongDanCu_CDS_CC = Math.Round(objVung.CongDongDanCu_CDS_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CongDongDanCu_CDS_CC = Math.Round(objVung.CongDongDanCu_CDS_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucNuocNgoai_TNG_DT -= tinh.ToChucNuocNgoai_TNG_DT;
-                        objVung.ToChucNuocNgoai_TNG_CC = Math.Round(objVung.ToChucNuocNgoai_TNG_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucNuocNgoai_TNG_CC = Math.Round(objVung.ToChucNuocNgoai_TNG_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.NguoiGocVietNamONuocNgoai_NGV_DT -= tinh.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        objVung.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objVung.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objVung.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucKinhTeVonNuocNgoai_TVN_DT -= tinh.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        objVung.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objVung.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objVung.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CoQuanNhaNuoc_TCQ_DT -= tinh.CoQuanNhaNuoc_TCQ_DT;
-                        objVung.CoQuanNhaNuoc_TCQ_CC = Math.Round(objVung.CoQuanNhaNuoc_TCQ_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CoQuanNhaNuoc_TCQ_CC = Math.Round(objVung.CoQuanNhaNuoc_TCQ_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.DonViSuNghiep_TSQ_DT -= tinh.DonViSuNghiep_TSQ_DT;
-                        objVung.DonViSuNghiep_TSQ_CC = Math.Round(objVung.DonViSuNghiep_TSQ_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.DonViSuNghiep_TSQ_CC = Math.Round(objVung.DonViSuNghiep_TSQ_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.ToChucKinhTe_KTQ_DT -= tinh.ToChucKinhTe_KTQ_DT;
-                        objVung.ToChucKinhTe_KTQ_CC = Math.Round(objVung.ToChucKinhTe_KTQ_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.ToChucKinhTe_KTQ_CC = Math.Round(objVung.ToChucKinhTe_KTQ_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                         objVung.CongDongDanCu_CDQ_DT -= tinh.CongDongDanCu_CDQ_DT;
-                        objVung.CongDongDanCu_CDQ_CC = Math.Round(objVung.CongDongDanCu_CDQ_DT * 100 / (objVungts.TongSo_DT == 0 ? 1 : objVungts.TongSo_DT), 4);
+                        objVung.CongDongDanCu_CDQ_CC = Math.Round(objVung.CongDongDanCu_CDQ_DT * 100 / (objVung.TongSo_DT == 0 ? 1 : objVung.TongSo_DT), 4);
                     }
                         await _bieu04TKKKRepos.UpdateAsync(objTW);
                         await _bieu04TKKK_VungRepos.UpdateAsync(objVung);

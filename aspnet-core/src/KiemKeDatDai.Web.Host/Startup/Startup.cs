@@ -24,6 +24,7 @@ using KiemKeDatDai.Dto;
 using Aspose.Cells.Charts;
 using Abp.Modules;
 using KiemKeDatDai.RisApplication;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace KiemKeDatDai.Web.Host.Startup
 {
@@ -111,6 +112,11 @@ namespace KiemKeDatDai.Web.Host.Startup
             //    options.Configuration = _appConfiguration["Redis:Configuration"];
             //});
             services.AddMemoryCache();
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 1024 * 1024 * 400;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

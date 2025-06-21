@@ -36,6 +36,9 @@ using NuGet.Protocol;
 using Aspose.Cells;
 using KiemKeDatDai.AppCore.Utility;
 using KiemKeDatDai.Authorization;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -190,7 +193,8 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
+                    var currentDvhc = await _dvhcRepos
+                        .FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Active == true && x.Year == year);
 
                     if (currentDvhc != null)
                     {
@@ -276,6 +280,64 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Report_DuyetBaoCao)]
+        public async Task<CommonResponseDto> DuyetAllXaTrongHuyen(string maHuyen, long year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+            {
+                try
+                {
+                    var currentUser = await GetCurrentUserAsync();
+                    var currentHuyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == maHuyen && x.Active == true && x.Year == year);
+
+                    if (currentHuyen == null)
+                    {
+                        commonResponseDto.Message = "Huyện này không tồn tại";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    if (currentHuyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                    {
+                        commonResponseDto.Message = "Huyện đã được duyệt, không thể duyệt xã";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    var lstXa = _dvhcRepos.GetAll()
+                        .Where(x => x.Parent_Code == maHuyen && x.Active == true && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET)
+                        .Select(x => new { x.MaXa, x.TenXa })
+                        .ToList();
+
+                    if (lstXa.Count == 0)
+                    {
+                        commonResponseDto.Message = "Không có xã nào chờ duyệt";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    foreach (var item in lstXa)
+                    {
+                        await DuyetBaoCaoXa(item.MaXa, year);
+                    }
+
+                    uow.Complete();
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Đã duyệt các xã " + string.Join(", ", lstXa.Select(x => x.TenXa));
+                }
+                catch (Exception ex)
+                {
+                    uow.Dispose();
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = ex.Message;
+                    Logger.Fatal(ex.Message);
+                }
+            }
+            return commonResponseDto;
+        }
+
         [AbpAuthorize(PermissionNames.Pages_Report_HuyBaoCao)]
         public async Task<CommonResponseDto> HuyDuyetBaoCaoXa(string ma, long year)
         {
@@ -286,7 +348,7 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
+                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Active == true && x.Year == year);
                     if (objdata != null)
                     {
                         if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
@@ -345,6 +407,63 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Report_HuyBaoCao)]
+        public async Task<CommonResponseDto> HuyDuyetAllXaTrongHuyen(string maHuyen, long year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+            {
+                try
+                {
+                    var currentUser = await GetCurrentUserAsync();
+                    var currentHuyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == maHuyen && x.Active == true && x.Year == year);
+
+                    if (currentHuyen == null)
+                    {
+                        commonResponseDto.Message = "Huyện này không tồn tại";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    if (currentHuyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                    {
+                        commonResponseDto.Message = "Huyện đã được duyệt, không thể hủy duyệt xã";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    var lstXa = _dvhcRepos.GetAll()
+                        .Where(x => x.Parent_Code == maHuyen && x.Active == true && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                        .Select(x => new { x.MaXa, x.TenXa })
+                        .ToList();
+
+                    if (lstXa.Count == 0)
+                    {
+                        commonResponseDto.Message = "Không có xã nào đã duyệt";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    foreach (var item in lstXa)
+                    {
+                        await HuyDuyetBaoCaoXa(item.MaXa, year);
+                    }
+
+                    uow.Complete();
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Đã hủy duyệt các xã " + string.Join(", ", lstXa.Select(x => x.TenXa));
+                }
+                catch (Exception ex)
+                {
+                    uow.Dispose();
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = ex.Message;
+                    Logger.Fatal(ex.Message);
+                }
+            }
+            return commonResponseDto;
+        }
 
         private async Task<CommonResponseDto> CreateOrUpdateBieuHuyen(DonViHanhChinh huyen, string maXa, long year, int hamduyet)
         {
@@ -677,6 +796,7 @@ namespace KiemKeDatDai.RisApplication
         private async Task CreateOrUpdateBieu03TKKK_Huyen(List<Bieu01TKKK_Xa> xa, long huyenId, string maHuyen, long year, int hamduyet)
         {
             var data_huyen = await _bieu03TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
+
             if (data_huyen.Count == 0)
             {
                 foreach (var item in xa)
@@ -735,12 +855,22 @@ namespace KiemKeDatDai.RisApplication
             try
             {
                 var objhuyen = await _bieu03TKKK_HuyenRepos.FirstOrDefaultAsync(x => x.MaHuyen == maHuyen && x.Ma == xa.Ma && x.Year == year);
+
                 if (objhuyen.Id > 0)
                 {
                     var dientichtheoDVHC = objhuyen.DienTichTheoDVHC.FromJson<List<DVHCBieu03TKKKDto>>();
                     //update duyệt xã
                     if (hamduyet == (int)HAM_DUYET.DUYET)
                     {
+                        // check xem xã này đã tồn tại trong json chưa, nếu tồn tại thì xóa đi add lại
+                        var currentXa = dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma);
+
+                        if (currentXa != null)
+                        {
+                            objhuyen.TongDienTich -= xa.TongDienTichDVHC;
+                            dientichtheoDVHC.Remove(currentXa);
+                        }
+
                         var bieu03Tkkk_xa = new DVHCBieu03TKKKDto
                         {
                             TenDVHC = _dvhcRepos.Single(x => x.Ma == xa.MaXa).Name,
@@ -749,6 +879,7 @@ namespace KiemKeDatDai.RisApplication
                             MaLoaiDat = xa.Ma,
                             DienTich = xa.TongDienTichDVHC,
                         };
+
                         objhuyen.TongDienTich += xa.TongDienTichDVHC;
                         objhuyen.STT = xa.STT;
                         objhuyen.LoaiDat = xa.LoaiDat;
@@ -761,10 +892,15 @@ namespace KiemKeDatDai.RisApplication
                     else
                     {
                         objhuyen.TongDienTich -= xa.TongDienTichDVHC;
-                        if (dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma) != null)
-                            dientichtheoDVHC.Remove(dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma));
+
+                        var currentXa = dientichtheoDVHC.FirstOrDefault(x => x.MaDVHC == xa.MaXa && x.MaLoaiDat == xa.Ma);
+
+                        if (currentXa != null)
+                            dientichtheoDVHC.Remove(currentXa);
+
                         objhuyen.DienTichTheoDVHC = dientichtheoDVHC.ToJson();
                     }
+
                     await _bieu03TKKK_HuyenRepos.UpdateAsync(objhuyen);
                 }
                 else
@@ -785,7 +921,7 @@ namespace KiemKeDatDai.RisApplication
             var data_huyen = await _bieu04TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
             if (data_huyen.Count == 0)
             {
-                foreach (var item in xa)
+                foreach (var item in xa.OrderBy(x => x.sequence))
                 {
                     //Tạo các bản ghi huyện tương ứng với bản ghi xã
                     await CreateBieu04TKKK_Huyen(item, huyenId, maHuyen);
@@ -793,7 +929,7 @@ namespace KiemKeDatDai.RisApplication
             }
             else
             {
-                foreach (var item in xa)
+                foreach (var item in xa.OrderBy(x => x.sequence))
                 {
                     //Cập nhật các bản ghi huyện tương ứng với bản ghi xã
                     await UpdateBieu04TKKK_Huyen(item, huyenId, maHuyen, year, hamduyet);
@@ -870,7 +1006,7 @@ namespace KiemKeDatDai.RisApplication
                     if (hamduyet == (int)HAM_DUYET.DUYET)
                     {
                         //objhuyen.TongSo_DT += xa.TongSo_DT;
-                        //objhuyen.TongSo_CC += xa.TongSo_CC;
+                        //objhuyen.TongSo_CC += xa.TongSo_CC;   
                         //objhuyen.CaNhanTrongNuoc_CNV_DT += xa.CaNhanTrongNuoc_CNV_DT;
                         //objhuyen.CaNhanTrongNuoc_CNV_CC += xa.CaNhanTrongNuoc_CNV_CC;
                         //objhuyen.NguoiVietNamONuocNgoai_CNN_DT += xa.NguoiVietNamONuocNgoai_CNN_DT;
@@ -906,41 +1042,42 @@ namespace KiemKeDatDai.RisApplication
                         objhuyen.TongSo_DT += xa.TongSo_DT;
                         objhuyen.TongSo_CC = Math.Round(objhuyen.TongSo_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CaNhanTrongNuoc_CNV_DT += xa.CaNhanTrongNuoc_CNV_DT;
-                        objhuyen.CaNhanTrongNuoc_CNV_CC = Math.Round(objhuyen.CaNhanTrongNuoc_CNV_DT * 100 / objhuyents.TongSo_DT,4);
+                        objhuyen.CaNhanTrongNuoc_CNV_CC = Math.Round(objhuyen.CaNhanTrongNuoc_CNV_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.NguoiVietNamONuocNgoai_CNN_DT += xa.NguoiVietNamONuocNgoai_CNN_DT;
-                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objhuyen.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objhuyen.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.CoQuanNhaNuoc_TCN_DT += xa.CoQuanNhaNuoc_TCN_DT;
-                        objhuyen.CoQuanNhaNuoc_TCN_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CoQuanNhaNuoc_TCN_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCN_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.DonViSuNghiep_TSN_DT += xa.DonViSuNghiep_TSN_DT;
-                        objhuyen.DonViSuNghiep_TSN_CC = Math.Round(objhuyen.DonViSuNghiep_TSN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.DonViSuNghiep_TSN_CC = Math.Round(objhuyen.DonViSuNghiep_TSN_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucXaHoi_TXH_DT += xa.ToChucXaHoi_TXH_DT;
-                        objhuyen.ToChucXaHoi_TXH_CC = Math.Round(objhuyen.ToChucXaHoi_TXH_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucXaHoi_TXH_CC = Math.Round(objhuyen.ToChucXaHoi_TXH_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucKinhTe_TKT_DT += xa.ToChucKinhTe_TKT_DT;
-                        objhuyen.ToChucKinhTe_TKT_CC = Math.Round(objhuyen.ToChucKinhTe_TKT_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucKinhTe_TKT_CC = Math.Round(objhuyen.ToChucKinhTe_TKT_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucKhac_TKH_DT += xa.ToChucKhac_TKH_DT;
-                        objhuyen.ToChucKhac_TKH_CC = Math.Round(objhuyen.ToChucKhac_TKH_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucKhac_TKH_CC = Math.Round(objhuyen.ToChucKhac_TKH_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucTonGiao_TTG_DT += xa.ToChucTonGiao_TTG_DT;
-                        objhuyen.ToChucTonGiao_TTG_CC = Math.Round(objhuyen.ToChucTonGiao_TTG_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucTonGiao_TTG_CC = Math.Round(objhuyen.ToChucTonGiao_TTG_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.CongDongDanCu_CDS_DT += xa.CongDongDanCu_CDS_DT;
-                        objhuyen.CongDongDanCu_CDS_CC = Math.Round(objhuyen.CongDongDanCu_CDS_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CongDongDanCu_CDS_CC = Math.Round(objhuyen.CongDongDanCu_CDS_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucNuocNgoai_TNG_DT += xa.ToChucNuocNgoai_TNG_DT;
-                        objhuyen.ToChucNuocNgoai_TNG_CC = Math.Round(objhuyen.ToChucNuocNgoai_TNG_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucNuocNgoai_TNG_CC = Math.Round(objhuyen.ToChucNuocNgoai_TNG_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT += xa.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT += xa.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.CoQuanNhaNuoc_TCQ_DT += xa.CoQuanNhaNuoc_TCQ_DT;
-                        objhuyen.CoQuanNhaNuoc_TCQ_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CoQuanNhaNuoc_TCQ_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCQ_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.DonViSuNghiep_TSQ_DT += xa.DonViSuNghiep_TSQ_DT;
-                        objhuyen.DonViSuNghiep_TSQ_CC = Math.Round(objhuyen.DonViSuNghiep_TSQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.DonViSuNghiep_TSQ_CC = Math.Round(objhuyen.DonViSuNghiep_TSQ_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucKinhTe_KTQ_DT += xa.ToChucKinhTe_KTQ_DT;
-                        objhuyen.ToChucKinhTe_KTQ_CC = Math.Round(objhuyen.ToChucKinhTe_KTQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucKinhTe_KTQ_CC = Math.Round(objhuyen.ToChucKinhTe_KTQ_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.CongDongDanCu_CDQ_DT += xa.CongDongDanCu_CDQ_DT;
-                        objhuyen.CongDongDanCu_CDQ_CC = Math.Round(objhuyen.CongDongDanCu_CDQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CongDongDanCu_CDQ_CC = Math.Round(objhuyen.CongDongDanCu_CDQ_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.STT = xa.STT;
                         objhuyen.LoaiDat = xa.LoaiDat;
                         objhuyen.Year = xa.Year;
                         objhuyen.sequence = xa.sequence;
+
                     }
                     //update huỷ duyệt xã
                     else
@@ -948,37 +1085,37 @@ namespace KiemKeDatDai.RisApplication
                         objhuyen.TongSo_DT -= xa.TongSo_DT;
                         objhuyen.TongSo_CC = Math.Round(objhuyen.TongSo_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CaNhanTrongNuoc_CNV_DT -= xa.CaNhanTrongNuoc_CNV_DT;
-                        objhuyen.CaNhanTrongNuoc_CNV_CC = Math.Round(objhuyen.CaNhanTrongNuoc_CNV_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CaNhanTrongNuoc_CNV_CC = Math.Round(objhuyen.CaNhanTrongNuoc_CNV_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.NguoiVietNamONuocNgoai_CNN_DT -= xa.NguoiVietNamONuocNgoai_CNN_DT;
-                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objhuyen.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.NguoiVietNamONuocNgoai_CNN_CC = Math.Round(objhuyen.NguoiVietNamONuocNgoai_CNN_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.CoQuanNhaNuoc_TCN_DT -= xa.CoQuanNhaNuoc_TCN_DT;
-                        objhuyen.CoQuanNhaNuoc_TCN_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CoQuanNhaNuoc_TCN_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCN_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.DonViSuNghiep_TSN_DT -= xa.DonViSuNghiep_TSN_DT;
-                        objhuyen.DonViSuNghiep_TSN_CC = Math.Round(objhuyen.DonViSuNghiep_TSN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.DonViSuNghiep_TSN_CC = Math.Round(objhuyen.DonViSuNghiep_TSN_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucXaHoi_TXH_DT -= xa.ToChucXaHoi_TXH_DT;
-                        objhuyen.ToChucXaHoi_TXH_CC = Math.Round(objhuyen.ToChucXaHoi_TXH_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucXaHoi_TXH_CC = Math.Round(objhuyen.ToChucXaHoi_TXH_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucKinhTe_TKT_DT -= xa.ToChucKinhTe_TKT_DT;
-                        objhuyen.ToChucKinhTe_TKT_CC = Math.Round(objhuyen.ToChucKinhTe_TKT_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucKinhTe_TKT_CC = Math.Round(objhuyen.ToChucKinhTe_TKT_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucKhac_TKH_DT -= xa.ToChucKhac_TKH_DT;
-                        objhuyen.ToChucKhac_TKH_CC = Math.Round(objhuyen.ToChucKhac_TKH_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucKhac_TKH_CC = Math.Round(objhuyen.ToChucKhac_TKH_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucTonGiao_TTG_DT -= xa.ToChucTonGiao_TTG_DT;
-                        objhuyen.ToChucTonGiao_TTG_CC = Math.Round(objhuyen.ToChucTonGiao_TTG_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucTonGiao_TTG_CC = Math.Round(objhuyen.ToChucTonGiao_TTG_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.CongDongDanCu_CDS_DT -= xa.CongDongDanCu_CDS_DT;
-                        objhuyen.CongDongDanCu_CDS_CC = Math.Round(objhuyen.CongDongDanCu_CDS_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CongDongDanCu_CDS_CC = Math.Round(objhuyen.CongDongDanCu_CDS_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucNuocNgoai_TNG_DT -= xa.ToChucNuocNgoai_TNG_DT;
-                        objhuyen.ToChucNuocNgoai_TNG_CC = Math.Round(objhuyen.ToChucNuocNgoai_TNG_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucNuocNgoai_TNG_CC = Math.Round(objhuyen.ToChucNuocNgoai_TNG_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT -= xa.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC = Math.Round(objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT -= xa.ToChucKinhTeVonNuocNgoai_TVN_DT;
                         objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC = Math.Round(objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CoQuanNhaNuoc_TCQ_DT -= xa.CoQuanNhaNuoc_TCQ_DT;
-                        objhuyen.CoQuanNhaNuoc_TCQ_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CoQuanNhaNuoc_TCQ_CC = Math.Round(objhuyen.CoQuanNhaNuoc_TCQ_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.DonViSuNghiep_TSQ_DT -= xa.DonViSuNghiep_TSQ_DT;
-                        objhuyen.DonViSuNghiep_TSQ_CC = Math.Round(objhuyen.DonViSuNghiep_TSQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.DonViSuNghiep_TSQ_CC = Math.Round(objhuyen.DonViSuNghiep_TSQ_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.ToChucKinhTe_KTQ_DT -= xa.ToChucKinhTe_KTQ_DT;
-                        objhuyen.ToChucKinhTe_KTQ_CC = Math.Round(objhuyen.ToChucKinhTe_KTQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.ToChucKinhTe_KTQ_CC = Math.Round(objhuyen.ToChucKinhTe_KTQ_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                         objhuyen.CongDongDanCu_CDQ_DT -= xa.CongDongDanCu_CDQ_DT;
-                        objhuyen.CongDongDanCu_CDQ_CC = Math.Round(objhuyen.CongDongDanCu_CDQ_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
+                        objhuyen.CongDongDanCu_CDQ_CC = Math.Round(objhuyen.CongDongDanCu_CDQ_DT * 100 / (objhuyen.TongSo_DT == 0 ? 1 : objhuyen.TongSo_DT), 4);
                     }
                     await _bieu04TKKK_HuyenRepos.UpdateAsync(objhuyen);
                 }

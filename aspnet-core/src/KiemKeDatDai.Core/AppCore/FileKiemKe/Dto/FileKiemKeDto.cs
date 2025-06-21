@@ -38,6 +38,8 @@ namespace KiemKeDatDai.ApplicationDto
         public long Year { get; set; }
         public string MaDVHC { get; set; } = "";
         public long? DVHCId { get; set; }
+        public int? CountImportedTable { get; set; } = 0;
+        public int? ImportedStatus { get; set; } = 1;
         public string DeletedFilePath { get; set; } = "";
 
         public long Id { get; set; }
