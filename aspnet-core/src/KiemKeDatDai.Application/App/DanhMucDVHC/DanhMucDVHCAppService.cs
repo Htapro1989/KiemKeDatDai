@@ -140,6 +140,11 @@ namespace KiemKeDatDai.RisApplication
                                     .Take(input.MaxResultCount)
                                     .ToListAsync();
 
+                foreach (var item in lstDvhc)
+                {
+                    if (item.Year == 20241) item.Year = 2024;
+                }
+
                 commonResponseDto.ReturnValue = new PagedResultDto<DVHCOutputDto>()
                 {
                     Items = lstDvhc,
@@ -555,18 +560,32 @@ namespace KiemKeDatDai.RisApplication
                 case (int)CAP_DVHC.XA:
                     dvhc.TenXa = input.Name;
                     dvhc.MaXa = input.Ma;
-                    dvhc.TenHuyen = input.TenHuyen != null ? input.TenHuyen : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
-                    dvhc.MaHuyen = input.MaHuyen != null ? input.MaHuyen : input.Parent_Code;
-                    dvhc.MaTinh = input.MaTinh != null ? input.MaTinh : allDvhc.Single(x => x.Ma == dvhc.MaHuyen).MaTinh;
-                    dvhc.TenTinh = input.TenTinh != null ? input.TenTinh : allDvhc.Single(x => x.Ma == dvhc.MaTinh).Name;
+
+                    //Nếu là đvhc mới 3 cấp thì chỉ lấy mã tỉnh, tên tỉnh theo mã xã, tên xã
+                    if (input.LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+                    {
+                        dvhc.MaTinh = input.MaTinh != null ? input.MaTinh : input.Parent_Code;
+                        dvhc.TenTinh = input.TenTinh != null ? input.TenTinh : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                    }
+                    //Nếu vẫn là đvhc 4 cấp cũ thì giữ nguyên code
+                    else if (input.LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+                    {
+                        dvhc.TenHuyen = input.TenHuyen != null ? input.TenHuyen : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                        dvhc.MaHuyen = input.MaHuyen != null ? input.MaHuyen : input.Parent_Code;
+                        dvhc.MaTinh = input.MaTinh != null ? input.MaTinh : allDvhc.Single(x => x.Ma == dvhc.MaHuyen).MaTinh;
+                        dvhc.TenTinh = input.TenTinh != null ? input.TenTinh : allDvhc.Single(x => x.Ma == dvhc.MaTinh).Name;
+                    }
+
                     dvhc.MaxFileUpload = input.MaxFileUpload != null ? input.MaxFileUpload : 5;
                     break;
+
                 case (int)CAP_DVHC.HUYEN:
                     dvhc.TenHuyen = input.Name;
                     dvhc.MaHuyen = input.Ma;
                     dvhc.TenTinh = input.TenTinh != null ? input.TenTinh : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
                     dvhc.MaTinh = input.MaTinh != null ? input.MaTinh : input.Parent_Code;
                     break;
+
                 case (int)CAP_DVHC.TINH:
                     dvhc.TenTinh = input.Name;
                     dvhc.MaTinh = input.Ma;
@@ -617,30 +636,46 @@ namespace KiemKeDatDai.RisApplication
                 case (int)CAP_DVHC.XA:
                     data.TenXa = data.Name;
                     data.MaXa = input.Ma;
-                    data.TenHuyen = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
-                    data.MaHuyen = input.Parent_Code;
-                    data.MaTinh = allDvhc.Single(x => x.Ma == data.MaHuyen).MaTinh;
-                    data.TenTinh = allDvhc.Single(x => x.Ma == data.MaTinh).Name;
+
+                    //Nếu là đvhc mới 3 cấp thì chỉ lấy mã tỉnh, tên tỉnh theo mã xã, tên xã
+                    if (input.LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+                    {
+                        data.MaTinh = input.Parent_Code;
+                        data.TenTinh = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
+                    }
+                    //Nếu vẫn là đvhc 4 cấp cũ thì giữ nguyên code
+                    else if (input.LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+                    {
+                        data.TenHuyen = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
+                        data.MaHuyen = input.Parent_Code;
+                        data.MaTinh = allDvhc.Single(x => x.Ma == data.MaHuyen).MaTinh;
+                        data.TenTinh = allDvhc.Single(x => x.Ma == data.MaTinh).Name;
+                    }
+
                     data.MaxFileUpload = input.MaxFileUpload;
                     break;
+
                 case (int)CAP_DVHC.HUYEN:
                     data.MaHuyen = input.Ma;
                     data.TenHuyen = data.Name;
                     data.TenTinh = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
                     data.MaTinh = input.Parent_Code;
                     break;
+
                 case (int)CAP_DVHC.TINH:
                     data.TenTinh = data.Name;
                     data.MaTinh = input.Ma;
                     data.TenVung = allDvhc.Single(x => x.Ma == data.Parent_Code).Name;
                     data.MaVung = input.Parent_Code;
                     break;
+
                 case (int)CAP_DVHC.VUNG:
                     data.TenVung = data.Name;
                     break;
                 default:
                     break;
             }
+
             await _dvhcRepos.UpdateAsync(data);
 
             commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
@@ -824,7 +859,8 @@ namespace KiemKeDatDai.RisApplication
                 MaXa = null,
                 MaHuyen = null,
                 MaTinh = null,
-                ListMaTinh = new List<string>()
+                ListMaTinh = new List<string>(),
+                LoaiCapDVHC = input.LoaiCapDVHC
             };
 
             switch (dvhc.CapDVHCId)
@@ -861,7 +897,9 @@ namespace KiemKeDatDai.RisApplication
                     break;
 
                 case (int)CAP_DVHC.VUNG:
+                    //lấy danh sách mã tỉnh thuộc vùng
                     var lstMaTinh = allDvhc.Where(x => x.Parent_Code == dvhc.Ma).Select(x => x.Ma).ToArray();
+                    //đếm số xã theo danh sách mã tỉnh trên
                     var dataVung = DemBaoCao(allDvhc, x => x.CapDVHCId == (int)CAP_DVHC.XA && lstMaTinh.Contains(x.MaTinh));
                     dto.Tong = dataVung.Tong;
                     dto.TongDuyet = dataVung.Duyet;
@@ -885,6 +923,12 @@ namespace KiemKeDatDai.RisApplication
             return dto;
         }
 
+        /// <summary>
+        /// Hàm đếm báo cáo theo trạng thái
+        /// </summary>
+        /// <param name="all">Danh sách tất cả đvhc</param>
+        /// <param name="condition">điều kiện where truyền vào</param>
+        /// <returns></returns>
         private (int Tong, int Duyet, int Nop) DemBaoCao(List<DonViHanhChinh> all, Func<DonViHanhChinh, bool> condition)
         {
             var list = all.Where(condition).ToList();
@@ -895,6 +939,11 @@ namespace KiemKeDatDai.RisApplication
             );
         }
 
+        /// <summary>
+        /// Hàm đếm số lượng xã đã đẩy dữ liệu lên theo mã đvhc truyền vào
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         private int TongDayDuLieu(TongDayDuLieuInputDto input)
         {
             var lstMaXa = new List<string>();
@@ -935,6 +984,14 @@ namespace KiemKeDatDai.RisApplication
             return query.Count();
         }
 
+        /// <summary>
+        /// Hàm kiểm tra ĐVHC có được nộp dữ liệu không? Nếu tất cả đvhc con đểu đã duyệt thì được nộp lên trên, và ngược lại 
+        /// </summary>
+        /// <param name="baoCaoDVHC"></param>
+        /// <param name="input"></param>
+        /// <param name="allDvhc"></param>
+        /// <param name="lstChild"></param>
+        /// <returns></returns>
         private async Task<bool> CheckNopBaoCao(BaoCaoDonViHanhChinhOutPutDto baoCaoDVHC, BaoCaoInPutDto input, List<DonViHanhChinh> allDvhc, List<DonViHanhChinh> lstChild)
         {
             bool isNopBaoCao = false;
@@ -1185,7 +1242,7 @@ namespace KiemKeDatDai.RisApplication
         }
 
         [AbpAuthorize(PermissionNames.Pages_Administration_System_Dvhc)]
-        public async Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUpload)
+        public async Task<CommonResponseDto> UploadFileDVHC(IFormFile fileUpload, int loaiCapDVHC)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
@@ -1249,11 +1306,16 @@ namespace KiemKeDatDai.RisApplication
                                         MaVung = item.Value<string>("MaVung"),
                                         TenTinh = item.Value<string>("TenTinh"),
                                         MaTinh = item.Value<string>("MaTinh"),
-                                        TenHuyen = item.Value<string>("TenHuyen"),
-                                        MaHuyen = item.Value<string>("MaHuyen"),
                                         TenXa = item.Value<string>("TenXa"),
                                         CapDVHCId = capDvhc
                                     };
+
+                                    //Nếu là đvhc cũ 4 cấp thì lấy thêm tên huyện, mã huyện
+                                    if (loaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
+                                    {
+                                        input.TenHuyen = item.Value<string>("TenHuyen");
+                                        input.MaHuyen = item.Value<string>("MaHuyen");
+                                    }
 
                                     switch (capDvhc)
                                     {
@@ -1290,11 +1352,14 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        public async Task<FileStreamResult> DownloadTemplateDVHC()
+        public async Task<FileStreamResult> DownloadTemplateDVHC(int loaiCapDVHC)
         {
             try
             {
-                var template = "TemplateImport_DVHC.xlsx";
+                var template = "TemplateImport_DVHC_3Cap.xlsx";
+
+                if (loaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP) template = "TemplateImport_DVHC.xlsx";
+
                 MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine("wwwroot/Templates/excels", template)));
                 return new FileStreamResult(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 {

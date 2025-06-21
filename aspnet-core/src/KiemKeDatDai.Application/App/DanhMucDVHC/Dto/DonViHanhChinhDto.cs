@@ -12,13 +12,14 @@ namespace KiemKeDatDai.Dto
     [AutoMap(typeof(DonViHanhChinh))]
     public class DVHCInputDto : DonViHanhChinh
     {
-
+        public int LoaiCapDVHC { get; set; }
     }
     public class DVHCDto : PagedAndFilteredInputDto
     {
         public long? Year { get; set; }
         public string MaVung { get; set; }
         public string MaTinh { get; set; }
+        public int LoaiCapDVHC { get; set; }
     }
     public class DVHCOutputDto : DonViHanhChinh
     {
@@ -34,6 +35,7 @@ namespace KiemKeDatDai.Dto
     {
         public long Year { get; set; }
         public string Ma { get; set; }
+        public int LoaiCapDVHC { get; set; }
     }
     public class BaoCaoDonViHanhChinhOutPutDto
     {
@@ -66,5 +68,6 @@ namespace KiemKeDatDai.Dto
         public string MaHuyen { get; set; }
         public string MaTinh { get; set; }
         public List<string> ListMaTinh { get; set; }
+        public int LoaiCapDVHC { get; set; }
     }
 }
