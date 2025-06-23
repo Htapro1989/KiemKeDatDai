@@ -854,7 +854,7 @@ namespace KiemKeDatDai.RisApplication
 
             var tongDayDuLieuInputDto = new TongDayDuLieuInputDto
             {
-                AllDvhc = allDvhcXa,
+                AllDvhc = allDvhc,
                 AllFile = allFile,
                 MaXa = null,
                 MaHuyen = null,
@@ -971,7 +971,7 @@ namespace KiemKeDatDai.RisApplication
                     .ToList();
             }
 
-            if (input.ListMaTinh != null)
+            if (input.ListMaTinh.Count > 0)
             {
                 lstMaXa = input.AllDvhc
                     .Where(x => input.ListMaTinh.Contains(x.MaTinh))
