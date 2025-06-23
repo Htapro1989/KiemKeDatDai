@@ -217,13 +217,12 @@ namespace KiemKeDatDai.RisApplication
         }
 
         [AbpAllowAnonymous]
-        public async Task<CommonResponseDto> ThongKeSoLieu()
+        public async Task<CommonResponseDto> ThongKeSoLieu(int year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
             try
             {
-                var year = 2024;
                 int tinh = (int)CAP_DVHC.TINH, huyen = (int)CAP_DVHC.HUYEN, xa = (int)CAP_DVHC.XA;
                 int daDuyet = (int)TRANG_THAI_DUYET.DA_DUYET, choDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
                 var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Year == year && x.Active == true).ToListAsync();
