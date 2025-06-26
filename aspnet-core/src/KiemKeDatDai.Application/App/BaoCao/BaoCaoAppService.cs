@@ -327,6 +327,55 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+        [AbpAuthorize]
+        public async Task<CommonResponseDto> DeleteAllBieuHuyen(long year, string maHuyen)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            try
+            {
+                var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == maHuyen && x.Year == year);
+
+                if (objdata != null)
+                {
+                    if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET || objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                    {
+                        commonResponseDto.Message = "ĐVHC này đang chờ duyệt hoặc đã duyệt, không thể xoá dữ liệu";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    else
+                    {
+                        using (var con = new SqlConnection(_connectionString))
+                        {
+                            await con.ExecuteAsync(
+                                "Delete_All_BieuHuyen", // Tên stored procedure
+                                new { @MaHuyen = maHuyen, @Year = year },
+                                commandType: CommandType.StoredProcedure // Chỉ định đây là stored procedure
+                            );
+                        }
+
+                    }
+                }
+                else
+                {
+                    commonResponseDto.Message = "ĐVHC này không tồn tại";
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    return commonResponseDto;
+                }
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Xóa dữ liệu các biểu huyện thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Fatal(ex.Message);
+            }
+            return commonResponseDto;
+        }
+
         [AbpAllowAnonymous]
         public async Task<CommonResponseDto> ReportNumberXaByDate(DateTime fromDate, DateTime toDate)
         {

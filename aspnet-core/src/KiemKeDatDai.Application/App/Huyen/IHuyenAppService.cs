@@ -12,6 +12,8 @@ namespace KiemKeDatDai.RisApplication
     public interface IHuyenAppService : IApplicationService
     {
         Task<CommonResponseDto> DuyetBaoCaoXa(string ma, long year);
+        Task<CommonResponseDto> DuyetAllXaTrongHuyen(string maHuyen, long year);
         Task<CommonResponseDto> HuyDuyetBaoCaoXa(string ma, long year);
+        Task<CommonResponseDto> HuyDuyetAllXaTrongHuyen(string maHuyen, long year);
     }
 }

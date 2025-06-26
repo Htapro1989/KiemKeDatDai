@@ -36,6 +36,9 @@ using NuGet.Protocol;
 using Aspose.Cells;
 using KiemKeDatDai.AppCore.Utility;
 using KiemKeDatDai.Authorization;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -190,7 +193,8 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var currentDvhc = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
+                    var currentDvhc = await _dvhcRepos
+                        .FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Active == true && x.Year == year);
 
                     if (currentDvhc != null)
                     {
@@ -276,6 +280,64 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Report_DuyetBaoCao)]
+        public async Task<CommonResponseDto> DuyetAllXaTrongHuyen(string maHuyen, long year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+            {
+                try
+                {
+                    var currentUser = await GetCurrentUserAsync();
+                    var currentHuyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == maHuyen && x.Active == true && x.Year == year);
+
+                    if (currentHuyen == null)
+                    {
+                        commonResponseDto.Message = "Huyện này không tồn tại";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    if (currentHuyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                    {
+                        commonResponseDto.Message = "Huyện đã được duyệt, không thể duyệt xã";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    var lstXa = _dvhcRepos.GetAll()
+                        .Where(x => x.Parent_Code == maHuyen && x.Active == true && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET)
+                        .Select(x => new { x.MaXa, x.TenXa })
+                        .ToList();
+
+                    if (lstXa.Count == 0)
+                    {
+                        commonResponseDto.Message = "Không có xã nào chờ duyệt";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    foreach (var item in lstXa)
+                    {
+                        await DuyetBaoCaoXa(item.MaXa, year);
+                    }
+
+                    uow.Complete();
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Đã duyệt các xã " + string.Join(", ", lstXa.Select(x => x.TenXa));
+                }
+                catch (Exception ex)
+                {
+                    uow.Dispose();
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = ex.Message;
+                    Logger.Fatal(ex.Message);
+                }
+            }
+            return commonResponseDto;
+        }
+
         [AbpAuthorize(PermissionNames.Pages_Report_HuyBaoCao)]
         public async Task<CommonResponseDto> HuyDuyetBaoCaoXa(string ma, long year)
         {
@@ -286,7 +348,7 @@ namespace KiemKeDatDai.RisApplication
                 try
                 {
                     var currentUser = await GetCurrentUserAsync();
-                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode);
+                    var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Active == true && x.Year == year);
                     if (objdata != null)
                     {
                         if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
@@ -345,6 +407,63 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Report_HuyBaoCao)]
+        public async Task<CommonResponseDto> HuyDuyetAllXaTrongHuyen(string maHuyen, long year)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+            {
+                try
+                {
+                    var currentUser = await GetCurrentUserAsync();
+                    var currentHuyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == maHuyen && x.Active == true && x.Year == year);
+
+                    if (currentHuyen == null)
+                    {
+                        commonResponseDto.Message = "Huyện này không tồn tại";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    if (currentHuyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                    {
+                        commonResponseDto.Message = "Huyện đã được duyệt, không thể hủy duyệt xã";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    var lstXa = _dvhcRepos.GetAll()
+                        .Where(x => x.Parent_Code == maHuyen && x.Active == true && x.Year == year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                        .Select(x => new { x.MaXa, x.TenXa })
+                        .ToList();
+
+                    if (lstXa.Count == 0)
+                    {
+                        commonResponseDto.Message = "Không có xã nào đã duyệt";
+                        commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                        return commonResponseDto;
+                    }
+
+                    foreach (var item in lstXa)
+                    {
+                        await HuyDuyetBaoCaoXa(item.MaXa, year);
+                    }
+
+                    uow.Complete();
+                    commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                    commonResponseDto.Message = "Đã hủy duyệt các xã " + string.Join(", ", lstXa.Select(x => x.TenXa));
+                }
+                catch (Exception ex)
+                {
+                    uow.Dispose();
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = ex.Message;
+                    Logger.Fatal(ex.Message);
+                }
+            }
+            return commonResponseDto;
+        }
 
         private async Task<CommonResponseDto> CreateOrUpdateBieuHuyen(DonViHanhChinh huyen, string maXa, long year, int hamduyet)
         {
