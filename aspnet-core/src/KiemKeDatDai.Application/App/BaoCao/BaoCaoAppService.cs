@@ -217,7 +217,7 @@ namespace KiemKeDatDai.RisApplication
         }
 
         [AbpAllowAnonymous]
-        public async Task<CommonResponseDto> ThongKeSoLieu(int year)
+        public async Task<CommonResponseDto> ThongKeSoLieu(long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
