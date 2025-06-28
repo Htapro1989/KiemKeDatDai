@@ -381,7 +381,7 @@ namespace KiemKeDatDai.RisApplication
             }
             var LoaiCapDVHC = KyThongKeKiemKe.LoaiCapDVHC ?? 4; // Mặc định là 4 cấp
             #region biểu 01TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu01TKKK = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
@@ -414,7 +414,7 @@ namespace KiemKeDatDai.RisApplication
             #endregion
 
             #region biểu 02TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu02TKKK = await _bieu02TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
@@ -447,7 +447,7 @@ namespace KiemKeDatDai.RisApplication
             #endregion
 
             #region biểu 03TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu03TKKK = await _bieu03TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
@@ -480,7 +480,7 @@ namespace KiemKeDatDai.RisApplication
             #endregion
 
             #region biểu 04TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu04TKKK = await _bieu04TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
@@ -513,7 +513,7 @@ namespace KiemKeDatDai.RisApplication
             #endregion
 
             #region biểu 05TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu05TKKK = await _bieu05TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
