@@ -1227,7 +1227,7 @@ namespace KiemKeDatDai.RisApplication
                         {
                             var tableData = table.ToDataTable();
                             var jArray = JArray.FromObject(tableData);
-                            var year = jArray[0].Value<long>("Year");
+                            var year = int.Parse(tableData.Rows[0][9].ToString());
                             var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Year == year).ToListAsync();
 
                             foreach (var item in jArray)
@@ -1252,7 +1252,9 @@ namespace KiemKeDatDai.RisApplication
                                         TenHuyen = item.Value<string>("TenHuyen"),
                                         MaHuyen = item.Value<string>("MaHuyen"),
                                         TenXa = item.Value<string>("TenXa"),
-                                        CapDVHCId = capDvhc
+                                        MaXa = item.Value<string>("MaXa"),
+                                        CapDVHCId = capDvhc,
+                                        Year = year,
                                     };
 
                                     switch (capDvhc)
@@ -1260,14 +1262,20 @@ namespace KiemKeDatDai.RisApplication
                                         case (int)CAP_DVHC.XA:
                                             input.Name = input.TenXa;
                                             input.Ma = input.MaXa;
+                                            input.Parent_Code = input.MaHuyen;
+                                            input.Parent_id = allDvhc.Single(x => x.MaHuyen == input.MaHuyen && x.CapDVHCId == (int)CAP_DVHC.HUYEN).Id;
                                             break;
                                         case (int)CAP_DVHC.HUYEN:
                                             input.Name = input.TenHuyen;
                                             input.Ma = input.MaHuyen;
+                                            input.Parent_Code = input.MaTinh;
+                                            input.Parent_id = allDvhc.Single(x => x.MaTinh == input.MaTinh && x.CapDVHCId == (int)CAP_DVHC.TINH).Id;
                                             break;
                                         case (int)CAP_DVHC.TINH:
                                             input.Name = input.TenTinh;
                                             input.Ma = input.MaTinh;
+                                            input.Parent_Code = input.MaVung;
+                                            input.Parent_id = allDvhc.Single(x => x.MaVung == input.MaVung && x.CapDVHCId == (int)CAP_DVHC.VUNG).Id;
                                             break;
                                     }
 
