@@ -80,7 +80,8 @@ namespace KiemKeDatDai.RisApplication
                                  Name = ky.Name,
                                  Year = ky.Year,
                                  Active = ky.Active,
-                                 CreationTime = ky.CreationTime
+                                 CreationTime = ky.CreationTime,
+                                 LoaiCapDVHC = ky.LoaiCapDVHC ?? 4
                              })
                              .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Ma.ToLower().Contains(filter.ToLower()))
                              .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Name.ToLower().Contains(filter.ToLower()));
@@ -103,7 +104,32 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                commonResponseDto.ReturnValue = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(id);
+                if (id <= 0)
+                {
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Id không hợp lệ";
+                    return commonResponseDto;
+                }
+                if (!await _dmKyThongKeKiemKeRepos.GetAll().AnyAsync(x => x.Id == id))
+                {
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Kỳ thống kê kiểm kê này không tồn tại";
+                    return commonResponseDto;
+                }
+                var dmKyThongKeKiem = await _dmKyThongKeKiemKeRepos.GetAll()
+                    .Where(x => x.Id == id)
+                    .Select(x => new DMKyKiemKeOuputDto
+                    {
+                        Id = x.Id,
+                        Ma = x.Ma,
+                        Name = x.Name,
+                        Year = x.Year,
+                        Active = x.Active,
+                        CreationTime = x.CreationTime,
+                        LoaiCapDVHC = x.LoaiCapDVHC ?? 4
+                    })
+                    .FirstOrDefaultAsync();
+                commonResponseDto.ReturnValue = dmKyThongKeKiem;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }
@@ -125,7 +151,7 @@ namespace KiemKeDatDai.RisApplication
             {
                 if (input.Id != 0)
                 {
-                    var data = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(input.Id);
+                    var data = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(input.Id??0);
 
                     if (data != null)
                     {
@@ -133,7 +159,7 @@ namespace KiemKeDatDai.RisApplication
                         data.Name = input.Name;
                         data.Year = input.Year;
                         data.Active = input.Active;
-
+                        data.LoaiCapDVHC = input.LoaiCapDVHC;
                         await _dmKyThongKeKiemKeRepos.UpdateAsync(data);
                     }
                 }

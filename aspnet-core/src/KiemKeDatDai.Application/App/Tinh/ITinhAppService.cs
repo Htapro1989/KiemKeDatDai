@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace KiemKeDatDai.RisApplication
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface ITinhAppService : IApplicationService
     {
-        Task<CommonResponseDto> DuyetBaoCaoHuyen(string ma, long year);
-        Task<CommonResponseDto> HuyDuyetBaoCaoHuyen(string ma, long year);
+        Task<CommonResponseDto> DuyetBaoCao(string ma, long year);
+        Task<CommonResponseDto> HuyDuyetBaoCao(string ma, long year);
         Task<CommonResponseDto> UpdateBieuTinh(string matinh, long year);
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

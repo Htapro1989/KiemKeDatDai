@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace KiemKeDatDai.EntitiesDb
 {
     [Table("Bieu04TKKK_Vung")]
-    public class Bieu04TKKK_Vung : FullAuditedEntity<long>
+    public class Bieu04TKKK_Vung : FullAuditedEntity<long>,IBieu04TKKK
     {
         public string? STT { get; set; }
         public string? LoaiDat { get; set; }
