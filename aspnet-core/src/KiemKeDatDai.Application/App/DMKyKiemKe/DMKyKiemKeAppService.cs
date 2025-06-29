@@ -66,6 +66,7 @@ namespace KiemKeDatDai.RisApplication
             _userRoleRepos = userRoleRepos;
             //_iLogAppService = iLogAppService;
         }
+        [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetAll(string filter)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
