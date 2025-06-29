@@ -1097,7 +1097,7 @@ namespace KiemKeDatDai.RisApplication
                     NguoiVietNamONuocNgoai_CNN_CC = huyen.NguoiVietNamONuocNgoai_CNN_CC,
                     CoQuanNhaNuoc_TCN_DT = huyen.CoQuanNhaNuoc_TCN_DT,
                     CoQuanNhaNuoc_TCN_CC = huyen.CoQuanNhaNuoc_TCN_CC,
-                    DonViSuNghiep_TSN_DT = huyen.NguoiVietNamONuocNgoai_CNN_DT,
+                    DonViSuNghiep_TSN_DT = huyen.DonViSuNghiep_TSN_DT,
                     DonViSuNghiep_TSN_CC = huyen.DonViSuNghiep_TSN_CC,
                     ToChucXaHoi_TXH_DT = huyen.ToChucXaHoi_TXH_DT,
                     ToChucXaHoi_TXH_CC = huyen.ToChucXaHoi_TXH_CC,
