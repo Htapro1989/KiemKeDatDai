@@ -1005,40 +1005,6 @@ namespace KiemKeDatDai.RisApplication
                     //update duyệt xã
                     if (hamduyet == (int)HAM_DUYET.DUYET)
                     {
-                        //objhuyen.TongSo_DT += xa.TongSo_DT;
-                        //objhuyen.TongSo_CC += xa.TongSo_CC;   
-                        //objhuyen.CaNhanTrongNuoc_CNV_DT += xa.CaNhanTrongNuoc_CNV_DT;
-                        //objhuyen.CaNhanTrongNuoc_CNV_CC += xa.CaNhanTrongNuoc_CNV_CC;
-                        //objhuyen.NguoiVietNamONuocNgoai_CNN_DT += xa.NguoiVietNamONuocNgoai_CNN_DT;
-                        //objhuyen.NguoiVietNamONuocNgoai_CNN_CC += xa.NguoiVietNamONuocNgoai_CNN_CC;
-                        //objhuyen.CoQuanNhaNuoc_TCN_DT += xa.CoQuanNhaNuoc_TCN_DT;
-                        //objhuyen.CoQuanNhaNuoc_TCN_CC += xa.CoQuanNhaNuoc_TCN_CC;
-                        //objhuyen.DonViSuNghiep_TSN_DT += xa.DonViSuNghiep_TSN_DT;
-                        //objhuyen.DonViSuNghiep_TSN_CC += xa.DonViSuNghiep_TSN_CC;
-                        //objhuyen.ToChucXaHoi_TXH_DT += xa.ToChucXaHoi_TXH_DT;
-                        //objhuyen.ToChucXaHoi_TXH_CC += xa.ToChucXaHoi_TXH_CC;
-                        //objhuyen.ToChucKinhTe_TKT_DT += xa.ToChucKinhTe_TKT_DT;
-                        //objhuyen.ToChucKinhTe_TKT_CC += xa.ToChucKinhTe_TKT_CC;
-                        //objhuyen.ToChucKhac_TKH_DT += xa.ToChucKhac_TKH_DT;
-                        //objhuyen.ToChucKhac_TKH_CC += xa.ToChucKhac_TKH_CC;
-                        //objhuyen.ToChucTonGiao_TTG_DT += xa.ToChucTonGiao_TTG_DT;
-                        //objhuyen.ToChucTonGiao_TTG_CC += xa.ToChucTonGiao_TTG_CC;
-                        //objhuyen.CongDongDanCu_CDS_DT += xa.CongDongDanCu_CDS_DT;
-                        //objhuyen.CongDongDanCu_CDS_CC += xa.CongDongDanCu_CDS_CC;
-                        //objhuyen.ToChucNuocNgoai_TNG_DT += xa.ToChucNuocNgoai_TNG_DT;
-                        //objhuyen.ToChucNuocNgoai_TNG_CC += xa.ToChucNuocNgoai_TNG_CC;
-                        //objhuyen.NguoiGocVietNamONuocNgoai_NGV_DT += xa.NguoiGocVietNamONuocNgoai_NGV_DT;
-                        //objhuyen.NguoiGocVietNamONuocNgoai_NGV_CC += xa.NguoiGocVietNamONuocNgoai_NGV_CC;
-                        //objhuyen.ToChucKinhTeVonNuocNgoai_TVN_DT += xa.ToChucKinhTeVonNuocNgoai_TVN_DT;
-                        //objhuyen.ToChucKinhTeVonNuocNgoai_TVN_CC += xa.ToChucKinhTeVonNuocNgoai_TVN_CC;
-                        //objhuyen.CoQuanNhaNuoc_TCQ_DT += xa.CoQuanNhaNuoc_TCQ_DT;
-                        //objhuyen.CoQuanNhaNuoc_TCQ_CC += xa.CoQuanNhaNuoc_TCQ_CC;
-                        //objhuyen.DonViSuNghiep_TSQ_DT += xa.DonViSuNghiep_TSQ_DT;
-                        //objhuyen.DonViSuNghiep_TSQ_CC += xa.DonViSuNghiep_TSQ_CC;
-                        //objhuyen.ToChucKinhTe_KTQ_DT += xa.ToChucKinhTe_KTQ_DT;
-                        //objhuyen.ToChucKinhTe_KTQ_CC += xa.ToChucKinhTe_KTQ_CC;
-                        //objhuyen.CongDongDanCu_CDQ_DT += xa.CongDongDanCu_CDQ_DT;
-                        //objhuyen.CongDongDanCu_CDQ_CC += xa.CongDongDanCu_CDQ_CC;
                         objhuyen.TongSo_DT += xa.TongSo_DT;
                         objhuyen.TongSo_CC = Math.Round(objhuyen.TongSo_DT * 100 / (objhuyents.TongSo_DT == 0 ? 1 : objhuyents.TongSo_DT), 4);
                         objhuyen.CaNhanTrongNuoc_CNV_DT += xa.CaNhanTrongNuoc_CNV_DT;
