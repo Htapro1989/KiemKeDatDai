@@ -211,7 +211,7 @@ namespace KiemKeDatDai.RisApplication
         }
 
         [AbpAuthorize(PermissionNames.Pages_Report_DuyetBaoCao)]
-        public async Task<CommonResponseDto> DuyetBaoCao(string ma, long year)
+        public async Task<CommonResponseDto> DuyetBaoCaoHuyen(string ma, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -292,7 +292,7 @@ namespace KiemKeDatDai.RisApplication
         }
 
         [AbpAuthorize(PermissionNames.Pages_Report_HuyBaoCao)]
-        public async Task<CommonResponseDto> HuyDuyetBaoCao(string ma, long year)
+        public async Task<CommonResponseDto> HuyDuyetBaoCaoHuyen(string ma, long year)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
