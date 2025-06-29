@@ -545,7 +545,7 @@ namespace KiemKeDatDai.RisApplication
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
-            if (CheckMaDVHC(input.Ma))
+            if (CheckMaDVHC(input.Ma, input.Year))
             {
                 commonResponseDto.Message = "Mã đơn vị hành chính" + input.Ma + "đã tồn tại";
                 commonResponseDto.Code = ResponseCodeStatus.ThatBai;
@@ -566,9 +566,13 @@ namespace KiemKeDatDai.RisApplication
                     {
                         dvhc.MaTinh = input.MaTinh != null ? input.MaTinh : input.Parent_Code;
                         dvhc.TenTinh = input.TenTinh != null ? input.TenTinh : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                        dvhc.Parent_Code = dvhc.Parent_Code == null ? dvhc.MaTinh : dvhc.Parent_Code;
+                        var parentDvhc = allDvhc.FirstOrDefault(x=>x.Ma == dvhc.Parent_Code);
+                        if (parentDvhc != null) 
+                            dvhc.Parent_id = parentDvhc.Id;
                     }
                     //Nếu vẫn là đvhc 4 cấp cũ thì giữ nguyên code
-                    else if (input.LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+                    else if (input.LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
                     {
                         dvhc.TenHuyen = input.TenHuyen != null ? input.TenHuyen : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
                         dvhc.MaHuyen = input.MaHuyen != null ? input.MaHuyen : input.Parent_Code;
@@ -589,8 +593,8 @@ namespace KiemKeDatDai.RisApplication
                 case (int)CAP_DVHC.TINH:
                     dvhc.TenTinh = input.Name;
                     dvhc.MaTinh = input.Ma;
-                    dvhc.TenVung = input.TenVung != null ? input.TenVung : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
-                    dvhc.MaVung = input.MaVung != null ? input.MaVung : input.Parent_Code;
+                    //dvhc.TenVung = input.TenVung != null ? input.TenVung : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
+                    //dvhc.MaVung = input.MaVung != null ? input.MaVung : input.Parent_Code;
                     break;
                 default:
                     break;
@@ -619,7 +623,7 @@ namespace KiemKeDatDai.RisApplication
             //Nếu sửa mã đvhc thì phải check lại mã này đã tồn tại chưa
             if (input.Ma != data.Ma)
             {
-                if (CheckMaDVHC(input.Ma))
+                if (CheckMaDVHC(input.Ma, input.Year))
                 {
                     commonResponseDto.Message = "Mã đơn vị hành chính" + input.Ma + "đã tồn tại";
                     commonResponseDto.Code = ResponseCodeStatus.ThatBai;
@@ -683,9 +687,9 @@ namespace KiemKeDatDai.RisApplication
             return commonResponseDto;
         }
 
-        private bool CheckMaDVHC(string ma)
+        private bool CheckMaDVHC(string ma, long year)
         {
-            var objDVHC = _dvhcRepos.FirstOrDefault(x => x.Ma == ma);
+            var objDVHC = _dvhcRepos.FirstOrDefault(x => x.Ma == ma && x.Year == year);
 
             if (objDVHC != null)
                 return true;
@@ -1284,7 +1288,7 @@ namespace KiemKeDatDai.RisApplication
                         {
                             var tableData = table.ToDataTable();
                             var jArray = JArray.FromObject(tableData);
-                            var year = jArray[0].Value<long>("Year");
+                            var year = int.Parse(tableData.Rows[0][9].ToString());
                             var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Year == year).ToListAsync();
 
                             foreach (var item in jArray)
@@ -1307,7 +1311,10 @@ namespace KiemKeDatDai.RisApplication
                                         TenTinh = item.Value<string>("TenTinh"),
                                         MaTinh = item.Value<string>("MaTinh"),
                                         TenXa = item.Value<string>("TenXa"),
-                                        CapDVHCId = capDvhc
+                                        MaXa = item.Value<string>("MaXa"),
+                                        CapDVHCId = capDvhc,
+                                        Year = year,
+                                        LoaiCapDVHC = loaiCapDVHC
                                     };
 
                                     //Nếu là đvhc cũ 4 cấp thì lấy thêm tên huyện, mã huyện
