@@ -88,7 +88,13 @@ namespace KiemKeDatDai.RisApplication
                              .WhereIf((input.MaCapDVHC != null), x => x.MaCapDVHC == input.MaCapDVHC)
                              .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.Name.ToLower().Contains(input.Filter.ToLower()));
                 
-                commonResponseDto.ReturnValue = await query.ToListAsync();
+                var lstCapDvhc = await query.ToListAsync();
+
+                if (lstCapDvhc.Count > 0 && input.LoaiCapDvhc == (int)LOAI_CAP_DVHC.BA_CAP) { 
+                    lstCapDvhc = lstCapDvhc.Where(x => x.MaCapDVHC != (int)CAP_DVHC.HUYEN && x.MaCapDVHC != (int)CAP_DVHC.VUNG).ToList();
+                }
+
+                commonResponseDto.ReturnValue = lstCapDvhc;
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
             }

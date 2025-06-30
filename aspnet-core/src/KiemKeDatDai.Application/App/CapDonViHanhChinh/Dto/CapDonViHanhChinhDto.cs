@@ -17,6 +17,7 @@ namespace KiemKeDatDai.Dto
     {
         public int? MaCapDVHC { get; set; }
         public string Filter { get; set; }
+        public int? LoaiCapDvhc { get; set; }
     }
     public class CapDVHCOuputDto : CapDVHC
     {
