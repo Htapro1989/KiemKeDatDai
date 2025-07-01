@@ -943,11 +943,8 @@ namespace KiemKeDatDai.RisApplication
             if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG || baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
                 isNopBaoCao = false;
 
-            if (baoCaoDVHC.ChildStatus == 0)
-            {
-                isNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
-            }
-            else
+            //Nếu không phải cấp xã
+            if (baoCaoDVHC.ChildStatus != 0)
             {
                 var soDaDuyet = allDvhc.Count(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
 

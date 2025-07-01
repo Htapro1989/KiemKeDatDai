@@ -206,9 +206,9 @@ namespace KiemKeDatDai.RisApplication
 
                     if (objdata != null)
                     {
-                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET || objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET)
                         {
-                            commonResponseDto.Message = "Tỉnh đã được duyệt, không thể duyệt huyện";
+                            commonResponseDto.Message = "Tỉnh đã nộp báo cáo, không thể duyệt huyện";
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
@@ -287,9 +287,9 @@ namespace KiemKeDatDai.RisApplication
 
                     if (objdata != null)
                     {
-                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET || objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET)
                         {
-                            commonResponseDto.Message = "Tỉnh đã được duyệt, không thể hủy duyệt huyện";
+                            commonResponseDto.Message = "Tỉnh đã nộp báo cáo, không thể hủy duyệt huyện";
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }

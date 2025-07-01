@@ -351,9 +351,9 @@ namespace KiemKeDatDai.RisApplication
                     var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == currentUser.DonViHanhChinhCode && x.Active == true && x.Year == year);
                     if (objdata != null)
                     {
-                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                        if (objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET || objdata.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET)
                         {
-                            commonResponseDto.Message = "Huyện đã được duyệt, không thể hủy duyệt xã";
+                            commonResponseDto.Message = "Huyện đã nộp báo cáo, không thể hủy duyệt xã";
                             commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                             return commonResponseDto;
                         }
@@ -426,9 +426,9 @@ namespace KiemKeDatDai.RisApplication
                         return commonResponseDto;
                     }
 
-                    if (currentHuyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
+                    if (currentHuyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET || currentHuyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.CHO_DUYET)
                     {
-                        commonResponseDto.Message = "Huyện đã được duyệt, không thể hủy duyệt xã";
+                        commonResponseDto.Message = "Huyện đã nộp báo cáo, không thể hủy duyệt xã";
                         commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                         return commonResponseDto;
                     }
