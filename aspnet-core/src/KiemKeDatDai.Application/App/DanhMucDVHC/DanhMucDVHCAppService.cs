@@ -1004,11 +1004,8 @@ namespace KiemKeDatDai.RisApplication
             if (baoCaoDVHC.CapDVHC == (int)CAP_DVHC.TRUNG_UONG || baoCaoDVHC.CapDVHC == (int)CAP_DVHC.VUNG)
                 isNopBaoCao = false;
 
-            if (baoCaoDVHC.ChildStatus == 0)
-            {
-                isNopBaoCao = baoCaoDVHC.TrangThaiDuyet != (int)TRANG_THAI_DUYET.DA_DUYET ? true : false;
-            }
-            else
+            //Nếu không phải cấp xã
+            if (baoCaoDVHC.ChildStatus != 0)
             {
                 var soDaDuyet = allDvhc.Count(x => x.Parent_Code == input.Ma && x.Year == input.Year && x.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET);
 
@@ -1329,14 +1326,20 @@ namespace KiemKeDatDai.RisApplication
                                         case (int)CAP_DVHC.XA:
                                             input.Name = input.TenXa;
                                             input.Ma = input.MaXa;
+                                            input.Parent_Code = input.MaHuyen;
+                                            input.Parent_id = allDvhc.Single(x => x.MaHuyen == input.MaHuyen && x.CapDVHCId == (int)CAP_DVHC.HUYEN).Id;
                                             break;
                                         case (int)CAP_DVHC.HUYEN:
                                             input.Name = input.TenHuyen;
                                             input.Ma = input.MaHuyen;
+                                            input.Parent_Code = input.MaTinh;
+                                            input.Parent_id = allDvhc.Single(x => x.MaTinh == input.MaTinh && x.CapDVHCId == (int)CAP_DVHC.TINH).Id;
                                             break;
                                         case (int)CAP_DVHC.TINH:
                                             input.Name = input.TenTinh;
                                             input.Ma = input.MaTinh;
+                                            input.Parent_Code = input.MaVung;
+                                            input.Parent_id = allDvhc.Single(x => x.MaVung == input.MaVung && x.CapDVHCId == (int)CAP_DVHC.VUNG).Id;
                                             break;
                                     }
 
