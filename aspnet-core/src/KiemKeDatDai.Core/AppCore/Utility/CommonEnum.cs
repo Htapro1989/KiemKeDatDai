@@ -122,6 +122,22 @@ namespace KiemKeDatDai
             BIEU_PL_IV = 13
         }
 
+        public enum HANH_DONG
+        {
+            [EnumDisplayString("Tạo mới")]
+            TAO_MOI = 1,
+            [EnumDisplayString("Cập nhật")]
+            CAP_NHAT = 2,
+            [EnumDisplayString("Xóa")]
+            XOA = 3,
+            [EnumDisplayString("Đăng nhập")]
+            DANG_nHAP = 4,
+            [EnumDisplayString("Duyệt")]
+            DUYET = 5,
+            [EnumDisplayString("Hủy")]
+            HUY = 6
+        }
+
         public enum LOAI_CAP_DVHC
         {
             BA_CAP = 3,

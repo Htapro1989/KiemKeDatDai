@@ -406,7 +406,6 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
-                PagedResultDto<DMBieuMauOuputDto> pagedResultDto = new PagedResultDto<DMBieuMauOuputDto>();
                 var bieumauObj = await _dmbmRepos.FirstOrDefaultAsync(id);
 
                 if (bieumauObj != null)

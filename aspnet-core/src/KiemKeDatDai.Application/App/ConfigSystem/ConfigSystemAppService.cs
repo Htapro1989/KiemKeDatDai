@@ -49,7 +49,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
-        //private readonly ILogAppService _iLogAppService;
+        private readonly ILogsAppService _logsAppService;
         private readonly IWritableOptions<ConfigSystemTime> _options;
 
         private readonly ICache mainCache;
@@ -61,6 +61,7 @@ namespace KiemKeDatDai.RisApplication
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
+            ILogsAppService logsAppService,
             IHttpContextAccessor httpContextAccessor,
             IWritableOptions<ConfigSystemTime> options
             )
@@ -71,6 +72,7 @@ namespace KiemKeDatDai.RisApplication
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
             _options = options;
+            _logsAppService = logsAppService;
         }
         public async Task<CommonResponseDto> GetAll(string filter)
         {
@@ -123,6 +125,8 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                var currentUser = await GetCurrentUserAsync();
+
                 if (input.Id != 0)
                 {
                     var data = await _configSystemRepos.FirstOrDefaultAsync(input.Id);
@@ -157,6 +161,19 @@ namespace KiemKeDatDai.RisApplication
                         data.Active = input.Active;
 
                         await _configSystemRepos.UpdateAsync(data);
+
+                        //ghi log hệ thống
+                        var log = new LogsInputDto
+                        {
+                            UserId = currentUser.Id,
+                            UserName = currentUser.UserName,
+                            FullName = currentUser.FullName,
+                            Action = (int)HANH_DONG.TAO_MOI,
+                            Description = "Cập nhật cấu hình hệ thống",
+                            Timestamp = DateTime.Now,
+                        };
+
+                        await _logsAppService.CreateOrUpdate(log);
                     }
                 }
                 else
@@ -169,6 +186,19 @@ namespace KiemKeDatDai.RisApplication
                     }).ToJson();
 
                     await _configSystemRepos.InsertAsync(objdata);
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.TAO_MOI,
+                        Description = "Tạo mới cấu hình hệ thống",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -187,6 +217,7 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _configSystemRepos.FirstOrDefaultAsync(id);
 
                 if (objdata != null)
@@ -194,6 +225,19 @@ namespace KiemKeDatDai.RisApplication
                     await _configSystemRepos.DeleteAsync(objdata);
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.XOA,
+                        Description = "Xóa cấu hình hệ thống",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
                 }
                 else
                 {

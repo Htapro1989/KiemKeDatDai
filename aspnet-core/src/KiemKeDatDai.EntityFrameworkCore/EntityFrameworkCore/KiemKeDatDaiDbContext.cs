@@ -93,6 +93,7 @@ namespace KiemKeDatDai.EntityFrameworkCore
         public virtual DbSet<Data_TangGiamKhac> Data_TangGiamKhac { get; set; }
         public virtual DbSet<YKien> YKien { get; set; }
         public virtual DbSet<News> News { get; set; }
+        public virtual DbSet<Logs> Logs { get; set; }
 
         public KiemKeDatDaiDbContext(DbContextOptions<KiemKeDatDaiDbContext> options)
             : base(options)
