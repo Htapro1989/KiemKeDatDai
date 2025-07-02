@@ -135,7 +135,9 @@ namespace KiemKeDatDai
             [EnumDisplayString("Duyệt")]
             DUYET = 5,
             [EnumDisplayString("Hủy")]
-            HUY = 6
+            HUY = 6,
+            [EnumDisplayString("Nộp")]
+            NOP = 7
         }
 
         public enum LOAI_CAP_DVHC

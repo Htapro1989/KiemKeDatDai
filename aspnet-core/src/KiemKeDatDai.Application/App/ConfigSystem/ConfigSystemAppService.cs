@@ -168,7 +168,7 @@ namespace KiemKeDatDai.RisApplication
                             UserId = currentUser.Id,
                             UserName = currentUser.UserName,
                             FullName = currentUser.FullName,
-                            Action = (int)HANH_DONG.TAO_MOI,
+                            Action = (int)HANH_DONG.CAP_NHAT,
                             Description = "Cập nhật cấu hình hệ thống",
                             Timestamp = DateTime.Now,
                         };

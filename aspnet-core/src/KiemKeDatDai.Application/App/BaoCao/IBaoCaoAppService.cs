@@ -11,7 +11,7 @@ namespace KiemKeDatDai.RisApplication
 {
     public interface IBaoCaoAppService : IApplicationService
     {
-        Task<CommonResponseDto> NopBaoCao(long year);
+        Task<CommonResponseDto> NopBaoCao(long year, string ma);
         Task<CommonResponseDto> ThongKeSoLieu(long year);
         Task<CommonResponseDto> DeleteAllDataXa(long year, string ma);
         Task<CommonResponseDto> ReportNumberXaByDate(DateTime fromDate, DateTime toDate);

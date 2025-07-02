@@ -61,6 +61,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IDistributedCache _distributedCache;
         private readonly IMemoryCache _cache;
         IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ILogsAppService _logsAppService;
 
         private readonly ICache mainCache;
 
@@ -77,6 +78,7 @@ namespace KiemKeDatDai.RisApplication
             IHttpContextAccessor httpContextAccessor,
             IDistributedCache distributedCache,
             IUnitOfWorkManager unitOfWorkManager,
+            ILogsAppService logsAppService,
             IMemoryCache cache
             )
         {
@@ -94,6 +96,7 @@ namespace KiemKeDatDai.RisApplication
             _distributedCache = distributedCache;
             _cache = cache;
             _unitOfWorkManager = unitOfWorkManager;
+            _logsAppService = logsAppService;
         }
 
         public async Task<CommonResponseDto> GetAll(DVHCDto input)
@@ -526,10 +529,36 @@ namespace KiemKeDatDai.RisApplication
                 if (input.Id != 0)
                 {
                     commonResponseDto = await Update(input, allDvhc);
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.CAP_NHAT,
+                        Description = "Cập nhật đơn vị hành chính",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
                 }
                 else
                 {
                     commonResponseDto = await Create(input, allDvhc);
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.TAO_MOI,
+                        Description = "Tạo mới cấu hình hệ thống",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
                 }
             }
             catch (Exception ex)
@@ -702,11 +731,26 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                var currentUser = await GetCurrentUserAsync();
                 var objDVHC = await _dvhcRepos.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (objDVHC != null)
                 {
                     await _dvhcRepos.DeleteAsync(objDVHC);
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.XOA,
+                        Description = "Xóa đơn vị hành chính",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
+
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";
                 }
@@ -1250,7 +1294,7 @@ namespace KiemKeDatDai.RisApplication
             {
                 try
                 {
-                    //var results = new List<List<DamInfoJsonOutput>>();
+                    var currentUser = await GetCurrentUserAsync();
                     string tenThuMuc = "DVHC";
                     var urlFile = await Utility.WriteFile(fileUpload, tenThuMuc);
 
@@ -1346,6 +1390,19 @@ namespace KiemKeDatDai.RisApplication
                                     commonResponseDto = await Create(input, allDvhc);
                                 }
                             }
+
+                            //ghi log hệ thống
+                            var log = new LogsInputDto
+                            {
+                                UserId = currentUser.Id,
+                                UserName = currentUser.UserName,
+                                FullName = currentUser.FullName,
+                                Action = (int)HANH_DONG.CAP_NHAT,
+                                Description = "Cập nhật đơn vị hành chính excel file",
+                                Timestamp = DateTime.Now,
+                            };
+
+                            await _logsAppService.CreateOrUpdate(log);
 
                             uow.Complete();
                         }

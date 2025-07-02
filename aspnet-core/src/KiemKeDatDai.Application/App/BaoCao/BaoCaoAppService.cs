@@ -77,6 +77,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
         private readonly ICache mainCache;
+        private readonly ILogsAppService _logsAppService;
 
         public BaoCaoAppService(ICacheManager cacheManager,
             IIocResolver iocResolver,
@@ -107,6 +108,7 @@ namespace KiemKeDatDai.RisApplication
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
             IHttpContextAccessor httpContextAccessor,
+            ILogsAppService logsAppService,
             IConfiguration configuration
             )
         {
@@ -138,11 +140,12 @@ namespace KiemKeDatDai.RisApplication
             _fileRepos = fileRepos;
             _configuration = configuration;
             _connectionString = _configuration["ConnectionStrings:Default"];
+            _logsAppService = logsAppService;
         }
 
 
         [AbpAuthorize(PermissionNames.Pages_Report_NopBaoCao)]
-        public async Task<CommonResponseDto> NopBaoCao(long year)
+        public async Task<CommonResponseDto> NopBaoCao(long year, string ma)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
 
@@ -152,7 +155,7 @@ namespace KiemKeDatDai.RisApplication
                 {
                     var currentUser = await GetCurrentUserAsync();
                     var allDvhc = await _dvhcRepos.GetAll().Where(x => x.Year == year).ToListAsync();
-                    var curentDvhc = allDvhc.FirstOrDefault(x => x.Ma == currentUser.DonViHanhChinhCode);
+                    var curentDvhc = allDvhc.FirstOrDefault(x => x.Ma == ma);
 
                     if (curentDvhc != null)
                     {
@@ -181,6 +184,33 @@ namespace KiemKeDatDai.RisApplication
                         curentDvhc.TrangThaiDuyet = (int)TRANG_THAI_DUYET.CHO_DUYET;
 
                         await _dvhcRepos.UpdateAsync(curentDvhc);
+
+                        //ghi log hệ thống
+                        string description = "";
+                        switch (curentDvhc.CapDVHCId)
+                        {
+                            case (int)CAP_DVHC.XA:
+                                description = "Xã " + curentDvhc.TenXa + " nộp báo cáo";
+                                break;
+                            case (int)CAP_DVHC.HUYEN:
+                                description = "Huyện " + curentDvhc.TenHuyen + " nộp báo cáo";
+                                break;
+                            case (int)CAP_DVHC.TINH:
+                                description = "Tỉnh " + curentDvhc.TenTinh + " nộp báo cáo";
+                                break;
+                        }
+
+                        var log = new LogsInputDto
+                        {
+                            UserId = currentUser.Id,
+                            UserName = currentUser.UserName,
+                            FullName = currentUser.FullName,
+                            Action = (int)HANH_DONG.NOP,
+                            Description = description,
+                            Timestamp = DateTime.Now,
+                        };
+
+                        await _logsAppService.CreateOrUpdate(log);
                     }
                     else
                     {
@@ -284,6 +314,7 @@ namespace KiemKeDatDai.RisApplication
 
             try
             {
+                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma && x.Year == year);
 
                 if (objdata != null)
@@ -307,6 +338,19 @@ namespace KiemKeDatDai.RisApplication
                         }
 
                     }
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.XOA,
+                        Description = "Xóa dữ liệu biểu xã",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
                 }
                 else
                 {
@@ -333,6 +377,7 @@ namespace KiemKeDatDai.RisApplication
 
             try
             {
+                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == maHuyen && x.Year == year);
 
                 if (objdata != null)
@@ -356,6 +401,19 @@ namespace KiemKeDatDai.RisApplication
                         }
 
                     }
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.XOA,
+                        Description = "Xóa dữ liệu biểu huyện",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
                 }
                 else
                 {

@@ -45,7 +45,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
-        //private readonly ILogAppService _iLogAppService;
+        private readonly ILogsAppService _logsAppService;
 
         private readonly ICache mainCache;
 
@@ -56,8 +56,8 @@ namespace KiemKeDatDai.RisApplication
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
-            IHttpContextAccessor httpContextAccessor
-            //ILogAppService iLogAppService
+            IHttpContextAccessor httpContextAccessor,
+            ILogsAppService logsAppService
             )
         {
             _capDVHCRepos = capDVHCRepos;
@@ -65,7 +65,7 @@ namespace KiemKeDatDai.RisApplication
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
-            //_iLogAppService = iLogAppService;
+            _logsAppService = logsAppService;
         }
         
         public async Task<CommonResponseDto> GetAll(CapDVHCDto input)
@@ -130,6 +130,8 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                var currentUser = await GetCurrentUserAsync();
+
                 if (input.Id != 0)
                 {
                     var data = await _capDVHCRepos.FirstOrDefaultAsync(input.Id);
@@ -143,6 +145,19 @@ namespace KiemKeDatDai.RisApplication
                         data.Active = input.Active;
 
                         await _capDVHCRepos.UpdateAsync(data);
+
+                        //ghi log hệ thống
+                        var log = new LogsInputDto
+                        {
+                            UserId = currentUser.Id,
+                            UserName = currentUser.UserName,
+                            FullName = currentUser.FullName,
+                            Action = (int)HANH_DONG.TAO_MOI,
+                            Description = "Cập nhật cấp đvhc",
+                            Timestamp = DateTime.Now,
+                        };
+
+                        await _logsAppService.CreateOrUpdate(log);
                     }
                 }
                 else
@@ -150,6 +165,19 @@ namespace KiemKeDatDai.RisApplication
                     var objdata = input.MapTo<CapDVHC>();
 
                     await _capDVHCRepos.InsertAsync(objdata);
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.TAO_MOI,
+                        Description = "Tạo mới cấp đvhc",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
                 }
                 commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                 commonResponseDto.Message = "Thành Công";
@@ -168,11 +196,25 @@ namespace KiemKeDatDai.RisApplication
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                var currentUser = await GetCurrentUserAsync();
                 var objdata = await _capDVHCRepos.FirstOrDefaultAsync(id);
 
                 if (objdata != null)
                 {
                     await _capDVHCRepos.DeleteAsync(objdata);
+
+                    //ghi log hệ thống
+                    var log = new LogsInputDto
+                    {
+                        UserId = currentUser.Id,
+                        UserName = currentUser.UserName,
+                        FullName = currentUser.FullName,
+                        Action = (int)HANH_DONG.XOA,
+                        Description = "Xóa cấp đvhc",
+                        Timestamp = DateTime.Now,
+                    };
+
+                    await _logsAppService.CreateOrUpdate(log);
 
                     commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
                     commonResponseDto.Message = "Thành Công";

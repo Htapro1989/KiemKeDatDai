@@ -12,11 +12,13 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KiemKeDatDai.Core\KiemKeDatDai.Core.csproj" />
-    <ProjectReference Include="..\KiemKeDatDai.EntityFrameworkCore\KiemKeDatDai.EntityFrameworkCore.csproj" />
+    <Compile Remove="App\Log\**" />
+    <EmbeddedResource Remove="App\Log\**" />
+    <None Remove="App\Log\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App\Log\" />
+    <ProjectReference Include="..\KiemKeDatDai.Core\KiemKeDatDai.Core.csproj" />
+    <ProjectReference Include="..\KiemKeDatDai.EntityFrameworkCore\KiemKeDatDai.EntityFrameworkCore.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Abp.RedisCache" Version="10.2.0-preview20250407" />
