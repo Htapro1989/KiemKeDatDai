@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using KiemKeDatDai.RisApplication;
 using static KiemKeDatDai.CommonEnum;
 using KiemKeDatDai.Authorization;
+using Abp.Runtime.Session;
 
 namespace KiemKeDatDai.RisApplication
 {
@@ -212,6 +213,43 @@ namespace KiemKeDatDai.RisApplication
                 commonResponseDto.Code = ResponseCodeStatus.ThatBai;
                 commonResponseDto.Message = ex.Message;
                 Logger.Error(ex.Message);
+            }
+            return commonResponseDto;
+        }
+        /// <summary>
+        /// Ghi log thông tin
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public async Task<CommonResponseDto> LogInfo(HANH_DONG action, string message)
+        {
+            CommonResponseDto commonResponseDto = new CommonResponseDto();
+            long userId = AbpSession.UserId ?? 0;
+            var user = await UserManager.FindByIdAsync(AbpSession.GetUserId().ToString());
+            LogsInputDto input = new LogsInputDto
+            {
+                UserId = userId,
+                UserName = user.UserName,
+                FullName = user.FullName,
+                Action = (int)action,
+                Description = message,
+                Timestamp = DateTime.Now
+            };
+            try
+            {
+                var objdata = input.MapTo<Logs>();
+
+                await _logsRepos.InsertAsync(objdata);
+
+                commonResponseDto.Code = ResponseCodeStatus.ThanhCong;
+                commonResponseDto.Message = "Thành Công";
+            }
+            catch (Exception ex)
+            {
+                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                commonResponseDto.Message = ex.Message;
+                Logger.Error("LogInfo:" + ex.Message);
             }
             return commonResponseDto;
         }

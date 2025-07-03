@@ -133,6 +133,7 @@ namespace KiemKeDatDai.Web.Host.Startup
             app.UseAuthorization();
 
             app.UseAbpRequestLocalization();
+            app.UseMiddleware<LoggingUserMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

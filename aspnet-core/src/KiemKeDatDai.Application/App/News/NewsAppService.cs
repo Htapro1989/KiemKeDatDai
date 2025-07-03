@@ -36,6 +36,9 @@ using KiemKeDatDai.AppCore.Utility;
 using KiemKeDatDai.Authorization;
 namespace KiemKeDatDai.App.DMBieuMau
 {
+    /// <summary>
+    /// Service for managing news articles
+    /// </summary>
     public class NewsAppService : KiemKeDatDaiAppServiceBase, INewsAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -46,16 +49,26 @@ namespace KiemKeDatDai.App.DMBieuMau
         private readonly IConfiguration _configuration;
         private readonly IRepository<EntitiesDb.File, long> _fileRepos;
         private readonly IRepository<User, long> _userRepos;
-
+        private readonly ILogsAppService _iLogsAppService;
         private readonly ICache mainCache;
-
+        /// <summary>
+        /// Constructor for NewsAppService
+        /// </summary>
+        /// <param name="newsRepos"></param>
+        /// <param name="objectMapper"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="configuration"></param>
+        /// <param name="fileRepos"></param>
+        /// <param name="userRepos"></param>
+        /// <param name="iLogsAppService"></param>
         public NewsAppService(
             IRepository<News, long> newsRepos,
             IObjectMapper objectMapper,
             IHttpContextAccessor httpContextAccessor,
             IConfiguration configuration,
             IRepository<EntitiesDb.File, long> fileRepos,
-            IRepository<User, long> userRepos
+            IRepository<User, long> userRepos,
+            ILogsAppService iLogsAppService
 
             )
         {
@@ -65,13 +78,21 @@ namespace KiemKeDatDai.App.DMBieuMau
             _configuration = configuration;
             _fileRepos = fileRepos;
             _userRepos = userRepos;
+            _iLogsAppService = iLogsAppService;
         }
+        /// <summary>
+        /// Lấy danh sách tin tức theo bộ lọc
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetAll(NewsFilterDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                await _iLogsAppService.LogInfo(HANH_DONG.TRUY_VAN, $"Lấy danh sách tin tức theo bộ lọc {input.Filter} ");
+
                 var lstBM = new List<NewsDto>();
                 var query = _newsRepos.GetAll().Include(x => x.File).Where(x => x.Type == input.Type)
                 .WhereIf(!input.Filter.IsNullOrEmpty(), x => x.Title.Contains(input.Filter) || x.Content.Contains(input.Filter) || x.Summary.Contains(input.Filter))
@@ -99,16 +120,28 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-
+        /// <summary>
+        /// Lấy tin tức theo ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetById(long id)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                await _iLogsAppService.LogInfo(HANH_DONG.TRUY_VAN, $"Lấy tin tức theo ID {id} ");
+
                 var obj = await _newsRepos.GetAll().Where(x => x.Id == id)
                 .Include(x => x.File)  // Include File entity
                 .FirstOrDefaultAsync();
+                if(obj == null)
+                {
+                    commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                    commonResponseDto.Message = "Tin tức không tồn tại";
+                    return commonResponseDto;
+                }
                 var objDto = _objectMapper.Map<NewsDto>(obj);
                 var userNames = _userRepos.FirstOrDefault(objDto.CreatorUserId ?? 0).Name;
                 objDto.CreateName = userNames;
@@ -124,43 +157,64 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-
+        /// <summary>
+        /// Download file tin tức theo ID
+        /// </summary>
+        /// <param name="FileId"></param>
+        /// <returns></returns>
         [AbpAllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> DownloadFileNewsByID(int FileId)
         {
-            CommonResponseDto commonResponseDto = new CommonResponseDto();
-            var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Id == FileId && x.FileType == FILE_NEWS);
-            if (fileEntity == null)
+            try
             {
-                return new NotFoundObjectResult(new { Message = "File not found on server" });
+                await _iLogsAppService.LogInfo(HANH_DONG.TRUY_VAN, $"Download file tin tức theo ID {FileId} ");
+
+                CommonResponseDto commonResponseDto = new CommonResponseDto();
+                var fileEntity = await _fileRepos.FirstOrDefaultAsync(x => x.Id == FileId && x.FileType == FILE_NEWS);
+                if (fileEntity == null)
+                {
+                    return new NotFoundObjectResult(new { Message = "File not found on server" });
+                }
+
+                var filePath = fileEntity.FilePath;
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return new NotFoundObjectResult(new { Message = "File not found on server" });
+                }
+
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(filePath, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                }
+                memory.Position = 0;
+
+                return new FileStreamResult(memory, Utility.GetContentType(filePath))
+                {
+                    FileDownloadName = fileEntity.FileName
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+                return new BadRequestObjectResult(new { Message = "Error occurred while processing the request." });
             }
 
-            var filePath = fileEntity.FilePath;
-            if (!System.IO.File.Exists(filePath))
-            {
-                return new NotFoundObjectResult(new { Message = "File not found on server" });
-            }
-
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(filePath, FileMode.Open))
-            {
-                await stream.CopyToAsync(memory);
-            }
-            memory.Position = 0;
-
-            return new FileStreamResult(memory, Utility.GetContentType(filePath))
-            {
-                FileDownloadName = fileEntity.FileName
-            };
         }
-
+        /// <summary>
+        /// Lấy danh sách tin tức phân trang và lọc theo tiêu chí
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAllowAnonymous]
         public async Task<CommonResponseDto> GetAllPaging(PagedAndFilteredInputDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                await _iLogsAppService.LogInfo(HANH_DONG.TRUY_VAN, $"Lấy danh sách tin tức phân trang và lọc theo tiêu chí {input.Filter} ");
+
                 var query = _newsRepos.GetAll().Include(x => x.File).WhereIf(!input.Filter.IsNullOrEmpty(), x => x.Title.Contains(input.Filter) || x.Content.Contains(input.Filter) || x.Summary.Contains(input.Filter));
                 var totalCount = await query.CountAsync();
                 var lstBM = new List<NewsDto>();
@@ -187,15 +241,22 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-
+        /// <summary>
+        /// Tạo mới hoặc cập nhật tin tức
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         public async Task<CommonResponseDto> CreateOrUpdate([FromForm] NewsUploadDto input)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+
                 if (input.Id != 0)
                 {
+                    await _iLogsAppService.LogInfo(HANH_DONG.CAP_NHAT, $"Cập nhật tin tức {input.Title} ");
+
                     var data = await _newsRepos.FirstOrDefaultAsync(input.Id);
                     if (data != null)
                     {
@@ -263,6 +324,8 @@ namespace KiemKeDatDai.App.DMBieuMau
                 }
                 else
                 {
+                    await _iLogsAppService.LogInfo(HANH_DONG.TAO_MOI, $"Tạo mới tin tức {input.Title} ");
+
                     var objdata = _objectMapper.Map<News>(input);
 
 
@@ -311,7 +374,11 @@ namespace KiemKeDatDai.App.DMBieuMau
             }
             return commonResponseDto;
         }
-
+        /// <summary>
+        /// Xóa tin tức theo ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_Administration_System_News)]
         [HttpDelete]
         public async Task<CommonResponseDto> Delete(long id)
@@ -319,6 +386,8 @@ namespace KiemKeDatDai.App.DMBieuMau
             CommonResponseDto commonResponseDto = new CommonResponseDto();
             try
             {
+                await _iLogsAppService.LogInfo(HANH_DONG.XOA, $"Xóa tin tức {id}");
+
                 var objdata = await _newsRepos.FirstOrDefaultAsync(id);
                 if (objdata != null)
                 {
