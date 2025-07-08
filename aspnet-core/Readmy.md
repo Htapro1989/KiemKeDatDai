@@ -34,3 +34,9 @@ select '2025-04-25 00:52:30.3751994', 1, 4, a.Id
 from AbpUsers a
 inner join DonViHanhChinh b on a.donvihanhchinhid = b.id
 where b.capDVHCId = 4
+
+-----------lấy danh sách các xã đã đẩy dữ liệu--------
+select MaXa, TenXa, TenHuyen, TenTinh, NgayDuyet, NgayGui, TrangThaiDuyet 
+from DonViHanhChinh dv
+inner join [File] f on dv.MaXa = f.MaDVHC
+where dv.CapDVHCId=4 and dv.Active=1 and dv.IsDeleted = 0 and dv.Year=2024 and f.IsDeleted = 0 and f.Year=2024 and f.FileType='FILE_KYTHONGKE'
