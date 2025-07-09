@@ -596,8 +596,8 @@ namespace KiemKeDatDai.RisApplication
                         dvhc.MaTinh = input.MaTinh != null ? input.MaTinh : input.Parent_Code;
                         dvhc.TenTinh = input.TenTinh != null ? input.TenTinh : allDvhc.Single(x => x.Ma == dvhc.Parent_Code).Name;
                         dvhc.Parent_Code = dvhc.Parent_Code == null ? dvhc.MaTinh : dvhc.Parent_Code;
-                        var parentDvhc = allDvhc.FirstOrDefault(x=>x.Ma == dvhc.Parent_Code);
-                        if (parentDvhc != null) 
+                        var parentDvhc = allDvhc.FirstOrDefault(x => x.Ma == dvhc.Parent_Code);
+                        if (parentDvhc != null)
                             dvhc.Parent_id = parentDvhc.Id;
                     }
                     //Nếu vẫn là đvhc 4 cấp cũ thì giữ nguyên code
@@ -1344,7 +1344,7 @@ namespace KiemKeDatDai.RisApplication
                                     }
 
                                     var capDvhc = item.Value<long>("CapDvhc");
-                                    
+
                                     var input = new DVHCInputDto()
                                     {
                                         TenVung = item.Value<string>("TenVung"),
@@ -1364,28 +1364,39 @@ namespace KiemKeDatDai.RisApplication
                                         input.TenHuyen = item.Value<string>("TenHuyen");
                                         input.MaHuyen = item.Value<string>("MaHuyen");
                                     }
-
-                                    switch (capDvhc)
+                                    else
                                     {
-                                        case (int)CAP_DVHC.XA:
-                                            input.Name = input.TenXa;
-                                            input.Ma = input.MaXa;
-                                            input.Parent_Code = input.MaHuyen;
-                                            input.Parent_id = allDvhc.Single(x => x.MaHuyen == input.MaHuyen && x.CapDVHCId == (int)CAP_DVHC.HUYEN).Id;
-                                            break;
-                                        case (int)CAP_DVHC.HUYEN:
-                                            input.Name = input.TenHuyen;
-                                            input.Ma = input.MaHuyen;
-                                            input.Parent_Code = input.MaTinh;
-                                            input.Parent_id = allDvhc.Single(x => x.MaTinh == input.MaTinh && x.CapDVHCId == (int)CAP_DVHC.TINH).Id;
-                                            break;
-                                        case (int)CAP_DVHC.TINH:
-                                            input.Name = input.TenTinh;
-                                            input.Ma = input.MaTinh;
-                                            input.Parent_Code = input.MaVung;
-                                            input.Parent_id = allDvhc.Single(x => x.MaVung == input.MaVung && x.CapDVHCId == (int)CAP_DVHC.VUNG).Id;
-                                            break;
+                                        switch (capDvhc)
+                                        {
+                                            case (int)CAP_DVHC.XA:
+                                                input.Name = input.TenXa;
+                                                input.Ma = input.MaXa;
+                                                if (loaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
+                                                {
+                                                    input.Parent_Code = input.MaHuyen;
+                                                    input.Parent_id = allDvhc.Single(x => x.MaHuyen == input.MaHuyen && x.CapDVHCId == (int)CAP_DVHC.HUYEN).Id;
+                                                }
+                                                else
+                                                {
+                                                    input.Parent_Code = input.MaTinh;
+                                                    input.Parent_id = allDvhc.Single(x => x.MaTinh == input.MaTinh && x.CapDVHCId == (int)CAP_DVHC.TINH).Id;
+                                                }
+                                                break;
+                                            case (int)CAP_DVHC.HUYEN:
+                                                input.Name = input.TenHuyen;
+                                                input.Ma = input.MaHuyen;
+                                                input.Parent_Code = input.MaTinh;
+                                                input.Parent_id = allDvhc.Single(x => x.MaTinh == input.MaTinh && x.CapDVHCId == (int)CAP_DVHC.TINH).Id;
+                                                break;
+                                            case (int)CAP_DVHC.TINH:
+                                                input.Name = input.TenTinh;
+                                                input.Ma = input.MaTinh;
+                                                input.Parent_Code = input.MaVung;
+                                                input.Parent_id = allDvhc.Single(x => x.MaVung == input.MaVung && x.CapDVHCId == (int)CAP_DVHC.VUNG).Id;
+                                                break;
+                                        }
                                     }
+
 
                                     commonResponseDto = await Create(input, allDvhc);
                                 }
