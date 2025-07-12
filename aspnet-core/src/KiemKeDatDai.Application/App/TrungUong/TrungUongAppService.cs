@@ -91,7 +91,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
-        //private readonly ILogAppService _iLogAppService;
+        private readonly ILogsAppService _logsAppService;
 
         private readonly ICache mainCache;
 
@@ -147,8 +147,8 @@ namespace KiemKeDatDai.RisApplication
             IObjectMapper objectMapper,
             IUserAppService iUserAppService,
             IRepository<UserRole, long> userRoleRepos,
+            ILogsAppService logsAppService,
             IHttpContextAccessor httpContextAccessor
-            //ILogAppService iLogAppService
             )
         {
             _dvhcRepos = dvhcRepos;
@@ -202,7 +202,7 @@ namespace KiemKeDatDai.RisApplication
             _iUserAppService = iUserAppService;
             _httpContextAccessor = httpContextAccessor;
             _userRoleRepos = userRoleRepos;
-            //_iLogAppService = iLogAppService;
+            _logsAppService = logsAppService;
         }
 
 
@@ -239,6 +239,19 @@ namespace KiemKeDatDai.RisApplication
                             tinh.NgayDuyet = DateTime.Now;
                             await _dvhcRepos.UpdateAsync(tinh);
                             #endregion
+
+                            //ghi log hệ thống
+                            var log = new LogsInputDto
+                            {
+                                UserId = currentUser.Id,
+                                UserName = currentUser.UserName,
+                                FullName = currentUser.FullName,
+                                Action = (int)HANH_DONG.DUYET,
+                                Description = "Duyệt báo cáo tỉnh " + tinh.Name,
+                                Timestamp = DateTime.Now,
+                            };
+
+                            await _logsAppService.CreateOrUpdate(log);
                         }
                         else
                         {
@@ -315,6 +328,19 @@ namespace KiemKeDatDai.RisApplication
                             tinh.NgayDuyet = DateTime.Now;
                             await _dvhcRepos.UpdateAsync(tinh);
                             #endregion
+
+                            //ghi log hệ thống
+                            var log = new LogsInputDto
+                            {
+                                UserId = currentUser.Id,
+                                UserName = currentUser.UserName,
+                                FullName = currentUser.FullName,
+                                Action = (int)HANH_DONG.HUY,
+                                Description = "Trả báo cáo tỉnh " + tinh.Name,
+                                Timestamp = DateTime.Now,
+                            };
+
+                            await _logsAppService.CreateOrUpdate(log);
                         }
                         else
                         {

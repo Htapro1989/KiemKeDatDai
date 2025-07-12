@@ -98,8 +98,7 @@ namespace KiemKeDatDai.RisApplication
         private readonly IUserAppService _iUserAppService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<UserRole, long> _userRoleRepos;
-
-        //private readonly ILogAppService _iLogAppService;
+        private readonly ILogsAppService _logsAppService;
 
         private readonly ICache mainCache;
 
@@ -156,8 +155,8 @@ namespace KiemKeDatDai.RisApplication
             IRepository<Bieu01TKKK_Xa, long> bieu01TKKK_XaRepos,
             IRepository<Bieu02TKKK_Xa, long> bieu02TKKK_XaRepos,
             IRepository<Bieu04TKKK_Xa, long> bieu04TKKK_XaRepos,
-            IRepository<Bieu05TKKK_Xa, long> bieu05TKKK_XaRepos
-            //ILogAppService iLogAppService
+            IRepository<Bieu05TKKK_Xa, long> bieu05TKKK_XaRepos,
+            ILogsAppService logsAppService
             )
         {
             _dvhcRepos = dvhcRepos;
@@ -208,6 +207,7 @@ namespace KiemKeDatDai.RisApplication
             _bieu02TKKK_XaRepos = bieu02TKKK_XaRepos;
             _bieu04TKKK_XaRepos = bieu04TKKK_XaRepos;
             _bieu05TKKK_XaRepos = bieu05TKKK_XaRepos;
+            _logsAppService = logsAppService;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Report_DuyetBaoCao)]
@@ -233,10 +233,18 @@ namespace KiemKeDatDai.RisApplication
 
                         var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
 
+                        var kyThongKeKiemKe = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(x => x.Year == year);
+                        if (kyThongKeKiemKe == null)
+                        {
+                            commonResponseDto.Message = "Kỳ thống kê không tồn tại cho năm này.";
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
+                        }
+
                         if (huyen != null)
                         {
                             //gọi hàm update biểu huyện
-                            commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, (int)HAM_DUYET.DUYET);
+                            commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, kyThongKeKiemKe.LoaiCapDVHC, (int)HAM_DUYET.DUYET);
 
                             #region cập nhật DVHC huyện sau khi duyệt huyện
                             huyen.TrangThaiDuyet = (int)TRANG_THAI_DUYET.DA_DUYET;
@@ -244,6 +252,29 @@ namespace KiemKeDatDai.RisApplication
 
                             await _dvhcRepos.UpdateAsync(huyen);
                             #endregion
+
+                            //ghi log hệ thống
+                            string description = "";
+                            if (kyThongKeKiemKe.LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+                            {
+                                description = "Tỉnh duyệt báo cáo xã " + huyen.Name;
+                            }
+                            else
+                            {
+                                description = "Tỉnh duyệt báo cáo huyện " + huyen.Name;
+                            }
+
+                            var log = new LogsInputDto
+                            {
+                                UserId = currentUser.Id,
+                                UserName = currentUser.UserName,
+                                FullName = currentUser.FullName,
+                                Action = (int)HANH_DONG.DUYET,
+                                Description = description,
+                                Timestamp = DateTime.Now,
+                            };
+
+                            await _logsAppService.CreateOrUpdate(log);
                         }
                         else
                         {
@@ -314,12 +345,20 @@ namespace KiemKeDatDai.RisApplication
 
                         var huyen = await _dvhcRepos.FirstOrDefaultAsync(x => x.Ma == ma);
 
+                        var kyThongKeKiemKe = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(x => x.Year == year);
+                        if (kyThongKeKiemKe == null)
+                        {
+                            commonResponseDto.Message = "Kỳ thống kê không tồn tại cho năm này.";
+                            commonResponseDto.Code = ResponseCodeStatus.ThatBai;
+                            return commonResponseDto;
+                        }
+
                         if (huyen != null)
                         {
                             //gọi hàm update biểu huyện
                             if (huyen.TrangThaiDuyet == (int)TRANG_THAI_DUYET.DA_DUYET)
                             {
-                                commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, (int)HAM_DUYET.HUY);
+                                commonResponseDto = await CreateOrUpdateBieuTinh(objdata, ma, year, kyThongKeKiemKe.LoaiCapDVHC, (int)HAM_DUYET.HUY);
                             }
 
                             #region cập nhật DVHC xã sau khi duyệt xã
@@ -328,6 +367,29 @@ namespace KiemKeDatDai.RisApplication
 
                             await _dvhcRepos.UpdateAsync(huyen);
                             #endregion
+
+                            //ghi log hệ thống
+                            string description = "";
+                            if (kyThongKeKiemKe.LoaiCapDVHC == (int)LOAI_CAP_DVHC.BA_CAP)
+                            {
+                                description = "Tỉnh trả báo cáo xã " + huyen.Name;
+                            }
+                            else
+                            {
+                                description = "Tỉnh trả báo cáo huyện " + huyen.Name;
+                            }
+
+                            var log = new LogsInputDto
+                            {
+                                UserId = currentUser.Id,
+                                UserName = currentUser.UserName,
+                                FullName = currentUser.FullName,
+                                Action = (int)HANH_DONG.HUY,
+                                Description = description,
+                                Timestamp = DateTime.Now,
+                            };
+
+                            await _logsAppService.CreateOrUpdate(log);
                         }
                         else
                         {
@@ -369,19 +431,12 @@ namespace KiemKeDatDai.RisApplication
             return null;
         }
 
-        private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, string maHuyen, long year, int hamduyet)
+        private async Task<CommonResponseDto> CreateOrUpdateBieuTinh(DonViHanhChinh tinh, string maHuyen, long year, int? loaiCapDVHC, int hamduyet)
         {
             CommonResponseDto commonResponseDto = new CommonResponseDto();
-            var KyThongKeKiemKe = await _dmKyThongKeKiemKeRepos.FirstOrDefaultAsync(x => x.Year == year);
-            if (KyThongKeKiemKe == null)
-            {
-                commonResponseDto.Message = "Kỳ thống kê không tồn tại cho năm này.";
-                commonResponseDto.Code = ResponseCodeStatus.ThatBai;
-                return commonResponseDto;
-            }
-            var LoaiCapDVHC = KyThongKeKiemKe.LoaiCapDVHC ?? 4; // Mặc định là 4 cấp
+
             #region biểu 01TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
+            if (loaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu01TKKK = await _bieu01TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
@@ -414,7 +469,7 @@ namespace KiemKeDatDai.RisApplication
             #endregion
 
             #region biểu 02TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
+            if (loaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu02TKKK = await _bieu02TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
@@ -447,7 +502,7 @@ namespace KiemKeDatDai.RisApplication
             #endregion
 
             #region biểu 03TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
+            if (loaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu03TKKK = await _bieu03TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
@@ -480,7 +535,7 @@ namespace KiemKeDatDai.RisApplication
             #endregion
 
             #region biểu 04TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
+            if (loaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu04TKKK = await _bieu04TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
@@ -513,7 +568,7 @@ namespace KiemKeDatDai.RisApplication
             #endregion
 
             #region biểu 05TKKK
-            if (LoaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
+            if (loaiCapDVHC == (int)LOAI_CAP_DVHC.BON_CAP)
             {
                 var data_bieu05TKKK = await _bieu05TKKK_HuyenRepos.GetAllListAsync(x => x.MaHuyen == maHuyen && x.Year == year);
 
